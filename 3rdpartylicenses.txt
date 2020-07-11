@@ -1333,6 +1333,9 @@ MIT
 @ngx-translate/http-loader
 MIT
 
+@obsidiansystems/hw-app-xtz
+Apache-2.0
+
 @taquito/local-forging
 MIT
 Copyright 2019 ECAD Labs Inc
@@ -1412,9 +1415,6 @@ MIT
 babel-polyfill
 MIT
 
-babel-runtime
-MIT
-
 base-n
 MIT
 The MIT License (MIT)
@@ -1490,9 +1490,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-
-basil-tezos-ledger
-Apache-2.0
 
 big-integer
 Unlicense
