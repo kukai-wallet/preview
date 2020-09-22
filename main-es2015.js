@@ -4806,11 +4806,16 @@ class QrScannerComponent {
     }
     scan() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+            console.log('1');
             const hasCamera = yield qr_scanner__WEBPACK_IMPORTED_MODULE_2__["default"].hasCamera();
             if (hasCamera) {
+                console.log('2');
                 qr_scanner__WEBPACK_IMPORTED_MODULE_2__["default"].WORKER_PATH = _node_modules_qr_scanner_qr_scanner_worker_min_js__WEBPACK_IMPORTED_MODULE_3___default.a;
+                console.log('3');
                 this.qrScanner = new qr_scanner__WEBPACK_IMPORTED_MODULE_2__["default"](this.videoplayer.nativeElement, result => this.handleQrCode(result));
-                this.qrScanner.start();
+                console.log('4');
+                yield this.qrScanner.start();
+                console.log('5');
             }
             else {
                 console.log('no camera found');
@@ -4819,6 +4824,7 @@ class QrScannerComponent {
     }
     handleQrCode(pairInfo) {
         console.log('Pairing Info', pairInfo);
+        this.closeModal();
     }
     closeModal() {
         // restore body scrollbar

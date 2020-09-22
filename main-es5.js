@@ -9585,23 +9585,37 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               while (1) {
                 switch (_context18.prev = _context18.next) {
                   case 0:
-                    _context18.next = 2;
+                    console.log('1');
+                    _context18.next = 3;
                     return qr_scanner__WEBPACK_IMPORTED_MODULE_2__["default"].hasCamera();
 
-                  case 2:
+                  case 3:
                     hasCamera = _context18.sent;
 
-                    if (hasCamera) {
-                      qr_scanner__WEBPACK_IMPORTED_MODULE_2__["default"].WORKER_PATH = _node_modules_qr_scanner_qr_scanner_worker_min_js__WEBPACK_IMPORTED_MODULE_3___default.a;
-                      this.qrScanner = new qr_scanner__WEBPACK_IMPORTED_MODULE_2__["default"](this.videoplayer.nativeElement, function (result) {
-                        return _this14.handleQrCode(result);
-                      });
-                      this.qrScanner.start();
-                    } else {
-                      console.log('no camera found');
+                    if (!hasCamera) {
+                      _context18.next = 15;
+                      break;
                     }
 
-                  case 4:
+                    console.log('2');
+                    qr_scanner__WEBPACK_IMPORTED_MODULE_2__["default"].WORKER_PATH = _node_modules_qr_scanner_qr_scanner_worker_min_js__WEBPACK_IMPORTED_MODULE_3___default.a;
+                    console.log('3');
+                    this.qrScanner = new qr_scanner__WEBPACK_IMPORTED_MODULE_2__["default"](this.videoplayer.nativeElement, function (result) {
+                      return _this14.handleQrCode(result);
+                    });
+                    console.log('4');
+                    _context18.next = 12;
+                    return this.qrScanner.start();
+
+                  case 12:
+                    console.log('5');
+                    _context18.next = 16;
+                    break;
+
+                  case 15:
+                    console.log('no camera found');
+
+                  case 16:
                   case "end":
                     return _context18.stop();
                 }
@@ -9613,6 +9627,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "handleQrCode",
         value: function handleQrCode(pairInfo) {
           console.log('Pairing Info', pairInfo);
+          this.closeModal();
         }
       }, {
         key: "closeModal",
