@@ -9461,19 +9461,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /* harmony import */
 
 
-    var qr_scanner__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
+    var _services_beacon_beacon_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
+    /*! ../../services/beacon/beacon.service */
+    "./src/app/services/beacon/beacon.service.ts");
+    /* harmony import */
+
+
+    var qr_scanner__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
     /*! qr-scanner */
     "./node_modules/qr-scanner/src/qr-scanner.js");
-    /* harmony import */
-
-
-    var _node_modules_qr_scanner_qr_scanner_worker_min_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
-    /*! ../../../../node_modules/qr-scanner/qr-scanner-worker.min.js */
-    "./node_modules/qr-scanner/qr-scanner-worker.min.js");
-    /* harmony import */
-
-
-    var _node_modules_qr_scanner_qr_scanner_worker_min_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_qr_scanner_qr_scanner_worker_min_js__WEBPACK_IMPORTED_MODULE_3__);
     /* harmony import */
 
 
@@ -9483,7 +9479,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     var _c0 = ["videoPlayer"];
 
-    function QrScannerComponent_div_1_p_12_Template(rf, ctx) {
+    function QrScannerComponent_div_2_p_12_Template(rf, ctx) {
       if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "p", 11);
 
@@ -9493,7 +9489,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }
 
-    function QrScannerComponent_div_1_Template(rf, ctx) {
+    function QrScannerComponent_div_2_Template(rf, ctx) {
       if (rf & 1) {
         var _r302 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
@@ -9503,7 +9499,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](2, "div", 4);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function QrScannerComponent_div_1_Template_div_click_2_listener() {
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function QrScannerComponent_div_2_Template_div_click_2_listener() {
           _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r302);
 
           var ctx_r301 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
@@ -9533,7 +9529,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtemplate"](12, QrScannerComponent_div_1_p_12_Template, 2, 0, "p", 10);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtemplate"](12, QrScannerComponent_div_2_p_12_Template, 2, 0, "p", 10);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
 
@@ -9554,9 +9550,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
 
     var QrScannerComponent = /*#__PURE__*/function () {
-      function QrScannerComponent() {
+      function QrScannerComponent(beaconService) {
         _classCallCheck(this, QrScannerComponent);
 
+        this.beaconService = beaconService;
         this.modalOpen = false;
       } //videoSource: HTMLVideoElement
 
@@ -9587,7 +9584,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                   case 0:
                     console.log('1');
                     _context18.next = 3;
-                    return qr_scanner__WEBPACK_IMPORTED_MODULE_2__["default"].hasCamera();
+                    return qr_scanner__WEBPACK_IMPORTED_MODULE_3__["default"].hasCamera();
 
                   case 3:
                     hasCamera = _context18.sent;
@@ -9598,9 +9595,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     }
 
                     console.log('2');
-                    qr_scanner__WEBPACK_IMPORTED_MODULE_2__["default"].WORKER_PATH = _node_modules_qr_scanner_qr_scanner_worker_min_js__WEBPACK_IMPORTED_MODULE_3___default.a;
+                    qr_scanner__WEBPACK_IMPORTED_MODULE_3__["default"].WORKER_PATH = './assets/js/qr-scanner-worker.min.js';
                     console.log('3');
-                    this.qrScanner = new qr_scanner__WEBPACK_IMPORTED_MODULE_2__["default"](this.videoplayer.nativeElement, function (result) {
+                    this.qrScanner = new qr_scanner__WEBPACK_IMPORTED_MODULE_3__["default"](this.videoplayer.nativeElement, function (result) {
                       return _this14.handleQrCode(result);
                     });
                     console.log('4');
@@ -9627,6 +9624,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "handleQrCode",
         value: function handleQrCode(pairInfo) {
           console.log('Pairing Info', pairInfo);
+          this.beaconService.addPeer(pairInfo);
           this.closeModal();
         }
       }, {
@@ -9647,7 +9645,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }();
 
     QrScannerComponent.ɵfac = function QrScannerComponent_Factory(t) {
-      return new (t || QrScannerComponent)();
+      return new (t || QrScannerComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_beacon_beacon_service__WEBPACK_IMPORTED_MODULE_2__["BeaconService"]));
     };
 
     QrScannerComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({
@@ -9664,30 +9662,32 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵloadQuery"]()) && (ctx.videoplayer = _t.first);
         }
       },
-      decls: 2,
+      decls: 3,
       vars: 1,
-      consts: [["src", "../../../assets/img/qr.svg", 1, "qr-icon", 3, "click"], ["id", "myModal", "class", "kukai-modal", 4, "ngIf"], ["id", "myModal", 1, "kukai-modal"], [1, "km-content"], [1, "x", 3, "click"], ["src", "../../../assets/img/x.svg"], [1, "km-header"], [1, "km-body"], [1, "video-container"], ["videoPlayer", ""], ["class", "no-cam", 4, "ngIf"], [1, "no-cam"]],
+      consts: [[3, "click"], ["id", "myModal", "class", "kukai-modal", 4, "ngIf"], ["id", "myModal", 1, "kukai-modal"], [1, "km-content"], [1, "x", 3, "click"], ["src", "../../../assets/img/x.svg"], [1, "km-header"], [1, "km-body"], [1, "video-container"], ["videoPlayer", ""], ["class", "no-cam", 4, "ngIf"], [1, "no-cam"]],
       template: function QrScannerComponent_Template(rf, ctx) {
         if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "img", 0);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "button", 0);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function QrScannerComponent_Template_img_click_0_listener() {
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function QrScannerComponent_Template_button_click_0_listener() {
             return ctx.openModal();
           });
 
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](1, "Scan QR code");
+
           _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtemplate"](1, QrScannerComponent_div_1_Template, 13, 1, "div", 1);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtemplate"](2, QrScannerComponent_div_2_Template, 13, 1, "div", 1);
         }
 
         if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx.modalOpen);
         }
       },
       directives: [_angular_common__WEBPACK_IMPORTED_MODULE_4__["NgIf"]],
-      styles: ["[_nghost-%COMP%]   video[_ngcontent-%COMP%] {\n  width: 100%;\n}\n\n[_nghost-%COMP%]   div.video-container[_ngcontent-%COMP%] {\n  margin: 1rem -1rem -0.5rem;\n}\n\n[_nghost-%COMP%]   p.no-cam[_ngcontent-%COMP%] {\n  display: block;\n  width: 100%;\n  text-align: center;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY29tcG9uZW50cy9xci1zY2FubmVyL0M6XFxVc2Vyc1xca2xhc19cXEdpdFxca3VrYWkvc3JjXFxhcHBcXGNvbXBvbmVudHNcXHFyLXNjYW5uZXJcXHFyLXNjYW5uZXIuY29tcG9uZW50LnNjc3MiLCJzcmMvYXBwL2NvbXBvbmVudHMvcXItc2Nhbm5lci9xci1zY2FubmVyLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0UsV0FBQTtBQ0NGOztBREVBO0VBQ0UsMEJBQUE7QUNDRjs7QURDQTtFQUNFLGNBQUE7RUFDQSxXQUFBO0VBQ0Esa0JBQUE7QUNFRiIsImZpbGUiOiJzcmMvYXBwL2NvbXBvbmVudHMvcXItc2Nhbm5lci9xci1zY2FubmVyLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiOmhvc3QgdmlkZW8ge1xyXG4gIHdpZHRoOiAxMDAlO1xyXG5cclxufVxyXG46aG9zdCBkaXYudmlkZW8tY29udGFpbmVyIHtcclxuICBtYXJnaW46IDFyZW0gLTFyZW0gLTAuNXJlbTtcclxufVxyXG46aG9zdCBwLm5vLWNhbSB7XHJcbiAgZGlzcGxheTogYmxvY2s7XHJcbiAgd2lkdGg6IDEwMCU7XHJcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xyXG59IiwiOmhvc3QgdmlkZW8ge1xuICB3aWR0aDogMTAwJTtcbn1cblxuOmhvc3QgZGl2LnZpZGVvLWNvbnRhaW5lciB7XG4gIG1hcmdpbjogMXJlbSAtMXJlbSAtMC41cmVtO1xufVxuXG46aG9zdCBwLm5vLWNhbSB7XG4gIGRpc3BsYXk6IGJsb2NrO1xuICB3aWR0aDogMTAwJTtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xufSJdfQ== */"]
+      styles: ["[_nghost-%COMP%]   video[_ngcontent-%COMP%] {\n  width: 100%;\n}\n\n[_nghost-%COMP%]   div.video-container[_ngcontent-%COMP%] {\n  margin: 1rem -1rem -0.5rem;\n}\n\n[_nghost-%COMP%]   p.no-cam[_ngcontent-%COMP%] {\n  display: block;\n  width: 100%;\n  text-align: center;\n}\n\n[_nghost-%COMP%]   button[_ngcontent-%COMP%] {\n  display: flex;\n  white-space: nowrap;\n  flex-direction: row;\n  margin: 1.5rem 0rem 1.5rem 1rem;\n  padding: 0.75rem 1.5rem;\n  border: 1px solid #5963FF;\n  color: #5963FF;\n  background: #FCFCFC;\n  font-weight: 500;\n  box-sizing: border-box;\n  border-radius: 0.5rem;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY29tcG9uZW50cy9xci1zY2FubmVyL0M6XFxVc2Vyc1xca2xhc19cXEdpdFxca3VrYWkvc3JjXFxhcHBcXGNvbXBvbmVudHNcXHFyLXNjYW5uZXJcXHFyLXNjYW5uZXIuY29tcG9uZW50LnNjc3MiLCJzcmMvYXBwL2NvbXBvbmVudHMvcXItc2Nhbm5lci9xci1zY2FubmVyLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0UsV0FBQTtBQ0NGOztBREVBO0VBQ0UsMEJBQUE7QUNDRjs7QURDQTtFQUNFLGNBQUE7RUFDQSxXQUFBO0VBQ0Esa0JBQUE7QUNFRjs7QURBQTtFQUNFLGFBQUE7RUFDQSxtQkFBQTtFQUNBLG1CQUFBO0VBQ0EsK0JBQUE7RUFDQSx1QkFBQTtFQUNBLHlCQUFBO0VBQ0EsY0FBQTtFQUNBLG1CQUFBO0VBQ0EsZ0JBQUE7RUFDQSxzQkFBQTtFQUNBLHFCQUFBO0FDR0YiLCJmaWxlIjoic3JjL2FwcC9jb21wb25lbnRzL3FyLXNjYW5uZXIvcXItc2Nhbm5lci5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIjpob3N0IHZpZGVvIHtcclxuICB3aWR0aDogMTAwJTtcclxuXHJcbn1cclxuOmhvc3QgZGl2LnZpZGVvLWNvbnRhaW5lciB7XHJcbiAgbWFyZ2luOiAxcmVtIC0xcmVtIC0wLjVyZW07XHJcbn1cclxuOmhvc3QgcC5uby1jYW0ge1xyXG4gIGRpc3BsYXk6IGJsb2NrO1xyXG4gIHdpZHRoOiAxMDAlO1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxufVxyXG46aG9zdCBidXR0b24ge1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAgd2hpdGUtc3BhY2U6IG5vd3JhcDtcclxuICBmbGV4LWRpcmVjdGlvbjogcm93O1xyXG4gIG1hcmdpbjogMS41cmVtIDByZW0gMS41cmVtIDFyZW07XHJcbiAgcGFkZGluZzogMC43NXJlbSAxLjVyZW07XHJcbiAgYm9yZGVyOiAxcHggc29saWQgIzU5NjNGRjtcclxuICBjb2xvcjogIzU5NjNGRjtcclxuICBiYWNrZ3JvdW5kOiAjRkNGQ0ZDO1xyXG4gIGZvbnQtd2VpZ2h0OiA1MDA7XHJcbiAgYm94LXNpemluZzogYm9yZGVyLWJveDtcclxuICBib3JkZXItcmFkaXVzOiAwLjVyZW07XHJcbn0iLCI6aG9zdCB2aWRlbyB7XG4gIHdpZHRoOiAxMDAlO1xufVxuXG46aG9zdCBkaXYudmlkZW8tY29udGFpbmVyIHtcbiAgbWFyZ2luOiAxcmVtIC0xcmVtIC0wLjVyZW07XG59XG5cbjpob3N0IHAubm8tY2FtIHtcbiAgZGlzcGxheTogYmxvY2s7XG4gIHdpZHRoOiAxMDAlO1xuICB0ZXh0LWFsaWduOiBjZW50ZXI7XG59XG5cbjpob3N0IGJ1dHRvbiB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIHdoaXRlLXNwYWNlOiBub3dyYXA7XG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XG4gIG1hcmdpbjogMS41cmVtIDByZW0gMS41cmVtIDFyZW07XG4gIHBhZGRpbmc6IDAuNzVyZW0gMS41cmVtO1xuICBib3JkZXI6IDFweCBzb2xpZCAjNTk2M0ZGO1xuICBjb2xvcjogIzU5NjNGRjtcbiAgYmFja2dyb3VuZDogI0ZDRkNGQztcbiAgZm9udC13ZWlnaHQ6IDUwMDtcbiAgYm94LXNpemluZzogYm9yZGVyLWJveDtcbiAgYm9yZGVyLXJhZGl1czogMC41cmVtO1xufSJdfQ== */"]
     });
     /*@__PURE__*/
 
@@ -9700,7 +9700,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           styleUrls: ['./qr-scanner.component.scss']
         }]
       }], function () {
-        return [];
+        return [{
+          type: _services_beacon_beacon_service__WEBPACK_IMPORTED_MODULE_2__["BeaconService"]
+        }];
       }, {
         videoplayer: [{
           type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"],
@@ -12586,7 +12588,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /*! @angular/common */
     "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
 
-    function SettingsComponent_table_33_tr_11_Template(rf, ctx) {
+    function SettingsComponent_table_31_tr_11_Template(rf, ctx) {
       if (rf & 1) {
         var _r134 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
 
@@ -12606,7 +12608,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](5, "td", 4);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function SettingsComponent_table_33_tr_11_Template_td_click_5_listener() {
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function SettingsComponent_table_31_tr_11_Template_td_click_5_listener() {
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r134);
 
           var i_r132 = ctx.index;
@@ -12618,7 +12620,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](6, "img", 7);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function SettingsComponent_table_33_tr_11_Template_img_click_6_listener() {
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function SettingsComponent_table_31_tr_11_Template_img_click_6_listener() {
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r134);
 
           var i_r132 = ctx.index;
@@ -12648,7 +12650,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }
 
-    function SettingsComponent_table_33_Template(rf, ctx) {
+    function SettingsComponent_table_31_Template(rf, ctx) {
       if (rf & 1) {
         var _r137 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
 
@@ -12674,7 +12676,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](8, "span", 4);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function SettingsComponent_table_33_Template_span_click_8_listener() {
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function SettingsComponent_table_31_Template_span_click_8_listener() {
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r137);
 
           var ctx_r136 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
@@ -12694,7 +12696,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](10, "tbody");
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](11, SettingsComponent_table_33_tr_11_Template, 7, 2, "tr", 6);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](11, SettingsComponent_table_31_tr_11_Template, 7, 2, "tr", 6);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
@@ -12710,7 +12712,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }
 
-    function SettingsComponent_table_36_tr_11_Template(rf, ctx) {
+    function SettingsComponent_table_34_tr_11_Template(rf, ctx) {
       if (rf & 1) {
         var _r142 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
 
@@ -12732,7 +12734,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](6, "img", 7);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function SettingsComponent_table_36_tr_11_Template_img_click_6_listener() {
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function SettingsComponent_table_34_tr_11_Template_img_click_6_listener() {
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r142);
 
           var i_r140 = ctx.index;
@@ -12766,7 +12768,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }
 
-    function SettingsComponent_table_36_Template(rf, ctx) {
+    function SettingsComponent_table_34_Template(rf, ctx) {
       if (rf & 1) {
         var _r144 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
 
@@ -12792,7 +12794,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](8, "span", 4);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function SettingsComponent_table_36_Template_span_click_8_listener() {
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function SettingsComponent_table_34_Template_span_click_8_listener() {
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r144);
 
           var ctx_r143 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
@@ -12812,7 +12814,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](10, "tbody");
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](11, SettingsComponent_table_36_tr_11_Template, 7, 4, "tr", 8);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](11, SettingsComponent_table_34_tr_11_Template, 7, 4, "tr", 8);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
@@ -12902,7 +12904,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           }, false, _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵresolveWindow"]);
         }
       },
-      decls: 37,
+      decls: 35,
       vars: 3,
       consts: [[3, "settings"], [1, "settings"], [1, "seperator"], [1, "handler"], [3, "click"], [4, "ngIf"], [4, "ngFor", "ngForOf"], ["src", "../../../assets/img/cross.svg", 3, "click"], [3, "inactive", 4, "ngFor", "ngForOf"]],
       template: function SettingsComponent_Template(rf, ctx) {
@@ -12989,15 +12991,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](26, "div");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](27, "button");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](27, "app-qr-scanner");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](28, "Scan QR code");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](29, "app-qr-scanner");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](30, "Hello");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](28, "Hello");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
@@ -13005,21 +13001,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](31, "H3");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](29, "H3");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](32, "Peers");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](33, SettingsComponent_table_33_Template, 12, 1, "table", 5);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](34, "H3");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](35, "Permissions to request operations");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](30, "Peers");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](36, SettingsComponent_table_36_Template, 12, 1, "table", 5);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](31, SettingsComponent_table_31_Template, 12, 1, "table", 5);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](32, "H3");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](33, "Permissions to request operations");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](34, SettingsComponent_table_34_Template, 12, 1, "table", 5);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         }
@@ -13027,7 +13023,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (rf & 2) {
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("settings", true);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](33);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](31);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx.beaconService.peers.length);
 
