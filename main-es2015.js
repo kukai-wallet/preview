@@ -5064,6 +5064,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 const _c0 = ["amountInput"];
 function SendComponent_button_0_Template(rf, ctx) { if (rf & 1) {
     const _r148 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
@@ -6019,6 +6020,7 @@ class SendComponent {
         this.latestSimError = '';
         this.parameters = null;
         this.micheline = null;
+        this.parametersFormat = 0;
     }
     checkInput(finalCheck = false) {
         let result;
@@ -6170,7 +6172,7 @@ class SendComponent {
                     !this.parameters.entrypoint) {
                     throw new Error('entrypoint and value expected');
                 }
-                // assertMichelsonCode(this.parameters.value);
+                Object(_taquito_michel_codec__WEBPACK_IMPORTED_MODULE_15__["assertMichelsonCode"])(this.parameters.value);
                 const res = Object(_taquito_michel_codec__WEBPACK_IMPORTED_MODULE_15__["emitMicheline"])(this.parameters.value, { indent: '  ', newline: '\n' });
                 this.micheline = { entrypoint: this.parameters.entrypoint, value: res };
             }
@@ -6305,6 +6307,9 @@ class SendComponent {
     }
     parametersTextboxDisplay() {
         return !this.parametersFormat ? this.micheline.value : JSON.stringify(this.parameters.value, null, 2);
+    }
+    setParametersFormat(id) {
+        this.parametersFormat = id;
     }
 }
 SendComponent.ɵfac = function SendComponent_Factory(t) { return new (t || SendComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_ngx_translate_core__WEBPACK_IMPORTED_MODULE_3__["TranslateService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](ngx_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2__["BsModalService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_4__["WalletService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_operation_operation_service__WEBPACK_IMPORTED_MODULE_6__["OperationService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_coordinator_coordinator_service__WEBPACK_IMPORTED_MODULE_5__["CoordinatorService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_export_export_service__WEBPACK_IMPORTED_MODULE_7__["ExportService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_8__["InputValidationService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_ledger_ledger_service__WEBPACK_IMPORTED_MODULE_9__["LedgerService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_estimate_estimate_service__WEBPACK_IMPORTED_MODULE_10__["EstimateService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_message_message_service__WEBPACK_IMPORTED_MODULE_14__["MessageService"])); };
