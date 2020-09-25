@@ -12338,9 +12338,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             try {
               if (!this.parameters.value || !this.parameters.entrypoint) {
                 throw new Error('entrypoint and value expected');
-              }
+              } // assertMichelsonCode(this.parameters.value);
 
-              Object(_taquito_michel_codec__WEBPACK_IMPORTED_MODULE_15__["assertMichelsonCode"])(this.parameters.value);
+
               var res = Object(_taquito_michel_codec__WEBPACK_IMPORTED_MODULE_15__["emitMicheline"])(this.parameters.value, {
                 indent: '  ',
                 newline: '\n'

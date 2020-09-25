@@ -5064,7 +5064,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
 const _c0 = ["amountInput"];
 function SendComponent_button_0_Template(rf, ctx) { if (rf & 1) {
     const _r148 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
@@ -6171,7 +6170,7 @@ class SendComponent {
                     !this.parameters.entrypoint) {
                     throw new Error('entrypoint and value expected');
                 }
-                Object(_taquito_michel_codec__WEBPACK_IMPORTED_MODULE_15__["assertMichelsonCode"])(this.parameters.value);
+                // assertMichelsonCode(this.parameters.value);
                 const res = Object(_taquito_michel_codec__WEBPACK_IMPORTED_MODULE_15__["emitMicheline"])(this.parameters.value, { indent: '  ', newline: '\n' });
                 this.micheline = { entrypoint: this.parameters.entrypoint, value: res };
             }
