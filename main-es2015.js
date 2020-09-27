@@ -6166,7 +6166,7 @@ class SendComponent {
             return this.translate.instant('SENDCOMPONENT.INVALIDFEE');
         }
         else if (this.parameters) {
-            console.log(this.parameters);
+            console.log('parameters', this.parameters);
             try {
                 if (!this.parameters.value ||
                     !this.parameters.entrypoint) {
