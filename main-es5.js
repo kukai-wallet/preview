@@ -2587,7 +2587,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "ngOnInit",
         value: function ngOnInit() {
           if (!this.walletService.wallet) {
-            this.messageService.addWarning('Failed to load the requested page. You need to login first!');
             this.router.navigate(['']);
           } else {
             this.onResize();
@@ -3037,7 +3036,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     function AgreementComponent_div_0_Template(rf, ctx) {
       if (rf & 1) {
-        var _r343 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
+        var _r337 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 1);
 
@@ -3074,11 +3073,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](13, "button", 7);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function AgreementComponent_div_0_Template_button_click_13_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r343);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r337);
 
-          var ctx_r342 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+          var ctx_r336 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
-          return ctx_r342.accept();
+          return ctx_r336.accept();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](14, "Accept");
@@ -3138,7 +3137,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           // localStorage.removeItem(this.key);
           var accepted = localStorage.getItem(this.key);
           var path = this.location.path();
-          console.log(path);
 
           if (!accepted && path !== '/terms-of-use' && path !== '/privacy-policy') {
             this.displayAgreement = true;
@@ -4571,7 +4569,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     function DelegateComponent_div_0_span_1_Template(rf, ctx) {
       if (rf & 1) {
-        var _r273 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r267 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "span");
 
@@ -4580,11 +4578,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](2, "span", 4);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function DelegateComponent_div_0_span_1_Template_span_click_2_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r273);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r267);
 
-          var ctx_r272 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
+          var ctx_r266 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
 
-          return ctx_r272.openModal();
+          return ctx_r266.openModal();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](3, "(Choose a baker)");
@@ -4597,7 +4595,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     function DelegateComponent_div_0_span_2_Template(rf, ctx) {
       if (rf & 1) {
-        var _r275 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r269 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "span");
 
@@ -4606,11 +4604,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](2, "span", 4);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function DelegateComponent_div_0_span_2_Template_span_click_2_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r275);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r269);
 
-          var ctx_r274 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
+          var ctx_r268 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
 
-          return ctx_r274.openModal();
+          return ctx_r268.openModal();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](3, "(Change\xA0baker)");
@@ -4621,11 +4619,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r271 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
+        var ctx_r265 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"]("", ctx_r271.activeAccount.delegate, " ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"]("", ctx_r265.activeAccount.delegate, " ");
       }
     }
 
@@ -4641,15 +4639,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r268 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
+        var ctx_r262 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r268.activeAccount.delegate);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r262.activeAccount.delegate);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r268.activeAccount.delegate);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r262.activeAccount.delegate);
       }
     }
 
@@ -4663,17 +4661,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r279 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+        var ctx_r273 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" ", ctx_r279.formInvalid, " ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" ", ctx_r273.formInvalid, " ");
       }
     }
 
     function DelegateComponent_div_1_div_7_Template(rf, ctx) {
       if (rf & 1) {
-        var _r281 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r275 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "div", 11);
 
@@ -4704,11 +4702,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](9, "input", 13, 14);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("ngModelChange", function DelegateComponent_div_1_div_7_Template_input_ngModelChange_9_listener($event) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r281);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r275);
 
-          var ctx_r280 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
+          var ctx_r274 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
 
-          return ctx_r280.toPkh = $event;
+          return ctx_r274.toPkh = $event;
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
@@ -4726,11 +4724,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](14, "input", 15);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("ngModelChange", function DelegateComponent_div_1_div_7_Template_input_ngModelChange_14_listener($event) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r281);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r275);
 
-          var ctx_r282 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
+          var ctx_r276 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
 
-          return ctx_r282.fee = $event;
+          return ctx_r276.fee = $event;
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
@@ -4742,11 +4740,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](16, "button", 17);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function DelegateComponent_div_1_div_7_Template_button_click_16_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r281);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r275);
 
-          var ctx_r283 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
+          var ctx_r277 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
 
-          return ctx_r283.openModal2();
+          return ctx_r277.openModal2();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](17, "Preview");
@@ -4757,25 +4755,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r276 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
+        var ctx_r270 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](5);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r276.activeAccount.address);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r270.activeAccount.address);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](4);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r276.toPkh)("disabled", ctx_r276.beaconMode);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r270.toPkh)("disabled", ctx_r270.beaconMode);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](5);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpropertyInterpolate"]("placeholder", ctx_r276.recommendedFee.toString());
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpropertyInterpolate"]("placeholder", ctx_r270.recommendedFee.toString());
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r276.fee);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r270.fee);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r276.formInvalid);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r270.formInvalid);
       }
     }
 
@@ -4791,11 +4789,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r284 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+        var ctx_r278 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" Delegate to Baker Address \u2014 ", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpipeBind1"](2, 1, ctx_r284.getDelegate()), " ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" Delegate to Baker Address \u2014 ", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpipeBind1"](2, 1, ctx_r278.getDelegate()), " ");
       }
     }
 
@@ -4811,52 +4809,52 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     function DelegateComponent_div_1_div_8_input_9_Template(rf, ctx) {
       if (rf & 1) {
-        var _r292 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r286 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "input", 26);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("ngModelChange", function DelegateComponent_div_1_div_8_input_9_Template_input_ngModelChange_0_listener($event) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r292);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r286);
 
-          var ctx_r291 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r285 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r291.password = $event;
+          return ctx_r285.password = $event;
         })("input", function DelegateComponent_div_1_div_8_input_9_Template_input_input_0_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r292);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r286);
 
-          var ctx_r293 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r287 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r293.pwdValid = "";
+          return ctx_r287.pwdValid = "";
         })("change", function DelegateComponent_div_1_div_8_input_9_Template_input_change_0_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r292);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r286);
 
-          var ctx_r294 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r288 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r294.pwdValid = "";
+          return ctx_r288.pwdValid = "";
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
       }
 
       if (rf & 2) {
-        var ctx_r286 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+        var ctx_r280 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r286.password);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r280.password);
       }
     }
 
     function DelegateComponent_div_1_div_8_button_10_Template(rf, ctx) {
       if (rf & 1) {
-        var _r296 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r290 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "button", 27);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function DelegateComponent_div_1_div_8_button_10_Template_button_click_0_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r296);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r290);
 
-          var ctx_r295 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r289 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r295.ledgerSign();
+          return ctx_r289.ledgerSign();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](1, "Sign with Ledger");
@@ -4867,16 +4865,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     function DelegateComponent_div_1_div_8_ng_template_11_Template(rf, ctx) {
       if (rf & 1) {
-        var _r298 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r292 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "button", 28);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function DelegateComponent_div_1_div_8_ng_template_11_Template_button_click_0_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r298);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r292);
 
-          var ctx_r297 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r291 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r297.inject();
+          return ctx_r291.inject();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](1);
@@ -4885,13 +4883,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r289 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+        var ctx_r283 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("disabled", ctx_r289.walletService.isLedgerWallet() && (!ctx_r289.sendResponse || !ctx_r289.sendResponse.payload || !ctx_r289.sendResponse.payload.signedOperation));
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("disabled", ctx_r283.walletService.isLedgerWallet() && (!ctx_r283.sendResponse || !ctx_r283.sendResponse.payload || !ctx_r283.sendResponse.payload.signedOperation));
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" ", ctx_r289.walletService.isLedgerWallet() ? "Broadcast" : "Confirm", "");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" ", ctx_r283.walletService.isLedgerWallet() ? "Broadcast" : "Confirm", "");
       }
     }
 
@@ -4905,11 +4903,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r290 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+        var ctx_r284 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r290.pwdValid);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r284.pwdValid);
       }
     }
 
@@ -4951,43 +4949,43 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var _r288 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵreference"](12);
+        var _r282 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵreference"](12);
 
-        var ctx_r277 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" Current Account Address \u2014 ", ctx_r277.activeAccount.address, " ");
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r277.getDelegate());
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r277.getDelegate());
+        var ctx_r271 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" Fee \u2014 ", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpipeBind2"](7, 8, ctx_r277.getFee(), "1.0-6"), " tez ");
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](3);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r277.walletService.isLedgerWallet() && !ctx_r277.walletService.isTorusWallet());
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" Current Account Address \u2014 ", ctx_r271.activeAccount.address, " ");
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r277.walletService.isLedgerWallet() && ctx_r277.ledgerError)("ngIfElse", _r288);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r271.getDelegate());
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r271.getDelegate());
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" Fee \u2014 ", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpipeBind2"](7, 8, ctx_r271.getFee(), "1.0-6"), " tez ");
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](3);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r277.pwdValid);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r271.walletService.isLedgerWallet() && !ctx_r271.walletService.isTorusWallet());
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r271.walletService.isLedgerWallet() && ctx_r271.ledgerError)("ngIfElse", _r282);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](3);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r271.pwdValid);
       }
     }
 
     function DelegateComponent_div_1_Template(rf, ctx) {
       if (rf & 1) {
-        var _r300 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r294 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "div", 5);
 
@@ -4996,11 +4994,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](2, "div", 7);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function DelegateComponent_div_1_Template_div_click_2_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r300);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r294);
 
-          var ctx_r299 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
+          var ctx_r293 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
 
-          return ctx_r299.closeModalAction();
+          return ctx_r293.closeModalAction();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelement"](3, "img", 8);
@@ -5027,17 +5025,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r269 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
+        var ctx_r263 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵclassProp"]("top", ctx_r269.beaconMode);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵclassProp"]("top", ctx_r263.beaconMode);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](7);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r269.activeView === 0);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r263.activeView === 0);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r269.activeView === 1);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r263.activeView === 1);
       }
     }
 
@@ -5969,15 +5967,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r319 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+        var ctx_r313 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx_r319.settings);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx_r313.settings);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", !ctx_r319.settings);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", !ctx_r313.settings);
       }
     }
 
@@ -5995,19 +5993,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var origAcc_r327 = ctx.$implicit;
+        var origAcc_r321 = ctx.$implicit;
 
-        var ctx_r326 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](3);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassProp"]("selected", origAcc_r327.address === ctx_r326.activeAccount.address);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpropertyInterpolate1"]("routerLink", "/account/", origAcc_r327.address, "");
+        var ctx_r320 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](3);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"](" ", origAcc_r327.shortAddress(), " ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassProp"]("selected", origAcc_r321.address === ctx_r320.activeAccount.address);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpropertyInterpolate1"]("routerLink", "/account/", origAcc_r321.address, "");
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"](" ", origAcc_r321.shortAddress(), " ");
       }
     }
 
@@ -6027,23 +6025,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var impAcc_r325 = ctx.$implicit;
+        var impAcc_r319 = ctx.$implicit;
 
-        var ctx_r324 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassProp"]("selected", impAcc_r325.address === ctx_r324.activeAccount.address);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpropertyInterpolate1"]("routerLink", "/account/", impAcc_r325.address, "");
+        var ctx_r318 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"](" ", impAcc_r325.shortAddress(), " ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassProp"]("selected", impAcc_r319.address === ctx_r318.activeAccount.address);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpropertyInterpolate1"]("routerLink", "/account/", impAcc_r319.address, "");
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", impAcc_r325.originatedAccounts);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"](" ", impAcc_r319.shortAddress(), " ");
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", impAcc_r319.originatedAccounts);
       }
     }
 
@@ -6085,15 +6083,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r320 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+        var ctx_r314 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](7);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx_r320.activeAccount.shortAddress());
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx_r314.activeAccount.shortAddress());
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx_r320.impAccs);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx_r314.impAccs);
       }
     }
 
@@ -6109,11 +6107,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r321 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+        var ctx_r315 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpropertyInterpolate1"]("src", "../../../assets/img/", ctx_r321.getVerifier(), "-logo.svg", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsanitizeUrl"]);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpropertyInterpolate1"]("src", "../../../assets/img/", ctx_r315.getVerifier(), "-logo.svg", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsanitizeUrl"]);
       }
     }
 
@@ -6463,11 +6461,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var message_r302 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2).$implicit;
+        var message_r296 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2).$implicit;
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](message_r302.msg);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](message_r296.msg);
       }
     }
 
@@ -6497,40 +6495,40 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var message_r302 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2).$implicit;
+        var message_r296 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2).$implicit;
 
-        var ctx_r307 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpropertyInterpolate"]("href", ctx_r307.notifyFormat(message_r302), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsanitizeUrl"]);
+        var ctx_r301 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate2"](" ", ctx_r307.getAlias(message_r302), " via ", message_r302.msg, ": ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpropertyInterpolate"]("href", ctx_r301.notifyFormat(message_r296), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsanitizeUrl"]);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"]("", message_r302.amount, " tez");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate2"](" ", ctx_r301.getAlias(message_r296), " via ", message_r296.msg, ": ");
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"]("", message_r296.amount, " tez");
       }
     }
 
     function MessagesComponent_div_1_alert_1_Template(rf, ctx) {
       if (rf & 1) {
-        var _r312 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
+        var _r306 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "alert", 4);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "button", 5);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function MessagesComponent_div_1_alert_1_Template_button_click_1_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r312);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r306);
 
-          var i_r303 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]().index;
+          var i_r297 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]().index;
 
-          var ctx_r310 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+          var ctx_r304 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
-          return ctx_r310.removeMessage(i_r303);
+          return ctx_r304.removeMessage(i_r297);
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "span", 6);
@@ -6549,17 +6547,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var message_r302 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]().$implicit;
+        var message_r296 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]().$implicit;
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("type", message_r302.type);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("type", message_r296.type);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](4);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", !message_r302.email && !message_r302.username && !message_r302.twitterId && message_r302.msg);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", !message_r296.email && !message_r296.username && !message_r296.twitterId && message_r296.msg);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", message_r302.email || message_r302.username || message_r302.twitterId);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", message_r296.email || message_r296.username || message_r296.twitterId);
       }
     }
 
@@ -6573,11 +6571,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var message_r302 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2).$implicit;
+        var message_r296 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2).$implicit;
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](message_r302.msg);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](message_r296.msg);
       }
     }
 
@@ -6591,13 +6589,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var message_r302 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]().$implicit;
+        var message_r296 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]().$implicit;
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("type", message_r302.type)("dismissOnTimeout", message_r302.timeout);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("type", message_r296.type)("dismissOnTimeout", message_r296.timeout);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", message_r302.msg);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", message_r296.msg);
       }
     }
 
@@ -6613,15 +6611,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var message_r302 = ctx.$implicit;
+        var message_r296 = ctx.$implicit;
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", !message_r302.timeout);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", !message_r296.timeout);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", message_r302.timeout);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", message_r296.timeout);
       }
     }
 
@@ -8220,16 +8218,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     function NewImplicitComponent_img_0_Template(rf, ctx) {
       if (rf & 1) {
-        var _r331 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r325 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "img", 2);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function NewImplicitComponent_img_0_Template_img_click_0_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r331);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r325);
 
-          var ctx_r330 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
+          var ctx_r324 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
 
-          return ctx_r330.openModal();
+          return ctx_r324.openModal();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
@@ -8246,17 +8244,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r333 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
+        var ctx_r327 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r333.errorMsg);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r327.errorMsg);
       }
     }
 
     function NewImplicitComponent_div_1_Template(rf, ctx) {
       if (rf & 1) {
-        var _r335 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r329 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "div", 3);
 
@@ -8265,11 +8263,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](2, "div", 5);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function NewImplicitComponent_div_1_Template_div_click_2_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r335);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r329);
 
-          var ctx_r334 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
+          var ctx_r328 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
 
-          return ctx_r334.closeModal();
+          return ctx_r328.closeModal();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelement"](3, "img", 6);
@@ -8299,23 +8297,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](11, "input", 10, 11);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("ngModelChange", function NewImplicitComponent_div_1_Template_input_ngModelChange_11_listener($event) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r335);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r329);
 
-          var ctx_r336 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
+          var ctx_r330 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
 
-          return ctx_r336.password = $event;
+          return ctx_r330.password = $event;
         })("input", function NewImplicitComponent_div_1_Template_input_input_11_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r335);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r329);
 
-          var ctx_r337 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
+          var ctx_r331 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
 
-          return ctx_r337.errorMsg = "";
+          return ctx_r331.errorMsg = "";
         })("change", function NewImplicitComponent_div_1_Template_input_change_11_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r335);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r329);
 
-          var ctx_r338 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
+          var ctx_r332 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
 
-          return ctx_r338.errorMsg = "";
+          return ctx_r332.errorMsg = "";
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
@@ -8323,11 +8321,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](13, "button", 12);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function NewImplicitComponent_div_1_Template_button_click_13_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r335);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r329);
 
-          var ctx_r339 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
+          var ctx_r333 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
 
-          return ctx_r339.addPkh();
+          return ctx_r333.addPkh();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](14, "Confirm");
@@ -8346,15 +8344,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r329 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
+        var ctx_r323 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](11);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r329.password);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r323.password);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](4);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r329.errorMsg);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r323.errorMsg);
       }
     }
 
@@ -9581,21 +9579,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var acc_r346 = ctx.$implicit;
+        var acc_r340 = ctx.$implicit;
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpropertyInterpolate"]("value", acc_r346.address);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpropertyInterpolate"]("value", acc_r340.address);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](acc_r346.pkh);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](acc_r340.pkh);
       }
     }
 
     function PermissionRequestComponent_div_0_Template(rf, ctx) {
       if (rf & 1) {
-        var _r348 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
+        var _r342 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 1);
 
@@ -9604,11 +9602,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "div", 3);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function PermissionRequestComponent_div_0_Template_div_click_2_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r348);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r342);
 
-          var ctx_r347 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+          var ctx_r341 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
-          return ctx_r347.rejectPermissions();
+          return ctx_r341.rejectPermissions();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](3, "img", 4);
@@ -9642,11 +9640,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](12, "select", 7);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("ngModelChange", function PermissionRequestComponent_div_0_Template_select_ngModelChange_12_listener($event) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r348);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r342);
 
-          var ctx_r349 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+          var ctx_r343 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
-          return ctx_r349.selectedAccount = $event;
+          return ctx_r343.selectedAccount = $event;
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](13, PermissionRequestComponent_div_0_ng_container_13_Template, 3, 2, "ng-container", 8);
@@ -9658,11 +9656,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](15, "button", 10);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function PermissionRequestComponent_div_0_Template_button_click_15_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r348);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r342);
 
-          var ctx_r350 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+          var ctx_r344 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
-          return ctx_r350.grantPermissions();
+          return ctx_r344.grantPermissions();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](16, "Approve");
@@ -9679,19 +9677,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r344 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+        var ctx_r338 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](9);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"]("", ctx_r344.permissionRequest.appMetadata.name, " wants permission to request signing of operations.");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"]("", ctx_r338.permissionRequest.appMetadata.name, " wants permission to request signing of operations.");
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngModel", ctx_r344.selectedAccount);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngModel", ctx_r338.selectedAccount);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx_r344.walletService.wallet.implicitAccounts);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx_r338.walletService.wallet.implicitAccounts);
       }
     }
 
@@ -9867,7 +9865,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     function QrScannerComponent_div_2_Template(rf, ctx) {
       if (rf & 1) {
-        var _r355 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r349 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "div", 2);
 
@@ -9876,11 +9874,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](2, "div", 4);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function QrScannerComponent_div_2_Template_div_click_2_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r355);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r349);
 
-          var ctx_r354 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
+          var ctx_r348 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
 
-          return ctx_r354.closeModal();
+          return ctx_r348.closeModal();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelement"](3, "img", 5);
@@ -9917,11 +9915,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r351 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
+        var ctx_r345 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](12);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r351.qrScanner);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r345.qrScanner);
       }
     }
 
@@ -10150,7 +10148,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     function ReceiveComponent_div_1_Template(rf, ctx) {
       if (rf & 1) {
-        var _r267 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
+        var _r261 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 2);
 
@@ -10159,11 +10157,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "div", 4);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function ReceiveComponent_div_1_Template_div_click_2_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r267);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r261);
 
-          var ctx_r266 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+          var ctx_r260 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
-          return ctx_r266.closeModal();
+          return ctx_r260.closeModal();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](3, "img", 5);
@@ -10210,7 +10208,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r265 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+        var ctx_r259 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](6);
 
@@ -10218,7 +10216,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](8);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx_r265.activeAddress);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx_r259.activeAddress);
       }
     }
 
@@ -10510,16 +10508,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     function SendComponent_button_0_Template(rf, ctx) {
       if (rf & 1) {
-        var _r176 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r170 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "button", 2);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function SendComponent_button_0_Template_button_click_0_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r176);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r170);
 
-          var ctx_r175 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
+          var ctx_r169 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
 
-          return ctx_r175.openModal();
+          return ctx_r169.openModal();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](1, "Send");
@@ -10570,16 +10568,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     function SendComponent_div_1_button_7_Template(rf, ctx) {
       if (rf & 1) {
-        var _r185 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r179 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "button", 11);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function SendComponent_div_1_button_7_Template_button_click_0_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r185);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r179);
 
-          var ctx_r184 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
+          var ctx_r178 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
 
-          return ctx_r184.toggleDestination();
+          return ctx_r178.toggleDestination();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtemplate"](1, SendComponent_div_1_button_7_ng_container_1_Template, 2, 0, "ng-container", 8);
@@ -10590,30 +10588,30 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r179 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
+        var ctx_r173 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r179.isMultipleDestinations);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r173.isMultipleDestinations);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r179.isMultipleDestinations);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r173.isMultipleDestinations);
       }
     }
 
     function SendComponent_div_1_div_8_button_7_Template(rf, ctx) {
       if (rf & 1) {
-        var _r201 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r195 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "button", 33);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function SendComponent_div_1_div_8_button_7_Template_button_click_0_listener($event) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r201);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r195);
 
-          var ctx_r200 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r194 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r200.sendEntireBalance($event);
+          return ctx_r194.sendEntireBalance($event);
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](1, "Send Max");
@@ -10622,9 +10620,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r187 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+        var ctx_r181 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵclassProp"]("max", ctx_r187.sendMax);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵclassProp"]("max", ctx_r181.sendMax);
       }
     }
 
@@ -10660,21 +10658,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var key_r203 = ctx.$implicit;
+        var key_r197 = ctx.$implicit;
 
-        var ctx_r202 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](4);
+        var ctx_r196 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](4);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpropertyInterpolate"]("value", key_r203);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpropertyInterpolate"]("value", key_r197);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"]("", ctx_r202.torusService.verifierMap[key_r203].name, " Account");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"]("", ctx_r196.torusService.verifierMap[key_r197].name, " Account");
       }
     }
 
     function SendComponent_div_1_div_8_div_19_Template(rf, ctx) {
       if (rf & 1) {
-        var _r205 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r199 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "div", 22);
 
@@ -10689,17 +10687,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](4, "select", 35);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("ngModelChange", function SendComponent_div_1_div_8_div_19_Template_select_ngModelChange_4_listener($event) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r205);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r199);
 
-          var ctx_r204 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r198 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r204.torusVerifier = $event;
+          return ctx_r198.torusVerifier = $event;
         })("ngModelChange", function SendComponent_div_1_div_8_div_19_Template_select_ngModelChange_4_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r205);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r199);
 
-          var ctx_r206 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r200 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r206.verifierChange();
+          return ctx_r200.verifierChange();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](5, "option", 36);
@@ -10717,23 +10715,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](8, "input", 38);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("input", function SendComponent_div_1_div_8_div_19_Template_input_input_8_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r205);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r199);
 
-          var ctx_r207 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r201 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r207.updateDefaultValues();
+          return ctx_r201.updateDefaultValues();
         })("change", function SendComponent_div_1_div_8_div_19_Template_input_change_8_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r205);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r199);
 
-          var ctx_r208 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r202 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r208.validateReceiverAddress();
+          return ctx_r202.validateReceiverAddress();
         })("ngModelChange", function SendComponent_div_1_div_8_div_19_Template_input_ngModelChange_8_listener($event) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r205);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r199);
 
-          var ctx_r209 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r203 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r209.toPkh = $event;
+          return ctx_r203.toPkh = $event;
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
@@ -10742,19 +10740,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r192 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+        var ctx_r186 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](4);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r192.torusVerifier);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r186.torusVerifier);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](3);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngForOf", ctx_r192.torusService.verifierMapKeys);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngForOf", ctx_r186.torusService.verifierMapKeys);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("disabled", ctx_r192.beaconMode)("ngModel", ctx_r192.toPkh);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("disabled", ctx_r186.beaconMode)("ngModel", ctx_r186.toPkh);
       }
     }
 
@@ -10792,11 +10790,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r211 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](4);
+        var ctx_r205 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](4);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r211.torusLookupAddress);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r205.torusLookupAddress);
       }
     }
 
@@ -10812,21 +10810,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r194 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+        var ctx_r188 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r194.torusPendingLookup);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r188.torusPendingLookup);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r194.torusPendingLookup && ctx_r194.torusLookupAddress);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r188.torusPendingLookup && ctx_r188.torusLookupAddress);
       }
     }
 
     function SendComponent_div_1_div_8_div_22_Template(rf, ctx) {
       if (rf & 1) {
-        var _r213 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r207 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "div", 22);
 
@@ -10845,23 +10843,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](5, "textarea", 44);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("input", function SendComponent_div_1_div_8_div_22_Template_textarea_input_5_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r213);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r207);
 
-          var ctx_r212 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r206 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r212.updateDefaultValues();
+          return ctx_r206.updateDefaultValues();
         })("change", function SendComponent_div_1_div_8_div_22_Template_textarea_change_5_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r213);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r207);
 
-          var ctx_r214 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r208 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r214.validateBatch();
+          return ctx_r208.validateBatch();
         })("ngModelChange", function SendComponent_div_1_div_8_div_22_Template_textarea_ngModelChange_5_listener($event) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r213);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r207);
 
-          var ctx_r215 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r209 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r215.toMultipleDestinationsString = $event;
+          return ctx_r209.toMultipleDestinationsString = $event;
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
@@ -10870,15 +10868,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r195 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+        var ctx_r189 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](4);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r195.batchSpace());
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r189.batchSpace());
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r195.toMultipleDestinationsString);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r189.toMultipleDestinationsString);
       }
     }
 
@@ -10904,7 +10902,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     function SendComponent_div_1_div_8_div_33_Template(rf, ctx) {
       if (rf & 1) {
-        var _r217 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r211 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "div", 45);
 
@@ -10921,11 +10919,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](5, "input", 46);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("ngModelChange", function SendComponent_div_1_div_8_div_33_Template_input_ngModelChange_5_listener($event) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r217);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r211);
 
-          var ctx_r216 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r210 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r216.gas = $event;
+          return ctx_r210.gas = $event;
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
@@ -10943,23 +10941,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](9, "input", 47);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("input", function SendComponent_div_1_div_8_div_33_Template_input_input_9_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r217);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r211);
 
-          var ctx_r218 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r212 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r218.updateMaxAmount();
+          return ctx_r212.updateMaxAmount();
         })("paste", function SendComponent_div_1_div_8_div_33_Template_input_paste_9_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r217);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r211);
 
-          var ctx_r219 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r213 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r219.updateMaxAmount();
+          return ctx_r213.updateMaxAmount();
         })("ngModelChange", function SendComponent_div_1_div_8_div_33_Template_input_ngModelChange_9_listener($event) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r217);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r211);
 
-          var ctx_r220 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r214 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r220.fee = $event;
+          return ctx_r214.fee = $event;
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
@@ -10981,23 +10979,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](14, "input", 47);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("input", function SendComponent_div_1_div_8_div_33_Template_input_input_14_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r217);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r211);
 
-          var ctx_r221 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r215 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r221.updateMaxAmount();
+          return ctx_r215.updateMaxAmount();
         })("paste", function SendComponent_div_1_div_8_div_33_Template_input_paste_14_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r217);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r211);
 
-          var ctx_r222 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r216 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r222.updateMaxAmount();
+          return ctx_r216.updateMaxAmount();
         })("ngModelChange", function SendComponent_div_1_div_8_div_33_Template_input_ngModelChange_14_listener($event) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r217);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r211);
 
-          var ctx_r223 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r217 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r223.storage = $event;
+          return ctx_r217.storage = $event;
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
@@ -11022,29 +11020,29 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r198 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+        var ctx_r192 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](5);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpropertyInterpolate"]("placeholder", ctx_r198.defaultTransactionParams.gas.toString());
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpropertyInterpolate"]("placeholder", ctx_r192.defaultTransactionParams.gas.toString());
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r198.gas);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r192.gas);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](4);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpropertyInterpolate"]("placeholder", ctx_r198.defaultTransactionParams.fee.toString());
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpropertyInterpolate"]("placeholder", ctx_r192.defaultTransactionParams.fee.toString());
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r198.fee);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r192.fee);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](5);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpropertyInterpolate"]("placeholder", ctx_r198.defaultTransactionParams.storage.toString());
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpropertyInterpolate"]("placeholder", ctx_r192.defaultTransactionParams.storage.toString());
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r198.storage);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r192.storage);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](4);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("value", ctx_r198.burnAmount() ? ctx_r198.burnAmount() : "0 tez");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("value", ctx_r192.burnAmount() ? ctx_r192.burnAmount() : "0 tez");
       }
     }
 
@@ -11058,17 +11056,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r199 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+        var ctx_r193 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" ", ctx_r199.formInvalid, " ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" ", ctx_r193.formInvalid, " ");
       }
     }
 
     function SendComponent_div_1_div_8_Template(rf, ctx) {
       if (rf & 1) {
-        var _r225 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r219 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "div", 12);
 
@@ -11077,23 +11075,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](2, "input", 14, 15);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("input", function SendComponent_div_1_div_8_Template_input_input_2_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r225);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r219);
 
-          var ctx_r224 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
+          var ctx_r218 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
 
-          return ctx_r224.amountInputChange();
+          return ctx_r218.amountInputChange();
         })("ngModelChange", function SendComponent_div_1_div_8_Template_input_ngModelChange_2_listener($event) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r225);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r219);
 
-          var ctx_r226 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
+          var ctx_r220 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
 
-          return ctx_r226.amount = $event;
+          return ctx_r220.amount = $event;
         })("click", function SendComponent_div_1_div_8_Template_input_click_2_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r225);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r219);
 
-          var ctx_r227 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
+          var ctx_r221 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
 
-          return ctx_r227.sendMax = false;
+          return ctx_r221.sendMax = false;
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
@@ -11163,11 +11161,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](28, "input", 27);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("ngModelChange", function SendComponent_div_1_div_8_Template_input_ngModelChange_28_listener($event) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r225);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r219);
 
-          var ctx_r228 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
+          var ctx_r222 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
 
-          return ctx_r228.advancedForm = $event;
+          return ctx_r222.advancedForm = $event;
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
@@ -11195,11 +11193,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](35, "button", 32);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function SendComponent_div_1_div_8_Template_button_click_35_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r225);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r219);
 
-          var ctx_r229 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
+          var ctx_r223 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
 
-          return ctx_r229.openModal2();
+          return ctx_r223.openModal2();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](36, "Preview");
@@ -11210,71 +11208,71 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var _r190 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵreference"](12);
+        var _r184 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵreference"](12);
 
-        var ctx_r180 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
+        var ctx_r174 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵstyleProp"]("font-size", ctx_r180.dynSize(), "rem")("width", ctx_r180.amount ? ctx_r180.amount.length + 1 : 3.6, "ch");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵstyleProp"]("font-size", ctx_r174.dynSize(), "rem")("width", ctx_r174.amount ? ctx_r174.amount.length + 1 : 3.6, "ch");
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r180.amount)("disabled", ctx_r180.isMultipleDestinations || ctx_r180.beaconMode && ctx_r180.operationRequest.operationDetails[0].amount);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r174.amount)("disabled", ctx_r174.isMultipleDestinations || ctx_r174.beaconMode && ctx_r174.operationRequest.operationDetails[0].amount);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](5);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !(ctx_r180.isMultipleDestinations || ctx_r180.beaconMode));
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !(ctx_r174.isMultipleDestinations || ctx_r174.beaconMode));
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r180.isMultipleDestinations || ctx_r180.beaconMode);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r174.isMultipleDestinations || ctx_r174.beaconMode);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r180.getTotalBurn())("ngIfElse", _r190);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r174.getTotalBurn())("ngIfElse", _r184);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](3);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" ", ctx_r180.getTotalCost(true), " ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" ", ctx_r174.getTotalCost(true), " ");
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](5);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r180.activeAccount.address);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r174.activeAccount.address);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r180.isMultipleDestinations);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r174.isMultipleDestinations);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r180.beaconMode && ctx_r180.parameters);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r174.beaconMode && ctx_r174.parameters);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r180.torusVerifier);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r174.torusVerifier);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r180.isMultipleDestinations);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r174.isMultipleDestinations);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](6);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r180.advancedForm);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r174.advancedForm);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](3);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r180.advancedForm);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r174.advancedForm);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r180.advancedForm);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r174.advancedForm);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r180.advancedForm);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r174.advancedForm);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r180.formInvalid);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r174.formInvalid);
       }
     }
 
@@ -11300,15 +11298,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r242 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](4);
+        var ctx_r236 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](4);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpropertyInterpolate1"]("src", "../../../assets/img/", ctx_r242.torusVerifier, "-logo.svg", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵsanitizeUrl"]);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpropertyInterpolate1"]("src", "../../../assets/img/", ctx_r236.torusVerifier, "-logo.svg", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵsanitizeUrl"]);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" ", ctx_r242.torusLookupId, "");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" ", ctx_r236.torusLookupId, "");
       }
     }
 
@@ -11322,11 +11320,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r243 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](4);
+        var ctx_r237 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](4);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r243.previewAttention());
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r237.previewAttention());
       }
     }
 
@@ -11350,19 +11348,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r231 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+        var ctx_r225 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r231.torusLookupId);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r225.torusLookupId);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r231.transactions[0].to);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r225.transactions[0].to);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r231.torusLookupId);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r225.torusLookupId);
       }
     }
 
@@ -11400,34 +11398,34 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var transaction_r246 = ctx.$implicit;
+        var transaction_r240 = ctx.$implicit;
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", transaction_r246.storageLimit);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", transaction_r240.storageLimit);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](transaction_r246.to);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](transaction_r240.to);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpipeBind2"](6, 3, transaction_r246.amount, "1.0-6"));
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpipeBind2"](6, 3, transaction_r240.amount, "1.0-6"));
       }
     }
 
     function SendComponent_div_1_div_9_ng_container_14_button_13_Template(rf, ctx) {
       if (rf & 1) {
-        var _r249 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r243 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "button", 75);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function SendComponent_div_1_div_9_ng_container_14_button_13_Template_button_click_0_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r249);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r243);
 
-          var ctx_r248 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](4);
+          var ctx_r242 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](4);
 
-          return ctx_r248.toggleTransactions();
+          return ctx_r242.toggleTransactions();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](1, "span", 76);
@@ -11440,11 +11438,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r245 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](4);
+        var ctx_r239 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](4);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" ", ctx_r245.showBtn, " ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" ", ctx_r239.showBtn, " ");
       }
     }
 
@@ -11496,7 +11494,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r232 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+        var ctx_r226 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](6);
 
@@ -11508,11 +11506,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](3);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngForOf", ctx_r232.showTransactions);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngForOf", ctx_r226.showTransactions);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r232.transactions.length > 2);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r226.transactions.length > 2);
       }
     }
 
@@ -11558,19 +11556,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r233 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+        var ctx_r227 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](5);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpropertyInterpolate1"]("src", "../../../assets/img/", ctx_r233.walletService.wallet.verifier, "-logo.svg", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵsanitizeUrl"]);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpropertyInterpolate1"]("src", "../../../assets/img/", ctx_r227.walletService.wallet.verifier, "-logo.svg", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵsanitizeUrl"]);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" ", ctx_r233.walletService.wallet.displayName(), " ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" ", ctx_r227.walletService.wallet.displayName(), " ");
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](5);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r233.activeAccount.address);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r227.activeAccount.address);
       }
     }
 
@@ -11598,11 +11596,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r234 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+        var ctx_r228 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](5);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r234.activeAccount.address);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r228.activeAccount.address);
       }
     }
 
@@ -11628,11 +11626,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r235 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+        var ctx_r229 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](4);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"]("", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpipeBind2"](5, 1, ctx_r235.getTotalBurn(), "1.0-6"), " tez");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"]("", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpipeBind2"](5, 1, ctx_r229.getTotalBurn(), "1.0-6"), " tez");
       }
     }
 
@@ -11646,11 +11644,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r250 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](4);
+        var ctx_r244 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](4);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" Entrypoint \u2014 ", ctx_r250.parameters.entrypoint, " ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" Entrypoint \u2014 ", ctx_r244.parameters.entrypoint, " ");
       }
     }
 
@@ -11664,17 +11662,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r251 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](4);
+        var ctx_r245 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](4);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r251.parametersTextboxDisplay());
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r245.parametersTextboxDisplay());
       }
     }
 
     function SendComponent_div_1_div_9_ng_container_25_Template(rf, ctx) {
       if (rf & 1) {
-        var _r253 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r247 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementContainerStart"](0);
 
@@ -11687,11 +11685,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](4, "li", 80);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function SendComponent_div_1_div_9_ng_container_25_Template_li_click_4_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r253);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r247);
 
-          var ctx_r252 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r246 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r252.setParametersFormat(0);
+          return ctx_r246.setParametersFormat(0);
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](5, "Micheline");
@@ -11701,11 +11699,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](6, "li", 80);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function SendComponent_div_1_div_9_ng_container_25_Template_li_click_6_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r253);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r247);
 
-          var ctx_r254 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r248 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r254.setParametersFormat(1);
+          return ctx_r248.setParametersFormat(1);
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](7, "JSON");
@@ -11722,74 +11720,74 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r236 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+        var ctx_r230 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r236.parameters == null ? null : ctx_r236.parameters.entrypoint);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r230.parameters == null ? null : ctx_r230.parameters.entrypoint);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](3);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵclassProp"]("active", ctx_r236.parametersFormat === 0);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵclassProp"]("active", ctx_r230.parametersFormat === 0);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵclassProp"]("active", ctx_r236.parametersFormat === 1);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵclassProp"]("active", ctx_r230.parametersFormat === 1);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r236.parameters);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r230.parameters);
       }
     }
 
     function SendComponent_div_1_div_9_input_28_Template(rf, ctx) {
       if (rf & 1) {
-        var _r256 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r250 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "input", 84);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("ngModelChange", function SendComponent_div_1_div_9_input_28_Template_input_ngModelChange_0_listener($event) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r256);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r250);
 
-          var ctx_r255 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r249 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r255.password = $event;
+          return ctx_r249.password = $event;
         })("input", function SendComponent_div_1_div_9_input_28_Template_input_input_0_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r256);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r250);
 
-          var ctx_r257 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r251 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r257.pwdValid = "";
+          return ctx_r251.pwdValid = "";
         })("change", function SendComponent_div_1_div_9_input_28_Template_input_change_0_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r256);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r250);
 
-          var ctx_r258 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r252 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r258.pwdValid = "";
+          return ctx_r252.pwdValid = "";
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
       }
 
       if (rf & 2) {
-        var ctx_r237 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+        var ctx_r231 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r237.password);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r231.password);
       }
     }
 
     function SendComponent_div_1_div_9_button_29_Template(rf, ctx) {
       if (rf & 1) {
-        var _r260 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r254 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "button", 85);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function SendComponent_div_1_div_9_button_29_Template_button_click_0_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r260);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r254);
 
-          var ctx_r259 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r253 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r259.ledgerRetry();
+          return ctx_r253.ledgerRetry();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](1, "Sign with Ledger");
@@ -11800,16 +11798,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     function SendComponent_div_1_div_9_ng_template_30_Template(rf, ctx) {
       if (rf & 1) {
-        var _r262 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r256 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "button", 86);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function SendComponent_div_1_div_9_ng_template_30_Template_button_click_0_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r262);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r256);
 
-          var ctx_r261 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+          var ctx_r255 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-          return ctx_r261.inject();
+          return ctx_r255.inject();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](1);
@@ -11818,13 +11816,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r240 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+        var ctx_r234 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("disabled", ctx_r240.walletService.isLedgerWallet() && (!ctx_r240.sendResponse || !ctx_r240.sendResponse.payload || !ctx_r240.sendResponse.payload.signedOperation));
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("disabled", ctx_r234.walletService.isLedgerWallet() && (!ctx_r234.sendResponse || !ctx_r234.sendResponse.payload || !ctx_r234.sendResponse.payload.signedOperation));
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" ", ctx_r240.walletService.isLedgerWallet() ? "Broadcast" : "Confirm", "");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" ", ctx_r234.walletService.isLedgerWallet() ? "Broadcast" : "Confirm", "");
       }
     }
 
@@ -11838,11 +11836,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r241 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
+        var ctx_r235 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r241.pwdValid);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r235.pwdValid);
       }
     }
 
@@ -11934,67 +11932,67 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var _r239 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵreference"](31);
+        var _r233 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵreference"](31);
 
-        var ctx_r181 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](6);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"]("", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpipeBind2"](7, 14, ctx_r181.totalAmount(), "1.0-6"), " tez");
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](3);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"]("", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpipeBind2"](10, 17, ctx_r181.totalAmount() * ctx_r181.walletService.wallet.XTZrate, "1.0-2"), " USD");
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r181.isMultipleDestinations);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r181.isMultipleDestinations);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r181.isMultipleDestinations);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r181.walletService.wallet.verifier);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r181.walletService.wallet.name);
+        var ctx_r175 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](6);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"]("", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpipeBind2"](23, 20, ctx_r181.getTotalFee(), "1.0-6"), " tez");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"]("", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpipeBind2"](7, 14, ctx_r175.totalAmount(), "1.0-6"), " tez");
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](3);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"]("", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpipeBind2"](10, 17, ctx_r175.totalAmount() * ctx_r175.walletService.wallet.XTZrate, "1.0-2"), " USD");
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r181.getTotalBurn());
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r175.isMultipleDestinations);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r175.isMultipleDestinations);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r181.parameters);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](3);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r181.walletService.isLedgerWallet() && !ctx_r181.walletService.isTorusWallet());
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r175.isMultipleDestinations);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r181.walletService.isLedgerWallet() && ctx_r181.ledgerError)("ngIfElse", _r239);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r175.walletService.wallet.verifier);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r175.walletService.wallet.name);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](6);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"]("", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpipeBind2"](23, 20, ctx_r175.getTotalFee(), "1.0-6"), " tez");
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r175.getTotalBurn());
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r175.parameters);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](3);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r181.pwdValid);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r175.walletService.isLedgerWallet() && !ctx_r175.walletService.isTorusWallet());
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r175.walletService.isLedgerWallet() && ctx_r175.ledgerError)("ngIfElse", _r233);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](3);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r175.pwdValid);
       }
     }
 
     function SendComponent_div_1_Template(rf, ctx) {
       if (rf & 1) {
-        var _r264 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+        var _r258 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "div", 3);
 
@@ -12003,11 +12001,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](2, "div", 5);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function SendComponent_div_1_Template_div_click_2_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r264);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r258);
 
-          var ctx_r263 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
+          var ctx_r257 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
 
-          return ctx_r263.closeModalAction();
+          return ctx_r257.closeModalAction();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelement"](3, "img", 6);
@@ -12034,29 +12032,29 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r174 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
+        var ctx_r168 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵclassProp"]("top", ctx_r174.beaconMode);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵclassProp"]("top", ctx_r168.beaconMode);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](5);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r174.activeView === 0);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r168.activeView === 0);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r174.activeView === 1);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r168.activeView === 1);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r174.activeView === 0 && !(ctx_r174.walletService.isLedgerWallet() || ctx_r174.beaconMode));
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r168.activeView === 0 && !(ctx_r168.walletService.isLedgerWallet() || ctx_r168.beaconMode));
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r174.activeView === 0);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r168.activeView === 0);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r174.activeView === 1);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r168.activeView === 1);
       }
     }
 
@@ -13603,9 +13601,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /*! @angular/common */
     "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
 
-    function SettingsComponent_table_30_tr_11_Template(rf, ctx) {
+    function SettingsComponent_table_18_tr_11_Template(rf, ctx) {
       if (rf & 1) {
-        var _r162 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
+        var _r156 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "tr");
 
@@ -13621,28 +13619,28 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](5, "td", 4);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](5, "td", 5);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function SettingsComponent_table_30_tr_11_Template_td_click_5_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r162);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function SettingsComponent_table_18_tr_11_Template_td_click_5_listener() {
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r156);
 
-          var i_r160 = ctx.index;
+          var i_r154 = ctx.index;
 
-          var ctx_r161 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2);
+          var ctx_r155 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2);
 
-          return ctx_r161.beaconService.removePeer(i_r160);
+          return ctx_r155.beaconService.removePeer(i_r154);
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](6, "img", 7);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function SettingsComponent_table_30_tr_11_Template_img_click_6_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r162);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function SettingsComponent_table_18_tr_11_Template_img_click_6_listener() {
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r156);
 
-          var i_r160 = ctx.index;
+          var i_r154 = ctx.index;
 
-          var ctx_r163 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2);
+          var ctx_r157 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2);
 
-          return ctx_r163.beaconService.removePeer(i_r160);
+          return ctx_r157.beaconService.removePeer(i_r154);
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
@@ -13653,21 +13651,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var peer_r159 = ctx.$implicit;
+        var peer_r153 = ctx.$implicit;
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](peer_r159.name);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](peer_r153.name);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](peer_r159.relayServer);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](peer_r153.relayServer);
       }
     }
 
-    function SettingsComponent_table_30_Template(rf, ctx) {
+    function SettingsComponent_table_18_Template(rf, ctx) {
       if (rf & 1) {
-        var _r165 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
+        var _r159 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "table");
 
@@ -13689,14 +13687,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](7, "th");
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](8, "span", 4);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](8, "span", 5);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function SettingsComponent_table_30_Template_span_click_8_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r165);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function SettingsComponent_table_18_Template_span_click_8_listener() {
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r159);
 
-          var ctx_r164 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+          var ctx_r158 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
-          return ctx_r164.beaconService.removePeers();
+          return ctx_r158.beaconService.removePeers();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](9, "Remove\xA0all");
@@ -13711,7 +13709,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](10, "tbody");
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](11, SettingsComponent_table_30_tr_11_Template, 7, 2, "tr", 6);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](11, SettingsComponent_table_18_tr_11_Template, 7, 2, "tr", 6);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
@@ -13719,17 +13717,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r156 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+        var ctx_r150 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](11);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx_r156.beaconService.peers);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx_r150.beaconService.peers);
       }
     }
 
-    function SettingsComponent_table_33_tr_11_Template(rf, ctx) {
+    function SettingsComponent_table_21_tr_11_Template(rf, ctx) {
       if (rf & 1) {
-        var _r170 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
+        var _r164 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "tr");
 
@@ -13749,14 +13747,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](6, "img", 7);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function SettingsComponent_table_33_tr_11_Template_img_click_6_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r170);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function SettingsComponent_table_21_tr_11_Template_img_click_6_listener() {
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r164);
 
-          var i_r168 = ctx.index;
+          var i_r162 = ctx.index;
 
-          var ctx_r169 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2);
+          var ctx_r163 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2);
 
-          return ctx_r169.beaconService.removePermission(i_r168);
+          return ctx_r163.beaconService.removePermission(i_r162);
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
@@ -13767,25 +13765,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var permission_r167 = ctx.$implicit;
+        var permission_r161 = ctx.$implicit;
 
-        var ctx_r166 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2);
+        var ctx_r160 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassProp"]("inactive", !ctx_r166.accountAvailable(permission_r167.address));
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](permission_r167.appMetadata.name);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassProp"]("inactive", !ctx_r160.accountAvailable(permission_r161.address));
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx_r166.formatAddress(permission_r167.address));
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](permission_r161.appMetadata.name);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx_r160.formatAddress(permission_r161.address));
       }
     }
 
-    function SettingsComponent_table_33_Template(rf, ctx) {
+    function SettingsComponent_table_21_Template(rf, ctx) {
       if (rf & 1) {
-        var _r172 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
+        var _r166 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "table");
 
@@ -13807,14 +13805,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](7, "th");
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](8, "span", 4);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](8, "span", 5);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function SettingsComponent_table_33_Template_span_click_8_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r172);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function SettingsComponent_table_21_Template_span_click_8_listener() {
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r166);
 
-          var ctx_r171 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+          var ctx_r165 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
-          return ctx_r171.beaconService.removePermissions();
+          return ctx_r165.beaconService.removePermissions();
         });
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](9, "Remove\xA0all");
@@ -13829,7 +13827,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](10, "tbody");
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](11, SettingsComponent_table_33_tr_11_Template, 7, 4, "tr", 8);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](11, SettingsComponent_table_21_tr_11_Template, 7, 4, "tr", 8);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
@@ -13837,11 +13835,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r157 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+        var ctx_r151 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](11);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx_r157.beaconService.permissions);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx_r151.beaconService.permissions);
       }
     }
 
@@ -13919,9 +13917,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           }, false, _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵresolveWindow"]);
         }
       },
-      decls: 34,
+      decls: 22,
       vars: 3,
-      consts: [[3, "settings"], [1, "settings"], [1, "seperator"], [1, "handler"], [3, "click"], [4, "ngIf"], [4, "ngFor", "ngForOf"], ["src", "../../../assets/img/cross.svg", 3, "click"], [3, "inactive", 4, "ngFor", "ngForOf"]],
+      consts: [[3, "settings"], [1, "settings"], [1, "seperator"], [1, "handler"], [4, "ngIf"], [3, "click"], [4, "ngFor", "ngForOf"], ["src", "../../../assets/img/cross.svg", 3, "click"], [3, "inactive", 4, "ngFor", "ngForOf"]],
       template: function SettingsComponent_Template(rf, ctx) {
         if (rf & 1) {
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](0, "app-header", 0);
@@ -13942,21 +13940,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](7, "h4");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](8, "Register Kukai as URI handler");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](8, "Scan a QR code");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](9, "p");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](10, "For Kukai to connect with dApps on the ");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](10, "Connect to dApps on ");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](11, "u");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](12, "same device");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](12, "another device");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](13, " it need to be registered as default TZIP-10 URI handler.");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](13, " by scanning a QR code.");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
@@ -13964,69 +13962,27 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](14, "div");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](15, "button", 4);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function SettingsComponent_Template_button_click_15_listener() {
-            return ctx.registerURIhandler();
-          });
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](16, "Register handler");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](15, "app-qr-scanner");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](16, "H3");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](17, "div", 3);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](18, "div");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](19, "h4");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](20, "Scan a QR code");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](17, "Peers");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](21, "p");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](18, SettingsComponent_table_18_Template, 12, 1, "table", 4);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](22, "Connect to dApps on ");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](19, "H3");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](23, "u");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](24, "another device");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](20, "Permissions to request operations");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](25, " by scanning a QR code.");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](26, "div");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](27, "app-qr-scanner");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](28, "H3");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](29, "Peers");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](30, SettingsComponent_table_30_Template, 12, 1, "table", 5);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](31, "H3");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](32, "Permissions to request operations");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](33, SettingsComponent_table_33_Template, 12, 1, "table", 5);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](21, SettingsComponent_table_21_Template, 12, 1, "table", 4);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         }
@@ -14034,7 +13990,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (rf & 2) {
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("settings", true);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](30);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](18);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx.beaconService.peers.length);
 
@@ -14157,11 +14113,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ctx_r340 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+        var ctx_r334 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](13);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx_r340.messageService.spinnerText);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx_r334.messageService.spinnerText);
       }
     }
 
@@ -14271,14 +14227,35 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     var _services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
     /*! ../../services/wallet/wallet.service */
     "./src/app/services/wallet/wallet.service.ts");
+    /* harmony import */
+
+
+    var _services_deeplink_deeplink_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+    /*! ../../services/deeplink/deeplink.service */
+    "./src/app/services/deeplink/deeplink.service.ts");
+    /* harmony import */
+
+
+    var rxjs_add_operator_filter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+    /*! rxjs/add/operator/filter */
+    "./node_modules/rxjs-compat/_esm2015/add/operator/filter.js");
+    /* harmony import */
+
+
+    var _angular_common__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
+    /*! @angular/common */
+    "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
 
     var StartComponent = /*#__PURE__*/function () {
-      function StartComponent(walletService, translate, router) {
+      function StartComponent(walletService, translate, router, route, deeplinkService, location) {
         _classCallCheck(this, StartComponent);
 
         this.walletService = walletService;
         this.translate = translate;
         this.router = router;
+        this.route = route;
+        this.deeplinkService = deeplinkService;
+        this.location = location;
         this.animationActive = true;
       }
 
@@ -14286,15 +14263,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "ngOnInit",
         value: function ngOnInit() {
           return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee31() {
+            var _this23 = this;
+
             return regeneratorRuntime.wrap(function _callee31$(_context31) {
               while (1) {
                 switch (_context31.prev = _context31.next) {
                   case 0:
+                    this.route.queryParams.filter(function (params) {
+                      return params.type;
+                    }).subscribe(function (params) {
+                      _this23.deeplinkService.set(params);
+
+                      _this23.location.replaceState('');
+                    });
+
                     if (this.walletService.wallet) {
                       this.router.navigate(['/accounts']);
                     }
 
-                  case 1:
+                  case 2:
                   case "end":
                     return _context31.stop();
                 }
@@ -14308,7 +14295,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }();
 
     StartComponent.ɵfac = function StartComponent_Factory(t) {
-      return new (t || StartComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_4__["WalletService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_ngx_translate_core__WEBPACK_IMPORTED_MODULE_3__["TranslateService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]));
+      return new (t || StartComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_4__["WalletService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_ngx_translate_core__WEBPACK_IMPORTED_MODULE_3__["TranslateService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_deeplink_deeplink_service__WEBPACK_IMPORTED_MODULE_5__["DeeplinkService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_angular_common__WEBPACK_IMPORTED_MODULE_7__["Location"]));
     };
 
     StartComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({
@@ -14578,6 +14565,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           type: _ngx_translate_core__WEBPACK_IMPORTED_MODULE_3__["TranslateService"]
         }, {
           type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]
+        }, {
+          type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"]
+        }, {
+          type: _services_deeplink_deeplink_service__WEBPACK_IMPORTED_MODULE_5__["DeeplinkService"]
+        }, {
+          type: _angular_common__WEBPACK_IMPORTED_MODULE_7__["Location"]
         }];
       }, null);
     })();
@@ -14752,7 +14745,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "torusLogin",
         value: function torusLogin(verifier) {
           return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee33() {
-            var _this23 = this;
+            var _this24 = this;
 
             var _yield$this$torusServ2, keyPair, userInfo;
 
@@ -14766,7 +14759,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                   case 2:
                     _context33.next = 4;
                     return this.torusService.loginTorus(verifier)["catch"](function (e) {
-                      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this23, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee32() {
+                      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this24, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee32() {
                         return regeneratorRuntime.wrap(function _callee32$(_context32) {
                           while (1) {
                             switch (_context32.prev = _context32.next) {
@@ -14806,19 +14799,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                       if (success) {
                         console.log('success');
 
-                        if (_this23.walletService.wallet.implicitAccounts.length === 1 && _this23.walletService.wallet.implicitAccounts[0].originatedAccounts.length === 0) {
+                        if (_this24.walletService.wallet.implicitAccounts.length === 1 && _this24.walletService.wallet.implicitAccounts[0].originatedAccounts.length === 0) {
                           console.log('single address');
 
-                          _this23.router.navigate(["/account/".concat(_this23.walletService.wallet.implicitAccounts[0].address)]);
+                          _this24.router.navigate(["/account/".concat(_this24.walletService.wallet.implicitAccounts[0].address)]);
                         } else {
-                          _this23.router.navigate(['/accounts']);
+                          _this24.router.navigate(['/accounts']);
                         }
 
-                        _this23.messageService.stopSpinner();
+                        _this24.messageService.stopSpinner();
                       } else {
-                        _this23.messageService.addError('Torus import failed');
+                        _this24.messageService.addError('Torus import failed');
 
-                        _this23.messageService.stopSpinner();
+                        _this24.messageService.stopSpinner();
                       }
                     });
 
@@ -15044,19 +15037,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /* harmony import */
 
 
-    var bs58check__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
-    /*! bs58check */
-    "./node_modules/bs58check/index.js");
-    /* harmony import */
-
-
-    var bs58check__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(bs58check__WEBPACK_IMPORTED_MODULE_8__);
-    /* harmony import */
-
-
-    var _services_beacon_beacon_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(
+    var _services_beacon_beacon_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
     /*! ../../services/beacon/beacon.service */
     "./src/app/services/beacon/beacon.service.ts");
+    /* harmony import */
+
+
+    var _services_deeplink_deeplink_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(
+    /*! ../../services/deeplink/deeplink.service */
+    "./src/app/services/deeplink/deeplink.service.ts");
     /* harmony import */
 
 
@@ -15075,98 +15064,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     var _permission_request_permission_request_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(
     /*! ../permission-request/permission-request.component */
     "./src/app/components/permission-request/permission-request.component.ts");
-    /* harmony import */
-
-
-    var _angular_forms__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(
-    /*! @angular/forms */
-    "./node_modules/@angular/forms/__ivy_ngcc__/fesm2015/forms.js");
-
-    function UriHandlerComponent_div_4_Template(rf, ctx) {
-      if (rf & 1) {
-        var _r152 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "div");
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](1, "button", 3);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function UriHandlerComponent_div_4_Template_button_click_1_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r152);
-
-          var ctx_r151 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
-
-          return ctx_r151.registerURIhandler();
-        });
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](2, "Register");
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](3, "a", 4);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](4, "button");
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](5, "Test");
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](6, "button", 3);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function UriHandlerComponent_div_4_Template_button_click_6_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r152);
-
-          var ctx_r153 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
-
-          return ctx_r153.removePeers();
-        });
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](7, "Remove peers");
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](8, "input", 5);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("ngModelChange", function UriHandlerComponent_div_4_Template_input_ngModelChange_8_listener($event) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r152);
-
-          var ctx_r154 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
-
-          return ctx_r154.pkDapp = $event;
-        });
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](9, "button", 3);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function UriHandlerComponent_div_4_Template_button_click_9_listener() {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r152);
-
-          var ctx_r155 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
-
-          return ctx_r155.addPeer();
-        });
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](10, "Submit");
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
-      }
-
-      if (rf & 2) {
-        var ctx_r150 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](8);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r150.pkDapp);
-      }
-    }
 
     var UriHandlerComponent = /*#__PURE__*/function () {
-      function UriHandlerComponent(route, messageService, walletService, location, beaconService) {
-        var _this24 = this;
+      function UriHandlerComponent(route, messageService, walletService, location, beaconService, deeplinkService) {
+        var _this25 = this;
 
         _classCallCheck(this, UriHandlerComponent);
 
@@ -15175,14 +15076,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         this.walletService = walletService;
         this.location = location;
         this.beaconService = beaconService;
+        this.deeplinkService = deeplinkService;
         this.CONSTANTS = new _constants__WEBPACK_IMPORTED_MODULE_6__["Constants"]();
         this.permissionRequest = null;
         this.operationRequest = null;
         /* https://docs.walletbeacon.io/beacon/03.getting-started-wallet.html#setup */
 
         this.connectApp = function () {
-          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this24, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee35() {
-            var _this25 = this;
+          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this25, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee35() {
+            var _this26 = this;
 
             return regeneratorRuntime.wrap(function _callee35$(_context35) {
               while (1) {
@@ -15200,14 +15102,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                   case 3:
                     // Establish P2P connection
                     this.beaconService.client.connect(function (message) {
-                      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this25, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee34() {
+                      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this26, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee34() {
                         return regeneratorRuntime.wrap(function _callee34$(_context34) {
                           while (1) {
                             switch (_context34.prev = _context34.next) {
                               case 0:
-                                console.log('### beacon message', message); // Let's assume it's a permission request, but we obviously need to handle all request types
+                                console.log('### beacon message', message);
 
-                                if (!(message.network.type !== this.CONSTANTS.NET.NETWORK && false)) {
+                                if (!(message.network.type !== this.CONSTANTS.NET.NETWORK)) {
                                   _context34.next = 7;
                                   break;
                                 }
@@ -15315,71 +15217,36 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "init",
         value: function init() {
           return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee36() {
-            var path, uri, rest, base58encoded, base58decoded;
+            var pairingString;
             return regeneratorRuntime.wrap(function _callee36$(_context36) {
               while (1) {
                 switch (_context36.prev = _context36.next) {
                   case 0:
-                    _context36.next = 2;
+                    pairingString = this.deeplinkService.popPairingJson();
+
+                    if (pairingString) {
+                      console.log(pairingString);
+                      this.beaconService.preNotifyPairing(pairingString);
+                    }
+
+                    _context36.next = 4;
                     return this.connectApp()["catch"](function (error) {
                       return console.error('connect error', error);
                     });
 
-                  case 2:
-                    path = this.location.path();
-                    console.log(path);
-                    console.log(window.location.origin);
-
-                    if (!(path && path.length > 10 && path.slice(0, 10) === '/accounts/')) {
-                      _context36.next = 29;
+                  case 4:
+                    if (!pairingString) {
+                      _context36.next = 8;
                       break;
                     }
 
-                    uri = path.slice(10);
-                    uri = decodeURI(uri).replace(/%2F|%3F/g, '');
-                    console.log(uri.slice(0, 12));
-
-                    if (!(uri.length > 12 && uri.slice(0, 12) === 'web%2Btezos:')) {
-                      _context36.next = 28;
-                      break;
-                    }
-
-                    // Correct prefix
-                    rest = uri.slice(12).split(/\&|%3D/g);
-                    console.log(rest);
-
-                    if (!(rest.length === 4 && rest[0] + rest[1] + rest[2] === 'typetzip10data')) {
-                      _context36.next = 25;
-                      break;
-                    }
-
-                    // Tzip-10
-                    console.log(rest[3]);
-                    base58encoded = rest[3];
-                    base58decoded = bs58check__WEBPACK_IMPORTED_MODULE_8__["decode"](base58encoded);
-                    console.log(base58decoded.toString());
-                    console.log('Connected?');
-                    _context36.next = 20;
+                    _context36.next = 7;
                     return this.beaconService.client.isConnected;
 
-                  case 20:
-                    console.log('Connected!!!');
-                    this.beaconService.addPeer(base58decoded.toString());
-                    this.location.replaceState('/accounts');
-                    _context36.next = 26;
-                    break;
+                  case 7:
+                    this.beaconService.addPeer(pairingString);
 
-                  case 25:
-                    console.warn('Unsupported URI format');
-
-                  case 26:
-                    _context36.next = 29;
-                    break;
-
-                  case 28:
-                    console.log("".concat(uri));
-
-                  case 29:
+                  case 8:
                   case "end":
                     return _context36.stop();
                 }
@@ -15574,15 +15441,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }();
 
     UriHandlerComponent.ɵfac = function UriHandlerComponent_Factory(t) {
-      return new (t || UriHandlerComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_message_message_service__WEBPACK_IMPORTED_MODULE_3__["MessageService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_5__["WalletService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_angular_common__WEBPACK_IMPORTED_MODULE_7__["Location"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_beacon_beacon_service__WEBPACK_IMPORTED_MODULE_9__["BeaconService"]));
+      return new (t || UriHandlerComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_message_message_service__WEBPACK_IMPORTED_MODULE_3__["MessageService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_5__["WalletService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_angular_common__WEBPACK_IMPORTED_MODULE_7__["Location"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_beacon_beacon_service__WEBPACK_IMPORTED_MODULE_8__["BeaconService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_deeplink_deeplink_service__WEBPACK_IMPORTED_MODULE_9__["DeeplinkService"]));
     };
 
     UriHandlerComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({
       type: UriHandlerComponent,
       selectors: [["app-uri-handler"]],
-      decls: 5,
-      vars: 8,
-      consts: [[3, "beaconMode", "operationRequest", "activeAccount", "operationResponse"], [3, "permissionRequest", "permissionResponse"], [4, "ngIf"], [3, "click"], ["href", "web+tezos://?type=tzip10&data=test"], ["type", "text", "placeholder", "Public Key", 3, "ngModel", "ngModelChange"]],
+      decls: 4,
+      vars: 7,
+      consts: [[3, "beaconMode", "operationRequest", "activeAccount", "operationResponse"], [3, "permissionRequest", "permissionResponse"]],
       template: function UriHandlerComponent_Template(rf, ctx) {
         if (rf & 1) {
           _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "div");
@@ -15611,8 +15478,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
           _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtemplate"](4, UriHandlerComponent_div_4_Template, 11, 1, "div", 2);
-
           _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
         }
 
@@ -15628,13 +15493,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("permissionRequest", ctx.permissionRequest);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", false);
         }
       },
-      directives: [_send_send_component__WEBPACK_IMPORTED_MODULE_10__["SendComponent"], _delegate_delegate_component__WEBPACK_IMPORTED_MODULE_11__["DelegateComponent"], _permission_request_permission_request_component__WEBPACK_IMPORTED_MODULE_12__["PermissionRequestComponent"], _angular_common__WEBPACK_IMPORTED_MODULE_7__["NgIf"], _angular_forms__WEBPACK_IMPORTED_MODULE_13__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_13__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_13__["NgModel"]],
+      directives: [_send_send_component__WEBPACK_IMPORTED_MODULE_10__["SendComponent"], _delegate_delegate_component__WEBPACK_IMPORTED_MODULE_11__["DelegateComponent"], _permission_request_permission_request_component__WEBPACK_IMPORTED_MODULE_12__["PermissionRequestComponent"]],
       styles: [".dfssfd-host[_ngcontent-%COMP%] {\n  min-height: 100vh;\n  width: 100%;\n  padding-bottom: 8rem;\n  display: flex;\n  justify-content: flex-start;\n  flex-direction: column;\n  background: #5963FF;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY29tcG9uZW50cy91cmktaGFuZGxlci9DOlxcVXNlcnNcXGtsYXNfXFxHaXRcXGt1a2FpL3NyY1xcYXBwXFxjb21wb25lbnRzXFx1cmktaGFuZGxlclxcdXJpLWhhbmRsZXIuY29tcG9uZW50LnNjc3MiLCJzcmMvYXBwL2NvbXBvbmVudHMvdXJpLWhhbmRsZXIvdXJpLWhhbmRsZXIuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxpQkFBQTtFQUNBLFdBQUE7RUFDQSxvQkFBQTtFQUNBLGFBQUE7RUFDQSwyQkFBQTtFQUNBLHNCQUFBO0VBQ0EsbUJBQUE7QUNDRiIsImZpbGUiOiJzcmMvYXBwL2NvbXBvbmVudHMvdXJpLWhhbmRsZXIvdXJpLWhhbmRsZXIuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuZGZzc2ZkLWhvc3Qge1xyXG4gIG1pbi1oZWlnaHQ6IDEwMHZoO1xyXG4gIHdpZHRoOiAxMDAlO1xyXG4gIHBhZGRpbmctYm90dG9tOiA4cmVtO1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAganVzdGlmeS1jb250ZW50OiBmbGV4LXN0YXJ0O1xyXG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XHJcbiAgYmFja2dyb3VuZDogIzU5NjNGRjtcclxufSIsIi5kZnNzZmQtaG9zdCB7XG4gIG1pbi1oZWlnaHQ6IDEwMHZoO1xuICB3aWR0aDogMTAwJTtcbiAgcGFkZGluZy1ib3R0b206IDhyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGp1c3RpZnktY29udGVudDogZmxleC1zdGFydDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgYmFja2dyb3VuZDogIzU5NjNGRjtcbn0iXX0= */"]
     });
     /*@__PURE__*/
@@ -15657,7 +15518,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
           type: _angular_common__WEBPACK_IMPORTED_MODULE_7__["Location"]
         }, {
-          type: _services_beacon_beacon_service__WEBPACK_IMPORTED_MODULE_9__["BeaconService"]
+          type: _services_beacon_beacon_service__WEBPACK_IMPORTED_MODULE_8__["BeaconService"]
+        }, {
+          type: _services_deeplink_deeplink_service__WEBPACK_IMPORTED_MODULE_9__["DeeplinkService"]
         }];
       }, null);
     })();
@@ -17156,11 +17019,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "getTransactonsCounter",
         value: function getTransactonsCounter(account) {
-          var _this26 = this;
+          var _this27 = this;
 
           return this.conseilService.accountInfo(account.address).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (counter) {
             if (account.activitiesCounter !== counter) {
-              return _this26.getAllTransactions(account, counter);
+              return _this27.getAllTransactions(account, counter);
             } else {
               return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])({
                 upToDate: true
@@ -17171,7 +17034,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "getAllTransactions",
         value: function getAllTransactions(account, counter) {
-          var _this27 = this;
+          var _this28 = this;
 
           return this.conseilService.getOperations(account.address).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (ans) {
             if (Array.isArray(ans)) {
@@ -17181,11 +17044,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               account.activitiesCounter = counter;
               console.log(oldActivitiesCounter + ' # ' + counter);
 
-              _this27.walletService.storeWallet();
+              _this28.walletService.storeWallet();
 
               if (oldActivitiesCounter !== -1) {
                 // Exclude inital loading
-                _this27.promptNewActivities(account, oldActivities, ans);
+                _this28.promptNewActivities(account, oldActivities, ans);
               } else {
                 console.log('# Excluded ' + counter);
               }
@@ -17197,9 +17060,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
                   var activity = _step6.value;
 
-                  var counterParty = _this27.getCounterparty(activity, account, false);
+                  var counterParty = _this28.getCounterparty(activity, account, false);
 
-                  _this27.lookupService.check(counterParty);
+                  _this28.lookupService.check(counterParty);
                 }
               } catch (err) {
                 _iterator6.e(err);
@@ -17219,7 +17082,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "promptNewActivities",
         value: function promptNewActivities(account, oldActivities, newActivities) {
-          var _this28 = this;
+          var _this29 = this;
 
           var _iterator7 = _createForOfIteratorHelper(newActivities),
               _step7;
@@ -17234,18 +17097,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               if (index === -1 || index !== -1 && oldActivities[index].status === 0) {
                 if (activity.type === 'transaction') {
                   if (account.address === activity.source) {
-                    _this28.messageService.addSuccess(account.shortAddress() + ': Sent ' + activity.amount / 1000000 + ' tez');
+                    _this29.messageService.addSuccess(account.shortAddress() + ': Sent ' + activity.amount / 1000000 + ' tez');
                   }
 
                   if (account.address === activity.destination) {
-                    _this28.messageService.addSuccess(account.shortAddress() + ': Received ' + activity.amount / 1000000 + ' tez');
+                    _this29.messageService.addSuccess(account.shortAddress() + ': Received ' + activity.amount / 1000000 + ' tez');
                   }
                 } else if (activity.type === 'delegation') {
-                  _this28.messageService.addSuccess(account.shortAddress() + ': Delegate updated');
+                  _this29.messageService.addSuccess(account.shortAddress() + ': Delegate updated');
                 } else if (activity.type === 'origination') {
-                  _this28.messageService.addSuccess(account.shortAddress() + ': Account originated');
+                  _this29.messageService.addSuccess(account.shortAddress() + ': Account originated');
                 } else if (activity.type === 'activation') {
-                  _this28.messageService.addSuccess(account.shortAddress() + ': Account activated');
+                  _this29.messageService.addSuccess(account.shortAddress() + ': Account activated');
                 }
               }
             };
@@ -17415,12 +17278,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "getAccountBalance",
         value: function getAccountBalance(account) {
-          var _this29 = this;
+          var _this30 = this;
 
           console.log('for ' + account.address);
           this.operationService.getBalance(account.address).subscribe(function (ans) {
             if (ans.success) {
-              _this29.updateAccountBalance(account, Number(ans.payload.balance));
+              _this30.updateAccountBalance(account, Number(ans.payload.balance));
             } else {
               console.log('Balance Error: ' + JSON.stringify(ans.payload.msg));
             }
@@ -17576,6 +17439,42 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       _createClass(BeaconService, [{
+        key: "preNotifyPairing",
+        value: function preNotifyPairing(pairInfoJson) {
+          var pairInfo = JSON.parse(pairInfoJson);
+          var peersJson = localStorage.getItem('beacon:communication-peers');
+          var newPublicKey = true;
+
+          if (peersJson) {
+            var peers = JSON.parse(peersJson);
+
+            if (peers && peers.length > 0 && pairInfo.publicKey) {
+              var _iterator10 = _createForOfIteratorHelper(peers),
+                  _step10;
+
+              try {
+                for (_iterator10.s(); !(_step10 = _iterator10.n()).done;) {
+                  var peer = _step10.value;
+
+                  if (peer.publicKey && peer.publicKey === pairInfo.publicKey) {
+                    newPublicKey = false;
+                    console.log('Existing public key found!');
+                    break;
+                  }
+                }
+              } catch (err) {
+                _iterator10.e(err);
+              } finally {
+                _iterator10.f();
+              }
+            }
+          }
+
+          if (newPublicKey) {
+            this.messageService.add("Pairing with ".concat(pairInfo.name, "..."));
+          }
+        }
+      }, {
         key: "addPeer",
         value: function addPeer(pairInfoJson) {
           return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee40() {
@@ -17590,9 +17489,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     return this.client.addPeer(pairInfo);
 
                   case 4:
-                    this.messageService.addSuccess("Pairing with ".concat(pairInfo.name, "..."));
-
-                  case 5:
                   case "end":
                     return _context40.stop();
                 }
@@ -18066,7 +17962,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "getContractAddresses",
         value: function getContractAddresses(pkh) {
           return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee56() {
-            var entity, query, results, addresses, _iterator10, _step10, result;
+            var entity, query, results, addresses, _iterator11, _step11, result;
 
             return regeneratorRuntime.wrap(function _callee56$(_context56) {
               while (1) {
@@ -18086,17 +17982,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                   case 10:
                     results = _context56.sent;
                     addresses = [];
-                    _iterator10 = _createForOfIteratorHelper(results);
+                    _iterator11 = _createForOfIteratorHelper(results);
 
                     try {
-                      for (_iterator10.s(); !(_step10 = _iterator10.n()).done;) {
-                        result = _step10.value;
+                      for (_iterator11.s(); !(_step11 = _iterator11.n()).done;) {
+                        result = _step11.value;
                         addresses.push(result.originated_contracts);
                       }
                     } catch (err) {
-                      _iterator10.e(err);
+                      _iterator11.e(err);
                     } finally {
-                      _iterator10.f();
+                      _iterator11.f();
                     }
 
                     return _context56.abrupt("return", addresses);
@@ -18128,7 +18024,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "getOperations",
         value: function getOperations(pkh) {
-          var _this30 = this;
+          var _this31 = this;
 
           var entity = 'operations';
           var sendQuery = conseiljs__WEBPACK_IMPORTED_MODULE_5__["ConseilQueryBuilder"].blankQuery();
@@ -18146,9 +18042,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           receiveQuery = conseiljs__WEBPACK_IMPORTED_MODULE_5__["ConseilQueryBuilder"].addOrdering(receiveQuery, 'block_level', conseiljs__WEBPACK_IMPORTED_MODULE_5__["ConseilSortDirection"].DESC);
           receiveQuery = conseiljs__WEBPACK_IMPORTED_MODULE_5__["ConseilQueryBuilder"].setLimit(receiveQuery, 10);
           return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["from"])(conseiljs__WEBPACK_IMPORTED_MODULE_5__["ConseilDataClient"].executeEntityQuery(this.conseilServer, this.platform, this.network, entity, sendQuery)).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (sendResult) {
-            sendResult = _this30.formatTx(sendResult);
-            return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["from"])(conseiljs__WEBPACK_IMPORTED_MODULE_5__["ConseilDataClient"].executeEntityQuery(_this30.conseilServer, _this30.platform, _this30.network, entity, receiveQuery)).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (receiveResult) {
-              receiveResult = _this30.formatTx(receiveResult);
+            sendResult = _this31.formatTx(sendResult);
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["from"])(conseiljs__WEBPACK_IMPORTED_MODULE_5__["ConseilDataClient"].executeEntityQuery(_this31.conseilServer, _this31.platform, _this31.network, entity, receiveQuery)).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (receiveResult) {
+              receiveResult = _this31.formatTx(receiveResult);
               var transactions = sendResult.concat(receiveResult).sort(function (a, b) {
                 return b['timestamp'] - a['timestamp'];
               });
@@ -18163,12 +18059,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         value: function formatTx(input) {
           var output = [];
 
-          var _iterator11 = _createForOfIteratorHelper(input),
-              _step11;
+          var _iterator12 = _createForOfIteratorHelper(input),
+              _step12;
 
           try {
-            for (_iterator11.s(); !(_step11 = _iterator11.n()).done;) {
-              var tx = _step11.value;
+            for (_iterator12.s(); !(_step12 = _iterator12.n()).done;) {
+              var tx = _step12.value;
 
               if (tx.kind !== 'transaction' || tx.amount > 0) {
                 var destination = tx.destination;
@@ -18192,9 +18088,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               }
             }
           } catch (err) {
-            _iterator11.e(err);
+            _iterator12.e(err);
           } finally {
-            _iterator11.f();
+            _iterator12.f();
           }
 
           return output;
@@ -18359,13 +18255,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "startXTZ",
         value: function startXTZ() {
-          var _this31 = this;
+          var _this32 = this;
 
           if (!this.tzrateInterval) {
             console.log('Start scheduler XTZ');
             this.tzrateService.getTzrate();
             this.tzrateInterval = setInterval(function () {
-              return _this31.tzrateService.getTzrate();
+              return _this32.tzrateService.getTzrate();
             }, this.defaultDelayPrice);
           }
         }
@@ -18373,7 +18269,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "start",
         value: function start(pkh) {
           return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee57() {
-            var _this32 = this;
+            var _this33 = this;
 
             var scheduleData;
             return regeneratorRuntime.wrap(function _callee57$(_context57) {
@@ -18387,7 +18283,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         pkh: pkh,
                         state: State.UpToDate,
                         interval: setInterval(function () {
-                          return _this32.update(pkh);
+                          return _this33.update(pkh);
                         }, this.defaultDelayActivity),
                         stateCounter: 0
                       };
@@ -18409,7 +18305,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         value: function boost(pkh) {
           var metadata = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
           return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee58() {
-            var _this33 = this;
+            var _this34 = this;
 
             var counter;
             return regeneratorRuntime.wrap(function _callee58$(_context58) {
@@ -18443,10 +18339,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                       counter = this.scheduler.get(pkh).stateCounter;
                       setTimeout(function () {
                         // Failsafe
-                        if (_this33.scheduler && _this33.scheduler.get(pkh).stateCounter === counter) {
+                        if (_this34.scheduler && _this34.scheduler.get(pkh).stateCounter === counter) {
                           console.log('Timeout from wait state');
 
-                          _this33.changeState(pkh, State.UpToDate);
+                          _this34.changeState(pkh, State.UpToDate);
                         }
                       }, 150000);
                     }
@@ -18463,7 +18359,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "update",
         value: function update(pkh) {
           return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee59() {
-            var _this34 = this;
+            var _this35 = this;
 
             return regeneratorRuntime.wrap(function _callee59$(_context59) {
               while (1) {
@@ -18471,11 +18367,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                   case 0:
                     this.setDelay(pkh, this.defaultDelayActivity);
                     this.activityService.updateTransactions(pkh).subscribe(function (ans) {
-                      switch (_this34.scheduler.get(pkh) ? _this34.scheduler.get(pkh).state : -1) {
+                      switch (_this35.scheduler.get(pkh) ? _this35.scheduler.get(pkh).state : -1) {
                         case State.UpToDate:
                           {
                             if (!ans.upToDate) {
-                              _this34.changeState(pkh, State.Updating);
+                              _this35.changeState(pkh, State.Updating);
                             }
 
                             break;
@@ -18484,9 +18380,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         case State.Wait:
                           {
                             if (!ans.upToDate) {
-                              _this34.changeState(pkh, State.Updating);
+                              _this35.changeState(pkh, State.Updating);
                             } else {
-                              _this34.setDelay(pkh, _this34.shortDelayActivity);
+                              _this35.setDelay(pkh, _this35.shortDelayActivity);
                             }
 
                             break;
@@ -18495,9 +18391,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         case State.Updating:
                           {
                             if (ans.upToDate) {
-                              _this34.changeState(pkh, State.UpToDate);
+                              _this35.changeState(pkh, State.UpToDate);
                             } else {
-                              _this34.setDelay(pkh, _this34.shortDelayActivity);
+                              _this35.setDelay(pkh, _this35.shortDelayActivity);
                             }
 
                             break;
@@ -18510,7 +18406,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                           }
                       }
 
-                      var acc = _this34.walletService.wallet.getAccount(pkh);
+                      var acc = _this35.walletService.wallet.getAccount(pkh);
 
                       if (acc && acc.activities.length) {
                         var latestActivity = acc.activities[0];
@@ -18526,9 +18422,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     }, function (err) {
                       return console.log('Error in update(): ' + JSON.stringify(err));
                     }, function () {
-                      console.log("account[".concat(_this34.accounts.findIndex(function (a) {
+                      console.log("account[".concat(_this35.accounts.findIndex(function (a) {
                         return a.address === pkh;
-                      }), "][").concat(typeof _this34.scheduler.get(pkh).state !== 'undefined' ? _this34.scheduler.get(pkh).state : '*', "]: <<"));
+                      }), "][").concat(typeof _this35.scheduler.get(pkh).state !== 'undefined' ? _this35.scheduler.get(pkh).state : '*', "]: <<"));
                     });
 
                   case 2:
@@ -18542,7 +18438,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "changeState",
         value: function changeState(pkh, newState) {
-          var _this35 = this;
+          var _this36 = this;
 
           var scheduleData = this.scheduler.get(pkh);
           scheduleData.state = newState;
@@ -18554,7 +18450,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           if (newState === State.Wait || newState === State.Updating) {
             clearInterval(scheduleData.interval);
             scheduleData.interval = setInterval(function () {
-              return _this35.update(pkh);
+              return _this36.update(pkh);
             }, this.shortDelayActivity);
           }
 
@@ -18564,7 +18460,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "setDelay",
         value: function setDelay(pkh, time) {
-          var _this36 = this;
+          var _this37 = this;
 
           var scheduleData = this.scheduler.get(pkh);
 
@@ -18573,7 +18469,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           }
 
           scheduleData.interval = setInterval(function () {
-            return _this36.update(pkh);
+            return _this37.update(pkh);
           }, time);
           this.scheduler.set(pkh, scheduleData);
         }
@@ -18617,17 +18513,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "updateAccountData",
         value: function updateAccountData(pkh) {
-          var _this37 = this;
+          var _this38 = this;
 
           // Maybe also check for originations to account?
           console.log('update account data for ' + pkh);
           this.operationService.getAccount(pkh).subscribe(function (ans) {
             if (ans.success) {
-              _this37.balanceService.updateAccountBalance(_this37.walletService.wallet.getAccount(pkh), Number(ans.payload.balance));
+              _this38.balanceService.updateAccountBalance(_this38.walletService.wallet.getAccount(pkh), Number(ans.payload.balance));
 
-              var acc = _this37.walletService.wallet.getAccount(pkh);
+              var acc = _this38.walletService.wallet.getAccount(pkh);
 
-              _this37.delegateService.handleDelegateResponse(acc, ans.payload.delegate);
+              _this38.delegateService.handleDelegateResponse(acc, ans.payload.delegate);
             } else {
               console.log('updateAccountData -> getAccount failed ', ans.payload.msg);
             }
@@ -18640,12 +18536,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             console.log('Unconfirmed transactions:');
             console.log(metadata.transactions);
 
-            var _iterator12 = _createForOfIteratorHelper(metadata.transactions),
-                _step12;
+            var _iterator13 = _createForOfIteratorHelper(metadata.transactions),
+                _step13;
 
             try {
-              for (_iterator12.s(); !(_step12 = _iterator12.n()).done;) {
-                var op = _step12.value;
+              for (_iterator13.s(); !(_step13 = _iterator13.n()).done;) {
+                var op = _step13.value;
                 var transaction = {
                   type: 'transaction',
                   status: 0,
@@ -18666,9 +18562,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 }
               }
             } catch (err) {
-              _iterator12.e(err);
+              _iterator13.e(err);
             } finally {
-              _iterator12.f();
+              _iterator13.f();
             }
           } else if (metadata.delegate !== undefined) {
             var delegation = {
@@ -18732,6 +18628,105 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   },
 
   /***/
+  "./src/app/services/deeplink/deeplink.service.ts":
+  /*!*******************************************************!*\
+    !*** ./src/app/services/deeplink/deeplink.service.ts ***!
+    \*******************************************************/
+
+  /*! exports provided: DeeplinkService */
+
+  /***/
+  function srcAppServicesDeeplinkDeeplinkServiceTs(module, __webpack_exports__, __webpack_require__) {
+    "use strict";
+
+    __webpack_require__.r(__webpack_exports__);
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "DeeplinkService", function () {
+      return DeeplinkService;
+    });
+    /* harmony import */
+
+
+    var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+    /*! @angular/core */
+    "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
+    /* harmony import */
+
+
+    var _operation_operation_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+    /*! ../operation/operation.service */
+    "./src/app/services/operation/operation.service.ts");
+
+    var DeeplinkService = /*#__PURE__*/function () {
+      function DeeplinkService(operationService) {
+        _classCallCheck(this, DeeplinkService);
+
+        this.operationService = operationService;
+        this.pairingJson = '';
+      }
+
+      _createClass(DeeplinkService, [{
+        key: "set",
+        value: function set(params) {
+          console.log(params);
+          this.pairingJson = this.extractPairingJson(params);
+          console.log(this.pairingJson);
+        }
+      }, {
+        key: "extractPairingJson",
+        value: function extractPairingJson(params) {
+          if (params.type === 'tzip10' && params.data) {
+            try {
+              return this.operationService.b58cdecode(params.data, '').toString();
+            } catch (e) {
+              return '';
+            }
+          }
+
+          return '';
+        }
+      }, {
+        key: "popPairingJson",
+        value: function popPairingJson() {
+          var pairingJson = this.pairingJson;
+          this.pairingJson = '';
+          return pairingJson;
+        }
+      }]);
+
+      return DeeplinkService;
+    }();
+
+    DeeplinkService.ɵfac = function DeeplinkService_Factory(t) {
+      return new (t || DeeplinkService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_operation_operation_service__WEBPACK_IMPORTED_MODULE_1__["OperationService"]));
+    };
+
+    DeeplinkService.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjectable"]({
+      token: DeeplinkService,
+      factory: DeeplinkService.ɵfac,
+      providedIn: 'root'
+    });
+    /*@__PURE__*/
+
+    (function () {
+      _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](DeeplinkService, [{
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"],
+        args: [{
+          providedIn: 'root'
+        }]
+      }], function () {
+        return [{
+          type: _operation_operation_service__WEBPACK_IMPORTED_MODULE_1__["OperationService"]
+        }];
+      }, null);
+    })();
+    /***/
+
+  },
+
+  /***/
   "./src/app/services/delegate/delegate.service.ts":
   /*!*******************************************************!*\
     !*** ./src/app/services/delegate/delegate.service.ts ***!
@@ -18781,29 +18776,29 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "getDelegates",
         value: function getDelegates() {
           if (this.walletService.wallet && this.walletService.wallet.implicitAccounts) {
-            var _iterator13 = _createForOfIteratorHelper(this.walletService.wallet.getAccounts()),
-                _step13;
+            var _iterator14 = _createForOfIteratorHelper(this.walletService.wallet.getAccounts()),
+                _step14;
 
             try {
-              for (_iterator13.s(); !(_step13 = _iterator13.n()).done;) {
-                var account = _step13.value;
+              for (_iterator14.s(); !(_step14 = _iterator14.n()).done;) {
+                var account = _step14.value;
                 this.getDelegate(account);
               }
             } catch (err) {
-              _iterator13.e(err);
+              _iterator14.e(err);
             } finally {
-              _iterator13.f();
+              _iterator14.f();
             }
           }
         }
       }, {
         key: "getDelegate",
         value: function getDelegate(account) {
-          var _this38 = this;
+          var _this39 = this;
 
           this.operationService.getDelegate(account.address).subscribe(function (data) {
             if (data.success) {
-              _this38.handleDelegateResponse(account, data.payload.delegate);
+              _this39.handleDelegateResponse(account, data.payload.delegate);
             }
           }, function (err) {
             return console.log(JSON.stringify(err));
@@ -19351,7 +19346,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "preLoadData",
         value: function preLoadData(pkh, pk) {
           return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee67() {
-            var _this39 = this;
+            var _this40 = this;
 
             return regeneratorRuntime.wrap(function _callee67$(_context67) {
               while (1) {
@@ -19362,7 +19357,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     _context67.next = 4;
                     return Promise.all([this.operationService.getHeader().toPromise(), this.getCounter(pkh), this.getManager(pkh)]).then(function (req) {
                       if (req[0] && req[1] && req[2] || req[2] === null) {
-                        _this39.init(req[0].hash, req[0].chain_id, req[1], req[2], pk, pkh);
+                        _this40.init(req[0].hash, req[0].chain_id, req[1], req[2], pk, pkh);
                       }
                     });
 
@@ -19381,7 +19376,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "estimate",
         value: function estimate(transactions, from, callback) {
           return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee69() {
-            var _this40 = this;
+            var _this41 = this;
 
             var _loop2;
 
@@ -19406,10 +19401,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         while (1) {
                           switch (_context69.prev = _context69.next) {
                             case 0:
-                              while (_this40.queue.length > 1) {
-                                _this40.queue[0].callback(null);
+                              while (_this41.queue.length > 1) {
+                                _this41.queue[0].callback(null);
 
-                                _this40.queue.shift();
+                                _this41.queue.shift();
                               }
 
                               retry = false;
@@ -19422,10 +19417,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                               }
 
                               _context69.next = 6;
-                              return _this40._estimate(_this40.queue[0].transactions, _this40.queue[0].from).then(function (res) {
-                                _this40.queue[0].callback(res);
+                              return _this41._estimate(_this41.queue[0].transactions, _this41.queue[0].from).then(function (res) {
+                                _this41.queue[0].callback(res);
                               })["catch"](function (error) {
-                                return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this40, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee68() {
+                                return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this41, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee68() {
                                   return regeneratorRuntime.wrap(function _callee68$(_context68) {
                                     while (1) {
                                       switch (_context68.prev = _context68.next) {
@@ -19464,7 +19459,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                               break;
 
                             case 9:
-                              _this40.queue.shift();
+                              _this41.queue.shift();
 
                             case 10:
                             case "end":
@@ -19498,9 +19493,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "_estimate",
         value: function _estimate(transactions, from) {
           return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee70() {
-            var _this41 = this;
+            var _this42 = this;
 
-            var extraGas, simulation, _iterator14, _step14, tx, op, result, reveal, limits, _iterator15, _step15, content, _this$getOpUsage, gasUsage, storageUsage;
+            var extraGas, simulation, _iterator15, _step15, tx, op, result, reveal, limits, _iterator16, _step16, content, _this$getOpUsage, gasUsage, storageUsage;
 
             return regeneratorRuntime.wrap(function _callee70$(_context71) {
               while (1) {
@@ -19521,11 +19516,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                       gasLimit: hardGasLimit,
                       storageLimit: hardStorageLimit
                     };
-                    _iterator14 = _createForOfIteratorHelper(transactions);
+                    _iterator15 = _createForOfIteratorHelper(transactions);
 
                     try {
-                      for (_iterator14.s(); !(_step14 = _iterator14.n()).done;) {
-                        tx = _step14.value;
+                      for (_iterator15.s(); !(_step15 = _iterator15.n()).done;) {
+                        tx = _step15.value;
 
                         if (!tx.amount) {
                           tx.amount = 0;
@@ -19539,9 +19534,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         tx.storageLimit = simulation.storageLimit;
                       }
                     } catch (err) {
-                      _iterator14.e(err);
+                      _iterator15.e(err);
                     } finally {
-                      _iterator14.f();
+                      _iterator15.f();
                     }
 
                     if (!(this.hash && this.counter && (this.manager || this.manager === null))) {
@@ -19566,18 +19561,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                     reveal = false;
                     limits = [];
-                    _iterator15 = _createForOfIteratorHelper(result.contents);
+                    _iterator16 = _createForOfIteratorHelper(result.contents);
                     _context71.prev = 15;
 
-                    _iterator15.s();
+                    _iterator16.s();
 
                   case 17:
-                    if ((_step15 = _iterator15.n()).done) {
+                    if ((_step16 = _iterator16.n()).done) {
                       _context71.next = 31;
                       break;
                     }
 
-                    content = _step15.value;
+                    content = _step16.value;
 
                     if (!(content.kind === 'reveal')) {
                       _context71.next = 23;
@@ -19617,12 +19612,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     _context71.prev = 33;
                     _context71.t0 = _context71["catch"](15);
 
-                    _iterator15.e(_context71.t0);
+                    _iterator16.e(_context71.t0);
 
                   case 36:
                     _context71.prev = 36;
 
-                    _iterator15.f();
+                    _iterator16.f();
 
                     return _context71.finish(36);
 
@@ -19631,14 +19626,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     return this.operationService.localForge(op).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (fop) {
                       var bytes = fop.length / 2 + 64;
 
-                      var gas = _this41.averageGasLimit(limits);
+                      var gas = _this42.averageGasLimit(limits);
 
-                      var storage = _this41.averageStorageLimit(limits);
+                      var storage = _this42.averageStorageLimit(limits);
 
                       var dtp = {
                         customLimits: limits,
-                        fee: _this41.recommendFee(limits, reveal, bytes),
-                        burn: _this41.burnFee(limits),
+                        fee: _this42.recommendFee(limits, reveal, bytes),
+                        burn: _this42.burnFee(limits),
                         gas: gas,
                         storage: storage,
                         reveal: reveal
@@ -19686,34 +19681,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           }
 
           if (content.metadata.operation_result.balance_updates) {
-            var _iterator16 = _createForOfIteratorHelper(content.metadata.operation_result.balance_updates),
-                _step16;
-
-            try {
-              for (_iterator16.s(); !(_step16 = _iterator16.n()).done;) {
-                var balanceUpdate = _step16.value;
-
-                if (balanceUpdate.contract === this.pkh) {
-                  burn = burn.minus(balanceUpdate.change);
-                }
-              }
-            } catch (err) {
-              _iterator16.e(err);
-            } finally {
-              _iterator16.f();
-            }
-          }
-
-          if (content.metadata.balance_updates) {
-            var _iterator17 = _createForOfIteratorHelper(content.metadata.balance_updates),
+            var _iterator17 = _createForOfIteratorHelper(content.metadata.operation_result.balance_updates),
                 _step17;
 
             try {
               for (_iterator17.s(); !(_step17 = _iterator17.n()).done;) {
-                var _balanceUpdate = _step17.value;
+                var balanceUpdate = _step17.value;
 
-                if (_balanceUpdate.contract === this.pkh) {
-                  burn = burn.minus(_balanceUpdate.change);
+                if (balanceUpdate.contract === this.pkh) {
+                  burn = burn.minus(balanceUpdate.change);
                 }
               }
             } catch (err) {
@@ -19723,15 +19699,34 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
           }
 
-          gasUsage += content.metadata.operation_result.consumed_gas ? Number(content.metadata.operation_result.consumed_gas) : 0;
-
-          if (content.metadata.internal_operation_results) {
-            var _iterator18 = _createForOfIteratorHelper(content.metadata.internal_operation_results),
+          if (content.metadata.balance_updates) {
+            var _iterator18 = _createForOfIteratorHelper(content.metadata.balance_updates),
                 _step18;
 
             try {
               for (_iterator18.s(); !(_step18 = _iterator18.n()).done;) {
-                var internalResult = _step18.value;
+                var _balanceUpdate = _step18.value;
+
+                if (_balanceUpdate.contract === this.pkh) {
+                  burn = burn.minus(_balanceUpdate.change);
+                }
+              }
+            } catch (err) {
+              _iterator18.e(err);
+            } finally {
+              _iterator18.f();
+            }
+          }
+
+          gasUsage += content.metadata.operation_result.consumed_gas ? Number(content.metadata.operation_result.consumed_gas) : 0;
+
+          if (content.metadata.internal_operation_results) {
+            var _iterator19 = _createForOfIteratorHelper(content.metadata.internal_operation_results),
+                _step19;
+
+            try {
+              for (_iterator19.s(); !(_step19 = _iterator19.n()).done;) {
+                var internalResult = _step19.value;
 
                 if (internalResult.result) {
                   if (internalResult.result.consumed_gas) {
@@ -19739,29 +19734,29 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                   }
 
                   if (internalResult.result.balance_updates) {
-                    var _iterator19 = _createForOfIteratorHelper(internalResult.result.balance_updates),
-                        _step19;
+                    var _iterator20 = _createForOfIteratorHelper(internalResult.result.balance_updates),
+                        _step20;
 
                     try {
-                      for (_iterator19.s(); !(_step19 = _iterator19.n()).done;) {
-                        var _balanceUpdate2 = _step19.value;
+                      for (_iterator20.s(); !(_step20 = _iterator20.n()).done;) {
+                        var _balanceUpdate2 = _step20.value;
 
                         if (_balanceUpdate2.contract === this.pkh && _balanceUpdate2.change.slice(0, 1) === '-') {
                           burn = burn.minus(_balanceUpdate2.change);
                         }
                       }
                     } catch (err) {
-                      _iterator19.e(err);
+                      _iterator20.e(err);
                     } finally {
-                      _iterator19.f();
+                      _iterator20.f();
                     }
                   }
                 }
               }
             } catch (err) {
-              _iterator18.e(err);
+              _iterator19.e(err);
             } finally {
-              _iterator18.f();
+              _iterator19.f();
             }
           }
 
@@ -19794,19 +19789,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             numberOfOperations++;
           }
 
-          var _iterator20 = _createForOfIteratorHelper(limits),
-              _step20;
+          var _iterator21 = _createForOfIteratorHelper(limits),
+              _step21;
 
           try {
-            for (_iterator20.s(); !(_step20 = _iterator20.n()).done;) {
-              var data = _step20.value;
+            for (_iterator21.s(); !(_step21 = _iterator21.n()).done;) {
+              var data = _step21.value;
               gasUnits += data.gasLimit;
               numberOfOperations++;
             }
           } catch (err) {
-            _iterator20.e(err);
+            _iterator21.e(err);
           } finally {
-            _iterator20.f();
+            _iterator21.f();
           }
 
           bytes += 10 * numberOfOperations; // add 10 extra bytes for variation in amount & fee
@@ -19818,34 +19813,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         value: function averageGasLimit(limits) {
           var totalGasLimit = big_js__WEBPACK_IMPORTED_MODULE_6___default()(0);
 
-          var _iterator21 = _createForOfIteratorHelper(limits),
-              _step21;
-
-          try {
-            for (_iterator21.s(); !(_step21 = _iterator21.n()).done;) {
-              var data = _step21.value;
-              totalGasLimit = totalGasLimit.plus(data.gasLimit);
-            }
-          } catch (err) {
-            _iterator21.e(err);
-          } finally {
-            _iterator21.f();
-          }
-
-          return Math.ceil(totalGasLimit.div(limits.length)).toString();
-        }
-      }, {
-        key: "averageStorageLimit",
-        value: function averageStorageLimit(limits) {
-          var totalStorageLimit = big_js__WEBPACK_IMPORTED_MODULE_6___default()(0);
-
           var _iterator22 = _createForOfIteratorHelper(limits),
               _step22;
 
           try {
             for (_iterator22.s(); !(_step22 = _iterator22.n()).done;) {
               var data = _step22.value;
-              totalStorageLimit = totalStorageLimit.plus(data.storageLimit);
+              totalGasLimit = totalGasLimit.plus(data.gasLimit);
             }
           } catch (err) {
             _iterator22.e(err);
@@ -19853,11 +19827,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             _iterator22.f();
           }
 
-          return Math.ceil(Number(totalStorageLimit.div(limits.length))).toString();
+          return Math.ceil(totalGasLimit.div(limits.length)).toString();
         }
       }, {
-        key: "burnFee",
-        value: function burnFee(limits) {
+        key: "averageStorageLimit",
+        value: function averageStorageLimit(limits) {
           var totalStorageLimit = big_js__WEBPACK_IMPORTED_MODULE_6___default()(0);
 
           var _iterator23 = _createForOfIteratorHelper(limits),
@@ -19874,23 +19848,44 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             _iterator23.f();
           }
 
+          return Math.ceil(Number(totalStorageLimit.div(limits.length))).toString();
+        }
+      }, {
+        key: "burnFee",
+        value: function burnFee(limits) {
+          var totalStorageLimit = big_js__WEBPACK_IMPORTED_MODULE_6___default()(0);
+
+          var _iterator24 = _createForOfIteratorHelper(limits),
+              _step24;
+
+          try {
+            for (_iterator24.s(); !(_step24 = _iterator24.n()).done;) {
+              var data = _step24.value;
+              totalStorageLimit = totalStorageLimit.plus(data.storageLimit);
+            }
+          } catch (err) {
+            _iterator24.e(err);
+          } finally {
+            _iterator24.f();
+          }
+
           return totalStorageLimit.div(1000).toString();
         }
       }, {
         key: "simulate",
         value: function simulate(op) {
-          var _this42 = this;
+          var _this43 = this;
 
           op.signature = 'edsigtXomBKi5CTRf5cjATJWSyaRvhfYNHqSUGrn4SdbYRcGwQrUGjzEfQDTuqHhuA8b2d8NarZjz8TRf65WkpQmo423BtomS8Q';
           return this.http.post(this.nodeURL + '/chains/main/blocks/head/helpers/scripts/run_operation', {
             operation: op,
             chain_id: this.chainId
           }, httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (res) {
-            _this42.operationService.checkApplied([res]);
+            _this43.operationService.checkApplied([res]);
 
             return Object(rxjs__WEBPACK_IMPORTED_MODULE_5__["of"])(res);
           })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(function (err) {
-            return _this42.operationService.errHandler(err);
+            return _this43.operationService.errHandler(err);
           }));
         }
       }, {
@@ -20554,7 +20549,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           var recursiveScan = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
           var address = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : pkh;
           return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee79() {
-            var addresses, _iterator24, _step24, _KT, _iterator25, _step25, KT;
+            var addresses, _iterator25, _step25, _KT, _iterator26, _step26, KT;
 
             return regeneratorRuntime.wrap(function _callee79$(_context80) {
               while (1) {
@@ -20565,18 +20560,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                   case 2:
                     addresses = _context80.sent;
-                    _iterator24 = _createForOfIteratorHelper(addresses);
+                    _iterator25 = _createForOfIteratorHelper(addresses);
 
                     try {
-                      for (_iterator24.s(); !(_step24 = _iterator24.n()).done;) {
-                        _KT = _step24.value;
+                      for (_iterator25.s(); !(_step25 = _iterator25.n()).done;) {
+                        _KT = _step25.value;
                         console.log('Found KT: ' + _KT);
                         this.walletService.addOriginatedAccount(_KT, pkh);
                       }
                     } catch (err) {
-                      _iterator24.e(err);
+                      _iterator25.e(err);
                     } finally {
-                      _iterator24.f();
+                      _iterator25.f();
                     }
 
                     this.walletService.storeWallet();
@@ -20586,18 +20581,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                       break;
                     }
 
-                    _iterator25 = _createForOfIteratorHelper(addresses);
+                    _iterator26 = _createForOfIteratorHelper(addresses);
                     _context80.prev = 8;
 
-                    _iterator25.s();
+                    _iterator26.s();
 
                   case 10:
-                    if ((_step25 = _iterator25.n()).done) {
+                    if ((_step26 = _iterator26.n()).done) {
                       _context80.next = 16;
                       break;
                     }
 
-                    KT = _step25.value;
+                    KT = _step26.value;
                     _context80.next = 14;
                     return this.findContracts(pkh, true, KT);
 
@@ -20613,12 +20608,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     _context80.prev = 18;
                     _context80.t0 = _context80["catch"](8);
 
-                    _iterator25.e(_context80.t0);
+                    _iterator26.e(_context80.t0);
 
                   case 21:
                     _context80.prev = 21;
 
-                    _iterator25.f();
+                    _iterator26.f();
 
                     return _context80.finish(21);
 
@@ -21074,7 +21069,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "getPublicAddress",
         value: function getPublicAddress(path) {
           return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee82() {
-            var _this43 = this;
+            var _this44 = this;
 
             var xtz, result, pk;
             return regeneratorRuntime.wrap(function _callee82$(_context83) {
@@ -21090,9 +21085,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     _context83.next = 6;
                     return xtz.getAddress(path, true)["catch"](function (e) {
                       if (e.message) {
-                        _this43.messageService.addError(e.message);
+                        _this44.messageService.addError(e.message);
                       } else {
-                        _this43.messageService.addError(e);
+                        _this44.messageService.addError(e);
                       }
 
                       throw e;
@@ -21115,7 +21110,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "signOperation",
         value: function signOperation(op, path) {
           return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee83() {
-            var _this44 = this;
+            var _this45 = this;
 
             var xtz, toSign, result;
             return regeneratorRuntime.wrap(function _callee83$(_context84) {
@@ -21141,7 +21136,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                   case 8:
                     _context84.next = 10;
                     return xtz.signOperation(path, toSign)["catch"](function (e) {
-                      _this44.messageService.addError(e, 0);
+                      _this45.messageService.addError(e, 0);
                     });
 
                   case 10:
@@ -21338,7 +21333,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "check",
         value: function check(address) {
           return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee85() {
-            var _this45 = this;
+            var _this46 = this;
 
             var _this$index2, x;
 
@@ -21354,7 +21349,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                       if (!this.pendingLookups[address] && x === -1) {
                         this.pendingLookups[address] = true;
                         this.operationService.torusKeyLookup(address).subscribe(function (ans) {
-                          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this45, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee84() {
+                          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this46, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee84() {
                             var keys, verifierMap, _i, _keys, key, verifierId, verifierArray, twitterId, _yield$this$torusServ4, username;
 
                             return regeneratorRuntime.wrap(function _callee84$(_context85) {
@@ -21475,21 +21470,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           var record = this.records[address];
 
           if (record) {
-            var _iterator26 = _createForOfIteratorHelper(record),
-                _step26;
+            var _iterator27 = _createForOfIteratorHelper(record),
+                _step27;
 
             try {
-              for (_iterator26.s(); !(_step26 = _iterator26.n()).done;) {
-                var entry = _step26.value;
+              for (_iterator27.s(); !(_step27 = _iterator27.n()).done;) {
+                var entry = _step27.value;
 
                 if (entry.lookupType > 1) {
                   return true;
                 }
               }
             } catch (err) {
-              _iterator26.e(err);
+              _iterator27.e(err);
             } finally {
-              _iterator26.f();
+              _iterator27.f();
             }
           }
 
@@ -21984,7 +21979,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       _createClass(OperationService, [{
         key: "activate",
         value: function activate(pkh, secret) {
-          var _this46 = this;
+          var _this47 = this;
 
           return this.getHeader().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (header) {
             var fop = {
@@ -21995,19 +21990,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 secret: secret
               }]
             };
-            return _this46.http.post(_this46.nodeURL + '/chains/main/blocks/head/helpers/forge/operations', fop).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (opbytes) {
+            return _this47.http.post(_this47.nodeURL + '/chains/main/blocks/head/helpers/forge/operations', fop).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (opbytes) {
               var sopbytes = opbytes + Array(129).join('0');
               fop.protocol = header.protocol;
               fop.signature = 'edsigtXomBKi5CTRf5cjATJWSyaRvhfYNHqSUGrn4SdbYRcGwQrUGjzEfQDTuqHhuA8b2d8NarZjz8TRf65WkpQmo423BtomS8Q';
-              return _this46.http.post(_this46.nodeURL + '/chains/main/blocks/head/helpers/preapply/operations', [fop]).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (preApplyResult) {
+              return _this47.http.post(_this47.nodeURL + '/chains/main/blocks/head/helpers/preapply/operations', [fop]).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (preApplyResult) {
                 console.log(JSON.stringify(preApplyResult));
-                return _this46.http.post(_this46.nodeURL + '/injection/operation', JSON.stringify(sopbytes), httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (_final) {
-                  return _this46.opCheck(_final);
+                return _this47.http.post(_this47.nodeURL + '/injection/operation', JSON.stringify(sopbytes), httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (_final) {
+                  return _this47.opCheck(_final);
                 }));
               }));
             }));
           })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(function (err) {
-            return _this46.errHandler(err);
+            return _this47.errHandler(err);
           }));
         }
       }, {
@@ -22040,31 +22035,31 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "originate",
         value: function originate(pkh, amount) {
-          var _this47 = this;
+          var _this48 = this;
 
           var fee = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
           var keys = arguments.length > 3 ? arguments[3] : undefined;
           return this.getHeader().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (header) {
-            return _this47.http.get(_this47.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/counter', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (actions) {
-              return _this47.http.get(_this47.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/manager_key', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (manager) {
-                if (fee >= _this47.feeHardCap) {
+            return _this48.http.get(_this48.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/counter', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (actions) {
+              return _this48.http.get(_this48.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/manager_key', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (manager) {
+                if (fee >= _this48.feeHardCap) {
                   throw new Error('TooHighFee');
                 }
 
                 var counter = Number(actions);
 
-                var script = _this47.getManagerScript(keys.pkh);
+                var script = _this48.getManagerScript(keys.pkh);
 
                 var fop = {
                   branch: header.hash,
                   contents: [{
                     kind: 'origination',
                     source: keys.pkh,
-                    fee: _this47.microTez.times(fee).toString(),
+                    fee: _this48.microTez.times(fee).toString(),
                     counter: (++counter).toString(),
                     gas_limit: '15678',
                     storage_limit: '509',
-                    balance: _this47.microTez.times(amount).toString(),
+                    balance: _this48.microTez.times(amount).toString(),
                     script: script
                   }]
                 };
@@ -22083,11 +22078,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                   fop.contents[1].counter = (Number(fop.contents[1].counter) + 1).toString();
                 }
 
-                return _this47.operation(fop, header, keys, true);
+                return _this48.operation(fop, header, keys, true);
               }));
             }));
           })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(function (err) {
-            return _this47.errHandler(err);
+            return _this48.errHandler(err);
           }));
         }
         /*
@@ -22097,24 +22092,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "transfer",
         value: function transfer(from, transactions, fee, keys) {
-          var _this48 = this;
+          var _this49 = this;
 
           return this.getHeader().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (header) {
-            return _this48.http.get(_this48.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/counter', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (actions) {
-              return _this48.http.get(_this48.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/manager_key', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (manager) {
-                if (fee >= _this48.feeHardCap) {
+            return _this49.http.get(_this49.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/counter', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (actions) {
+              return _this49.http.get(_this49.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/manager_key', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (manager) {
+                if (fee >= _this49.feeHardCap) {
                   throw new Error('TooHighFee');
                 }
 
                 var counter = Number(actions);
 
-                var fop = _this48.createTransactionObject(header.hash, counter, manager, transactions, keys.pkh, keys.pk, from, fee);
+                var fop = _this49.createTransactionObject(header.hash, counter, manager, transactions, keys.pkh, keys.pk, from, fee);
 
-                return _this48.operation(fop, header, keys);
+                return _this49.operation(fop, header, keys);
               }));
             }));
           })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(function (err) {
-            return _this48.errHandler(err);
+            return _this49.errHandler(err);
           }));
         }
       }, {
@@ -22201,14 +22196,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "delegate",
         value: function delegate(from, to) {
-          var _this49 = this;
+          var _this50 = this;
 
           var fee = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
           var keys = arguments.length > 3 ? arguments[3] : undefined;
           return this.getHeader().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (header) {
-            return _this49.http.get(_this49.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/counter', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (actions) {
-              return _this49.http.get(_this49.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/manager_key', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (manager) {
-                if (fee >= _this49.feeHardCap) {
+            return _this50.http.get(_this50.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/counter', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (actions) {
+              return _this50.http.get(_this50.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/manager_key', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (manager) {
+                if (fee >= _this50.feeHardCap) {
                   throw new Error('TooHighFee');
                 }
 
@@ -22219,7 +22214,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                   delegationOp = {
                     kind: 'delegation',
                     source: from,
-                    fee: _this49.microTez.times(fee).toString(),
+                    fee: _this50.microTez.times(fee).toString(),
                     counter: (++counter).toString(),
                     gas_limit: '10000',
                     storage_limit: '0'
@@ -22232,13 +22227,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                   delegationOp = {
                     kind: 'transaction',
                     source: keys.pkh,
-                    fee: _this49.microTez.times(fee).toString(),
+                    fee: _this50.microTez.times(fee).toString(),
                     counter: (++counter).toString(),
                     gas_limit: '26283',
                     storage_limit: '0',
                     amount: '0',
                     destination: from,
-                    parameters: to !== '' ? _this49.getContractDelegation(to) : _this49.getContractUnDelegation()
+                    parameters: to !== '' ? _this50.getContractDelegation(to) : _this50.getContractUnDelegation()
                   };
                 }
 
@@ -22261,11 +22256,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                   fop.contents[1].counter = (Number(fop.contents[1].counter) + 1).toString();
                 }
 
-                return _this49.operation(fop, header, keys);
+                return _this50.operation(fop, header, keys);
               }));
             }));
           })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(function (err) {
-            return _this49.errHandler(err);
+            return _this50.errHandler(err);
           }));
         }
         /*
@@ -22275,25 +22270,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "operation",
         value: function operation(fop, header, keys) {
-          var _this50 = this;
+          var _this51 = this;
 
           var origination = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
           console.log('fop to send: ' + JSON.stringify(fop));
           return this.http.post(this.nodeURL + '/chains/main/blocks/head/helpers/forge/operations', fop).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (opbytes) {
-            return _this50.localForge(fop).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (localOpbytes) {
+            return _this51.localForge(fop).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (localOpbytes) {
               if (opbytes !== localOpbytes) {
                 throw new Error('ValidationError');
               }
 
               if (!keys.sk) {
                 fop.signature = 'edsigtXomBKi5CTRf5cjATJWSyaRvhfYNHqSUGrn4SdbYRcGwQrUGjzEfQDTuqHhuA8b2d8NarZjz8TRf65WkpQmo423BtomS8Q';
-                return _this50.http.post(_this50.nodeURL + '/chains/main/blocks/head/helpers/scripts/run_operation', {
+                return _this51.http.post(_this51.nodeURL + '/chains/main/blocks/head/helpers/scripts/run_operation', {
                   operation: fop,
                   chain_id: header.chain_id
                 }).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (applied) {
                   console.log('applied: ' + JSON.stringify(applied));
 
-                  _this50.checkApplied([applied]);
+                  _this51.checkApplied([applied]);
 
                   return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])({
                     success: true,
@@ -22305,24 +22300,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               } else {
                 fop.protocol = header.protocol;
 
-                var signed = _this50.sign(opbytes, keys.sk);
+                var signed = _this51.sign(opbytes, keys.sk);
 
                 var sopbytes = signed.sbytes;
                 fop.signature = signed.edsig;
-                return _this50.http.post(_this50.nodeURL + '/chains/main/blocks/head/helpers/preapply/operations', [fop]).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (applied) {
+                return _this51.http.post(_this51.nodeURL + '/chains/main/blocks/head/helpers/preapply/operations', [fop]).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (applied) {
                   console.log('applied: ' + JSON.stringify(applied));
 
-                  _this50.checkApplied(applied);
+                  _this51.checkApplied(applied);
 
                   console.log('sop: ' + sopbytes);
-                  return _this50.http.post(_this50.nodeURL + '/injection/operation', JSON.stringify(sopbytes), httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (_final3) {
+                  return _this51.http.post(_this51.nodeURL + '/injection/operation', JSON.stringify(sopbytes), httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (_final3) {
                     var newPkh = null;
 
                     if (origination) {
                       newPkh = applied[0].contents[fop.contents.length - 1].metadata.operation_result.originated_contracts[0];
                     }
 
-                    return _this50.opCheck(_final3, newPkh);
+                    return _this51.opCheck(_final3, newPkh);
                   }));
                 }));
               }
@@ -22336,7 +22331,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "broadcast",
         value: function broadcast(sopbytes) {
-          var _this51 = this;
+          var _this52 = this;
 
           var fop;
 
@@ -22351,7 +22346,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
           return this.getHeader().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (header) {
             fop.protocol = header.protocol;
-            return _this51.http.post(_this51.nodeURL + '/chains/main/blocks/head/helpers/preapply/operations', [fop]).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (parsed) {
+            return _this52.http.post(_this52.nodeURL + '/chains/main/blocks/head/helpers/preapply/operations', [fop]).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (parsed) {
               var newPkh = null;
 
               for (var i = 0; i < parsed[0].contents.length; i++) {
@@ -22360,18 +22355,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 }
               }
 
-              return _this51.http.post(_this51.nodeURL + '/injection/operation', JSON.stringify(sopbytes), httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (_final4) {
-                return _this51.opCheck(_final4, newPkh);
+              return _this52.http.post(_this52.nodeURL + '/injection/operation', JSON.stringify(sopbytes), httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (_final4) {
+                return _this52.opCheck(_final4, newPkh);
               }));
             }));
           })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(function (err) {
-            return _this51.errHandler(err);
+            return _this52.errHandler(err);
           }));
         }
       }, {
         key: "torusKeyLookup",
         value: function torusKeyLookup(tz2address) {
-          var _this52 = this;
+          var _this53 = this;
 
           // Make it into Promise
           // Zero padding
@@ -22385,7 +22380,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 noReveal: true
               });
             } else {
-              return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["from"])(_this52.decompress(manager)).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (pk) {
+              return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["from"])(_this53.decompress(manager)).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (pk) {
                 var torusReq = {
                   jsonrpc: '2.0',
                   method: 'KeyLookupRequest',
@@ -22395,8 +22390,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     pub_key_Y: pk.Y
                   }
                 };
-                var url = _this52.CONSTANTS.NET.NETWORK === 'mainnet' ? 'https://torus-19.torusnode.com/jrpc' : 'https://teal-15-1.torusnode.com/jrpc';
-                return _this52.http.post(url, JSON.stringify(torusReq), httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (ans) {
+                var url = _this53.CONSTANTS.NET.NETWORK === 'mainnet' ? 'https://torus-19.torusnode.com/jrpc' : 'https://teal-15-1.torusnode.com/jrpc';
+                return _this53.http.post(url, JSON.stringify(torusReq), httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (ans) {
                   try {
                     if (ans.result.PublicKey.X === pk.X && ans.result.PublicKey.Y === pk.Y) {
                       return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])(ans);
@@ -22479,7 +22474,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "getBalance",
         value: function getBalance(pkh) {
-          var _this53 = this;
+          var _this54 = this;
 
           return this.http.get(this.nodeURL + '/chains/main/blocks/head/context/contracts/' + pkh + '/balance').pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (balance) {
             return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])({
@@ -22489,13 +22484,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               }
             });
           })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(function (err) {
-            return _this53.errHandler(err);
+            return _this54.errHandler(err);
           }));
         }
       }, {
         key: "getDelegate",
         value: function getDelegate(pkh) {
-          var _this54 = this;
+          var _this55 = this;
 
           return this.http.get(this.nodeURL + '/chains/main/blocks/head/context/contracts/' + pkh).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (contract) {
             var delegate = '';
@@ -22511,13 +22506,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               }
             });
           })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(function (err) {
-            return _this54.errHandler(err);
+            return _this55.errHandler(err);
           }));
         }
       }, {
         key: "getVotingRights",
         value: function getVotingRights() {
-          var _this55 = this;
+          var _this56 = this;
 
           return this.http.get(this.nodeURL + '/chains/main/blocks/head/votes/listings').pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (listings) {
             return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])({
@@ -22525,7 +22520,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               payload: listings
             });
           })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(function (err) {
-            return _this55.errHandler(err);
+            return _this56.errHandler(err);
           }));
         }
       }, {
@@ -22544,7 +22539,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "getAccount",
         value: function getAccount(pkh) {
-          var _this56 = this;
+          var _this57 = this;
 
           return this.http.get(this.nodeURL + '/chains/main/blocks/head/context/contracts/' + pkh).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (contract) {
             var delegate = '';
@@ -22563,19 +22558,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               }
             });
           })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(function (err) {
-            return _this56.errHandler(err);
+            return _this57.errHandler(err);
           }));
         }
       }, {
         key: "getVerifiedOpBytes",
         value: function getVerifiedOpBytes(operationLevel, operationHash, pkh, pk) {
-          var _this57 = this;
+          var _this58 = this;
 
           return this.http.get(this.nodeURL + '/chains/main/blocks/' + operationLevel + '/operation_hashes', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (opHashes) {
             var opIndex = opHashes[3].findIndex(function (a) {
               return a === operationHash;
             });
-            return _this57.http.get(_this57.nodeURL + '/chains/main/blocks/' + operationLevel + '/operations', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (op) {
+            return _this58.http.get(_this58.nodeURL + '/chains/main/blocks/' + operationLevel + '/operations', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (op) {
               var ans = '';
               op = op[3][opIndex];
               var sig = op.signature;
@@ -22594,10 +22589,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 }
               }
 
-              return _this57.http.post(_this57.nodeURL + '/chains/main/blocks/head/helpers/forge/operations', op).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (opBytes) {
-                if (_this57.pk2pkh(pk) === pkh) {
-                  if (_this57.verify(opBytes, sig, pk)) {
-                    ans = opBytes + _this57.buf2hex(_this57.b58cdecode(sig, _this57.prefix.sig));
+              return _this58.http.post(_this58.nodeURL + '/chains/main/blocks/head/helpers/forge/operations', op).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (opBytes) {
+                if (_this58.pk2pkh(pk) === pkh) {
+                  if (_this58.verify(opBytes, sig, pk)) {
+                    ans = opBytes + _this58.buf2hex(_this58.b58cdecode(sig, _this58.prefix.sig));
                   } else {
                     throw new Error('InvalidSignature');
                   }
@@ -24032,13 +24027,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       _createClass(TzrateService, [{
         key: "getTzrate",
         value: function getTzrate() {
-          var _this58 = this;
+          var _this59 = this;
 
           if (this.CONSTANTS.NET.NETWORK === 'mainnet') {
             this.http.get(this.apiUrl).subscribe(function (price) {
-              _this58.walletService.wallet.XTZrate = price.tezos.usd;
+              _this59.walletService.wallet.XTZrate = price.tezos.usd;
 
-              _this58.updateFiatBalances();
+              _this59.updateFiatBalances();
             }, function (err) {
               return console.log('Failed to get xtz price: ' + JSON.stringify(err));
             });
@@ -24054,12 +24049,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           var tot = 0;
           var change = false;
 
-          var _iterator27 = _createForOfIteratorHelper(accounts),
-              _step27;
+          var _iterator28 = _createForOfIteratorHelper(accounts),
+              _step28;
 
           try {
-            for (_iterator27.s(); !(_step27 = _iterator27.n()).done;) {
-              var account = _step27.value;
+            for (_iterator28.s(); !(_step28 = _iterator28.n()).done;) {
+              var account = _step28.value;
 
               if (account.balanceXTZ !== null) {
                 account.balanceUSD = Number(account.balanceXTZ / 1000000 * this.walletService.wallet.XTZrate);
@@ -24068,9 +24063,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               }
             }
           } catch (err) {
-            _iterator27.e(err);
+            _iterator28.e(err);
           } finally {
-            _iterator27.f();
+            _iterator28.f();
           }
 
           if (change) {
@@ -24729,12 +24724,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               this.wallet.lookups = wd.lookups;
             }
 
-            var _iterator28 = _createForOfIteratorHelper(wd.implicitAccounts),
-                _step28;
+            var _iterator29 = _createForOfIteratorHelper(wd.implicitAccounts),
+                _step29;
 
             try {
-              for (_iterator28.s(); !(_step28 = _iterator28.n()).done;) {
-                var implicit = _step28.value;
+              for (_iterator29.s(); !(_step29 = _iterator29.n()).done;) {
+                var implicit = _step29.value;
                 var impAcc = new _wallet__WEBPACK_IMPORTED_MODULE_3__["ImplicitAccount"](implicit.pkh, implicit.pk, implicit.derivationPath ? implicit.derivationPath : null);
                 impAcc.balanceUSD = implicit.balanceUSD;
                 impAcc.balanceXTZ = implicit.balanceXTZ;
@@ -24742,12 +24737,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 impAcc.activitiesCounter = implicit.activitiesCounter;
                 impAcc.activities = implicit.activities;
 
-                var _iterator29 = _createForOfIteratorHelper(implicit.originatedAccounts),
-                    _step29;
+                var _iterator30 = _createForOfIteratorHelper(implicit.originatedAccounts),
+                    _step30;
 
                 try {
-                  for (_iterator29.s(); !(_step29 = _iterator29.n()).done;) {
-                    var originated = _step29.value;
+                  for (_iterator30.s(); !(_step30 = _iterator30.n()).done;) {
+                    var originated = _step30.value;
                     var origAcc = new _wallet__WEBPACK_IMPORTED_MODULE_3__["OriginatedAccount"](originated.address, impAcc.pkh, impAcc.pk);
                     origAcc.balanceUSD = originated.balanceUSD;
                     origAcc.balanceXTZ = originated.balanceXTZ;
@@ -24757,17 +24752,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     impAcc.originatedAccounts.push(origAcc);
                   }
                 } catch (err) {
-                  _iterator29.e(err);
+                  _iterator30.e(err);
                 } finally {
-                  _iterator29.f();
+                  _iterator30.f();
                 }
 
                 this.wallet.implicitAccounts.push(impAcc);
               }
             } catch (err) {
-              _iterator28.e(err);
+              _iterator29.e(err);
             } finally {
-              _iterator28.f();
+              _iterator29.f();
             }
           }
         }]);
@@ -24909,34 +24904,34 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           var accounts = [];
 
           if (this.implicitAccounts.length) {
-            var _iterator30 = _createForOfIteratorHelper(this.implicitAccounts),
-                _step30;
+            var _iterator31 = _createForOfIteratorHelper(this.implicitAccounts),
+                _step31;
 
             try {
-              for (_iterator30.s(); !(_step30 = _iterator30.n()).done;) {
-                var implicitAccount = _step30.value;
+              for (_iterator31.s(); !(_step31 = _iterator31.n()).done;) {
+                var implicitAccount = _step31.value;
                 accounts.push(implicitAccount);
 
                 if (implicitAccount.originatedAccounts.length) {
-                  var _iterator31 = _createForOfIteratorHelper(implicitAccount.originatedAccounts),
-                      _step31;
+                  var _iterator32 = _createForOfIteratorHelper(implicitAccount.originatedAccounts),
+                      _step32;
 
                   try {
-                    for (_iterator31.s(); !(_step31 = _iterator31.n()).done;) {
-                      var originatedAccount = _step31.value;
+                    for (_iterator32.s(); !(_step32 = _iterator32.n()).done;) {
+                      var originatedAccount = _step32.value;
                       accounts.push(originatedAccount);
                     }
                   } catch (err) {
-                    _iterator31.e(err);
+                    _iterator32.e(err);
                   } finally {
-                    _iterator31.f();
+                    _iterator32.f();
                   }
                 }
               }
             } catch (err) {
-              _iterator30.e(err);
+              _iterator31.e(err);
             } finally {
-              _iterator30.f();
+              _iterator31.f();
             }
           }
 
@@ -24951,40 +24946,40 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "getAccount",
         value: function getAccount(address) {
           if (this.implicitAccounts.length) {
-            var _iterator32 = _createForOfIteratorHelper(this.implicitAccounts),
-                _step32;
+            var _iterator33 = _createForOfIteratorHelper(this.implicitAccounts),
+                _step33;
 
             try {
-              for (_iterator32.s(); !(_step32 = _iterator32.n()).done;) {
-                var implicitAccount = _step32.value;
+              for (_iterator33.s(); !(_step33 = _iterator33.n()).done;) {
+                var implicitAccount = _step33.value;
 
                 if (implicitAccount.address === address) {
                   return implicitAccount;
                 }
 
                 if (implicitAccount.originatedAccounts.length) {
-                  var _iterator33 = _createForOfIteratorHelper(implicitAccount.originatedAccounts),
-                      _step33;
+                  var _iterator34 = _createForOfIteratorHelper(implicitAccount.originatedAccounts),
+                      _step34;
 
                   try {
-                    for (_iterator33.s(); !(_step33 = _iterator33.n()).done;) {
-                      var originatedAccount = _step33.value;
+                    for (_iterator34.s(); !(_step34 = _iterator34.n()).done;) {
+                      var originatedAccount = _step34.value;
 
                       if (originatedAccount.address === address) {
                         return originatedAccount;
                       }
                     }
                   } catch (err) {
-                    _iterator33.e(err);
+                    _iterator34.e(err);
                   } finally {
-                    _iterator33.f();
+                    _iterator34.f();
                   }
                 }
               }
             } catch (err) {
-              _iterator32.e(err);
+              _iterator33.e(err);
             } finally {
-              _iterator32.f();
+              _iterator33.f();
             }
           }
 
@@ -24994,21 +24989,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "getImplicitAccount",
         value: function getImplicitAccount(pkh) {
           if (this.implicitAccounts.length) {
-            var _iterator34 = _createForOfIteratorHelper(this.implicitAccounts),
-                _step34;
+            var _iterator35 = _createForOfIteratorHelper(this.implicitAccounts),
+                _step35;
 
             try {
-              for (_iterator34.s(); !(_step34 = _iterator34.n()).done;) {
-                var implicitAccount = _step34.value;
+              for (_iterator35.s(); !(_step35 = _iterator35.n()).done;) {
+                var implicitAccount = _step35.value;
 
                 if (implicitAccount.pkh === pkh) {
                   return implicitAccount;
                 }
               }
             } catch (err) {
-              _iterator34.e(err);
+              _iterator35.e(err);
             } finally {
-              _iterator34.f();
+              _iterator35.f();
             }
           }
 
@@ -25025,13 +25020,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       var _super = _createSuper(FullWallet);
 
       function FullWallet(encryptedSeed) {
-        var _this59;
+        var _this60;
 
         _classCallCheck(this, FullWallet);
 
-        _this59 = _super.call(this);
-        _this59.encryptedSeed = encryptedSeed;
-        return _this59;
+        _this60 = _super.call(this);
+        _this60.encryptedSeed = encryptedSeed;
+        return _this60;
       }
 
       return FullWallet;
@@ -25043,13 +25038,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       var _super2 = _createSuper(LegacyWalletV1);
 
       function LegacyWalletV1(salt, encrypedSeed) {
-        var _this60;
+        var _this61;
 
         _classCallCheck(this, LegacyWalletV1);
 
-        _this60 = _super2.call(this, encrypedSeed);
-        _this60.salt = salt;
-        return _this60;
+        _this61 = _super2.call(this, encrypedSeed);
+        _this61.salt = salt;
+        return _this61;
       }
 
       return LegacyWalletV1;
@@ -25061,13 +25056,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       var _super3 = _createSuper(LegacyWalletV2);
 
       function LegacyWalletV2(IV, encryptedSeed) {
-        var _this61;
+        var _this62;
 
         _classCallCheck(this, LegacyWalletV2);
 
-        _this61 = _super3.call(this, encryptedSeed);
-        _this61.IV = IV;
-        return _this61;
+        _this62 = _super3.call(this, encryptedSeed);
+        _this62.IV = IV;
+        return _this62;
       }
 
       return LegacyWalletV2;
@@ -25079,14 +25074,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       var _super4 = _createSuper(LegacyWalletV3);
 
       function LegacyWalletV3(IV, encryptedSeed, encryptedEntropy) {
-        var _this62;
+        var _this63;
 
         _classCallCheck(this, LegacyWalletV3);
 
-        _this62 = _super4.call(this, encryptedSeed);
-        _this62.IV = IV;
-        _this62.encryptedEntropy = encryptedEntropy;
-        return _this62;
+        _this63 = _super4.call(this, encryptedSeed);
+        _this63.IV = IV;
+        _this63.encryptedEntropy = encryptedEntropy;
+        return _this63;
       }
 
       return LegacyWalletV3;
@@ -25098,15 +25093,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       var _super5 = _createSuper(HdWallet);
 
       function HdWallet(IV, encryptedSeed, encryptedEntropy) {
-        var _this63;
+        var _this64;
 
         _classCallCheck(this, HdWallet);
 
-        _this63 = _super5.call(this, encryptedSeed);
-        _this63.encryptedEntropy = encryptedEntropy;
-        _this63.IV = IV;
-        _this63.index = 0;
-        return _this63;
+        _this64 = _super5.call(this, encryptedSeed);
+        _this64.encryptedEntropy = encryptedEntropy;
+        _this64.IV = IV;
+        _this64.index = 0;
+        return _this64;
       }
 
       return HdWallet;
@@ -25118,15 +25113,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       var _super6 = _createSuper(TorusWallet);
 
       function TorusWallet(verifier, id, name) {
-        var _this64;
+        var _this65;
 
         _classCallCheck(this, TorusWallet);
 
-        _this64 = _super6.call(this);
-        _this64.verifier = verifier;
-        _this64.id = id;
-        _this64.name = name;
-        return _this64;
+        _this65 = _super6.call(this);
+        _this65.verifier = verifier;
+        _this65.id = id;
+        _this65.name = name;
+        return _this65;
       }
 
       _createClass(TorusWallet, [{
@@ -25188,18 +25183,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       var _super8 = _createSuper(ImplicitAccount);
 
       function ImplicitAccount(pkh, pk, derivationPath) {
-        var _this65;
+        var _this66;
 
         _classCallCheck(this, ImplicitAccount);
 
-        _this65 = _super8.call(this, pkh, pk, pkh);
-        _this65.originatedAccounts = [];
+        _this66 = _super8.call(this, pkh, pk, pkh);
+        _this66.originatedAccounts = [];
 
         if (derivationPath) {
-          _this65.derivationPath = derivationPath;
+          _this66.derivationPath = derivationPath;
         }
 
-        return _this65;
+        return _this66;
       }
 
       _createClass(ImplicitAccount, [{
