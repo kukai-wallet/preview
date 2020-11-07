@@ -5347,7 +5347,7 @@ function SendComponent_div_1_div_8_div_19_Template(rf, ctx) { if (rf & 1) {
 } if (rf & 2) {
     const ctx_r186 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](4);
-    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r186.torusVerifier);
+    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r186.torusVerifier)("disabled", ctx_r186.beaconMode);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](3);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngForOf", ctx_r186.torusService.verifierMapKeys);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
@@ -5505,7 +5505,7 @@ function SendComponent_div_1_div_8_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](18);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtemplate"](19, SendComponent_div_1_div_8_div_19_Template, 9, 4, "div", 23);
+    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtemplate"](19, SendComponent_div_1_div_8_div_19_Template, 9, 5, "div", 23);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtemplate"](20, SendComponent_div_1_div_8_div_20_Template, 3, 0, "div", 8);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtemplate"](21, SendComponent_div_1_div_8_ng_container_21_Template, 3, 2, "ng-container", 8);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtemplate"](22, SendComponent_div_1_div_8_div_22_Template, 6, 2, "div", 23);
@@ -6794,7 +6794,7 @@ SendComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComp
     } if (rf & 2) {
         var _t;
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵloadQuery"]()) && (ctx.amountInputView = _t.first);
-    } }, inputs: { beaconMode: "beaconMode", operationRequest: "operationRequest", activeAccount: "activeAccount" }, outputs: { operationResponse: "operationResponse" }, features: [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵNgOnChangesFeature"]], decls: 2, vars: 2, consts: [["class", "purple", 3, "click", 4, "ngIf"], ["id", "myModal", "class", "kukai-modal", 3, "top", 4, "ngIf"], [1, "purple", 3, "click"], ["id", "myModal", 1, "kukai-modal"], [1, "km-content"], [1, "x", 3, "click"], ["src", "../../../assets/img/x.svg"], [1, "km-header"], [4, "ngIf"], ["class", "small multiple-destinations", 3, "click", 4, "ngIf"], ["class", "km-body", 4, "ngIf"], [1, "small", "multiple-destinations", 3, "click"], [1, "km-body"], [1, "amount"], ["placeholder", "0.00", 1, "custom-large", 3, "ngModel", "disabled", "input", "ngModelChange", "click"], ["amountInput", ""], [1, "tez"], [1, "row-group"], ["tabindex", "-1", "class", "small", 3, "max", "click", 4, "ngIf"], [1, "fee"], [4, "ngIf", "ngIfElse"], ["burn", ""], [1, "group"], ["class", "group", 4, "ngIf"], [1, "advanced"], [1, "switch-container"], [1, "switch"], ["type", "checkbox", "tabindex", "-1", 3, "ngModel", "ngModelChange"], [1, "slider", "round"], [1, "switch-desc"], ["class", "advanced-form", 4, "ngIf"], ["class", "danger no-margin", 4, "ngIf"], [1, "purple", 2, "margin", "2.5rem 0 1.5rem", 3, "click"], ["tabindex", "-1", 1, "small", 3, "click"], [2, "justify-content", "space-between", "opacity", "1", "color", "rgba(44, 50, 58, 0.4)"], [1, "select-css", 3, "ngModel", "ngModelChange"], ["value", "", "selected", ""], [3, "value", 4, "ngFor", "ngForOf"], ["type", "text", 1, "text", 3, "disabled", "ngModel", "input", "change", "ngModelChange"], [3, "value"], [2, "color", "#C83532", "margin-top", "1rem"], ["class", "torus-details", 4, "ngIf"], [1, "torus-details"], [1, "batchInfo"], ["type", "text", "rows", "3", "placeholder", "address1 amount1 ; \naddress2 amount2 ; \naddress3 ...", 1, "text", 3, "ngModel", "input", "change", "ngModelChange"], [1, "advanced-form"], ["type", "text", 1, "text", 3, "placeholder", "ngModel", "ngModelChange"], ["type", "text", 1, "text", 3, "placeholder", "ngModel", "input", "paste", "ngModelChange"], ["type", "text", "tabindex", "-1", "readonly", "", 1, "text", "read-only", 3, "value"], [1, "danger", "no-margin"], [1, "preview-top"], [1, "preview-amount"], [1, "section"], [1, "amount-tez"], [1, "amount-usd"], ["class", "section", 4, "ngIf"], ["src", "../../../assets/img/tezos-xtz-logo.svg", 2, "height", "4.5rem", "margin-right", "1rem"], [1, "seperator"], [1, "preview-row"], ["class", "preview-row", 4, "ngIf"], [1, "row-group", 2, "margin", "1.25rem 0 1.5rem"], ["autocomplete", "current-password", "placeholder", "Password", "class", "text password", "type", "password", 3, "ngModel", "ngModelChange", "input", "change", 4, "ngIf"], ["class", "retry", 3, "click", 4, "ngIf", "ngIfElse"], ["elseBlock", ""], ["class", "danger margin", 4, "ngIf"], ["class", "torus-to", 4, "ngIf"], [1, "single-to"], ["id", "previewAttention", 4, "ngIf"], [1, "torus-to"], [3, "src"], ["id", "previewAttention"], ["scope", "col"], [4, "ngFor", "ngForOf"], ["style", "margin-left: auto; margin: 0.5rem 0 1rem; height: 2rem;", "type", "button", "class", "show-more", "aria-label", "More", 3, "click", 4, "ngIf"], [1, "txAmount"], ["type", "button", "aria-label", "More", 1, "show-more", 2, "margin-left", "auto", "margin", "0.5rem 0 1rem", "height", "2rem", 3, "click"], ["aria-hidden", "true"], ["class", "preview", 4, "ngIf"], [1, "tabs-container"], [1, "tabs"], [1, "tab", 3, "click"], ["style", "width: 100%; font-size: 0.875rem", "rows", "10", "readonly", "", 4, "ngIf"], [1, "preview"], ["rows", "10", "readonly", "", 2, "width", "100%", "font-size", "0.875rem"], ["autocomplete", "current-password", "placeholder", "Password", "type", "password", 1, "text", "password", 3, "ngModel", "ngModelChange", "input", "change"], [1, "retry", 3, "click"], [1, "purple", "confirm", 3, "disabled", "click"], [1, "danger", "margin"]], template: function SendComponent_Template(rf, ctx) { if (rf & 1) {
+    } }, inputs: { beaconMode: "beaconMode", operationRequest: "operationRequest", activeAccount: "activeAccount" }, outputs: { operationResponse: "operationResponse" }, features: [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵNgOnChangesFeature"]], decls: 2, vars: 2, consts: [["class", "purple", 3, "click", 4, "ngIf"], ["id", "myModal", "class", "kukai-modal", 3, "top", 4, "ngIf"], [1, "purple", 3, "click"], ["id", "myModal", 1, "kukai-modal"], [1, "km-content"], [1, "x", 3, "click"], ["src", "../../../assets/img/x.svg"], [1, "km-header"], [4, "ngIf"], ["class", "small multiple-destinations", 3, "click", 4, "ngIf"], ["class", "km-body", 4, "ngIf"], [1, "small", "multiple-destinations", 3, "click"], [1, "km-body"], [1, "amount"], ["placeholder", "0.00", 1, "custom-large", 3, "ngModel", "disabled", "input", "ngModelChange", "click"], ["amountInput", ""], [1, "tez"], [1, "row-group"], ["tabindex", "-1", "class", "small", 3, "max", "click", 4, "ngIf"], [1, "fee"], [4, "ngIf", "ngIfElse"], ["burn", ""], [1, "group"], ["class", "group", 4, "ngIf"], [1, "advanced"], [1, "switch-container"], [1, "switch"], ["type", "checkbox", "tabindex", "-1", 3, "ngModel", "ngModelChange"], [1, "slider", "round"], [1, "switch-desc"], ["class", "advanced-form", 4, "ngIf"], ["class", "danger no-margin", 4, "ngIf"], [1, "purple", 2, "margin", "2.5rem 0 1.5rem", 3, "click"], ["tabindex", "-1", 1, "small", 3, "click"], [2, "justify-content", "space-between", "opacity", "1", "color", "rgba(44, 50, 58, 0.4)"], [1, "select-css", 3, "ngModel", "disabled", "ngModelChange"], ["value", "", "selected", ""], [3, "value", 4, "ngFor", "ngForOf"], ["type", "text", 1, "text", 3, "disabled", "ngModel", "input", "change", "ngModelChange"], [3, "value"], [2, "color", "#C83532", "margin-top", "1rem"], ["class", "torus-details", 4, "ngIf"], [1, "torus-details"], [1, "batchInfo"], ["type", "text", "rows", "3", "placeholder", "address1 amount1 ; \naddress2 amount2 ; \naddress3 ...", 1, "text", 3, "ngModel", "input", "change", "ngModelChange"], [1, "advanced-form"], ["type", "text", 1, "text", 3, "placeholder", "ngModel", "ngModelChange"], ["type", "text", 1, "text", 3, "placeholder", "ngModel", "input", "paste", "ngModelChange"], ["type", "text", "tabindex", "-1", "readonly", "", 1, "text", "read-only", 3, "value"], [1, "danger", "no-margin"], [1, "preview-top"], [1, "preview-amount"], [1, "section"], [1, "amount-tez"], [1, "amount-usd"], ["class", "section", 4, "ngIf"], ["src", "../../../assets/img/tezos-xtz-logo.svg", 2, "height", "4.5rem", "margin-right", "1rem"], [1, "seperator"], [1, "preview-row"], ["class", "preview-row", 4, "ngIf"], [1, "row-group", 2, "margin", "1.25rem 0 1.5rem"], ["autocomplete", "current-password", "placeholder", "Password", "class", "text password", "type", "password", 3, "ngModel", "ngModelChange", "input", "change", 4, "ngIf"], ["class", "retry", 3, "click", 4, "ngIf", "ngIfElse"], ["elseBlock", ""], ["class", "danger margin", 4, "ngIf"], ["class", "torus-to", 4, "ngIf"], [1, "single-to"], ["id", "previewAttention", 4, "ngIf"], [1, "torus-to"], [3, "src"], ["id", "previewAttention"], ["scope", "col"], [4, "ngFor", "ngForOf"], ["style", "margin-left: auto; margin: 0.5rem 0 1rem; height: 2rem;", "type", "button", "class", "show-more", "aria-label", "More", 3, "click", 4, "ngIf"], [1, "txAmount"], ["type", "button", "aria-label", "More", 1, "show-more", 2, "margin-left", "auto", "margin", "0.5rem 0 1rem", "height", "2rem", 3, "click"], ["aria-hidden", "true"], ["class", "preview", 4, "ngIf"], [1, "tabs-container"], [1, "tabs"], [1, "tab", 3, "click"], ["style", "width: 100%; font-size: 0.875rem", "rows", "10", "readonly", "", 4, "ngIf"], [1, "preview"], ["rows", "10", "readonly", "", 2, "width", "100%", "font-size", "0.875rem"], ["autocomplete", "current-password", "placeholder", "Password", "type", "password", 1, "text", "password", 3, "ngModel", "ngModelChange", "input", "change"], [1, "retry", 3, "click"], [1, "purple", "confirm", 3, "disabled", "click"], [1, "danger", "margin"]], template: function SendComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtemplate"](0, SendComponent_button_0_Template, 2, 0, "button", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtemplate"](1, SendComponent_div_1_Template, 10, 7, "div", 1);
     } if (rf & 2) {
@@ -6977,9 +6977,6 @@ class SettingsComponent {
         else {
             this.router.navigate(['']);
         }
-    }
-    registerURIhandler() {
-        navigator.registerProtocolHandler('web+tezos', `${window.location.origin}/accounts/%s`, 'Kukai Wallet');
     }
     accountAvailable(pkh) {
         const index = this.implicitAccounts.findIndex((impAcc) => impAcc.pkh === pkh);
@@ -7545,7 +7542,7 @@ class UriHandlerComponent {
             this.beaconService.client
                 .connect((message) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
                 console.log('### beacon message', message);
-                if (message.network.type !== this.CONSTANTS.NET.NETWORK) { // Todo: remove false
+                if (message.network.type !== this.CONSTANTS.NET.NETWORK) {
                     console.warn(`Rejecting Beacon message because of network. Expected ${this.CONSTANTS.NET.NETWORK} instead of ${message.network.type}`);
                     yield this.beaconService.rejectOnNetwork(message);
                 }
@@ -10039,18 +10036,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DeeplinkService", function() { return DeeplinkService; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var _operation_operation_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../operation/operation.service */ "./src/app/services/operation/operation.service.ts");
+/* harmony import */ var _services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/wallet/wallet.service */ "./src/app/services/wallet/wallet.service.ts");
+/* harmony import */ var _services_message_message_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/message/message.service */ "./src/app/services/message/message.service.ts");
+
+
+
+
 
 
 
 
 class DeeplinkService {
-    constructor(operationService) {
+    constructor(operationService, walletService, messageService) {
         this.operationService = operationService;
+        this.walletService = walletService;
+        this.messageService = messageService;
         this.pairingJson = '';
     }
     set(params) {
         console.log(params);
         this.pairingJson = this.extractPairingJson(params);
+        if (this.pairingJson && !this.walletService.wallet) {
+            this.messageService.addWarning('Access your wallet to complete the pairing');
+        }
         console.log(this.pairingJson);
     }
     extractPairingJson(params) {
@@ -10070,14 +10078,14 @@ class DeeplinkService {
         return pairingJson;
     }
 }
-DeeplinkService.ɵfac = function DeeplinkService_Factory(t) { return new (t || DeeplinkService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_operation_operation_service__WEBPACK_IMPORTED_MODULE_1__["OperationService"])); };
+DeeplinkService.ɵfac = function DeeplinkService_Factory(t) { return new (t || DeeplinkService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_operation_operation_service__WEBPACK_IMPORTED_MODULE_1__["OperationService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_2__["WalletService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_services_message_message_service__WEBPACK_IMPORTED_MODULE_3__["MessageService"])); };
 DeeplinkService.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjectable"]({ token: DeeplinkService, factory: DeeplinkService.ɵfac, providedIn: 'root' });
 /*@__PURE__*/ (function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](DeeplinkService, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"],
         args: [{
                 providedIn: 'root'
             }]
-    }], function () { return [{ type: _operation_operation_service__WEBPACK_IMPORTED_MODULE_1__["OperationService"] }]; }, null); })();
+    }], function () { return [{ type: _operation_operation_service__WEBPACK_IMPORTED_MODULE_1__["OperationService"] }, { type: _services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_2__["WalletService"] }, { type: _services_message_message_service__WEBPACK_IMPORTED_MODULE_3__["MessageService"] }]; }, null); })();
 
 
 /***/ }),
