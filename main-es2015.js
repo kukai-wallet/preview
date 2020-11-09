@@ -7492,8 +7492,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/__ivy_ngcc__/fesm2015/router.js");
 /* harmony import */ var _services_message_message_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/message/message.service */ "./src/app/services/message/message.service.ts");
-/* harmony import */ var _airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @airgap/beacon-sdk */ "./node_modules/@airgap/beacon-sdk/dist/index.js");
-/* harmony import */ var _airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @airgap/beacon-sdk */ "./node_modules/@airgap/beacon-sdk/dist/esm/index.js");
 /* harmony import */ var _services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../services/wallet/wallet.service */ "./src/app/services/wallet/wallet.service.ts");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../constants */ "./src/app/constants.ts");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
@@ -7602,7 +7601,7 @@ class UriHandlerComponent {
             }
             else if (message.operationDetails.length > 1) {
                 console.warn('Multiple operations currently not supported in requests');
-                yield this.beaconService.rejectOnToManyOps(message);
+                yield this.beaconService.rejectOnTooManyOps(message);
                 return false;
             }
             if (message.operationDetails[0].kind === 'transaction') {
@@ -9450,11 +9449,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var _services_message_message_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/message/message.service */ "./src/app/services/message/message.service.ts");
-/* harmony import */ var _airgap_beacon_sdk_dist_constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @airgap/beacon-sdk/dist/constants */ "./node_modules/@airgap/beacon-sdk/dist/constants.js");
-/* harmony import */ var _airgap_beacon_sdk_dist_constants__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_airgap_beacon_sdk_dist_constants__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @airgap/beacon-sdk */ "./node_modules/@airgap/beacon-sdk/dist/index.js");
-/* harmony import */ var _airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__);
-
+/* harmony import */ var _airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @airgap/beacon-sdk */ "./node_modules/@airgap/beacon-sdk/dist/esm/index.js");
 
 
 
@@ -9547,27 +9542,27 @@ class BeaconService {
     }
     rejectOnPermission(message) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            yield this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__["BeaconErrorType"].NOT_GRANTED_ERROR, message);
+            yield this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_3__["BeaconErrorType"].NOT_GRANTED_ERROR, message);
         });
     }
     rejectOnNetwork(message) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            yield this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__["BeaconErrorType"].NETWORK_NOT_SUPPORTED, message);
+            yield this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_3__["BeaconErrorType"].NETWORK_NOT_SUPPORTED, message);
         });
     }
     rejectOnSourceAddress(message) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            yield this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__["BeaconErrorType"].NO_PRIVATE_KEY_FOUND_ERROR, message);
+            yield this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_3__["BeaconErrorType"].NO_PRIVATE_KEY_FOUND_ERROR, message);
         });
     }
-    rejectOnToManyOps(message) {
+    rejectOnTooManyOps(message) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            yield this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__["BeaconErrorType"].TOO_MANY_OPERATIONS, message);
+            yield this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_3__["BeaconErrorType"].TOO_MANY_OPERATIONS, message);
         });
     }
     rejectOnUnknown(message) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            yield this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__["BeaconErrorType"].UNKNOWN_ERROR, message);
+            yield this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_3__["BeaconErrorType"].UNKNOWN_ERROR, message);
         });
     }
     respondWithError(errorType, requestMessage) {
@@ -9578,7 +9573,7 @@ class BeaconService {
                     type: this.correspondingResponseType[requestMessage.type],
                     errorType
                 };
-                const response = Object.assign({ beaconId: yield this.client.beaconId, version: _airgap_beacon_sdk_dist_constants__WEBPACK_IMPORTED_MODULE_3__["BEACON_VERSION"] }, error);
+                const response = Object.assign({ beaconId: yield this.client.beaconId, version: _airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_3__["BEACON_VERSION"] }, error);
                 yield this.client.respond(response);
             }
         });
@@ -9586,9 +9581,9 @@ class BeaconService {
     approvePermissionRequest(message, publicKey) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             const response = {
-                type: _airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__["BeaconMessageType"].PermissionResponse,
+                type: _airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_3__["BeaconMessageType"].PermissionResponse,
                 network: message.network,
-                scopes: [_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__["PermissionScope"].OPERATION_REQUEST],
+                scopes: [_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_3__["PermissionScope"].OPERATION_REQUEST],
                 id: message.id,
                 publicKey: publicKey
             };
@@ -9597,12 +9592,8 @@ class BeaconService {
     }
     rejectPermissionRequest(message) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            yield this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__["BeaconErrorType"].NOT_GRANTED_ERROR, message);
+            yield this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_3__["BeaconErrorType"].NOT_GRANTED_ERROR, message);
         });
-    }
-    registerURIhandler() {
-        navigator.registerProtocolHandler('web+tezos', `${window.location.origin}/accounts/%s`, 'Kukai'); // web+tezos://?type=tzip10&data=<data>
-        console.log(`${window.location.origin}/accounts/<payload>`);
     }
 }
 BeaconService.ɵfac = function BeaconService_Factory(t) { return new (t || BeaconService)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵinject"](_services_message_message_service__WEBPACK_IMPORTED_MODULE_2__["MessageService"])); };

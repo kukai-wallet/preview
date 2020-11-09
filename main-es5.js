@@ -15006,11 +15006,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     var _airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
     /*! @airgap/beacon-sdk */
-    "./node_modules/@airgap/beacon-sdk/dist/index.js");
-    /* harmony import */
-
-
-    var _airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__);
+    "./node_modules/@airgap/beacon-sdk/dist/esm/index.js");
     /* harmony import */
 
 
@@ -15276,7 +15272,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                     console.warn('Multiple operations currently not supported in requests');
                     _context37.next = 11;
-                    return this.beaconService.rejectOnToManyOps(message);
+                    return this.beaconService.rejectOnTooManyOps(message);
 
                   case 11:
                     return _context37.abrupt("return", false);
@@ -17397,23 +17393,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /* harmony import */
 
 
-    var _airgap_beacon_sdk_dist_constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
-    /*! @airgap/beacon-sdk/dist/constants */
-    "./node_modules/@airgap/beacon-sdk/dist/constants.js");
-    /* harmony import */
-
-
-    var _airgap_beacon_sdk_dist_constants__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_airgap_beacon_sdk_dist_constants__WEBPACK_IMPORTED_MODULE_3__);
-    /* harmony import */
-
-
-    var _airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+    var _airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
     /*! @airgap/beacon-sdk */
-    "./node_modules/@airgap/beacon-sdk/dist/index.js");
-    /* harmony import */
-
-
-    var _airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__);
+    "./node_modules/@airgap/beacon-sdk/dist/esm/index.js");
 
     var BeaconService = /*#__PURE__*/function () {
       function BeaconService(messageService) {
@@ -17668,7 +17650,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 switch (_context48.prev = _context48.next) {
                   case 0:
                     _context48.next = 2;
-                    return this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__["BeaconErrorType"].NOT_GRANTED_ERROR, message);
+                    return this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_3__["BeaconErrorType"].NOT_GRANTED_ERROR, message);
 
                   case 2:
                   case "end":
@@ -17687,7 +17669,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 switch (_context49.prev = _context49.next) {
                   case 0:
                     _context49.next = 2;
-                    return this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__["BeaconErrorType"].NETWORK_NOT_SUPPORTED, message);
+                    return this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_3__["BeaconErrorType"].NETWORK_NOT_SUPPORTED, message);
 
                   case 2:
                   case "end":
@@ -17706,7 +17688,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 switch (_context50.prev = _context50.next) {
                   case 0:
                     _context50.next = 2;
-                    return this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__["BeaconErrorType"].NO_PRIVATE_KEY_FOUND_ERROR, message);
+                    return this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_3__["BeaconErrorType"].NO_PRIVATE_KEY_FOUND_ERROR, message);
 
                   case 2:
                   case "end":
@@ -17717,15 +17699,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           }));
         }
       }, {
-        key: "rejectOnToManyOps",
-        value: function rejectOnToManyOps(message) {
+        key: "rejectOnTooManyOps",
+        value: function rejectOnTooManyOps(message) {
           return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee51() {
             return regeneratorRuntime.wrap(function _callee51$(_context51) {
               while (1) {
                 switch (_context51.prev = _context51.next) {
                   case 0:
                     _context51.next = 2;
-                    return this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__["BeaconErrorType"].TOO_MANY_OPERATIONS, message);
+                    return this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_3__["BeaconErrorType"].TOO_MANY_OPERATIONS, message);
 
                   case 2:
                   case "end":
@@ -17744,7 +17726,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 switch (_context52.prev = _context52.next) {
                   case 0:
                     _context52.next = 2;
-                    return this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__["BeaconErrorType"].UNKNOWN_ERROR, message);
+                    return this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_3__["BeaconErrorType"].UNKNOWN_ERROR, message);
 
                   case 2:
                   case "end":
@@ -17779,7 +17761,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                   case 5:
                     _context53.t1 = _context53.sent;
-                    _context53.t2 = _airgap_beacon_sdk_dist_constants__WEBPACK_IMPORTED_MODULE_3__["BEACON_VERSION"];
+                    _context53.t2 = _airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_3__["BEACON_VERSION"];
                     _context53.t3 = {
                       beaconId: _context53.t1,
                       version: _context53.t2
@@ -17807,9 +17789,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 switch (_context54.prev = _context54.next) {
                   case 0:
                     response = {
-                      type: _airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__["BeaconMessageType"].PermissionResponse,
+                      type: _airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_3__["BeaconMessageType"].PermissionResponse,
                       network: message.network,
-                      scopes: [_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__["PermissionScope"].OPERATION_REQUEST],
+                      scopes: [_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_3__["PermissionScope"].OPERATION_REQUEST],
                       id: message.id,
                       publicKey: publicKey
                     };
@@ -17833,7 +17815,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 switch (_context55.prev = _context55.next) {
                   case 0:
                     _context55.next = 2;
-                    return this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__["BeaconErrorType"].NOT_GRANTED_ERROR, message);
+                    return this.respondWithError(_airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_3__["BeaconErrorType"].NOT_GRANTED_ERROR, message);
 
                   case 2:
                   case "end":
@@ -17842,13 +17824,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               }
             }, _callee55, this);
           }));
-        }
-      }, {
-        key: "registerURIhandler",
-        value: function registerURIhandler() {
-          navigator.registerProtocolHandler('web+tezos', "".concat(window.location.origin, "/accounts/%s"), 'Kukai'); // web+tezos://?type=tzip10&data=<data>
-
-          console.log("".concat(window.location.origin, "/accounts/<payload>"));
         }
       }]);
 
