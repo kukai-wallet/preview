@@ -1,7032 +1,5 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["main"],{
 
-/***/ "../beacon-sdk/dist/esm/MockWindow.js":
-/*!********************************************!*\
-  !*** ../beacon-sdk/dist/esm/MockWindow.js ***!
-  \********************************************/
-/*! exports provided: myWindow, clearMockWindowState */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "myWindow", function() { return myWindow; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearMockWindowState", function() { return clearMockWindowState; });
-const cbs = [(_) => undefined];
-/**
- * A mock for postmessage if run in node.js environment
- */
-let myWindow = {
-    postMessage: (message, _target) => {
-        console.log('GOT MOCK POST MESSAGE', message);
-        cbs.forEach((callbackElement) => {
-            callbackElement({ data: message });
-        });
-    },
-    addEventListener: (_name, eventCallback) => {
-        cbs.push(eventCallback);
-    },
-    removeEventListener: (_name, eventCallback) => {
-        cbs.splice(cbs.indexOf((element) => element === eventCallback), 1);
-    }
-};
-try {
-    if (typeof window !== 'undefined') {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        myWindow = window;
-    }
-}
-catch (windowError) {
-    console.log(`not defined: ${windowError}`);
-}
-const clearMockWindowState = () => {
-    cbs.length = 0;
-};
-
-//# sourceMappingURL=MockWindow.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/Serializer.js":
-/*!********************************************!*\
-  !*** ../beacon-sdk/dist/esm/Serializer.js ***!
-  \********************************************/
-/*! exports provided: Serializer */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(Buffer) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Serializer", function() { return Serializer; });
-/* harmony import */ var bs58check__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bs58check */ "../beacon-sdk/node_modules/bs58check/index.js");
-/* harmony import */ var bs58check__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(bs58check__WEBPACK_IMPORTED_MODULE_0__);
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-/**
- * The Serializer is used to serialize / deserialize JSON objects and encode them with bs58check
- */
-class Serializer {
-    /**
-     * Serialize and bs58check encode an object
-     *
-     * @param message JSON object to serialize
-     */
-    serialize(message) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const str = JSON.stringify(message);
-            return bs58check__WEBPACK_IMPORTED_MODULE_0__["encode"](Buffer.from(str));
-        });
-    }
-    /**
-     * Deserialize a bs58check encoded string
-     *
-     * @param encoded String to be deserialized
-     */
-    deserialize(encoded) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (typeof encoded !== 'string') {
-                throw new Error('Encoded payload needs to be a string');
-            }
-            return JSON.parse(bs58check__WEBPACK_IMPORTED_MODULE_0__["decode"](encoded).toString());
-        });
-    }
-}
-//# sourceMappingURL=Serializer.js.map
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../kukai/node_modules/node-libs-browser/node_modules/buffer/index.js */ "./node_modules/node-libs-browser/node_modules/buffer/index.js").Buffer))
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/alert/Alert.js":
-/*!*********************************************!*\
-  !*** ../beacon-sdk/dist/esm/alert/Alert.js ***!
-  \*********************************************/
-/*! exports provided: closeAlert, closeAlerts, openAlert */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "closeAlert", function() { return closeAlert; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "closeAlerts", function() { return closeAlerts; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "openAlert", function() { return openAlert; });
-/* harmony import */ var _utils_generate_uuid__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/generate-uuid */ "../beacon-sdk/dist/esm/utils/generate-uuid.js");
-/* harmony import */ var _utils_platform__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/platform */ "../beacon-sdk/dist/esm/utils/platform.js");
-/* harmony import */ var _utils_replace_in_template__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/replace-in-template */ "../beacon-sdk/dist/esm/utils/replace-in-template.js");
-/* harmony import */ var _alert_templates__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./alert-templates */ "../beacon-sdk/dist/esm/alert/alert-templates.js");
-// Taken from https://github.com/WalletConnect/walletconnect-monorepo/blob/master/packages/qrcode-modal/src/browser.ts
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-
-let document;
-if (typeof window !== 'undefined' && typeof window.document !== 'undefined') {
-    document = window.document;
-}
-const timeout = {};
-const formatBody = (dataString) => {
-    if (typeof dataString === 'string') {
-        return dataString.replace('<svg', `<svg class="beacon-alert__image"`);
-    }
-    return dataString;
-};
-const formatAlert = (id, body, title, type, buttons, pairingPayload) => {
-    const callToAction = title;
-    const buttonsHtml = buttons.map((button, index) => `<button id="beacon-alert-${id}-${index}" class="beacon-modal__button${button.style === 'outline' ? '--outline' : ''}">${button.text}</button>`);
-    let allStyles = _alert_templates__WEBPACK_IMPORTED_MODULE_3__["alertTemplates"].default.css;
-    if (type === 'pair') {
-        allStyles += _alert_templates__WEBPACK_IMPORTED_MODULE_3__["alertTemplates"].pair.css;
-    }
-    let alertContainer = `<style>${allStyles}</style>${_alert_templates__WEBPACK_IMPORTED_MODULE_3__["alertTemplates"].container}`;
-    alertContainer = Object(_utils_replace_in_template__WEBPACK_IMPORTED_MODULE_2__["replaceInTemplate"])(alertContainer, 'main', type === 'pair' ? _alert_templates__WEBPACK_IMPORTED_MODULE_3__["alertTemplates"].pair.html : _alert_templates__WEBPACK_IMPORTED_MODULE_3__["alertTemplates"].default.html);
-    alertContainer = Object(_utils_replace_in_template__WEBPACK_IMPORTED_MODULE_2__["replaceInTemplate"])(alertContainer, 'callToAction', callToAction);
-    alertContainer = Object(_utils_replace_in_template__WEBPACK_IMPORTED_MODULE_2__["replaceInTemplate"])(alertContainer, 'buttons', buttonsHtml.join(' '));
-    alertContainer = Object(_utils_replace_in_template__WEBPACK_IMPORTED_MODULE_2__["replaceInTemplate"])(alertContainer, 'body', body);
-    alertContainer = Object(_utils_replace_in_template__WEBPACK_IMPORTED_MODULE_2__["replaceInTemplate"])(alertContainer, 'id', id);
-    alertContainer = Object(_utils_replace_in_template__WEBPACK_IMPORTED_MODULE_2__["replaceInTemplate"])(alertContainer, 'payload', pairingPayload !== null && pairingPayload !== void 0 ? pairingPayload : '');
-    if (alertContainer.indexOf('{{') >= 0) {
-        const start = alertContainer.indexOf('{{');
-        const end = alertContainer.indexOf('}}');
-        console.error('Not all placeholders replaced!', alertContainer.substr(start, end - start));
-        throw new Error('Not all placeholders replaced!');
-    }
-    return alertContainer;
-};
-/**
- * Close an alert by ID
- *
- * @param id ID of alert
- */
-const closeAlert = (id) => new Promise((resolve) => {
-    const elm = document.getElementById(`beacon-alert-modal-${id}`);
-    if (elm) {
-        const animationDuration = 300;
-        const localTimeout = timeout[id];
-        if (localTimeout) {
-            clearTimeout(localTimeout);
-            timeout[id] = undefined;
-        }
-        elm.className = elm.className.replace('fadeIn', 'fadeOut');
-        window.setTimeout(() => {
-            const wrapper = document.getElementById(`beacon-alert-wrapper-${id}`);
-            if (wrapper) {
-                document.body.removeChild(wrapper);
-            }
-            resolve();
-        }, animationDuration);
-    }
-    else {
-        resolve();
-    }
-});
-/**
- * Close all alerts
- */
-const closeAlerts = () => __awaiter(void 0, void 0, void 0, function* () {
-    return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
-        const openAlertElements = document.querySelectorAll('[id^="beacon-alert-wrapper-"]');
-        if (openAlertElements.length > 0) {
-            const alertIds = [];
-            openAlertElements.forEach((element) => __awaiter(void 0, void 0, void 0, function* () {
-                alertIds.push(element.id.split('-')[3]);
-            }));
-            yield Promise.all(alertIds.map(closeAlert));
-            resolve();
-        }
-        else {
-            resolve();
-        }
-    }));
-});
-/**
- * Show an alert
- *
- * @param alertConfig The configuration of the alert
- */
-// eslint-disable-next-line complexity
-const openAlert = (alertConfig) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
-    const body = alertConfig.body;
-    const title = alertConfig.title;
-    const timer = alertConfig.timer;
-    const pairingPayload = alertConfig.pairingPayload;
-    yield closeAlerts();
-    const id = (yield Object(_utils_generate_uuid__WEBPACK_IMPORTED_MODULE_0__["generateGUID"])()).split('-').join('');
-    const wrapper = document.createElement('div');
-    wrapper.setAttribute('id', `beacon-alert-wrapper-${id}`);
-    const buttons = [
-        ...((_b = (_a = alertConfig.buttons) === null || _a === void 0 ? void 0 : _a.map((button) => {
-            var _a, _b;
-            return ({
-                text: button.text,
-                // eslint-disable-next-line @typescript-eslint/unbound-method
-                actionCallback: (_a = button.actionCallback) !== null && _a !== void 0 ? _a : (() => Promise.resolve()),
-                style: (_b = button.style) !== null && _b !== void 0 ? _b : 'outline'
-            });
-        })) !== null && _b !== void 0 ? _b : [])
-    ];
-    const formattedBody = body ? formatBody(body) : '';
-    wrapper.innerHTML = formatAlert(id, formattedBody, title, pairingPayload ? 'pair' : 'default', buttons, pairingPayload);
-    if (timer) {
-        timeout[id] = window.setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
-            yield closeAlert(id);
-        }), timer);
-    }
-    document.body.appendChild(wrapper);
-    buttons.forEach((button, index) => {
-        const buttonElement = document.getElementById(`beacon-alert-${id}-${index}`);
-        if (buttonElement) {
-            buttonElement.addEventListener('click', () => __awaiter(void 0, void 0, void 0, function* () {
-                yield closeAlert(id);
-                if (button.actionCallback) {
-                    yield button.actionCallback();
-                }
-            }));
-        }
-    });
-    const closeButton = document.getElementById(`beacon-alert-${id}-close`);
-    if (closeButton) {
-        closeButton.addEventListener('click', () => __awaiter(void 0, void 0, void 0, function* () {
-            yield closeAlert(id);
-        }));
-    }
-    const platform = Object(_utils_platform__WEBPACK_IMPORTED_MODULE_1__["isAndroid"])(window) ? 'android' : Object(_utils_platform__WEBPACK_IMPORTED_MODULE_1__["isIOS"])(window) ? 'ios' : 'desktop';
-    const mainText = document.getElementById(`beacon-main-text`);
-    const iosList = document.getElementById(`beacon-ios-list`);
-    const androidList = document.getElementById(`beacon-android-list`);
-    const desktopList = document.getElementById(`beacon-desktop-list`);
-    const webList = document.getElementById(`beacon-web-list`);
-    if (mainText && iosList && androidList && desktopList && webList) {
-        const showPlatform = (type) => {
-            const platformSwitch = document.getElementById(`beacon-switch`);
-            if (platformSwitch) {
-                platformSwitch.innerHTML =
-                    type === 'none' ? 'Pair Wallet on same device' : 'Pair Wallet on different device';
-            }
-            mainText.style.display = 'none';
-            iosList.style.display = 'none';
-            androidList.style.display = 'none';
-            desktopList.style.display = 'none';
-            webList.style.display = 'none';
-            switch (type) {
-                case 'ios':
-                    iosList.style.display = 'initial';
-                    break;
-                case 'android':
-                    androidList.style.display = 'initial';
-                    break;
-                case 'desktop':
-                    desktopList.style.display = 'initial';
-                    webList.style.display = 'initial';
-                    break;
-                default:
-                    mainText.style.display = 'initial';
-            }
-        };
-        let showQr = platform === 'desktop';
-        const switchPlatform = () => {
-            showPlatform(showQr ? 'none' : platform);
-            showQr = !showQr;
-        };
-        switchPlatform();
-        {
-            const platformSwitch = document.getElementById(`beacon-switch`);
-            if (platformSwitch) {
-                platformSwitch.addEventListener('click', switchPlatform);
-            }
-        }
-    }
-    return id;
-});
-
-//# sourceMappingURL=Alert.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/alert/Toast.js":
-/*!*********************************************!*\
-  !*** ../beacon-sdk/dist/esm/alert/Toast.js ***!
-  \*********************************************/
-/*! exports provided: closeToast, openToast */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "closeToast", function() { return closeToast; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "openToast", function() { return openToast; });
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-let document;
-if (typeof window !== 'undefined' && typeof window.document !== 'undefined') {
-    document = window.document;
-}
-let timeout;
-const getToastHTML = (config) => {
-    const text = config.body;
-    return `
-  <style>
-    :root {
-      --animation-duration: 300ms;
-    }
-    
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-    
-    @keyframes fadeOut {
-      from {
-        opacity: 1;
-      }
-      to {
-        opacity: 0;
-      }
-    }
-    
-    .animated {
-      animation-duration: var(--animation-duration);
-      animation-fill-mode: both;
-    }
-    
-    .fadeIn {
-      animation-name: fadeIn;
-    }
-    
-    .fadeOut {
-      animation-name: fadeOut;
-    }
-
-    .beacon-toast__base {
-      position: absolute;
-      bottom: 16px;
-      right: 16px;
-      padding: 16px;
-      height: 64px;
-      z-index: 2147483000;
-      background: #fff;
-      margin: 0 auto;
-      border-radius: 4px;
-      overflow: hidden;
-      box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.1);
-      display: flex;
-      align-items: center;
-    }
-
-    .beacon-toast__content {
-      padding: 0 0 0 16px;
-      font-family: Roboto, Helvetica, sans-serif;
-    }
-    .spinner .loader,
-    .spinner .loader:after {
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-    }
-    .spinner .loader {
-      position: relative;
-      text-indent: -9999em;
-      border-top: 4px solid rgba(56,128,255, 0.2);
-      border-right: 4px solid rgba(56,128,255, 0.2);
-      border-bottom: 4px solid rgba(56,128,255, 0.2);
-      border-left: 4px solid #3880ff;
-      -webkit-transform: translateZ(0);
-      -ms-transform: translateZ(0);
-      transform: translateZ(0);
-      -webkit-animation: spinner 1.1s infinite linear;
-      animation: spinner 1.1s infinite linear;
-    }
-    @-webkit-keyframes spinner {
-      0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-      }
-      100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-      }
-    }
-    @keyframes spinner {
-      0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-      }
-      100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-      }
-    }
-  </style>
-  
-  <div id="beacon-toast" class="beacon-toast__base animated fadeIn">
-    <div class="load-container spinner">
-      <div class="loader">Loading...</div>
-    </div>
-    <div class="beacon-toast__content">
-      <p>${text}</p>
-    </div>
-    ${config.showDoneButton ? '<div id="beacon-toast-button-done"></div>' : ''}
-  </div>
-`;
-};
-/**
- * Close a toast
- */
-const closeToast = () => new Promise((resolve) => {
-    const elm = document.getElementById('beacon-toast');
-    if (elm) {
-        const animationDuration = 300;
-        if (timeout) {
-            clearTimeout(timeout);
-            timeout = undefined;
-        }
-        elm.className = elm.className.replace('fadeIn', 'fadeOut');
-        window.setTimeout(() => {
-            const wrapper = document.getElementById('beacon-toast-wrapper');
-            if (wrapper) {
-                document.body.removeChild(wrapper);
-            }
-            resolve();
-        }, animationDuration);
-    }
-    else {
-        resolve();
-    }
-});
-/**
- * Create a new toast
- *
- * @param toastConfig Configuration of the toast
- */
-const openToast = (toastConfig) => __awaiter(void 0, void 0, void 0, function* () {
-    const timer = toastConfig.timer;
-    yield closeToast();
-    const wrapper = document.createElement('div');
-    wrapper.setAttribute('id', 'beacon-toast-wrapper');
-    wrapper.innerHTML = getToastHTML(toastConfig);
-    if (timer) {
-        timeout = window.setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
-            yield closeToast();
-        }), timer);
-    }
-    document.body.appendChild(wrapper);
-    const doneButton = document.getElementById('beacon-toast-button-done');
-    if (doneButton) {
-        doneButton.addEventListener('click', () => __awaiter(void 0, void 0, void 0, function* () {
-            yield closeToast();
-        }));
-    }
-});
-
-//# sourceMappingURL=Toast.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/alert/alert-templates.js":
-/*!*******************************************************!*\
-  !*** ../beacon-sdk/dist/esm/alert/alert-templates.js ***!
-  \*******************************************************/
-/*! exports provided: alertTemplates */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "alertTemplates", function() { return alertTemplates; });
-const alertTemplates = { "container": "<div id=\"beacon-alert-modal-{{id}}\" class=\"beacon-alert__base animated fadeIn\">\r\n  <div class=\"beacon-modal__wrapper\">\r\n    <div class=\"beacon-modal__header\">\r\n      <svg\r\n        xmlns=\"http://www.w3.org/2000/svg\"\r\n        id=\"Guides\"\r\n        x=\"0\"\r\n        y=\"0\"\r\n        version=\"1.1\"\r\n        viewBox=\"0 0 179.2 43\"\r\n        xml:space=\"preserve\"\r\n        width=\"140\"\r\n        height=\"40\"\r\n      >\r\n        <style>\r\n          .st0 {\r\n            fill: #3880ff;\r\n          }\r\n          .st1 {\r\n            fill: #fff;\r\n          }\r\n        </style>\r\n        <path\r\n          d=\"M45 19v.9c0 .3-.2 7.5-3.4 13.2-3.3 5.6-9.4 9.3-9.7 9.5l-.8.4-1.3-.8-7.6-4.4c-.5-.3-.9-.6-1.4-.9-.4-.3-.7-.5-1.1-.8-.8-.7-1.5-1.4-2.1-2.2-.9-1.1-1.6-2.4-2.1-3.7-.9-2.3-1.3-4.8-1.2-7.5.8-.4 1.6-.6 2.4-.6h.6c-.2 2.4.1 4.6.8 6.6 1 2.8 2.9 5.1 5.5 6.6l7.4 4.3c.2-.1.4-.2.6-.4 1.9-1.3 5.3-4.1 7.3-7.6 2.2-3.9 2.8-8.9 3-10.8L38.8 19c.3-1 .4-2.1.5-3.2L45 19z\"\r\n          class=\"st0\"\r\n        />\r\n        <path\r\n          d=\"M36.3 4.1v10.3c0 .5 0 1.1-.1 1.6s-.1.9-.2 1.3c-.2 1-.5 2-.9 3-.5 1.3-1.3 2.6-2.2 3.7-1.5 1.9-3.5 3.6-5.9 4.8-.9-.6-1.6-1.3-2-2.4 2.1-1 3.9-2.3 5.2-4 1.9-2.3 3-5.1 3-8.1V5.9l-.6-.3c-2-1-6.1-2.6-10.1-2.6-4.5 0-9.1 2-10.9 2.9v3.6c-1 .3-2 .7-3 1.1V4.1l.8-.4C9.7 3.5 16 0 22.5 0s12.8 3.5 13.1 3.6l.7.5z\"\r\n          class=\"st0\"\r\n        />\r\n        <path\r\n          d=\"M10.5 16.5l-7.4 4.3v.7c.2 2.1.9 6.5 2.9 10 2.2 3.9 6.2 6.9 7.9 8l3.1-1.8c.8.7 1.6 1.4 2.5 2L13.8 43l-.8-.5c-.3-.2-6.4-3.9-9.7-9.5C.1 27.4 0 20.2 0 19.9V19l1.3-.8L9 13.9c.5-.3.9-.5 1.4-.7.4-.2.8-.4 1.3-.5 1-.4 2-.6 3-.7 1.4-.2 2.9-.2 4.3 0 2.4.3 4.8 1.2 7.1 2.7 0 1-.4 2-1 2.9-1.9-1.3-4-2.2-6-2.5-3.1-.6-6-.1-8.6 1.4z\"\r\n          class=\"st0\"\r\n        />\r\n        <g>\r\n          <path\r\n            d=\"M73.9 23c.9 1 1.3 2.3 1.3 3.7 0 1.9-.6 3.4-1.9 4.5-1.3 1.1-3.1 1.7-5.5 1.7h-8.6v-23h8.4c2.3 0 4.1.5 5.3 1.5 1.2 1 1.8 2.4 1.8 4.2 0 1.5-.4 2.7-1.2 3.6-.8.9-1.8 1.5-3.1 1.8 1.5.3 2.6 1 3.5 2zm-11.7-3h5c1.5 0 2.6-.3 3.4-1 .8-.7 1.2-1.6 1.2-2.8 0-1.2-.4-2.1-1.1-2.8-.8-.7-1.9-1-3.5-1h-4.8V20zm8.7 9.4c.9-.7 1.3-1.7 1.3-3s-.4-2.3-1.3-3c-.9-.7-2.1-1.1-3.7-1.1h-5v8.2h5c1.6-.1 2.8-.4 3.7-1.1zM95.3 24.6H81c.1 2.1.6 3.6 1.7 4.6s2.4 1.5 4 1.5c1.4 0 2.6-.4 3.6-1.1 1-.7 1.6-1.7 1.8-2.9h3.2c-.2 1.2-.7 2.4-1.5 3.3-.8 1-1.7 1.7-2.9 2.3-1.2.5-2.6.8-4.1.8-1.7 0-3.2-.4-4.6-1.1-1.3-.7-2.4-1.8-3.1-3.2-.8-1.4-1.1-3-1.1-4.9 0-1.9.4-3.5 1.1-4.9.8-1.4 1.8-2.5 3.1-3.2 1.3-.7 2.9-1.1 4.6-1.1 1.7 0 3.3.4 4.6 1.1 1.3.7 2.3 1.7 3 3 .7 1.2 1 2.6 1 4.1.1.7 0 1.2-.1 1.7zm-3.5-4.8c-.5-.9-1.2-1.6-2.1-2-.9-.4-1.8-.7-2.8-.7-1.6 0-3 .5-4.1 1.5-1.1 1-1.7 2.5-1.8 4.5h11.5c0-1.3-.2-2.4-.7-3.3zM111.2 16c1.2.9 2.1 2 2.5 3.5V15h3v18h-3v-4.6c-.5 1.5-1.3 2.6-2.5 3.5-1.2.9-2.7 1.3-4.4 1.3-1.6 0-3-.4-4.3-1.1-1.2-.7-2.2-1.8-2.9-3.2-.7-1.4-1.1-3-1.1-4.9 0-1.9.4-3.5 1.1-4.9.7-1.4 1.7-2.5 2.9-3.2 1.2-.7 2.7-1.1 4.3-1.1 1.7-.1 3.1.4 4.4 1.2zm-8 3.1c-1.1 1.2-1.7 2.8-1.7 4.8 0 2.1.5 3.7 1.7 4.8 1.1 1.2 2.6 1.8 4.4 1.8 1.2 0 2.2-.3 3.2-.8.9-.5 1.7-1.3 2.2-2.3.5-1 .8-2.1.8-3.5 0-1.3-.3-2.5-.8-3.5s-1.2-1.8-2.2-2.3c-.9-.5-2-.8-3.2-.8-1.9.1-3.3.7-4.4 1.8zM135 16.6c1.5 1.2 2.4 2.9 2.8 4.9h-3.1c-.2-1.3-.8-2.3-1.8-3-1-.7-2.2-1.1-3.6-1.1-1 0-2 .2-2.9.7-.9.5-1.6 1.2-2.1 2.2-.5 1-.8 2.2-.8 3.7s.3 2.7.8 3.7 1.2 1.7 2.1 2.2c.9.5 1.8.7 2.9.7 1.4 0 2.6-.4 3.6-1.1 1-.7 1.6-1.8 1.8-3h3.1c-.3 2.1-1.3 3.7-2.8 4.9-1.5 1.2-3.4 1.8-5.7 1.8-1.7 0-3.2-.4-4.6-1.1-1.3-.7-2.4-1.8-3.1-3.2-.8-1.4-1.1-3-1.1-4.9 0-1.9.4-3.5 1.1-4.9.8-1.4 1.8-2.5 3.1-3.2 1.3-.7 2.9-1.1 4.6-1.1 2.3-.1 4.2.6 5.7 1.8zM154.5 15.9c1.4.7 2.4 1.8 3.2 3.2.8 1.4 1.2 3 1.2 4.9 0 1.9-.4 3.5-1.2 4.9-.8 1.4-1.8 2.4-3.2 3.2-1.4.7-2.9 1.1-4.6 1.1-1.7 0-3.3-.4-4.6-1.1-1.4-.7-2.4-1.8-3.2-3.2-.8-1.4-1.2-3-1.2-4.9 0-1.9.4-3.5 1.2-4.9.8-1.4 1.9-2.5 3.2-3.2 1.4-.7 2.9-1.1 4.6-1.1 1.7-.1 3.2.3 4.6 1.1zm-7.6 2.2c-.9.5-1.6 1.2-2.2 2.2-.6 1-.8 2.2-.8 3.7 0 1.4.3 2.7.8 3.6.6 1 1.3 1.7 2.2 2.2.9.5 1.9.7 3 .7s2.1-.2 3-.7c.9-.5 1.6-1.2 2.2-2.2.6-1 .8-2.2.8-3.6 0-1.5-.3-2.7-.8-3.7-.6-1-1.3-1.7-2.2-2.2-.9-.5-1.9-.7-3-.7s-2.1.2-3 .7zM177.3 16.7c1.3 1.3 1.9 3.3 1.9 5.8v10.4h-3V22.8c0-1.8-.5-3.2-1.4-4.1-.9-1-2.2-1.4-3.7-1.4-1.6 0-2.9.5-3.9 1.6s-1.5 2.6-1.5 4.6V33h-3V15h3v4.3c.5-1.5 1.3-2.6 2.4-3.4 1.2-.8 2.5-1.2 4-1.2 2.2 0 3.9.6 5.2 2z\"\r\n            class=\"st1\"\r\n          />\r\n        </g>\r\n      </svg>\r\n      <div class=\"beacon-modal__close__wrapper\">\r\n        <div id=\"beacon-alert-{{id}}-close\" class=\"beacon-modal__close__icon\">\r\n          <div class=\"beacon-modal__close__line1\"></div>\r\n          <div class=\"beacon-modal__close__line2\"></div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n    <div class=\"beacon-modal__base\">\r\n      <div class=\"beacon-modal__content\">\r\n        <div>\r\n          <p class=\"beacon-alert__title\">\r\n            {{callToAction}}\r\n          </p>\r\n\r\n          {{main}}\r\n\r\n          <div class=\"beacon-action__container\">\r\n            {{buttons}}\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n", "default": { "html": "<div id=\"beacon-main-text\" class=\"beacon-alert__text\">\r\n  {{body}}\r\n</div>\r\n", "css": ":root {\r\n  --animation-duration: 300ms;\r\n}\r\n\r\n@keyframes fadeIn {\r\n  from {\r\n    opacity: 0;\r\n  }\r\n  to {\r\n    opacity: 1;\r\n  }\r\n}\r\n\r\n@keyframes fadeOut {\r\n  from {\r\n    opacity: 1;\r\n  }\r\n  to {\r\n    opacity: 0;\r\n  }\r\n}\r\n\r\n.animated {\r\n  animation-duration: var(--animation-duration);\r\n  animation-fill-mode: both;\r\n}\r\n\r\n.fadeIn {\r\n  animation-name: fadeIn;\r\n}\r\n\r\n.fadeOut {\r\n  animation-name: fadeOut;\r\n}\r\n\r\n.beacon-modal__wrapper {\r\n  position: relative;\r\n  transform: translateY(-50%);\r\n  top: 50%;\r\n  display: inline-block;\r\n  z-index: 2147483000;\r\n  max-width: 500px;\r\n  width: 100%;\r\n}\r\n\r\n.beacon-modal__base,\r\n.beacon-modal__close__wrapper {\r\n  background: #fff;\r\n  box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.1);\r\n}\r\n\r\n.beacon-modal__base {\r\n  margin: 0 auto;\r\n  border-radius: 32px;\r\n  overflow: hidden;\r\n}\r\n\r\n.beacon-modal__header {\r\n  padding: 16px 0;\r\n  width: 100%;\r\n  display: flex;\r\n  flex-direction: row;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n}\r\n\r\n.beacon-modal__headerLogo {\r\n  width: 100%;\r\n  max-width: 320px;\r\n  margin: 20px auto;\r\n  height: 100%;\r\n}\r\n\r\n.beacon-alert__text,\r\n.beacon-alert__title,\r\n.beacon-selection__name,\r\np,\r\nbutton {\r\n  font-family: Roboto, Helvetica, sans-serif;\r\n}\r\n\r\n.beacon-modal__close__wrapper {\r\n  position: absolute;\r\n  top: 20px;\r\n  right: 0;\r\n  z-index: 10000;\r\n  cursor: pointer;\r\n  border-radius: 100%;\r\n}\r\n\r\n.beacon-modal__close__icon {\r\n  width: 16px;\r\n  height: 16px;\r\n  position: relative;\r\n  top: 0;\r\n  right: 0;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  transform: rotate(45deg);\r\n  margin: 8px;\r\n}\r\n\r\n.beacon-modal__close__line1 {\r\n  position: absolute;\r\n  width: 90%;\r\n  border: 1px solid #000;\r\n}\r\n\r\n.beacon-modal__close__line2 {\r\n  position: absolute;\r\n  width: 90%;\r\n  border: 1px solid #000;\r\n  transform: rotate(90deg);\r\n}\r\n\r\n.beacon-alert__base {\r\n  position: fixed;\r\n  top: 0;\r\n  width: 100%;\r\n  height: 100%;\r\n  z-index: 2147482999;\r\n  background-color: rgb(17 17 17 / 0.84);\r\n  text-align: center;\r\n  padding: 24px;\r\n}\r\n\r\n.beacon-alert__text,\r\n.beacon-alert__title {\r\n  text-align: center;\r\n  margin: 0 auto;\r\n  padding: 0 0 16px;\r\n}\r\n\r\n.margin__bottom {\r\n  margin-bottom: 16px;\r\n}\r\n\r\n.beacon-alert__title {\r\n  color: #7c828b;\r\n  font-size: 18px;\r\n}\r\n\r\n.beacon-alert__text {\r\n  color: #000;\r\n  font-size: 14px;\r\n}\r\n\r\n.beacon-modal__button,\r\n.beacon-modal__button--outline {\r\n  height: 36px;\r\n  font-size: 14px;\r\n  letter-spacing: 0.84px;\r\n  margin-bottom: 4px;\r\n  margin-inline-end: 2px;\r\n  margin-inline-start: 2px;\r\n  margin-left: 2px;\r\n  margin-right: 2px;\r\n  margin-top: 4px;\r\n  padding-inline-end: 15.4px;\r\n  padding-inline-start: 15.4px;\r\n  padding-left: 15.4px;\r\n  padding-right: 15.4px;\r\n  overflow-wrap: break-word;\r\n  pointer-events: auto;\r\n  text-align: center;\r\n  border: 2px solid #3880ff;\r\n  border-radius: 4px;\r\n}\r\n\r\n.beacon-modal__button {\r\n  background: #3880ff;\r\n  color: #fff;\r\n}\r\n\r\n.beacon-modal__button--outline {\r\n  background: #fff;\r\n  color: #3880ff;\r\n}\r\n\r\n.beacon-alert__image {\r\n  width: 300px;\r\n  height: 300px;\r\n  box-sizing: border-box;\r\n  box-shadow: 0 10px 20px 0 rgba(17, 17, 17, 0.12);\r\n  border: 1px solid rgba(17, 17, 17, 0.04);\r\n  border-radius: 16px;\r\n}\r\n\r\n.beacon-modal__content {\r\n  padding: 24px;\r\n}\r\n\r\n.beacon-action__container {\r\n  padding-top: 24px;\r\n}\r\n\r\na {\r\n  text-decoration: none;\r\n}\r\n" }, "pair": { "html": "<div id=\"beacon-main-text\" class=\"beacon-alert__text\">\r\n  {{body}}\r\n</div>\r\n\r\n<div id=\"beacon-ios-list\">\r\n  <div class=\"beacon-selection__container\">\n      <a alt=\"Open in AirGap Wallet\" href=\"airgap-wallet://?type=tzip10&data={{payload}}\" target=\"_blank\" class=\"beacon-selection__list\">\n        <div class=\"beacon-selection__name\">AirGap Wallet</div>\n        <div>\n          <img class=\"beacon-selection__img\" src=\"data:image/png;base64,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\"/>\n        </div>\n      </a>\n      </div>\r\n</div>\r\n<div id=\"beacon-android-list\"><a href=\"tezos://?type=tzip10&data={{payload}}\" target=\"_blank\"><button class=\"beacon-modal__button\">Connect Wallet</button></a></div>\r\n<div id=\"beacon-desktop-list\">\n      <a alt=\"Open in Galleon\" href=\"galleon://?type=tzip10&data={{payload}}\" target=\"_blank\" class=\"beacon-selection__list\">\n        <div class=\"beacon-selection__name\">Galleon</div>\n        <div>\n          <img class=\"beacon-selection__img\" src=\"data:image/png;base64,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\"/>\n        </div>\n      </a>\n      </div>\r\n<div id=\"beacon-web-list\">\n      <a alt=\"Open in Kukai\" href=\"https://preview.kukai.app?type=tzip10&data={{payload}}\" target=\"_blank\" class=\"beacon-selection__list\">\n        <div class=\"beacon-selection__name\">Kukai</div>\n        <div>\n          <img class=\"beacon-selection__img\" src=\"data:image/png;base64,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\"/>\n        </div>\n      </a>\n      </div>\r\n\r\n<div>\r\n  <button id=\"beacon-switch\" class=\"beacon-modal__button--outline\"></button>\r\n</div>\r\n", "css": "#beacon-main-text {\r\n  display: initial;\r\n}\r\n.beacon-selection__container {\r\n  padding: 16px 16px 0;\r\n}\r\n.beacon-selection__list {\r\n  display: flex;\r\n  flex-direction: row;\r\n  justify-content: space-between;\r\n  text-decoration: none;\r\n  padding-bottom: 24px;\r\n  align-items: center;\r\n}\r\n.beacon-selection__name {\r\n  font-size: 1.5rem;\r\n  font-weight: 600;\r\n  color: #3b3d40;\r\n}\r\n.beacon-selection__img {\r\n  width: 48px;\r\n  height: 48px;\r\n  box-shadow: 0 4px 12px 0 rgba(17, 17, 17, 0.24);\r\n  border-radius: 16px;\r\n}\r\n" } };
-//# sourceMappingURL=alert-templates.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/beacon-message-events.js":
-/*!*******************************************************!*\
-  !*** ../beacon-sdk/dist/esm/beacon-message-events.js ***!
-  \*******************************************************/
-/*! exports provided: messageEvents */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "messageEvents", function() { return messageEvents; });
-/* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./events */ "../beacon-sdk/dist/esm/events.js");
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! . */ "../beacon-sdk/dist/esm/index.js");
-
-
-const messageEvents = {
-    [___WEBPACK_IMPORTED_MODULE_1__["BeaconMessageType"].PermissionRequest]: {
-        sent: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].PERMISSION_REQUEST_SENT,
-        success: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].PERMISSION_REQUEST_SUCCESS,
-        error: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].PERMISSION_REQUEST_ERROR
-    },
-    [___WEBPACK_IMPORTED_MODULE_1__["BeaconMessageType"].PermissionResponse]: {
-        sent: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].UNKNOWN,
-        success: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].UNKNOWN,
-        error: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].UNKNOWN
-    },
-    [___WEBPACK_IMPORTED_MODULE_1__["BeaconMessageType"].OperationRequest]: {
-        sent: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].OPERATION_REQUEST_SENT,
-        success: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].OPERATION_REQUEST_SUCCESS,
-        error: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].OPERATION_REQUEST_ERROR
-    },
-    [___WEBPACK_IMPORTED_MODULE_1__["BeaconMessageType"].OperationResponse]: {
-        sent: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].UNKNOWN,
-        success: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].UNKNOWN,
-        error: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].UNKNOWN
-    },
-    [___WEBPACK_IMPORTED_MODULE_1__["BeaconMessageType"].SignPayloadRequest]: {
-        sent: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].SIGN_REQUEST_SENT,
-        success: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].SIGN_REQUEST_SUCCESS,
-        error: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].SIGN_REQUEST_ERROR
-    },
-    [___WEBPACK_IMPORTED_MODULE_1__["BeaconMessageType"].SignPayloadResponse]: {
-        sent: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].UNKNOWN,
-        success: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].UNKNOWN,
-        error: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].UNKNOWN
-    },
-    [___WEBPACK_IMPORTED_MODULE_1__["BeaconMessageType"].BroadcastRequest]: {
-        sent: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].BROADCAST_REQUEST_SENT,
-        success: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].BROADCAST_REQUEST_SUCCESS,
-        error: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].BROADCAST_REQUEST_ERROR
-    },
-    [___WEBPACK_IMPORTED_MODULE_1__["BeaconMessageType"].BroadcastResponse]: {
-        sent: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].UNKNOWN,
-        success: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].UNKNOWN,
-        error: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].UNKNOWN
-    },
-    [___WEBPACK_IMPORTED_MODULE_1__["BeaconMessageType"].Disconnect]: {
-        sent: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].UNKNOWN,
-        success: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].UNKNOWN,
-        error: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].UNKNOWN
-    },
-    [___WEBPACK_IMPORTED_MODULE_1__["BeaconMessageType"].Error]: {
-        sent: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].UNKNOWN,
-        success: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].UNKNOWN,
-        error: _events__WEBPACK_IMPORTED_MODULE_0__["BeaconEvent"].UNKNOWN
-    }
-};
-//# sourceMappingURL=beacon-message-events.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/clients/beacon-client/BeaconClient.js":
-/*!********************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/clients/beacon-client/BeaconClient.js ***!
-  \********************************************************************/
-/*! exports provided: BeaconClient */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BeaconClient", function() { return BeaconClient; });
-/* harmony import */ var _utils_exposed_promise__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/exposed-promise */ "../beacon-sdk/dist/esm/utils/exposed-promise.js");
-/* harmony import */ var _utils_generate_uuid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/generate-uuid */ "../beacon-sdk/dist/esm/utils/generate-uuid.js");
-/* harmony import */ var _utils_crypto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils/crypto */ "../beacon-sdk/dist/esm/utils/crypto.js");
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../.. */ "../beacon-sdk/dist/esm/index.js");
-/* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../events */ "../beacon-sdk/dist/esm/events.js");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../constants */ "../beacon-sdk/dist/esm/constants.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-
-
-
-/**
- * The beacon client is an abstract client that handles everything that is shared between all other clients.
- * Specifically, it handles managing the beaconId and and the local keypair.
- */
-class BeaconClient {
-    constructor(config) {
-        /** The beaconId is a public key that is used to identify one specific application (dapp or wallet).
-         * This is used inside a message to specify the sender, for example.
-         */
-        this._beaconId = new _utils_exposed_promise__WEBPACK_IMPORTED_MODULE_0__["ExposedPromise"]();
-        this.events = new _events__WEBPACK_IMPORTED_MODULE_4__["BeaconEventHandler"]();
-        /**
-         * The local keypair that is used for the communication encryption
-         */
-        this._keyPair = new _utils_exposed_promise__WEBPACK_IMPORTED_MODULE_0__["ExposedPromise"]();
-        if (!config.name) {
-            throw new Error('Name not set');
-        }
-        if (!config.storage) {
-            throw new Error('Storage not set');
-        }
-        this.name = config.name;
-        this.storage = config.storage;
-        this.initSDK().catch(console.error);
-    }
-    get beaconId() {
-        return this._beaconId.promise;
-    }
-    get keyPair() {
-        return this._keyPair.promise;
-    }
-    /**
-     * This resets the SDK. After using this method, this instance is no longer usable. You will have to instanciate a new client.
-     */
-    destroy() {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.removeBeaconEntriesFromStorage();
-        });
-    }
-    /**
-     * This method initializes the SDK by setting some values in the storage and generating a keypair.
-     */
-    initSDK() {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.storage.set(___WEBPACK_IMPORTED_MODULE_3__["StorageKey"].BEACON_SDK_VERSION, _constants__WEBPACK_IMPORTED_MODULE_5__["SDK_VERSION"]).catch(console.error);
-            this.loadOrCreateBeaconSecret().catch(console.error);
-            return this.keyPair.then((keyPair) => {
-                this._beaconId.resolve(Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_2__["toHex"])(keyPair.publicKey));
-            });
-        });
-    }
-    /**
-     * Removes all beacon values from the storage.
-     */
-    removeBeaconEntriesFromStorage() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const allKeys = Object.values(___WEBPACK_IMPORTED_MODULE_3__["StorageKey"]);
-            yield Promise.all(allKeys.map((key) => this.storage.delete(key)));
-        });
-    }
-    /**
-     * This method tries to load the seed from storage, if it doesn't exist, a new one will be created and persisted.
-     */
-    loadOrCreateBeaconSecret() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const storageValue = yield this.storage.get(___WEBPACK_IMPORTED_MODULE_3__["StorageKey"].BEACON_SDK_SECRET_SEED);
-            if (storageValue && typeof storageValue === 'string') {
-                this._keyPair.resolve(yield Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_2__["getKeypairFromSeed"])(storageValue));
-            }
-            else {
-                const key = yield Object(_utils_generate_uuid__WEBPACK_IMPORTED_MODULE_1__["generateGUID"])();
-                yield this.storage.set(___WEBPACK_IMPORTED_MODULE_3__["StorageKey"].BEACON_SDK_SECRET_SEED, key);
-                this._keyPair.resolve(yield Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_2__["getKeypairFromSeed"])(key));
-            }
-        });
-    }
-}
-//# sourceMappingURL=BeaconClient.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/clients/client/Client.js":
-/*!*******************************************************!*\
-  !*** ../beacon-sdk/dist/esm/clients/client/Client.js ***!
-  \*******************************************************/
-/*! exports provided: Client */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Client", function() { return Client; });
-/* harmony import */ var _utils_exposed_promise__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/exposed-promise */ "../beacon-sdk/dist/esm/utils/exposed-promise.js");
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../.. */ "../beacon-sdk/dist/esm/index.js");
-/* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../events */ "../beacon-sdk/dist/esm/events.js");
-/* harmony import */ var _utils_available_transports__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils/available-transports */ "../beacon-sdk/dist/esm/utils/available-transports.js");
-/* harmony import */ var _beacon_client_BeaconClient__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../beacon-client/BeaconClient */ "../beacon-sdk/dist/esm/clients/beacon-client/BeaconClient.js");
-/* harmony import */ var _managers_AccountManager__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../managers/AccountManager */ "../beacon-sdk/dist/esm/managers/AccountManager.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-
-
-
-/**
- * This abstract class handles the a big part of the logic that is shared between the dapp and wallet client.
- * For example, it selects and manages the transport and accounts.
- */
-class Client extends _beacon_client_BeaconClient__WEBPACK_IMPORTED_MODULE_4__["BeaconClient"] {
-    constructor(config) {
-        var _a;
-        super({ name: config.name, storage: config.storage });
-        /**
-         * How many requests can be sent after another
-         */
-        this.rateLimit = 2;
-        /**
-         * The time window in seconds in which the "rateLimit" is checked
-         */
-        this.rateLimitWindowInSeconds = 5;
-        /**
-         * Stores the times when requests have been made to determine if the rate limit has been reached
-         */
-        this.requestCounter = [];
-        this._transport = new _utils_exposed_promise__WEBPACK_IMPORTED_MODULE_0__["ExposedPromise"]();
-        /**
-         * Returns whether or not the transport is successfully connected
-         */
-        this._isConnected = new _utils_exposed_promise__WEBPACK_IMPORTED_MODULE_0__["ExposedPromise"]();
-        this.events = new _events__WEBPACK_IMPORTED_MODULE_2__["BeaconEventHandler"](config.eventHandlers);
-        this.accountManager = new _managers_AccountManager__WEBPACK_IMPORTED_MODULE_5__["AccountManager"](config.storage);
-        this.matrixNodes = (_a = config.matrixNodes) !== null && _a !== void 0 ? _a : [];
-        this.handleResponse = (message, connectionInfo) => {
-            throw new Error(`not overwritten${JSON.stringify(message)} - ${JSON.stringify(connectionInfo)}`);
-        };
-    }
-    get transport() {
-        return this._transport.promise;
-    }
-    get isConnected() {
-        return this._isConnected.promise;
-    }
-    /**
-     * Returns whether or not the transaport is ready
-     */
-    get ready() {
-        return this.transport.then(() => undefined);
-    }
-    /**
-     * Return all locally known accounts
-     */
-    getAccounts() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.accountManager.getAccounts();
-        });
-    }
-    /**
-     * Return the account by ID
-     * @param accountIdentifier The ID of an account
-     */
-    getAccount(accountIdentifier) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.accountManager.getAccount(accountIdentifier);
-        });
-    }
-    /**
-     * Remove the account by ID
-     * @param accountIdentifier The ID of an account
-     */
-    removeAccount(accountIdentifier) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.accountManager.removeAccount(accountIdentifier);
-        });
-    }
-    /**
-     * Remove all locally stored accounts
-     */
-    removeAllAccounts() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.accountManager.removeAllAccounts();
-        });
-    }
-    /**
-     * Add a new request (current timestamp) to the pending requests, remove old ones and check if we are above the limit
-     */
-    addRequestAndCheckIfRateLimited() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const now = new Date().getTime();
-            this.requestCounter = this.requestCounter.filter((date) => date + this.rateLimitWindowInSeconds * 1000 > now);
-            this.requestCounter.push(now);
-            return this.requestCounter.length > this.rateLimit;
-        });
-    }
-    /**
-     * This method initializes the client. It will check if the connection should be established to a
-     * browser extension or if the P2P transport should be used.
-     *
-     * @param isDapp A boolean flag indicating if this is the DAppClient or WalletClient
-     * @param transport An optional transport that can be provided by the user
-     */
-    init(isDapp = true, transport) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this._transport.status === _utils_exposed_promise__WEBPACK_IMPORTED_MODULE_0__["ExposedPromiseStatus"].RESOLVED) {
-                return (yield this.transport).type;
-            }
-            if (transport) {
-                yield this.setTransport(transport); // Let users define their own transport
-                return transport.type;
-            }
-            else {
-                return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
-                    const keyPair = yield this.keyPair; // We wait for keypair here so the P2P Transport creation is not delayed and causing issues
-                    const setTransport = (newTransport) => __awaiter(this, void 0, void 0, function* () {
-                        yield this.setTransport(newTransport);
-                        resolve(newTransport.type);
-                    });
-                    const setBeaconTransport = () => __awaiter(this, void 0, void 0, function* () {
-                        const newTransport = new ___WEBPACK_IMPORTED_MODULE_1__["P2PTransport"](this.name, keyPair, this.storage, this.events, this.matrixNodes, isDapp);
-                        return setTransport(newTransport);
-                    });
-                    const setBeaconTransportTimeout = window.setTimeout(setBeaconTransport, 200);
-                    return _utils_available_transports__WEBPACK_IMPORTED_MODULE_3__["availableTransports"].extension.then((postMessageAvailable) => __awaiter(this, void 0, void 0, function* () {
-                        if (setBeaconTransportTimeout) {
-                            window.clearTimeout(setBeaconTransportTimeout);
-                        }
-                        if (postMessageAvailable) {
-                            return setTransport(new ___WEBPACK_IMPORTED_MODULE_1__["PostMessageTransport"](this.name, keyPair, this.storage, isDapp));
-                        }
-                        else {
-                            return setBeaconTransport();
-                        }
-                    }));
-                }));
-            }
-        });
-    }
-    /**
-     * Return all known peers
-     */
-    getPeers() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if ((yield this.transport).type === ___WEBPACK_IMPORTED_MODULE_1__["TransportType"].P2P) {
-                return (yield this.transport).getPeers(); // TODO: Also support other transports?
-            }
-            else {
-                return [];
-            }
-        });
-    }
-    /**
-     * Add a new peer to the known peers
-     * @param peer The new peer to add
-     */
-    addPeer(peer) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if ((yield this.transport).type === ___WEBPACK_IMPORTED_MODULE_1__["TransportType"].P2P) {
-                return (yield this.transport).addPeer(peer); // TODO: Also support other transports?
-            }
-        });
-    }
-    /**
-     * The method will attempt to initiate a connection using the active transport method.
-     * If the method is called multiple times while it is connecting (meaning the initial connect didn't finish),
-     * the transport will try to reconnect.
-     */
-    _connect() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const transport = yield this.transport;
-            if (transport.connectionStatus === ___WEBPACK_IMPORTED_MODULE_1__["TransportStatus"].NOT_CONNECTED) {
-                yield transport.connect();
-                transport
-                    .addListener((message, connectionInfo) => __awaiter(this, void 0, void 0, function* () {
-                    if (typeof message === 'string') {
-                        const deserializedMessage = (yield new ___WEBPACK_IMPORTED_MODULE_1__["Serializer"]().deserialize(message));
-                        this.handleResponse(deserializedMessage, connectionInfo);
-                    }
-                }))
-                    .catch((error) => console.log(error));
-                this._isConnected.resolve(true);
-            }
-            else if (transport.connectionStatus === ___WEBPACK_IMPORTED_MODULE_1__["TransportStatus"].CONNECTING) {
-                yield transport.reconnect();
-            }
-            else {
-                // NO-OP
-            }
-            return this._isConnected.promise;
-        });
-    }
-    /**
-     * A "setter" for when the transport needs to be changed.
-     */
-    setTransport(transport) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this._transport.isSettled()) {
-                // If the promise has already been resolved we need to create a new one.
-                this._transport = _utils_exposed_promise__WEBPACK_IMPORTED_MODULE_0__["ExposedPromise"].resolve(transport);
-            }
-            else {
-                this._transport.resolve(transport);
-            }
-            yield this.events.emit(_events__WEBPACK_IMPORTED_MODULE_2__["BeaconEvent"].ACTIVE_TRANSPORT_SET, transport);
-        });
-    }
-}
-//# sourceMappingURL=Client.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/clients/dapp-client/DAppClient.js":
-/*!****************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/clients/dapp-client/DAppClient.js ***!
-  \****************************************************************/
-/*! exports provided: DAppClient */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DAppClient", function() { return DAppClient; });
-/* harmony import */ var _utils_exposed_promise__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/exposed-promise */ "../beacon-sdk/dist/esm/utils/exposed-promise.js");
-/* harmony import */ var _utils_Logger__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/Logger */ "../beacon-sdk/dist/esm/utils/Logger.js");
-/* harmony import */ var _utils_generate_uuid__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils/generate-uuid */ "../beacon-sdk/dist/esm/utils/generate-uuid.js");
-/* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../events */ "../beacon-sdk/dist/esm/events.js");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../constants */ "../beacon-sdk/dist/esm/constants.js");
-/* harmony import */ var _utils_crypto__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../utils/crypto */ "../beacon-sdk/dist/esm/utils/crypto.js");
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../.. */ "../beacon-sdk/dist/esm/index.js");
-/* harmony import */ var _beacon_message_events__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../beacon-message-events */ "../beacon-sdk/dist/esm/beacon-message-events.js");
-/* harmony import */ var _utils_get_account_identifier__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../utils/get-account-identifier */ "../beacon-sdk/dist/esm/utils/get-account-identifier.js");
-/* harmony import */ var _utils_tezblock_blockexplorer__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../utils/tezblock-blockexplorer */ "../beacon-sdk/dist/esm/utils/tezblock-blockexplorer.js");
-/* harmony import */ var _types_BeaconErrorType__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../types/BeaconErrorType */ "../beacon-sdk/dist/esm/types/BeaconErrorType.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-
-
-
-
-
-
-
-
-const logger = new _utils_Logger__WEBPACK_IMPORTED_MODULE_1__["Logger"]('DAppClient');
-/**
- * The DAppClient has to be used in decentralized applications. It handles all the logic related to connecting to beacon-compatible
- * wallets and sending requests.
- */
-class DAppClient extends ___WEBPACK_IMPORTED_MODULE_6__["Client"] {
-    constructor(config) {
-        var _a;
-        super(Object.assign({ storage: config.storage ? config.storage : new ___WEBPACK_IMPORTED_MODULE_6__["LocalStorage"]() }, config));
-        /**
-         * A map of requests that are currently "open", meaning we have sent them to a wallet and are still awaiting a response.
-         */
-        this.openRequests = new Map();
-        /**
-         * The currently active account. For all requests that are associated to a specific request (operation request, signing request),
-         * the active account is used to determine the network and destination wallet
-         */
-        this._activeAccount = new _utils_exposed_promise__WEBPACK_IMPORTED_MODULE_0__["ExposedPromise"]();
-        this.iconUrl = config.iconUrl;
-        this.blockExplorer = (_a = config.blockExplorer) !== null && _a !== void 0 ? _a : new _utils_tezblock_blockexplorer__WEBPACK_IMPORTED_MODULE_9__["TezblockBlockExplorer"]();
-        this.storage
-            .get(___WEBPACK_IMPORTED_MODULE_6__["StorageKey"].ACTIVE_ACCOUNT)
-            .then((activeAccountIdentifier) => __awaiter(this, void 0, void 0, function* () {
-            if (activeAccountIdentifier) {
-                yield this.setActiveAccount(yield this.accountManager.getAccount(activeAccountIdentifier));
-            }
-            else {
-                yield this.setActiveAccount(undefined);
-            }
-        }))
-            .catch((storageError) => __awaiter(this, void 0, void 0, function* () {
-            yield this.setActiveAccount(undefined);
-            console.error(storageError);
-        }));
-        this.handleResponse = (message, connectionInfo) => __awaiter(this, void 0, void 0, function* () {
-            const openRequest = this.openRequests.get(message.id);
-            if (openRequest) {
-                if (message.type === ___WEBPACK_IMPORTED_MODULE_6__["BeaconMessageType"].Error) {
-                    openRequest.reject(message);
-                }
-                else {
-                    openRequest.resolve({ message, connectionInfo });
-                }
-                this.openRequests.delete(message.id);
-            }
-            else {
-                if (message.type === ___WEBPACK_IMPORTED_MODULE_6__["BeaconMessageType"].Disconnect) {
-                    const transport = yield this.transport;
-                    if (transport.type === ___WEBPACK_IMPORTED_MODULE_6__["TransportType"].P2P) {
-                        // TODO: Also handle postmessage transport
-                        yield transport.removePeer({
-                            name: '',
-                            publicKey: message.senderId,
-                            version: _constants__WEBPACK_IMPORTED_MODULE_4__["BEACON_VERSION"],
-                            relayServer: ''
-                        });
-                        yield this.events.emit(_events__WEBPACK_IMPORTED_MODULE_3__["BeaconEvent"].P2P_CHANNEL_CLOSED);
-                    }
-                }
-                else {
-                    logger.error('handleResponse', 'no request found for id ', message.id);
-                }
-            }
-        });
-    }
-    /**
-     * Returns the status if the transport is connected
-     */
-    get isConnected() {
-        return this._isConnected.promise;
-    }
-    init(_isDapp, transport) {
-        const _super = Object.create(null, {
-            init: { get: () => super.init }
-        });
-        return __awaiter(this, void 0, void 0, function* () {
-            const initResponse = yield _super.init.call(this, true, transport);
-            return initResponse;
-        });
-    }
-    /**
-     * Returns the active account
-     */
-    getActiveAccount() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this._activeAccount.promise;
-        });
-    }
-    /**
-     * Sets the active account
-     *
-     * @param account The account that will be set as the active account
-     */
-    setActiveAccount(account) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this._activeAccount.isSettled()) {
-                // If the promise has already been resolved we need to create a new one.
-                this._activeAccount = _utils_exposed_promise__WEBPACK_IMPORTED_MODULE_0__["ExposedPromise"].resolve(account);
-            }
-            else {
-                this._activeAccount.resolve(account);
-            }
-            yield this.storage.set(___WEBPACK_IMPORTED_MODULE_6__["StorageKey"].ACTIVE_ACCOUNT, account ? account.accountIdentifier : undefined);
-            yield this.events.emit(_events__WEBPACK_IMPORTED_MODULE_3__["BeaconEvent"].ACTIVE_ACCOUNT_SET, account);
-            return;
-        });
-    }
-    /**
-     * Returns the metadata of this DApp
-     */
-    getAppMetadata() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return {
-                senderId: yield this.beaconId,
-                name: this.name,
-                icon: this.iconUrl
-            };
-        });
-    }
-    /**
-     * The method will attempt to initiate a connection using the active transport method.
-     * If the method is called multiple times while it is connecting (meaning the initial connect didn't finish),
-     * the transport will try to reconnect.
-     */
-    connect() {
-        const _super = Object.create(null, {
-            _connect: { get: () => super._connect }
-        });
-        return __awaiter(this, void 0, void 0, function* () {
-            return _super._connect.call(this);
-        });
-    }
-    /**
-     * Will remove the account from the local storage and set a new active account if necessary.
-     *
-     * @param accountIdentifier ID of the account
-     */
-    removeAccount(accountIdentifier) {
-        const _super = Object.create(null, {
-            removeAccount: { get: () => super.removeAccount }
-        });
-        return __awaiter(this, void 0, void 0, function* () {
-            const removeAccountResult = _super.removeAccount.call(this, accountIdentifier);
-            const activeAccount = yield this.getActiveAccount();
-            if (activeAccount && activeAccount.accountIdentifier === accountIdentifier) {
-                yield this.setActiveAccount(undefined);
-            }
-            return removeAccountResult;
-        });
-    }
-    /**
-     * Remove all accounts and set active account to undefined
-     */
-    removeAllAccounts() {
-        const _super = Object.create(null, {
-            removeAllAccounts: { get: () => super.removeAllAccounts }
-        });
-        return __awaiter(this, void 0, void 0, function* () {
-            yield _super.removeAllAccounts.call(this);
-            yield this.setActiveAccount(undefined);
-        });
-    }
-    /**
-     * Removes a peer and all the accounts that have been connected through that peer
-     *
-     * @param peer Peer to be removed
-     */
-    removePeer(peer) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if ((yield this.transport).type === ___WEBPACK_IMPORTED_MODULE_6__["TransportType"].P2P) {
-                // TODO: Allow for other transport types?
-                const removePeerResult = (yield this.transport).removePeer(peer);
-                yield this.removeAccountsForPeers([peer]);
-                return removePeerResult;
-            }
-        });
-    }
-    /**
-     * Remove all peers and all accounts that have been connected through those peers
-     */
-    removeAllPeers() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if ((yield this.transport).type === ___WEBPACK_IMPORTED_MODULE_6__["TransportType"].P2P) {
-                // TODO: Allow for other transport types?
-                const peers = yield (yield this.transport).getPeers();
-                const removePeerResult = (yield this.transport).removeAllPeers();
-                yield this.removeAccountsForPeers(peers);
-                return removePeerResult;
-            }
-        });
-    }
-    /**
-     * Allows the user to subscribe to specific events that are fired in the SDK
-     *
-     * @param internalEvent The event to subscribe to
-     * @param eventCallback The callback that will be called when the event occurs
-     */
-    subscribeToEvent(internalEvent, eventCallback) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.events.on(internalEvent, eventCallback);
-        });
-    }
-    /**
-     * Check if we have permissions to send the specific message type to the active account.
-     * If no active account is set, only permission requests are allowed.
-     *
-     * @param type The type of the message
-     */
-    checkPermissions(type) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (type === ___WEBPACK_IMPORTED_MODULE_6__["BeaconMessageType"].PermissionRequest) {
-                return true;
-            }
-            const activeAccount = yield this.getActiveAccount();
-            if (!activeAccount) {
-                throw yield this.sendInternalError('No active account set!');
-            }
-            const permissions = activeAccount.scopes;
-            switch (type) {
-                case ___WEBPACK_IMPORTED_MODULE_6__["BeaconMessageType"].OperationRequest:
-                    return permissions.includes(___WEBPACK_IMPORTED_MODULE_6__["PermissionScope"].OPERATION_REQUEST);
-                case ___WEBPACK_IMPORTED_MODULE_6__["BeaconMessageType"].SignPayloadRequest:
-                    return permissions.includes(___WEBPACK_IMPORTED_MODULE_6__["PermissionScope"].SIGN);
-                case ___WEBPACK_IMPORTED_MODULE_6__["BeaconMessageType"].BroadcastRequest:
-                    return true;
-                default:
-                    return false;
-            }
-        });
-    }
-    /**
-     * Send a permission request to the DApp. This should be done as the first step. The wallet will respond
-     * with an publicKey and permissions that were given. The account returned will be set as the "activeAccount"
-     * and will be used for the following requests.
-     *
-     * @param input The message details we need to prepare the PermissionRequest message.
-     */
-    requestPermissions(input) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const request = {
-                appMetadata: yield this.getAppMetadata(),
-                type: ___WEBPACK_IMPORTED_MODULE_6__["BeaconMessageType"].PermissionRequest,
-                network: input && input.network ? input.network : { type: ___WEBPACK_IMPORTED_MODULE_6__["NetworkType"].MAINNET },
-                scopes: input && input.scopes
-                    ? input.scopes
-                    : [___WEBPACK_IMPORTED_MODULE_6__["PermissionScope"].OPERATION_REQUEST, ___WEBPACK_IMPORTED_MODULE_6__["PermissionScope"].SIGN]
-            };
-            const { message, connectionInfo } = yield this.makeRequest(request).catch((requestError) => __awaiter(this, void 0, void 0, function* () {
-                throw this.handleRequestError(request, requestError);
-            }));
-            // TODO: Migration code. Remove sometime after 1.0.0 release.
-            const publicKey = message.publicKey || message.pubkey || message.pubKey;
-            const address = yield Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_5__["getAddressFromPublicKey"])(publicKey);
-            const accountInfo = {
-                accountIdentifier: yield Object(_utils_get_account_identifier__WEBPACK_IMPORTED_MODULE_8__["getAccountIdentifier"])(address, message.network),
-                senderId: message.senderId,
-                origin: {
-                    type: connectionInfo.origin,
-                    id: connectionInfo.id
-                },
-                address,
-                publicKey,
-                network: message.network,
-                scopes: message.scopes,
-                threshold: message.threshold,
-                connectedAt: new Date().getTime()
-            };
-            yield this.accountManager.addAccount(accountInfo);
-            yield this.setActiveAccount(accountInfo);
-            const { senderId, network, scopes, threshold } = message;
-            const output = {
-                senderId,
-                address,
-                network,
-                scopes,
-                publicKey,
-                threshold
-            }; // TODO: Should we return the account info here?
-            yield this.notifySuccess(request, {
-                account: accountInfo,
-                output,
-                blockExplorer: this.blockExplorer,
-                connectionContext: connectionInfo
-            });
-            return output;
-        });
-    }
-    /**
-     * This method will send a "SignPayloadRequest" to the wallet. This method is meant to be used to sign
-     * arbitrary data (eg. a string). It will return the signature in the format of "edsig..."
-     *
-     * @param input The message details we need to prepare the SignPayloadRequest message.
-     */
-    requestSignPayload(input) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!input.payload) {
-                throw yield this.sendInternalError('Payload must be provided');
-            }
-            const activeAccount = yield this.getActiveAccount();
-            if (!activeAccount) {
-                throw yield this.sendInternalError('No active account!');
-            }
-            const request = {
-                type: ___WEBPACK_IMPORTED_MODULE_6__["BeaconMessageType"].SignPayloadRequest,
-                payload: input.payload,
-                sourceAddress: input.sourceAddress || activeAccount.address
-            };
-            const { message, connectionInfo } = yield this.makeRequest(request).catch((requestError) => __awaiter(this, void 0, void 0, function* () {
-                throw this.handleRequestError(request, requestError);
-            }));
-            const { senderId, signature } = message;
-            const output = { senderId, signature };
-            yield this.notifySuccess(request, {
-                account: activeAccount,
-                output,
-                connectionContext: connectionInfo
-            });
-            return output;
-        });
-    }
-    /**
-     * This method sends an OperationRequest to the wallet. This method should be used for all kinds of operations,
-     * eg. transaction or delegation. Not all properties have to be provided. Data like "counter" and fees will be
-     * fetched and calculated by the wallet (but they can still be provided if required).
-     *
-     * @param input The message details we need to prepare the OperationRequest message.
-     */
-    requestOperation(input) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!input.operationDetails) {
-                throw yield this.sendInternalError('Operation details must be provided');
-            }
-            const activeAccount = yield this.getActiveAccount();
-            if (!activeAccount) {
-                throw yield this.sendInternalError('No active account!');
-            }
-            const request = {
-                type: ___WEBPACK_IMPORTED_MODULE_6__["BeaconMessageType"].OperationRequest,
-                network: activeAccount.network || { type: ___WEBPACK_IMPORTED_MODULE_6__["NetworkType"].MAINNET },
-                operationDetails: input.operationDetails,
-                sourceAddress: activeAccount.address || ''
-            };
-            const { message, connectionInfo } = yield this.makeRequest(request).catch((requestError) => __awaiter(this, void 0, void 0, function* () {
-                throw this.handleRequestError(request, requestError);
-            }));
-            const { senderId, transactionHash } = message;
-            const output = { senderId, transactionHash };
-            yield this.notifySuccess(request, {
-                account: activeAccount,
-                output,
-                blockExplorer: this.blockExplorer,
-                connectionContext: connectionInfo
-            });
-            return { senderId, transactionHash };
-        });
-    }
-    /**
-     * Sends a "BroadcastRequest" to the wallet. This method can be used to inject an already signed transaction
-     * to the network.
-     *
-     * @param input The message details we need to prepare the BroadcastRequest message.
-     */
-    requestBroadcast(input) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!input.signedTransaction) {
-                throw yield this.sendInternalError('Signed transaction must be provided');
-            }
-            const network = input.network || { type: ___WEBPACK_IMPORTED_MODULE_6__["NetworkType"].MAINNET };
-            const request = {
-                type: ___WEBPACK_IMPORTED_MODULE_6__["BeaconMessageType"].BroadcastRequest,
-                network,
-                signedTransaction: input.signedTransaction
-            };
-            const { message, connectionInfo } = yield this.makeRequest(request).catch((requestError) => __awaiter(this, void 0, void 0, function* () {
-                throw this.handleRequestError(request, requestError);
-            }));
-            const { senderId, transactionHash } = message;
-            const output = { senderId, transactionHash };
-            yield this.notifySuccess(request, {
-                network,
-                output,
-                blockExplorer: this.blockExplorer,
-                connectionContext: connectionInfo
-            });
-            return { senderId, transactionHash };
-        });
-    }
-    /**
-     * This method will emit an internal error message.
-     *
-     * @param errorMessage The error message to send.
-     */
-    sendInternalError(errorMessage) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.events.emit(_events__WEBPACK_IMPORTED_MODULE_3__["BeaconEvent"].INTERNAL_ERROR, errorMessage);
-            throw new Error(errorMessage);
-        });
-    }
-    /**
-     * This method will remove all accounts associated with a specific peer.
-     *
-     * @param peersToRemove An array of peers for which accounts should be removed
-     */
-    removeAccountsForPeers(peersToRemove) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const accounts = yield this.accountManager.getAccounts();
-            const peerIdsToRemove = peersToRemove.map((peer) => peer.publicKey);
-            // Remove all accounts with origin of the specified peer
-            const accountsToRemove = accounts.filter((account) => peerIdsToRemove.includes(account.origin.id));
-            const accountIdentifiersToRemove = accountsToRemove.map((accountInfo) => accountInfo.accountIdentifier);
-            yield this.accountManager.removeAccounts(accountIdentifiersToRemove);
-            // Check if one of the accounts that was removed was the active account and if yes, set it to undefined
-            const activeAccount = yield this.getActiveAccount();
-            if (activeAccount) {
-                if (accountIdentifiersToRemove.includes(activeAccount.accountIdentifier)) {
-                    yield this.setActiveAccount(undefined);
-                }
-            }
-        });
-    }
-    /**
-     * This message handles errors that we receive from the wallet.
-     *
-     * @param request The request we sent
-     * @param beaconError The error we received
-     */
-    handleRequestError(request, beaconError) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (beaconError.errorType) {
-                let errorCallback = () => Promise.resolve();
-                if (beaconError.errorType === _types_BeaconErrorType__WEBPACK_IMPORTED_MODULE_10__["BeaconErrorType"].NO_PRIVATE_KEY_FOUND_ERROR) {
-                    errorCallback = () => __awaiter(this, void 0, void 0, function* () {
-                        const operationRequest = request;
-                        // if the account we requested is not available, we remove it locally
-                        let accountInfo;
-                        if (operationRequest.sourceAddress && operationRequest.network) {
-                            const accountIdentifier = yield Object(_utils_get_account_identifier__WEBPACK_IMPORTED_MODULE_8__["getAccountIdentifier"])(operationRequest.sourceAddress, operationRequest.network);
-                            accountInfo = yield this.getAccount(accountIdentifier);
-                            if (accountInfo) {
-                                yield this.removeAccount(accountInfo.accountIdentifier);
-                            }
-                        }
-                    });
-                }
-                this.events
-                    .emit(_beacon_message_events__WEBPACK_IMPORTED_MODULE_7__["messageEvents"][request.type].error, beaconError, [
-                    { text: 'Remove account', actionCallback: errorCallback }
-                ])
-                    .catch((emitError) => console.warn(emitError));
-                throw ___WEBPACK_IMPORTED_MODULE_6__["BeaconError"].getError(beaconError.errorType);
-            }
-            console.error('requestError', beaconError);
-            throw beaconError;
-        });
-    }
-    /**
-     * This message will send an event when we receive a successful response to one of the requests we sent.
-     *
-     * @param request The request we sent
-     * @param response The response we received
-     */
-    notifySuccess(request, response) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.events
-                .emit(_beacon_message_events__WEBPACK_IMPORTED_MODULE_7__["messageEvents"][request.type].success, response)
-                .catch((emitError) => console.warn(emitError));
-        });
-    }
-    /**
-     * This method handles sending of requests to the DApp. It makes sure that the DAppClient is initialized and connected
-     * to the transport. After that rate limits and permissions will be checked, an ID is attached and the request is sent
-     * to the DApp over the transport.
-     *
-     * @param requestInput The BeaconMessage to be sent to the wallet
-     * @param account The account that the message will be sent to
-     */
-    makeRequest(requestInput, account) {
-        return __awaiter(this, void 0, void 0, function* () {
-            logger.log('makeRequest');
-            yield this.init();
-            logger.log('makeRequest', 'after init');
-            yield this.connect();
-            logger.log('makeRequest', 'after connecting');
-            if (yield this.addRequestAndCheckIfRateLimited()) {
-                this.events
-                    .emit(_events__WEBPACK_IMPORTED_MODULE_3__["BeaconEvent"].LOCAL_RATE_LIMIT_REACHED)
-                    .catch((emitError) => console.warn(emitError));
-                throw new Error('rate limit reached');
-            }
-            if (!(yield this.checkPermissions(requestInput.type))) {
-                this.events.emit(_events__WEBPACK_IMPORTED_MODULE_3__["BeaconEvent"].NO_PERMISSIONS).catch((emitError) => console.warn(emitError));
-                throw new Error('No permissions to send this request to wallet!');
-            }
-            if (!this.beaconId) {
-                throw yield this.sendInternalError('BeaconID not defined');
-            }
-            const request = Object.assign({ id: yield Object(_utils_generate_uuid__WEBPACK_IMPORTED_MODULE_2__["generateGUID"])(), version: _constants__WEBPACK_IMPORTED_MODULE_4__["BEACON_VERSION"], senderId: yield this.beaconId }, requestInput);
-            const exposed = new _utils_exposed_promise__WEBPACK_IMPORTED_MODULE_0__["ExposedPromise"]();
-            this.addOpenRequest(request.id, exposed);
-            const payload = yield new ___WEBPACK_IMPORTED_MODULE_6__["Serializer"]().serialize(request);
-            let origin;
-            if (account) {
-                origin = account.senderId;
-            }
-            yield (yield this.transport).send(payload, origin);
-            this.events
-                .emit(_beacon_message_events__WEBPACK_IMPORTED_MODULE_7__["messageEvents"][requestInput.type].sent)
-                .catch((emitError) => console.warn(emitError));
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            return exposed.promise; // TODO: fix type
-        });
-    }
-    /**
-     * Adds a requests to the "openRequests" set so we know what messages have already been answered/handled.
-     *
-     * @param id The ID of the message
-     * @param promise A promise that resolves once the response for that specific message is received
-     */
-    addOpenRequest(id, promise) {
-        logger.log('addOpenRequest', this.name, `adding request ${id} and waiting for answer`);
-        this.openRequests.set(id, promise);
-    }
-}
-//# sourceMappingURL=DAppClient.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/clients/wallet-client/WalletClient.js":
-/*!********************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/clients/wallet-client/WalletClient.js ***!
-  \********************************************************************/
-/*! exports provided: WalletClient */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WalletClient", function() { return WalletClient; });
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../.. */ "../beacon-sdk/dist/esm/index.js");
-/* harmony import */ var _managers_PermissionManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../managers/PermissionManager */ "../beacon-sdk/dist/esm/managers/PermissionManager.js");
-/* harmony import */ var _managers_AppMetadataManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../managers/AppMetadataManager */ "../beacon-sdk/dist/esm/managers/AppMetadataManager.js");
-/* harmony import */ var _interceptors_IncomingRequestInterceptor__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../interceptors/IncomingRequestInterceptor */ "../beacon-sdk/dist/esm/interceptors/IncomingRequestInterceptor.js");
-/* harmony import */ var _interceptors_OutgoingResponseInterceptor__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../interceptors/OutgoingResponseInterceptor */ "../beacon-sdk/dist/esm/interceptors/OutgoingResponseInterceptor.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-
-
-/**
- * The WalletClient has to be used in the wallet. It handles all the logic related to connecting to beacon-compatible
- * dapps and handling/responding to requests.
- */
-class WalletClient extends ___WEBPACK_IMPORTED_MODULE_0__["Client"] {
-    constructor(config) {
-        super(Object.assign({ storage: new ___WEBPACK_IMPORTED_MODULE_0__["LocalStorage"]() }, config));
-        /**
-         * This array stores pending requests, meaning requests we received and have not yet handled / sent a response.
-         */
-        this.pendingRequests = [];
-        this.permissionManager = new _managers_PermissionManager__WEBPACK_IMPORTED_MODULE_1__["PermissionManager"](new ___WEBPACK_IMPORTED_MODULE_0__["LocalStorage"]());
-        this.appMetadataManager = new _managers_AppMetadataManager__WEBPACK_IMPORTED_MODULE_2__["AppMetadataManager"](new ___WEBPACK_IMPORTED_MODULE_0__["LocalStorage"]());
-    }
-    init() {
-        const _super = Object.create(null, {
-            init: { get: () => super.init }
-        });
-        return __awaiter(this, void 0, void 0, function* () {
-            return _super.init.call(this, false);
-        });
-    }
-    /**
-     * This method initiates a connection to the P2P network and registers a callback that will be called
-     * whenever a message is received.
-     *
-     * @param newMessageCallback The callback that will be invoked for every message the transport receives.
-     */
-    connect(newMessageCallback) {
-        const _super = Object.create(null, {
-            _connect: { get: () => super._connect }
-        });
-        return __awaiter(this, void 0, void 0, function* () {
-            this.handleResponse = (message, connectionInfo) => __awaiter(this, void 0, void 0, function* () {
-                if (!this.pendingRequests.some((request) => request.id === message.id)) {
-                    this.pendingRequests.push(message);
-                    yield _interceptors_IncomingRequestInterceptor__WEBPACK_IMPORTED_MODULE_3__["IncomingRequestInterceptor"].intercept({
-                        message,
-                        connectionInfo,
-                        appMetadataManager: this.appMetadataManager,
-                        interceptorCallback: newMessageCallback
-                    });
-                }
-            });
-            return _super._connect.call(this);
-        });
-    }
-    /**
-     * This method sends a response for a specific request back to the DApp
-     *
-     * @param message The BeaconResponseMessage that will be sent back to the DApp
-     */
-    respond(message) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const request = this.pendingRequests.find((pendingRequest) => pendingRequest.id === message.id);
-            if (!request) {
-                throw new Error('No matching request found!');
-            }
-            this.pendingRequests = this.pendingRequests.filter((pendingRequest) => pendingRequest.id !== message.id);
-            yield _interceptors_OutgoingResponseInterceptor__WEBPACK_IMPORTED_MODULE_4__["OutgoingResponseInterceptor"].intercept({
-                senderId: yield this.beaconId,
-                request,
-                message,
-                permissionManager: this.permissionManager,
-                appMetadataManager: this.appMetadataManager,
-                interceptorCallback: (response) => __awaiter(this, void 0, void 0, function* () {
-                    yield this.respondToMessage(response);
-                })
-            });
-        });
-    }
-    getAppMetadataList() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.appMetadataManager.getAppMetadataList();
-        });
-    }
-    getAppMetadata(senderId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.appMetadataManager.getAppMetadata(senderId);
-        });
-    }
-    removeAppMetadata(senderId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.appMetadataManager.removeAppMetadata(senderId);
-        });
-    }
-    removeAllAppMetadata() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.appMetadataManager.removeAllAppMetadata();
-        });
-    }
-    getPermissions() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.permissionManager.getPermissions();
-        });
-    }
-    getPermission(accountIdentifier) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.permissionManager.getPermission(accountIdentifier);
-        });
-    }
-    removePermission(accountIdentifier) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.permissionManager.removePermission(accountIdentifier);
-        });
-    }
-    removeAllPermissions() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.permissionManager.removeAllPermissions();
-        });
-    }
-    removePeer(peer) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if ((yield this.transport).type === ___WEBPACK_IMPORTED_MODULE_0__["TransportType"].P2P) {
-                const removePeerResult = (yield this.transport).removePeer(peer);
-                yield this.removePermissionsForPeers([peer]);
-                return removePeerResult;
-            }
-        });
-    }
-    removeAllPeers() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if ((yield this.transport).type === ___WEBPACK_IMPORTED_MODULE_0__["TransportType"].P2P) {
-                const peers = yield (yield this.transport).getPeers();
-                const removePeerResult = (yield this.transport).removeAllPeers();
-                yield this.removePermissionsForPeers(peers);
-                return removePeerResult;
-            }
-        });
-    }
-    removePermissionsForPeers(peersToRemove) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const permissions = yield this.permissionManager.getPermissions();
-            const peerIdsToRemove = peersToRemove.map((peer) => peer.publicKey);
-            // Remove all permissions with origin of the specified peer
-            const permissionsToRemove = permissions.filter((permission) => peerIdsToRemove.includes(permission.appMetadata.senderId));
-            const permissionIdentifiersToRemove = permissionsToRemove.map((permissionInfo) => permissionInfo.accountIdentifier);
-            yield this.permissionManager.removePermissions(permissionIdentifiersToRemove);
-        });
-    }
-    /**
-     * An internal method to send a BeaconMessage to the DApp
-     *
-     * @param message Send a message back to the DApp
-     */
-    respondToMessage(message) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const serializedMessage = yield new ___WEBPACK_IMPORTED_MODULE_0__["Serializer"]().serialize(message);
-            yield (yield this.transport).send(serializedMessage);
-        });
-    }
-}
-//# sourceMappingURL=WalletClient.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/constants.js":
-/*!*******************************************!*\
-  !*** ../beacon-sdk/dist/esm/constants.js ***!
-  \*******************************************/
-/*! exports provided: SDK_VERSION, BEACON_VERSION, DEBUG */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SDK_VERSION", function() { return SDK_VERSION; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BEACON_VERSION", function() { return BEACON_VERSION; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DEBUG", function() { return DEBUG; });
-const SDK_VERSION = '2.0.0-beta.11';
-const BEACON_VERSION = '2';
-const DEBUG = false;
-//# sourceMappingURL=constants.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/errors/AbortedBeaconError.js":
-/*!***********************************************************!*\
-  !*** ../beacon-sdk/dist/esm/errors/AbortedBeaconError.js ***!
-  \***********************************************************/
-/*! exports provided: AbortedBeaconError */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AbortedBeaconError", function() { return AbortedBeaconError; });
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-
-class AbortedBeaconError extends ___WEBPACK_IMPORTED_MODULE_0__["BeaconError"] {
-    constructor() {
-        super(___WEBPACK_IMPORTED_MODULE_0__["BeaconErrorType"].ABORTED_ERROR, 'The action was aborted by the user.');
-        this.name = 'UnknownBeaconError';
-        this.title = 'Error';
-    }
-}
-//# sourceMappingURL=AbortedBeaconError.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/errors/BeaconError.js":
-/*!****************************************************!*\
-  !*** ../beacon-sdk/dist/esm/errors/BeaconError.js ***!
-  \****************************************************/
-/*! exports provided: BeaconError */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BeaconError", function() { return BeaconError; });
-/* harmony import */ var _utils_assert_never__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/assert-never */ "../beacon-sdk/dist/esm/utils/assert-never.js");
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-
-
-class BeaconError {
-    constructor(errorType, message) {
-        this.name = 'BeaconError';
-        this.title = 'Error'; // Visible in the UI
-        this.message = `[${errorType}]:${message}`;
-        this.description = message;
-    }
-    static getError(errorType) {
-        switch (errorType) {
-            case ___WEBPACK_IMPORTED_MODULE_1__["BeaconErrorType"].BROADCAST_ERROR:
-                return new ___WEBPACK_IMPORTED_MODULE_1__["NetworkNotSupportedBeaconError"]();
-            case ___WEBPACK_IMPORTED_MODULE_1__["BeaconErrorType"].NETWORK_NOT_SUPPORTED:
-                return new ___WEBPACK_IMPORTED_MODULE_1__["NetworkNotSupportedBeaconError"]();
-            case ___WEBPACK_IMPORTED_MODULE_1__["BeaconErrorType"].NO_ADDRESS_ERROR:
-                return new ___WEBPACK_IMPORTED_MODULE_1__["NoAddressBeaconError"]();
-            case ___WEBPACK_IMPORTED_MODULE_1__["BeaconErrorType"].NO_PRIVATE_KEY_FOUND_ERROR:
-                return new ___WEBPACK_IMPORTED_MODULE_1__["NoPrivateKeyBeaconError"]();
-            case ___WEBPACK_IMPORTED_MODULE_1__["BeaconErrorType"].NOT_GRANTED_ERROR:
-                return new ___WEBPACK_IMPORTED_MODULE_1__["NotGrantedBeaconError"]();
-            case ___WEBPACK_IMPORTED_MODULE_1__["BeaconErrorType"].PARAMETERS_INVALID_ERROR:
-                return new ___WEBPACK_IMPORTED_MODULE_1__["ParametersInvalidBeaconError"]();
-            case ___WEBPACK_IMPORTED_MODULE_1__["BeaconErrorType"].TOO_MANY_OPERATIONS:
-                return new ___WEBPACK_IMPORTED_MODULE_1__["TooManyOperationsBeaconError"]();
-            case ___WEBPACK_IMPORTED_MODULE_1__["BeaconErrorType"].TRANSACTION_INVALID_ERROR:
-                return new ___WEBPACK_IMPORTED_MODULE_1__["TransactionInvalidBeaconError"]();
-            case ___WEBPACK_IMPORTED_MODULE_1__["BeaconErrorType"].ABORTED_ERROR:
-                return new ___WEBPACK_IMPORTED_MODULE_1__["AbortedBeaconError"]();
-            case ___WEBPACK_IMPORTED_MODULE_1__["BeaconErrorType"].UNKNOWN_ERROR:
-                return new ___WEBPACK_IMPORTED_MODULE_1__["UnknownBeaconError"]();
-            default:
-                Object(_utils_assert_never__WEBPACK_IMPORTED_MODULE_0__["assertNever"])(errorType);
-        }
-    }
-}
-//# sourceMappingURL=BeaconError.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/errors/BroadcastBeaconError.js":
-/*!*************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/errors/BroadcastBeaconError.js ***!
-  \*************************************************************/
-/*! exports provided: BroadcastBeaconError */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BroadcastBeaconError", function() { return BroadcastBeaconError; });
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-
-class BroadcastBeaconError extends ___WEBPACK_IMPORTED_MODULE_0__["BeaconError"] {
-    constructor() {
-        super(___WEBPACK_IMPORTED_MODULE_0__["BeaconErrorType"].BROADCAST_ERROR, 'The transaction could not be broadcast to the network. Please try again.');
-        this.name = 'BroadcastBeaconError';
-        this.title = 'Broadcast Error';
-    }
-}
-//# sourceMappingURL=BroadcastBeaconError.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/errors/NetworkNotSupportedBeaconError.js":
-/*!***********************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/errors/NetworkNotSupportedBeaconError.js ***!
-  \***********************************************************************/
-/*! exports provided: NetworkNotSupportedBeaconError */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NetworkNotSupportedBeaconError", function() { return NetworkNotSupportedBeaconError; });
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-
-class NetworkNotSupportedBeaconError extends ___WEBPACK_IMPORTED_MODULE_0__["BeaconError"] {
-    constructor() {
-        super(___WEBPACK_IMPORTED_MODULE_0__["BeaconErrorType"].NETWORK_NOT_SUPPORTED, 'The wallet does not support this network. Please select another one.');
-        this.name = 'NetworkNotSupportedBeaconError';
-        this.title = 'Network Error';
-    }
-}
-//# sourceMappingURL=NetworkNotSupportedBeaconError.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/errors/NoAddressBeaconError.js":
-/*!*************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/errors/NoAddressBeaconError.js ***!
-  \*************************************************************/
-/*! exports provided: NoAddressBeaconError */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NoAddressBeaconError", function() { return NoAddressBeaconError; });
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-
-class NoAddressBeaconError extends ___WEBPACK_IMPORTED_MODULE_0__["BeaconError"] {
-    constructor() {
-        super(___WEBPACK_IMPORTED_MODULE_0__["BeaconErrorType"].NO_ADDRESS_ERROR, 'The wallet does not have an account set up. Please make sure to set up your wallet and try again.');
-        this.name = 'NoAddressBeaconError';
-        this.title = 'No Address';
-    }
-}
-//# sourceMappingURL=NoAddressBeaconError.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/errors/NoPrivateKeyBeaconError.js":
-/*!****************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/errors/NoPrivateKeyBeaconError.js ***!
-  \****************************************************************/
-/*! exports provided: NoPrivateKeyBeaconError */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NoPrivateKeyBeaconError", function() { return NoPrivateKeyBeaconError; });
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-
-class NoPrivateKeyBeaconError extends ___WEBPACK_IMPORTED_MODULE_0__["BeaconError"] {
-    constructor() {
-        super(___WEBPACK_IMPORTED_MODULE_0__["BeaconErrorType"].NO_PRIVATE_KEY_FOUND_ERROR, 'The account you are trying to interact with is not available. Please make sure to add the account to your wallet and try again.');
-        this.name = 'NoPrivateKeyBeaconError';
-        this.title = 'Account Not Found';
-    }
-}
-//# sourceMappingURL=NoPrivateKeyBeaconError.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/errors/NotGrantedBeaconError.js":
-/*!**************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/errors/NotGrantedBeaconError.js ***!
-  \**************************************************************/
-/*! exports provided: NotGrantedBeaconError */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NotGrantedBeaconError", function() { return NotGrantedBeaconError; });
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-
-class NotGrantedBeaconError extends ___WEBPACK_IMPORTED_MODULE_0__["BeaconError"] {
-    constructor() {
-        super(___WEBPACK_IMPORTED_MODULE_0__["BeaconErrorType"].NOT_GRANTED_ERROR, 'You do not have the necessary permissions to perform this action. Please initiate another permission request and give the necessary permissions.');
-        this.name = 'NotGrantedBeaconError';
-        this.title = 'Permission Not Granted';
-    }
-}
-//# sourceMappingURL=NotGrantedBeaconError.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/errors/ParametersInvalidBeaconError.js":
-/*!*********************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/errors/ParametersInvalidBeaconError.js ***!
-  \*********************************************************************/
-/*! exports provided: ParametersInvalidBeaconError */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ParametersInvalidBeaconError", function() { return ParametersInvalidBeaconError; });
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-
-class ParametersInvalidBeaconError extends ___WEBPACK_IMPORTED_MODULE_0__["BeaconError"] {
-    constructor() {
-        super(___WEBPACK_IMPORTED_MODULE_0__["BeaconErrorType"].PARAMETERS_INVALID_ERROR, 'Some of the parameters you provided are invalid and the request could not be completed. Please check your inputs and try again.');
-        this.name = 'ParametersInvalidBeaconError';
-        this.title = 'Parameters Invalid';
-    }
-}
-//# sourceMappingURL=ParametersInvalidBeaconError.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/errors/TooManyOperationsBeaconError.js":
-/*!*********************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/errors/TooManyOperationsBeaconError.js ***!
-  \*********************************************************************/
-/*! exports provided: TooManyOperationsBeaconError */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TooManyOperationsBeaconError", function() { return TooManyOperationsBeaconError; });
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-
-class TooManyOperationsBeaconError extends ___WEBPACK_IMPORTED_MODULE_0__["BeaconError"] {
-    constructor() {
-        super(___WEBPACK_IMPORTED_MODULE_0__["BeaconErrorType"].TOO_MANY_OPERATIONS, 'The request contains too many transactions. Please include fewer operations and try again.');
-        this.name = 'TooManyOperationsBeaconError';
-        this.title = 'Too Many Operations';
-    }
-}
-//# sourceMappingURL=TooManyOperationsBeaconError.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/errors/TransactionInvalidBeaconError.js":
-/*!**********************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/errors/TransactionInvalidBeaconError.js ***!
-  \**********************************************************************/
-/*! exports provided: TransactionInvalidBeaconError */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TransactionInvalidBeaconError", function() { return TransactionInvalidBeaconError; });
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-
-class TransactionInvalidBeaconError extends ___WEBPACK_IMPORTED_MODULE_0__["BeaconError"] {
-    constructor() {
-        super(___WEBPACK_IMPORTED_MODULE_0__["BeaconErrorType"].TRANSACTION_INVALID_ERROR, 'The transaction is invalid and the node did not accept it.');
-        this.name = 'TransactionInvalidBeaconError';
-        this.title = 'Transaction Invalid';
-    }
-}
-//# sourceMappingURL=TransactionInvalidBeaconError.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/errors/UnknownBeaconError.js":
-/*!***********************************************************!*\
-  !*** ../beacon-sdk/dist/esm/errors/UnknownBeaconError.js ***!
-  \***********************************************************/
-/*! exports provided: UnknownBeaconError */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UnknownBeaconError", function() { return UnknownBeaconError; });
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-
-class UnknownBeaconError extends ___WEBPACK_IMPORTED_MODULE_0__["BeaconError"] {
-    constructor() {
-        super(___WEBPACK_IMPORTED_MODULE_0__["BeaconErrorType"].UNKNOWN_ERROR, 'An unknown error occured. Please try again or report it to a developer.');
-        this.name = 'UnknownBeaconError';
-        this.title = 'Error';
-    }
-}
-//# sourceMappingURL=UnknownBeaconError.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/events.js":
-/*!****************************************!*\
-  !*** ../beacon-sdk/dist/esm/events.js ***!
-  \****************************************/
-/*! exports provided: BeaconEvent, defaultEventCallbacks, BeaconEventHandler */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BeaconEvent", function() { return BeaconEvent; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultEventCallbacks", function() { return defaultEventCallbacks; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BeaconEventHandler", function() { return BeaconEventHandler; });
-/* harmony import */ var _utils_get_tzip10_link__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils/get-tzip10-link */ "../beacon-sdk/dist/esm/utils/get-tzip10-link.js");
-/* harmony import */ var _alert_Toast__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./alert/Toast */ "../beacon-sdk/dist/esm/alert/Toast.js");
-/* harmony import */ var _alert_Alert__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./alert/Alert */ "../beacon-sdk/dist/esm/alert/Alert.js");
-/* harmony import */ var _utils_qr__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils/qr */ "../beacon-sdk/dist/esm/utils/qr.js");
-/* harmony import */ var _utils_Logger__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils/Logger */ "../beacon-sdk/dist/esm/utils/Logger.js");
-/* harmony import */ var _errors_BeaconError__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./errors/BeaconError */ "../beacon-sdk/dist/esm/errors/BeaconError.js");
-/* harmony import */ var _Serializer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Serializer */ "../beacon-sdk/dist/esm/Serializer.js");
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! . */ "../beacon-sdk/dist/esm/index.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-
-
-
-
-
-const logger = new _utils_Logger__WEBPACK_IMPORTED_MODULE_4__["Logger"]('BeaconEvents');
-const serializer = new _Serializer__WEBPACK_IMPORTED_MODULE_6__["Serializer"]();
-/**
- * The different events that can be emitted by the beacon-sdk
- */
-var BeaconEvent;
-(function (BeaconEvent) {
-    BeaconEvent["PERMISSION_REQUEST_SENT"] = "PERMISSION_REQUEST_SENT";
-    BeaconEvent["PERMISSION_REQUEST_SUCCESS"] = "PERMISSION_REQUEST_SUCCESS";
-    BeaconEvent["PERMISSION_REQUEST_ERROR"] = "PERMISSION_REQUEST_ERROR";
-    BeaconEvent["OPERATION_REQUEST_SENT"] = "OPERATION_REQUEST_SENT";
-    BeaconEvent["OPERATION_REQUEST_SUCCESS"] = "OPERATION_REQUEST_SUCCESS";
-    BeaconEvent["OPERATION_REQUEST_ERROR"] = "OPERATION_REQUEST_ERROR";
-    BeaconEvent["SIGN_REQUEST_SENT"] = "SIGN_REQUEST_SENT";
-    BeaconEvent["SIGN_REQUEST_SUCCESS"] = "SIGN_REQUEST_SUCCESS";
-    BeaconEvent["SIGN_REQUEST_ERROR"] = "SIGN_REQUEST_ERROR";
-    BeaconEvent["BROADCAST_REQUEST_SENT"] = "BROADCAST_REQUEST_SENT";
-    BeaconEvent["BROADCAST_REQUEST_SUCCESS"] = "BROADCAST_REQUEST_SUCCESS";
-    BeaconEvent["BROADCAST_REQUEST_ERROR"] = "BROADCAST_REQUEST_ERROR";
-    BeaconEvent["LOCAL_RATE_LIMIT_REACHED"] = "LOCAL_RATE_LIMIT_REACHED";
-    BeaconEvent["NO_PERMISSIONS"] = "NO_PERMISSIONS";
-    BeaconEvent["ACTIVE_ACCOUNT_SET"] = "ACTIVE_ACCOUNT_SET";
-    BeaconEvent["ACTIVE_TRANSPORT_SET"] = "ACTIVE_TRANSPORT_SET";
-    BeaconEvent["P2P_CHANNEL_CONNECT_SUCCESS"] = "P2P_CHANNEL_CONNECT_SUCCESS";
-    BeaconEvent["P2P_LISTEN_FOR_CHANNEL_OPEN"] = "P2P_LISTEN_FOR_CHANNEL_OPEN";
-    BeaconEvent["P2P_CHANNEL_CLOSED"] = "P2P_CHANNEL_CLOSED";
-    BeaconEvent["INTERNAL_ERROR"] = "INTERNAL_ERROR";
-    BeaconEvent["UNKNOWN"] = "UNKNOWN";
-})(BeaconEvent || (BeaconEvent = {}));
-/**
- * Show a "Request sent" toast
- */
-const showSentToast = () => __awaiter(void 0, void 0, void 0, function* () {
-    Object(_alert_Toast__WEBPACK_IMPORTED_MODULE_1__["openToast"])({ body: 'Request sent', timer: 3000 }).catch((toastError) => console.error(toastError));
-});
-/**
- * Show a "No Permission" alert
- */
-const showNoPermissionAlert = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield Object(_alert_Alert__WEBPACK_IMPORTED_MODULE_2__["openAlert"])({
-        title: 'No Permission',
-        body: 'Please allow the wallet to handle this type of request.'
-    });
-});
-/**
- * Show an error alert
- *
- * @param beaconError The beacon error
- */
-const showErrorAlert = (beaconError, buttons) => __awaiter(void 0, void 0, void 0, function* () {
-    const error = beaconError.errorType
-        ? _errors_BeaconError__WEBPACK_IMPORTED_MODULE_5__["BeaconError"].getError(beaconError.errorType)
-        : new ___WEBPACK_IMPORTED_MODULE_7__["UnknownBeaconError"]();
-    yield Object(_alert_Alert__WEBPACK_IMPORTED_MODULE_2__["openAlert"])({
-        title: error.title,
-        body: error.description,
-        buttons
-    });
-});
-/**
- * Show a rate limit reached toast
- */
-const showRateLimitReached = () => __awaiter(void 0, void 0, void 0, function* () {
-    Object(_alert_Toast__WEBPACK_IMPORTED_MODULE_1__["openToast"])({
-        body: 'Rate limit reached. Please slow down',
-        timer: 3000
-    }).catch((toastError) => console.error(toastError));
-});
-/**
- * Show a "connection successful" alert for 1.5 seconds
- */
-const showBeaconConnectedAlert = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield Object(_alert_Alert__WEBPACK_IMPORTED_MODULE_2__["openAlert"])({
-        title: 'Success',
-        body: 'A wallet has been paired over the beacon network.',
-        buttons: [{ text: 'Done', style: 'outline' }],
-        timer: 1500
-    });
-});
-/**
- * Show a "channel closed" alert for 1.5 seconds
- */
-const showChannelClosedAlert = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield Object(_alert_Alert__WEBPACK_IMPORTED_MODULE_2__["openAlert"])({
-        title: 'Channel closed',
-        body: `Your peer has closed the connection.`,
-        buttons: [{ text: 'Done', style: 'outline' }],
-        timer: 1500
-    });
-});
-const showInternalErrorAlert = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    const alertConfig = {
-        title: 'Internal Error',
-        body: `${data}`,
-        buttons: [{ text: 'Done', style: 'outline' }]
-    };
-    yield Object(_alert_Alert__WEBPACK_IMPORTED_MODULE_2__["openAlert"])(alertConfig);
-});
-/**
- * Show a connect alert with QR code
- *
- * @param data The data that is emitted by the P2P_LISTEN_FOR_CHANNEL_OPEN event
- */
-const showQrCode = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    const dataString = JSON.stringify(data);
-    console.log(dataString); // TODO: Remove after "copy to clipboard" has been added.
-    const base58encoded = yield serializer.serialize(data);
-    console.log(base58encoded); // TODO: Remove after "copy to clipboard" has been added.
-    const uri = Object(_utils_get_tzip10_link__WEBPACK_IMPORTED_MODULE_0__["getTzip10Link"])('tezos://', base58encoded);
-    const alertConfig = {
-        title: 'Pair with Wallet',
-        body: `${Object(_utils_qr__WEBPACK_IMPORTED_MODULE_3__["getQrData"])(uri, 'svg')}<p>Don't know what to do with this QR code? <a href="https://docs.walletbeacon.io/supported-wallets.html" target="_blank">Learn more</a>.</p>`,
-        pairingPayload: base58encoded
-    };
-    yield Object(_alert_Alert__WEBPACK_IMPORTED_MODULE_2__["openAlert"])(alertConfig);
-});
-/**
- * Show a "Permission Granted" alert
- *
- * @param data The data that is emitted by the PERMISSION_REQUEST_SUCCESS event
- */
-const showPermissionSuccessAlert = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    const { account, output, blockExplorer } = data;
-    const alertConfig = {
-        title: 'Permission Granted',
-        body: `We received permissions for the address <strong>${output.address}</strong>
-    <br>
-    <br>
-    Network: <strong>${output.network.type}</strong>
-    <br>
-    Permissions: <strong>${output.scopes}</strong>`,
-        buttons: [
-            {
-                text: 'Open Blockexplorer',
-                actionCallback: () => __awaiter(void 0, void 0, void 0, function* () {
-                    const link = yield blockExplorer.getAddressLink(output.address, account.network);
-                    window.open(link, '_blank');
-                })
-            },
-            { text: 'Done', style: 'solid' }
-        ]
-    };
-    yield Object(_alert_Alert__WEBPACK_IMPORTED_MODULE_2__["openAlert"])(alertConfig);
-});
-/**
- * Show an "Operation Broadcasted" alert
- *
- * @param data The data that is emitted by the OPERATION_REQUEST_SUCCESS event
- */
-const showOperationSuccessAlert = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    const { account, output, blockExplorer } = data;
-    const alertConfig = {
-        title: 'Operation Broadcasted',
-        body: `The transaction has successfully been broadcasted to the network with the following hash. <strong>${output.transactionHash}</strong>`,
-        buttons: [
-            {
-                text: 'Open Blockexplorer',
-                actionCallback: () => __awaiter(void 0, void 0, void 0, function* () {
-                    const link = yield blockExplorer.getTransactionLink(output.transactionHash, account.network);
-                    window.open(link, '_blank');
-                })
-            },
-            { text: 'Done', style: 'solid' }
-        ]
-    };
-    yield Object(_alert_Alert__WEBPACK_IMPORTED_MODULE_2__["openAlert"])(alertConfig);
-});
-/**
- * Show a "Transaction Signed" alert
- *
- * @param data The data that is emitted by the SIGN_REQUEST_SUCCESS event
- */
-const showSignSuccessAlert = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    const output = data.output;
-    const alertConfig = {
-        title: 'Payload signed',
-        body: `The payload has successfully been signed.
-    <br>
-    Signature: <strong>${output.signature}</strong>`,
-        buttons: [{ text: 'Done', style: 'solid' }]
-    };
-    yield Object(_alert_Alert__WEBPACK_IMPORTED_MODULE_2__["openAlert"])(alertConfig);
-});
-/**
- * Show a "Broadcasted" alert
- *
- * @param data The data that is emitted by the BROADCAST_REQUEST_SUCCESS event
- */
-const showBroadcastSuccessAlert = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    const { network, output, blockExplorer } = data;
-    const alertConfig = {
-        title: 'Broadcasted',
-        body: `The transaction has successfully been broadcasted to the network with the following hash. <strong>${output.transactionHash}</strong>`,
-        buttons: [
-            {
-                text: 'Open Blockexplorer',
-                actionCallback: () => __awaiter(void 0, void 0, void 0, function* () {
-                    const link = yield blockExplorer.getTransactionLink(output.transactionHash, network);
-                    window.open(link, '_blank');
-                })
-            },
-            { text: 'Done', style: 'solid' }
-        ]
-    };
-    yield Object(_alert_Alert__WEBPACK_IMPORTED_MODULE_2__["openAlert"])(alertConfig);
-});
-const emptyHandler = (eventType) => (data) => __awaiter(void 0, void 0, void 0, function* () {
-    logger.log('emptyHandler', eventType, data);
-});
-/**
- * The default event handlers
- */
-const defaultEventCallbacks = {
-    [BeaconEvent.PERMISSION_REQUEST_SENT]: showSentToast,
-    [BeaconEvent.PERMISSION_REQUEST_SUCCESS]: showPermissionSuccessAlert,
-    [BeaconEvent.PERMISSION_REQUEST_ERROR]: showErrorAlert,
-    [BeaconEvent.OPERATION_REQUEST_SENT]: showSentToast,
-    [BeaconEvent.OPERATION_REQUEST_SUCCESS]: showOperationSuccessAlert,
-    [BeaconEvent.OPERATION_REQUEST_ERROR]: showErrorAlert,
-    [BeaconEvent.SIGN_REQUEST_SENT]: showSentToast,
-    [BeaconEvent.SIGN_REQUEST_SUCCESS]: showSignSuccessAlert,
-    [BeaconEvent.SIGN_REQUEST_ERROR]: showErrorAlert,
-    [BeaconEvent.BROADCAST_REQUEST_SENT]: showSentToast,
-    [BeaconEvent.BROADCAST_REQUEST_SUCCESS]: showBroadcastSuccessAlert,
-    [BeaconEvent.BROADCAST_REQUEST_ERROR]: showErrorAlert,
-    [BeaconEvent.LOCAL_RATE_LIMIT_REACHED]: showRateLimitReached,
-    [BeaconEvent.NO_PERMISSIONS]: showNoPermissionAlert,
-    [BeaconEvent.ACTIVE_ACCOUNT_SET]: emptyHandler(BeaconEvent.ACTIVE_ACCOUNT_SET),
-    [BeaconEvent.ACTIVE_TRANSPORT_SET]: emptyHandler(BeaconEvent.ACTIVE_TRANSPORT_SET),
-    [BeaconEvent.P2P_CHANNEL_CONNECT_SUCCESS]: showBeaconConnectedAlert,
-    [BeaconEvent.P2P_LISTEN_FOR_CHANNEL_OPEN]: showQrCode,
-    [BeaconEvent.P2P_CHANNEL_CLOSED]: showChannelClosedAlert,
-    [BeaconEvent.INTERNAL_ERROR]: showInternalErrorAlert,
-    [BeaconEvent.UNKNOWN]: emptyHandler(BeaconEvent.UNKNOWN)
-};
-/**
- * Handles beacon events
- */
-class BeaconEventHandler {
-    constructor(eventsToOverride = {}) {
-        this.callbackMap = {
-            [BeaconEvent.PERMISSION_REQUEST_SENT]: [defaultEventCallbacks.PERMISSION_REQUEST_SENT],
-            [BeaconEvent.PERMISSION_REQUEST_SUCCESS]: [defaultEventCallbacks.PERMISSION_REQUEST_SUCCESS],
-            [BeaconEvent.PERMISSION_REQUEST_ERROR]: [defaultEventCallbacks.PERMISSION_REQUEST_ERROR],
-            [BeaconEvent.OPERATION_REQUEST_SENT]: [defaultEventCallbacks.OPERATION_REQUEST_SENT],
-            [BeaconEvent.OPERATION_REQUEST_SUCCESS]: [defaultEventCallbacks.OPERATION_REQUEST_SUCCESS],
-            [BeaconEvent.OPERATION_REQUEST_ERROR]: [defaultEventCallbacks.OPERATION_REQUEST_ERROR],
-            [BeaconEvent.SIGN_REQUEST_SENT]: [defaultEventCallbacks.SIGN_REQUEST_SENT],
-            [BeaconEvent.SIGN_REQUEST_SUCCESS]: [defaultEventCallbacks.SIGN_REQUEST_SUCCESS],
-            [BeaconEvent.SIGN_REQUEST_ERROR]: [defaultEventCallbacks.SIGN_REQUEST_ERROR],
-            [BeaconEvent.BROADCAST_REQUEST_SENT]: [defaultEventCallbacks.BROADCAST_REQUEST_SENT],
-            [BeaconEvent.BROADCAST_REQUEST_SUCCESS]: [defaultEventCallbacks.BROADCAST_REQUEST_SUCCESS],
-            [BeaconEvent.BROADCAST_REQUEST_ERROR]: [defaultEventCallbacks.BROADCAST_REQUEST_ERROR],
-            [BeaconEvent.LOCAL_RATE_LIMIT_REACHED]: [defaultEventCallbacks.LOCAL_RATE_LIMIT_REACHED],
-            [BeaconEvent.NO_PERMISSIONS]: [defaultEventCallbacks.NO_PERMISSIONS],
-            [BeaconEvent.ACTIVE_ACCOUNT_SET]: [defaultEventCallbacks.ACTIVE_ACCOUNT_SET],
-            [BeaconEvent.ACTIVE_TRANSPORT_SET]: [defaultEventCallbacks.ACTIVE_TRANSPORT_SET],
-            [BeaconEvent.P2P_CHANNEL_CONNECT_SUCCESS]: [defaultEventCallbacks.P2P_CHANNEL_CONNECT_SUCCESS],
-            [BeaconEvent.P2P_LISTEN_FOR_CHANNEL_OPEN]: [defaultEventCallbacks.P2P_LISTEN_FOR_CHANNEL_OPEN],
-            [BeaconEvent.P2P_CHANNEL_CLOSED]: [defaultEventCallbacks.P2P_CHANNEL_CLOSED],
-            [BeaconEvent.INTERNAL_ERROR]: [defaultEventCallbacks.INTERNAL_ERROR],
-            [BeaconEvent.UNKNOWN]: [defaultEventCallbacks.UNKNOWN]
-        };
-        this.overrideDefaults(eventsToOverride).catch((overrideError) => {
-            logger.error('constructor', overrideError);
-        });
-    }
-    /**
-     * A method to subscribe to a specific beacon event and register a callback
-     *
-     * @param event The event being emitted
-     * @param eventCallback The callback that will be invoked
-     */
-    on(event, eventCallback) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const listeners = this.callbackMap[event] || [];
-            listeners.push(eventCallback);
-            this.callbackMap[event] = listeners;
-        });
-    }
-    /**
-     * Emit a beacon event
-     *
-     * @param event The event being emitted
-     * @param data The data to be emit
-     */
-    emit(event, data, eventCallback) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const listeners = this.callbackMap[event];
-            if (listeners && listeners.length > 0) {
-                listeners.forEach((listener) => __awaiter(this, void 0, void 0, function* () {
-                    try {
-                        yield listener(data, eventCallback);
-                    }
-                    catch (listenerError) {
-                        logger.error(`error handling event ${event}`, listenerError);
-                    }
-                }));
-            }
-        });
-    }
-    /**
-     * Override beacon event default callbacks. This can be used to disable default alert/toast behaviour
-     *
-     * @param eventsToOverride An object with the events to override
-     */
-    overrideDefaults(eventsToOverride) {
-        return __awaiter(this, void 0, void 0, function* () {
-            Object.keys(eventsToOverride).forEach((untypedEvent) => {
-                const eventType = untypedEvent;
-                const event = eventsToOverride[eventType];
-                if (event) {
-                    this.callbackMap[eventType] = [event.handler];
-                }
-            });
-        });
-    }
-}
-//# sourceMappingURL=events.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/index.js":
-/*!***************************************!*\
-  !*** ../beacon-sdk/dist/esm/index.js ***!
-  \***************************************/
-/*! exports provided: TezosOperationType, BeaconClient, Client, DAppClient, WalletClient, P2PCommunicationClient, NetworkType, BeaconMessageType, PermissionScope, Origin, ExtensionMessageTarget, BeaconError, BeaconErrorType, AbortedBeaconError, BroadcastBeaconError, NetworkNotSupportedBeaconError, NoAddressBeaconError, NoPrivateKeyBeaconError, NotGrantedBeaconError, ParametersInvalidBeaconError, TooManyOperationsBeaconError, TransactionInvalidBeaconError, UnknownBeaconError, TransportStatus, TransportType, Transport, PostMessageTransport, P2PTransport, ChromeMessageTransport, BeaconEvent, BeaconEventHandler, defaultEventCallbacks, Storage, StorageKey, ChromeStorage, LocalStorage, getStorage, AccountManager, AppMetadataManager, PermissionManager, SDK_VERSION, BEACON_VERSION, getAccountIdentifier, getAddressFromPublicKey, Serializer, availableTransports */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _transports_clients_P2PCommunicationClient__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./transports/clients/P2PCommunicationClient */ "../beacon-sdk/dist/esm/transports/clients/P2PCommunicationClient.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "P2PCommunicationClient", function() { return _transports_clients_P2PCommunicationClient__WEBPACK_IMPORTED_MODULE_0__["P2PCommunicationClient"]; });
-
-/* harmony import */ var _types_beacon_BeaconMessageType__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./types/beacon/BeaconMessageType */ "../beacon-sdk/dist/esm/types/beacon/BeaconMessageType.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BeaconMessageType", function() { return _types_beacon_BeaconMessageType__WEBPACK_IMPORTED_MODULE_1__["BeaconMessageType"]; });
-
-/* harmony import */ var _types_beacon_PermissionScope__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./types/beacon/PermissionScope */ "../beacon-sdk/dist/esm/types/beacon/PermissionScope.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PermissionScope", function() { return _types_beacon_PermissionScope__WEBPACK_IMPORTED_MODULE_2__["PermissionScope"]; });
-
-/* harmony import */ var _types_beacon_NetworkType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./types/beacon/NetworkType */ "../beacon-sdk/dist/esm/types/beacon/NetworkType.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NetworkType", function() { return _types_beacon_NetworkType__WEBPACK_IMPORTED_MODULE_3__["NetworkType"]; });
-
-/* harmony import */ var _types_tezos_OperationTypes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./types/tezos/OperationTypes */ "../beacon-sdk/dist/esm/types/tezos/OperationTypes.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TezosOperationType", function() { return _types_tezos_OperationTypes__WEBPACK_IMPORTED_MODULE_4__["TezosOperationType"]; });
-
-/* harmony import */ var _types_Origin__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./types/Origin */ "../beacon-sdk/dist/esm/types/Origin.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Origin", function() { return _types_Origin__WEBPACK_IMPORTED_MODULE_5__["Origin"]; });
-
-/* harmony import */ var _types_ExtensionMessageTarget__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./types/ExtensionMessageTarget */ "../beacon-sdk/dist/esm/types/ExtensionMessageTarget.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExtensionMessageTarget", function() { return _types_ExtensionMessageTarget__WEBPACK_IMPORTED_MODULE_6__["ExtensionMessageTarget"]; });
-
-/* harmony import */ var _clients_client_Client__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./clients/client/Client */ "../beacon-sdk/dist/esm/clients/client/Client.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Client", function() { return _clients_client_Client__WEBPACK_IMPORTED_MODULE_7__["Client"]; });
-
-/* harmony import */ var _clients_wallet_client_WalletClient__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./clients/wallet-client/WalletClient */ "../beacon-sdk/dist/esm/clients/wallet-client/WalletClient.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "WalletClient", function() { return _clients_wallet_client_WalletClient__WEBPACK_IMPORTED_MODULE_8__["WalletClient"]; });
-
-/* harmony import */ var _clients_dapp_client_DAppClient__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./clients/dapp-client/DAppClient */ "../beacon-sdk/dist/esm/clients/dapp-client/DAppClient.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DAppClient", function() { return _clients_dapp_client_DAppClient__WEBPACK_IMPORTED_MODULE_9__["DAppClient"]; });
-
-/* harmony import */ var _errors_BeaconError__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./errors/BeaconError */ "../beacon-sdk/dist/esm/errors/BeaconError.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BeaconError", function() { return _errors_BeaconError__WEBPACK_IMPORTED_MODULE_10__["BeaconError"]; });
-
-/* harmony import */ var _types_BeaconErrorType__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./types/BeaconErrorType */ "../beacon-sdk/dist/esm/types/BeaconErrorType.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BeaconErrorType", function() { return _types_BeaconErrorType__WEBPACK_IMPORTED_MODULE_11__["BeaconErrorType"]; });
-
-/* harmony import */ var _errors_BroadcastBeaconError__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./errors/BroadcastBeaconError */ "../beacon-sdk/dist/esm/errors/BroadcastBeaconError.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BroadcastBeaconError", function() { return _errors_BroadcastBeaconError__WEBPACK_IMPORTED_MODULE_12__["BroadcastBeaconError"]; });
-
-/* harmony import */ var _errors_NetworkNotSupportedBeaconError__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./errors/NetworkNotSupportedBeaconError */ "../beacon-sdk/dist/esm/errors/NetworkNotSupportedBeaconError.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NetworkNotSupportedBeaconError", function() { return _errors_NetworkNotSupportedBeaconError__WEBPACK_IMPORTED_MODULE_13__["NetworkNotSupportedBeaconError"]; });
-
-/* harmony import */ var _errors_NoAddressBeaconError__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./errors/NoAddressBeaconError */ "../beacon-sdk/dist/esm/errors/NoAddressBeaconError.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NoAddressBeaconError", function() { return _errors_NoAddressBeaconError__WEBPACK_IMPORTED_MODULE_14__["NoAddressBeaconError"]; });
-
-/* harmony import */ var _errors_NoPrivateKeyBeaconError__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./errors/NoPrivateKeyBeaconError */ "../beacon-sdk/dist/esm/errors/NoPrivateKeyBeaconError.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NoPrivateKeyBeaconError", function() { return _errors_NoPrivateKeyBeaconError__WEBPACK_IMPORTED_MODULE_15__["NoPrivateKeyBeaconError"]; });
-
-/* harmony import */ var _errors_NotGrantedBeaconError__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./errors/NotGrantedBeaconError */ "../beacon-sdk/dist/esm/errors/NotGrantedBeaconError.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NotGrantedBeaconError", function() { return _errors_NotGrantedBeaconError__WEBPACK_IMPORTED_MODULE_16__["NotGrantedBeaconError"]; });
-
-/* harmony import */ var _errors_ParametersInvalidBeaconError__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./errors/ParametersInvalidBeaconError */ "../beacon-sdk/dist/esm/errors/ParametersInvalidBeaconError.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ParametersInvalidBeaconError", function() { return _errors_ParametersInvalidBeaconError__WEBPACK_IMPORTED_MODULE_17__["ParametersInvalidBeaconError"]; });
-
-/* harmony import */ var _errors_TooManyOperationsBeaconError__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./errors/TooManyOperationsBeaconError */ "../beacon-sdk/dist/esm/errors/TooManyOperationsBeaconError.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TooManyOperationsBeaconError", function() { return _errors_TooManyOperationsBeaconError__WEBPACK_IMPORTED_MODULE_18__["TooManyOperationsBeaconError"]; });
-
-/* harmony import */ var _errors_TransactionInvalidBeaconError__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./errors/TransactionInvalidBeaconError */ "../beacon-sdk/dist/esm/errors/TransactionInvalidBeaconError.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TransactionInvalidBeaconError", function() { return _errors_TransactionInvalidBeaconError__WEBPACK_IMPORTED_MODULE_19__["TransactionInvalidBeaconError"]; });
-
-/* harmony import */ var _errors_UnknownBeaconError__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./errors/UnknownBeaconError */ "../beacon-sdk/dist/esm/errors/UnknownBeaconError.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UnknownBeaconError", function() { return _errors_UnknownBeaconError__WEBPACK_IMPORTED_MODULE_20__["UnknownBeaconError"]; });
-
-/* harmony import */ var _types_transport_TransportStatus__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./types/transport/TransportStatus */ "../beacon-sdk/dist/esm/types/transport/TransportStatus.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TransportStatus", function() { return _types_transport_TransportStatus__WEBPACK_IMPORTED_MODULE_21__["TransportStatus"]; });
-
-/* harmony import */ var _types_transport_TransportType__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./types/transport/TransportType */ "../beacon-sdk/dist/esm/types/transport/TransportType.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TransportType", function() { return _types_transport_TransportType__WEBPACK_IMPORTED_MODULE_22__["TransportType"]; });
-
-/* harmony import */ var _transports_PostMessageTransport__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./transports/PostMessageTransport */ "../beacon-sdk/dist/esm/transports/PostMessageTransport.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostMessageTransport", function() { return _transports_PostMessageTransport__WEBPACK_IMPORTED_MODULE_23__["PostMessageTransport"]; });
-
-/* harmony import */ var _transports_Transport__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./transports/Transport */ "../beacon-sdk/dist/esm/transports/Transport.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Transport", function() { return _transports_Transport__WEBPACK_IMPORTED_MODULE_24__["Transport"]; });
-
-/* harmony import */ var _transports_P2PTransport__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./transports/P2PTransport */ "../beacon-sdk/dist/esm/transports/P2PTransport.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "P2PTransport", function() { return _transports_P2PTransport__WEBPACK_IMPORTED_MODULE_25__["P2PTransport"]; });
-
-/* harmony import */ var _transports_ChromeMessageTransport__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./transports/ChromeMessageTransport */ "../beacon-sdk/dist/esm/transports/ChromeMessageTransport.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ChromeMessageTransport", function() { return _transports_ChromeMessageTransport__WEBPACK_IMPORTED_MODULE_26__["ChromeMessageTransport"]; });
-
-/* harmony import */ var _storage_Storage__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./storage/Storage */ "../beacon-sdk/dist/esm/storage/Storage.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Storage", function() { return _storage_Storage__WEBPACK_IMPORTED_MODULE_27__["Storage"]; });
-
-/* harmony import */ var _types_storage_StorageKey__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./types/storage/StorageKey */ "../beacon-sdk/dist/esm/types/storage/StorageKey.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "StorageKey", function() { return _types_storage_StorageKey__WEBPACK_IMPORTED_MODULE_28__["StorageKey"]; });
-
-/* harmony import */ var _storage_ChromeStorage__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./storage/ChromeStorage */ "../beacon-sdk/dist/esm/storage/ChromeStorage.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ChromeStorage", function() { return _storage_ChromeStorage__WEBPACK_IMPORTED_MODULE_29__["ChromeStorage"]; });
-
-/* harmony import */ var _storage_LocalStorage__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./storage/LocalStorage */ "../beacon-sdk/dist/esm/storage/LocalStorage.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LocalStorage", function() { return _storage_LocalStorage__WEBPACK_IMPORTED_MODULE_30__["LocalStorage"]; });
-
-/* harmony import */ var _storage_getStorage__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./storage/getStorage */ "../beacon-sdk/dist/esm/storage/getStorage.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getStorage", function() { return _storage_getStorage__WEBPACK_IMPORTED_MODULE_31__["getStorage"]; });
-
-/* harmony import */ var _Serializer__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./Serializer */ "../beacon-sdk/dist/esm/Serializer.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Serializer", function() { return _Serializer__WEBPACK_IMPORTED_MODULE_32__["Serializer"]; });
-
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./constants */ "../beacon-sdk/dist/esm/constants.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SDK_VERSION", function() { return _constants__WEBPACK_IMPORTED_MODULE_33__["SDK_VERSION"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BEACON_VERSION", function() { return _constants__WEBPACK_IMPORTED_MODULE_33__["BEACON_VERSION"]; });
-
-/* harmony import */ var _managers_AccountManager__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./managers/AccountManager */ "../beacon-sdk/dist/esm/managers/AccountManager.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AccountManager", function() { return _managers_AccountManager__WEBPACK_IMPORTED_MODULE_34__["AccountManager"]; });
-
-/* harmony import */ var _managers_AppMetadataManager__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./managers/AppMetadataManager */ "../beacon-sdk/dist/esm/managers/AppMetadataManager.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AppMetadataManager", function() { return _managers_AppMetadataManager__WEBPACK_IMPORTED_MODULE_35__["AppMetadataManager"]; });
-
-/* harmony import */ var _managers_PermissionManager__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./managers/PermissionManager */ "../beacon-sdk/dist/esm/managers/PermissionManager.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PermissionManager", function() { return _managers_PermissionManager__WEBPACK_IMPORTED_MODULE_36__["PermissionManager"]; });
-
-/* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./events */ "../beacon-sdk/dist/esm/events.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BeaconEvent", function() { return _events__WEBPACK_IMPORTED_MODULE_37__["BeaconEvent"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BeaconEventHandler", function() { return _events__WEBPACK_IMPORTED_MODULE_37__["BeaconEventHandler"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defaultEventCallbacks", function() { return _events__WEBPACK_IMPORTED_MODULE_37__["defaultEventCallbacks"]; });
-
-/* harmony import */ var _utils_crypto__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./utils/crypto */ "../beacon-sdk/dist/esm/utils/crypto.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getAddressFromPublicKey", function() { return _utils_crypto__WEBPACK_IMPORTED_MODULE_38__["getAddressFromPublicKey"]; });
-
-/* harmony import */ var _clients_beacon_client_BeaconClient__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./clients/beacon-client/BeaconClient */ "../beacon-sdk/dist/esm/clients/beacon-client/BeaconClient.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BeaconClient", function() { return _clients_beacon_client_BeaconClient__WEBPACK_IMPORTED_MODULE_39__["BeaconClient"]; });
-
-/* harmony import */ var _utils_get_account_identifier__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./utils/get-account-identifier */ "../beacon-sdk/dist/esm/utils/get-account-identifier.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getAccountIdentifier", function() { return _utils_get_account_identifier__WEBPACK_IMPORTED_MODULE_40__["getAccountIdentifier"]; });
-
-/* harmony import */ var _errors_AbortedBeaconError__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./errors/AbortedBeaconError */ "../beacon-sdk/dist/esm/errors/AbortedBeaconError.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AbortedBeaconError", function() { return _errors_AbortedBeaconError__WEBPACK_IMPORTED_MODULE_41__["AbortedBeaconError"]; });
-
-/* harmony import */ var _utils_available_transports__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./utils/available-transports */ "../beacon-sdk/dist/esm/utils/available-transports.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "availableTransports", function() { return _utils_available_transports__WEBPACK_IMPORTED_MODULE_42__["availableTransports"]; });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Tezos
-
-// Clients
-
-// Beacon
-
-// Errors
-
-// Transport
-
-// Events
-
-// Storage
-
-// Managers
-
-// Constants
-
-// Utils
-
-// Others
-
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/interceptors/IncomingRequestInterceptor.js":
-/*!*************************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/interceptors/IncomingRequestInterceptor.js ***!
-  \*************************************************************************/
-/*! exports provided: IncomingRequestInterceptor */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IncomingRequestInterceptor", function() { return IncomingRequestInterceptor; });
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-/**
- * The IncomingRequestInterceptor is used in the WalletClient to intercept an incoming request and enrich it with data, like app metadata.
- */
-class IncomingRequestInterceptor {
-    /**
-     * The method that is called during the interception
-     *
-     * @param config
-     */
-    static intercept(config) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { message, connectionInfo, appMetadataManager, interceptorCallback } = config;
-            // TODO: Remove v1 compatibility in later version
-            if (message.beaconId && !message.senderId) {
-                message.senderId = message.beaconId;
-                delete message.beaconId;
-            }
-            switch (message.type) {
-                case ___WEBPACK_IMPORTED_MODULE_0__["BeaconMessageType"].PermissionRequest:
-                    {
-                        // TODO: Remove v1 compatibility in later version
-                        if (message.appMetadata.beaconId && !message.appMetadata.senderId) {
-                            message.appMetadata.senderId = message.appMetadata.beaconId;
-                            delete message.appMetadata.beaconId;
-                        }
-                        yield appMetadataManager.addAppMetadata(message.appMetadata);
-                        const request = message;
-                        interceptorCallback(request, connectionInfo);
-                    }
-                    break;
-                case ___WEBPACK_IMPORTED_MODULE_0__["BeaconMessageType"].OperationRequest:
-                    {
-                        const appMetadata = yield IncomingRequestInterceptor.getAppMetadata(appMetadataManager, message.senderId);
-                        const request = Object.assign({ appMetadata }, message);
-                        interceptorCallback(request, connectionInfo);
-                    }
-                    break;
-                case ___WEBPACK_IMPORTED_MODULE_0__["BeaconMessageType"].SignPayloadRequest:
-                    {
-                        const appMetadata = yield IncomingRequestInterceptor.getAppMetadata(appMetadataManager, message.senderId);
-                        const request = Object.assign({ appMetadata }, message);
-                        interceptorCallback(request, connectionInfo);
-                    }
-                    break;
-                case ___WEBPACK_IMPORTED_MODULE_0__["BeaconMessageType"].BroadcastRequest:
-                    {
-                        const appMetadata = yield IncomingRequestInterceptor.getAppMetadata(appMetadataManager, message.senderId);
-                        const request = Object.assign({ appMetadata }, message);
-                        interceptorCallback(request, connectionInfo);
-                    }
-                    break;
-                default:
-                    console.log('Message not handled');
-            }
-        });
-    }
-    static getAppMetadata(appMetadataManager, senderId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const appMetadata = yield appMetadataManager.getAppMetadata(senderId);
-            if (!appMetadata) {
-                throw new Error('AppMetadata not found');
-            }
-            return appMetadata;
-        });
-    }
-}
-//# sourceMappingURL=IncomingRequestInterceptor.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/interceptors/OutgoingResponseInterceptor.js":
-/*!**************************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/interceptors/OutgoingResponseInterceptor.js ***!
-  \**************************************************************************/
-/*! exports provided: OutgoingResponseInterceptor */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OutgoingResponseInterceptor", function() { return OutgoingResponseInterceptor; });
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants */ "../beacon-sdk/dist/esm/constants.js");
-/* harmony import */ var _utils_crypto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/crypto */ "../beacon-sdk/dist/esm/utils/crypto.js");
-/* harmony import */ var _utils_get_account_identifier__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/get-account-identifier */ "../beacon-sdk/dist/esm/utils/get-account-identifier.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-
-/**
- * The OutgoingResponseInterceptor is used in the WalletClient to intercept an outgoing response and enrich it with data.
- */
-class OutgoingResponseInterceptor {
-    static intercept(config) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { senderId, request, message, permissionManager, appMetadataManager, interceptorCallback } = config;
-            // TODO: Remove v1 compatibility in later version
-            const interceptorCallbackWrapper = (msg) => {
-                const untypedMessage = msg;
-                untypedMessage.beaconId = msg.senderId;
-                interceptorCallback(msg);
-            };
-            switch (message.type) {
-                case ___WEBPACK_IMPORTED_MODULE_0__["BeaconMessageType"].Error: {
-                    const response = {
-                        type: message.type,
-                        version: _constants__WEBPACK_IMPORTED_MODULE_1__["BEACON_VERSION"],
-                        senderId,
-                        id: message.id,
-                        errorType: message.errorType
-                    };
-                    interceptorCallbackWrapper(response);
-                    break;
-                }
-                case ___WEBPACK_IMPORTED_MODULE_0__["BeaconMessageType"].PermissionResponse: {
-                    const response = Object.assign({ senderId, version: _constants__WEBPACK_IMPORTED_MODULE_1__["BEACON_VERSION"] }, message);
-                    // TODO: Migration code. Remove sometime after 1.0.0 release.
-                    const publicKey = response.publicKey || response.pubkey || response.pubKey;
-                    const address = yield Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_2__["getAddressFromPublicKey"])(publicKey);
-                    const appMetadata = yield appMetadataManager.getAppMetadata(request.senderId);
-                    if (!appMetadata) {
-                        throw new Error('AppMetadata not found');
-                    }
-                    const permission = {
-                        accountIdentifier: yield Object(_utils_get_account_identifier__WEBPACK_IMPORTED_MODULE_3__["getAccountIdentifier"])(address, response.network),
-                        senderId: request.senderId,
-                        appMetadata,
-                        website: '',
-                        address,
-                        publicKey,
-                        network: response.network,
-                        scopes: response.scopes,
-                        connectedAt: new Date().getTime()
-                    };
-                    permissionManager.addPermission(permission).catch(console.error);
-                    interceptorCallbackWrapper(response);
-                    break;
-                }
-                case ___WEBPACK_IMPORTED_MODULE_0__["BeaconMessageType"].OperationResponse:
-                    {
-                        const response = Object.assign({ senderId, version: _constants__WEBPACK_IMPORTED_MODULE_1__["BEACON_VERSION"] }, message);
-                        interceptorCallbackWrapper(response);
-                    }
-                    break;
-                case ___WEBPACK_IMPORTED_MODULE_0__["BeaconMessageType"].SignPayloadResponse:
-                    {
-                        const response = Object.assign({ senderId, version: _constants__WEBPACK_IMPORTED_MODULE_1__["BEACON_VERSION"] }, message);
-                        interceptorCallbackWrapper(response);
-                    }
-                    break;
-                case ___WEBPACK_IMPORTED_MODULE_0__["BeaconMessageType"].BroadcastResponse:
-                    {
-                        const response = Object.assign({ senderId, version: _constants__WEBPACK_IMPORTED_MODULE_1__["BEACON_VERSION"] }, message);
-                        interceptorCallbackWrapper(response);
-                    }
-                    break;
-                default:
-                    console.log('Message not handled');
-            }
-        });
-    }
-}
-//# sourceMappingURL=OutgoingResponseInterceptor.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/managers/AccountManager.js":
-/*!*********************************************************!*\
-  !*** ../beacon-sdk/dist/esm/managers/AccountManager.js ***!
-  \*********************************************************/
-/*! exports provided: AccountManager */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AccountManager", function() { return AccountManager; });
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-/* harmony import */ var _StorageManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./StorageManager */ "../beacon-sdk/dist/esm/managers/StorageManager.js");
-/* harmony import */ var _PermissionValidator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PermissionValidator */ "../beacon-sdk/dist/esm/managers/PermissionValidator.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-/**
- * The AccountManager provides CRUD functionality for account entities and persists them to the provided storage.
- */
-class AccountManager {
-    constructor(storage) {
-        this.storageManager = new _StorageManager__WEBPACK_IMPORTED_MODULE_1__["StorageManager"](storage, ___WEBPACK_IMPORTED_MODULE_0__["StorageKey"].ACCOUNTS);
-    }
-    getAccounts() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.getAll();
-        });
-    }
-    getAccount(accountIdentifier) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.getOne((account) => account.accountIdentifier === accountIdentifier);
-        });
-    }
-    addAccount(accountInfo) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.addOne(accountInfo, (account) => account.accountIdentifier === accountInfo.accountIdentifier);
-        });
-    }
-    removeAccount(accountIdentifier) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.remove((account) => account.accountIdentifier === accountIdentifier);
-        });
-    }
-    removeAccounts(accountIdentifiers) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.remove((account) => accountIdentifiers.includes(account.accountIdentifier));
-        });
-    }
-    removeAllAccounts() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.removeAll();
-        });
-    }
-    hasPermission(message) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return _PermissionValidator__WEBPACK_IMPORTED_MODULE_2__["PermissionValidator"].hasPermission(message, this.getAccount.bind(this), this.getAccounts.bind(this));
-        });
-    }
-}
-//# sourceMappingURL=AccountManager.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/managers/AppMetadataManager.js":
-/*!*************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/managers/AppMetadataManager.js ***!
-  \*************************************************************/
-/*! exports provided: AppMetadataManager */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppMetadataManager", function() { return AppMetadataManager; });
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-/* harmony import */ var _StorageManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./StorageManager */ "../beacon-sdk/dist/esm/managers/StorageManager.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-/**
- * The AppMetadataManager provides CRUD functionality for app-metadata entities and persists them to the provided storage.
- */
-class AppMetadataManager {
-    constructor(storage) {
-        this.storageManager = new _StorageManager__WEBPACK_IMPORTED_MODULE_1__["StorageManager"](storage, ___WEBPACK_IMPORTED_MODULE_0__["StorageKey"].APP_METADATA_LIST);
-    }
-    getAppMetadataList() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.getAll();
-        });
-    }
-    getAppMetadata(senderId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.getOne((appMetadata) => appMetadata.senderId === senderId);
-        });
-    }
-    addAppMetadata(appMetadata) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.addOne(appMetadata, (appMetadataElement) => appMetadataElement.senderId === appMetadata.senderId);
-        });
-    }
-    removeAppMetadata(senderId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.remove((appMetadata) => appMetadata.senderId === senderId);
-        });
-    }
-    removeAppMetadatas(senderIds) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.remove((appMetadata) => senderIds.includes(appMetadata.senderId));
-        });
-    }
-    removeAllAppMetadata() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.removeAll();
-        });
-    }
-}
-//# sourceMappingURL=AppMetadataManager.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/managers/PeerManager.js":
-/*!******************************************************!*\
-  !*** ../beacon-sdk/dist/esm/managers/PeerManager.js ***!
-  \******************************************************/
-/*! exports provided: PeerManager */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PeerManager", function() { return PeerManager; });
-/* harmony import */ var _StorageManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./StorageManager */ "../beacon-sdk/dist/esm/managers/StorageManager.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-/**
- * The PeerManager provides CRUD functionality for peer entities and persists them to the provided storage.
- */
-class PeerManager {
-    constructor(storage, key) {
-        this.storageManager = new _StorageManager__WEBPACK_IMPORTED_MODULE_0__["StorageManager"](storage, key);
-    }
-    hasPeer(publicKey) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return (yield this.getPeer(publicKey)) ? true : false;
-        });
-    }
-    getPeers() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.getAll();
-        });
-    }
-    getPeer(publicKey) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.getOne((peer) => peer.publicKey === publicKey);
-        });
-    }
-    addPeer(peerInfo) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.addOne(peerInfo, (peer) => peer.publicKey === peerInfo.publicKey);
-        });
-    }
-    removePeer(publicKey) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.remove((peer) => peer.publicKey === publicKey);
-        });
-    }
-    removePeers(publicKeys) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.remove((peer) => publicKeys.includes(peer.publicKey));
-        });
-    }
-    removeAllPeers() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.removeAll();
-        });
-    }
-}
-//# sourceMappingURL=PeerManager.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/managers/PermissionManager.js":
-/*!************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/managers/PermissionManager.js ***!
-  \************************************************************/
-/*! exports provided: PermissionManager */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PermissionManager", function() { return PermissionManager; });
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-/* harmony import */ var _StorageManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./StorageManager */ "../beacon-sdk/dist/esm/managers/StorageManager.js");
-/* harmony import */ var _PermissionValidator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PermissionValidator */ "../beacon-sdk/dist/esm/managers/PermissionValidator.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-/**
- * The PermissionManager provides CRUD functionality for permission entities and persists them to the provided storage.
- */
-class PermissionManager {
-    constructor(storage) {
-        this.storageManager = new _StorageManager__WEBPACK_IMPORTED_MODULE_1__["StorageManager"](storage, ___WEBPACK_IMPORTED_MODULE_0__["StorageKey"].PERMISSION_LIST);
-    }
-    getPermissions() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.getAll();
-        });
-    }
-    getPermission(accountIdentifier) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.getOne((permission) => permission.accountIdentifier === accountIdentifier);
-        });
-    }
-    addPermission(permissionInfo) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.addOne(permissionInfo, (permission) => permission.accountIdentifier === permissionInfo.accountIdentifier);
-        });
-    }
-    removePermission(accountIdentifier) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.remove((permissionInfo) => permissionInfo.accountIdentifier === accountIdentifier);
-        });
-    }
-    removePermissions(accountIdentifiers) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.remove((permission) => accountIdentifiers.includes(permission.accountIdentifier));
-        });
-    }
-    removeAllPermissions() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storageManager.removeAll();
-        });
-    }
-    hasPermission(message) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return _PermissionValidator__WEBPACK_IMPORTED_MODULE_2__["PermissionValidator"].hasPermission(message, this.getPermission.bind(this), this.getPermissions.bind(this));
-        });
-    }
-}
-//# sourceMappingURL=PermissionManager.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/managers/PermissionValidator.js":
-/*!**************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/managers/PermissionValidator.js ***!
-  \**************************************************************/
-/*! exports provided: PermissionValidator */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PermissionValidator", function() { return PermissionValidator; });
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-/* harmony import */ var _utils_get_account_identifier__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/get-account-identifier */ "../beacon-sdk/dist/esm/utils/get-account-identifier.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-/**
- * The PermissionValidator is used to check if permissions for a certain message type have been given
- */
-class PermissionValidator {
-    /**
-     * Check if permissions were given for a certain message type.
-     *
-     * PermissionRequest and BroadcastRequest will always return true.
-     *
-     * @param message Beacon Message
-     */
-    static hasPermission(message, getOne, getAll) {
-        return __awaiter(this, void 0, void 0, function* () {
-            switch (message.type) {
-                case ___WEBPACK_IMPORTED_MODULE_0__["BeaconMessageType"].PermissionRequest:
-                case ___WEBPACK_IMPORTED_MODULE_0__["BeaconMessageType"].BroadcastRequest: {
-                    return true;
-                }
-                case ___WEBPACK_IMPORTED_MODULE_0__["BeaconMessageType"].OperationRequest: {
-                    const accountIdentifier = yield Object(_utils_get_account_identifier__WEBPACK_IMPORTED_MODULE_1__["getAccountIdentifier"])(message.sourceAddress, message.network);
-                    const permission = yield getOne(accountIdentifier);
-                    if (!permission) {
-                        return false;
-                    }
-                    return permission.scopes.includes(___WEBPACK_IMPORTED_MODULE_0__["PermissionScope"].OPERATION_REQUEST);
-                }
-                case ___WEBPACK_IMPORTED_MODULE_0__["BeaconMessageType"].SignPayloadRequest: {
-                    const permissions = yield getAll();
-                    const filteredPermissions = permissions.filter((permission) => permission.address === message.sourceAddress);
-                    if (filteredPermissions.length === 0) {
-                        return false;
-                    }
-                    return filteredPermissions.some((permission) => permission.scopes.includes(___WEBPACK_IMPORTED_MODULE_0__["PermissionScope"].SIGN));
-                }
-                default:
-                    throw new Error('Message not handled');
-            }
-        });
-    }
-}
-//# sourceMappingURL=PermissionValidator.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/managers/StorageManager.js":
-/*!*********************************************************!*\
-  !*** ../beacon-sdk/dist/esm/managers/StorageManager.js ***!
-  \*********************************************************/
-/*! exports provided: StorageManager */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StorageManager", function() { return StorageManager; });
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-/* eslint-disable prefer-arrow/prefer-arrow-functions */
-function fixArrayType(array) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return array;
-}
-/* eslint-enable prefer-arrow/prefer-arrow-functions */
-/**
- * The StorageManager provides CRUD functionality for specific entities and persists them to the provided storage.
- */
-class StorageManager {
-    constructor(storage, storageKey) {
-        this.storage = storage;
-        this.storageKey = storageKey;
-    }
-    getAll() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storage.get(this.storageKey);
-        });
-    }
-    getOne(predicate) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const entities = yield this.storage.get(this.storageKey);
-            return fixArrayType(entities).find(predicate);
-        });
-    }
-    addOne(element, predicate, overwrite = true) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const entities = yield this.storage.get(this.storageKey);
-            if (!fixArrayType(entities).some(predicate)) {
-                fixArrayType(entities).push(element);
-            }
-            else if (overwrite) {
-                for (let i = 0; i < entities.length; i++) {
-                    if (predicate(fixArrayType(entities)[i])) {
-                        entities[i] = element;
-                    }
-                }
-            }
-            return this.storage.set(this.storageKey, entities);
-        });
-    }
-    remove(predicate) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const entities = yield this.storage.get(this.storageKey);
-            const filteredEntities = fixArrayType(entities).filter((entity) => !predicate(entity));
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            return this.storage.set(this.storageKey, filteredEntities);
-        });
-    }
-    removeAll() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.storage.delete(this.storageKey);
-        });
-    }
-}
-//# sourceMappingURL=StorageManager.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/matrix-client/MatrixClient.js":
-/*!************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/matrix-client/MatrixClient.js ***!
-  \************************************************************/
-/*! exports provided: MatrixClient */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MatrixClient", function() { return MatrixClient; });
-/* harmony import */ var _MatrixClientStore__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MatrixClientStore */ "../beacon-sdk/dist/esm/matrix-client/MatrixClientStore.js");
-/* harmony import */ var _MatrixHttpClient__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MatrixHttpClient */ "../beacon-sdk/dist/esm/matrix-client/MatrixHttpClient.js");
-/* harmony import */ var _models_MatrixRoom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./models/MatrixRoom */ "../beacon-sdk/dist/esm/matrix-client/models/MatrixRoom.js");
-/* harmony import */ var _services_MatrixRoomService__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./services/MatrixRoomService */ "../beacon-sdk/dist/esm/matrix-client/services/MatrixRoomService.js");
-/* harmony import */ var _services_MatrixUserService__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./services/MatrixUserService */ "../beacon-sdk/dist/esm/matrix-client/services/MatrixUserService.js");
-/* harmony import */ var _services_MatrixEventService__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./services/MatrixEventService */ "../beacon-sdk/dist/esm/matrix-client/services/MatrixEventService.js");
-/* harmony import */ var _MatrixClientEventEmitter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./MatrixClientEventEmitter */ "../beacon-sdk/dist/esm/matrix-client/MatrixClientEventEmitter.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-
-
-
-
-const MAX_POLLING_RETRIES = 3;
-/**
- * The matrix client used to connect to the matrix network
- */
-class MatrixClient {
-    constructor(store, eventEmitter, userService, roomService, eventService) {
-        this.store = store;
-        this.eventEmitter = eventEmitter;
-        this.userService = userService;
-        this.roomService = roomService;
-        this.eventService = eventService;
-        this.store.onStateChanged((oldState, newState, stateChange) => {
-            this.eventEmitter.onStateChanged(oldState, newState, stateChange);
-        }, 'rooms');
-    }
-    /**
-     * Create a matrix client based on the options provided
-     *
-     * @param config
-     */
-    static create(config) {
-        const store = new _MatrixClientStore__WEBPACK_IMPORTED_MODULE_0__["MatrixClientStore"](config.storage);
-        const eventEmitter = new _MatrixClientEventEmitter__WEBPACK_IMPORTED_MODULE_6__["MatrixClientEventEmitter"]();
-        const httpClient = new _MatrixHttpClient__WEBPACK_IMPORTED_MODULE_1__["MatrixHttpClient"](config.baseUrl);
-        const accountService = new _services_MatrixUserService__WEBPACK_IMPORTED_MODULE_4__["MatrixUserService"](httpClient);
-        const roomService = new _services_MatrixRoomService__WEBPACK_IMPORTED_MODULE_3__["MatrixRoomService"](httpClient);
-        const eventService = new _services_MatrixEventService__WEBPACK_IMPORTED_MODULE_5__["MatrixEventService"](httpClient);
-        return new MatrixClient(store, eventEmitter, accountService, roomService, eventService);
-    }
-    /**
-     * Return all the rooms we are currently part of
-     */
-    get joinedRooms() {
-        return Object.values(this.store.get('rooms')).filter((room) => room.status === _models_MatrixRoom__WEBPACK_IMPORTED_MODULE_2__["MatrixRoomStatus"].JOINED);
-    }
-    /**
-     * Return all the rooms to which we have received invitations
-     */
-    get invitedRooms() {
-        return Object.values(this.store.get('rooms')).filter((room) => room.status === _models_MatrixRoom__WEBPACK_IMPORTED_MODULE_2__["MatrixRoomStatus"].INVITED);
-    }
-    /**
-     * Return all the rooms that we left
-     */
-    get leftRooms() {
-        return Object.values(this.store.get('rooms')).filter((room) => room.status === _models_MatrixRoom__WEBPACK_IMPORTED_MODULE_2__["MatrixRoomStatus"].LEFT);
-    }
-    /**
-     * Initiate the connection to the matrix node and log in
-     *
-     * @param user
-     */
-    start(user) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.userService.login(user.id, user.password, user.deviceId);
-            yield this.store.update({
-                accessToken: response.access_token
-            });
-            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-                yield this.poll(0, (pollingResponse) => __awaiter(this, void 0, void 0, function* () {
-                    if (!this.store.get('isRunning')) {
-                        resolve();
-                    }
-                    yield this.store.update({
-                        isRunning: true,
-                        syncToken: pollingResponse.next_batch,
-                        pollingTimeout: 30000,
-                        pollingRetries: 0,
-                        rooms: _models_MatrixRoom__WEBPACK_IMPORTED_MODULE_2__["MatrixRoom"].fromSync(pollingResponse.rooms)
-                    });
-                }), (error) => __awaiter(this, void 0, void 0, function* () {
-                    if (!this.store.get('isRunning')) {
-                        reject(error);
-                    }
-                    yield this.store.update({
-                        isRunning: false,
-                        pollingRetries: this.store.get('pollingRetries') + 1
-                    });
-                }));
-            }));
-        });
-    }
-    /**
-     * Subscribe to new matrix events
-     *
-     * @param event
-     * @param listener
-     */
-    subscribe(event, listener) {
-        this.eventEmitter.on(event, listener);
-    }
-    /**
-     * Unsubscribe from matrix events
-     *
-     * @param event
-     * @param listener
-     */
-    unsubscribe(event, listener) {
-        if (listener) {
-            this.eventEmitter.removeListener(event, listener);
-        }
-        else {
-            this.eventEmitter.removeAllListeners(event);
-        }
-    }
-    getRoomById(id) {
-        return this.store.getRoom(id);
-    }
-    /**
-     * Create a private room with the supplied members
-     *
-     * @param members Members that will be in the room
-     */
-    createTrustedPrivateRoom(...members) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.requiresAuthorization('createRoom', (accessToken) => __awaiter(this, void 0, void 0, function* () {
-                const response = yield this.roomService.createRoom(accessToken, {
-                    invite: members,
-                    preset: 'trusted_private_chat',
-                    is_direct: true
-                });
-                return response.room_id;
-            }));
-        });
-    }
-    /**
-     * Invite user to rooms
-     *
-     * @param user The user to be invited
-     * @param roomsOrIds The rooms the user will be invited to
-     */
-    inviteToRooms(user, ...roomsOrIds) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.requiresAuthorization('invite', (accessToken) => Promise.all(roomsOrIds.map((roomOrId) => {
-                const room = this.store.getRoom(roomOrId);
-                this.roomService
-                    .inviteToRoom(accessToken, user, room)
-                    .catch((error) => console.warn(error));
-            })));
-        });
-    }
-    /**
-     * Join rooms
-     *
-     * @param roomsOrIds
-     */
-    joinRooms(...roomsOrIds) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.requiresAuthorization('join', (accessToken) => Promise.all(roomsOrIds.map((roomOrId) => {
-                const room = this.store.getRoom(roomOrId);
-                return this.roomService.joinRoom(accessToken, room).catch((error) => console.warn(error));
-            })));
-        });
-    }
-    /**
-     * Send a text message
-     *
-     * @param roomOrId
-     * @param message
-     */
-    sendTextMessage(roomOrId, message) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                yield this.requiresAuthorization('send', (accessToken) => __awaiter(this, void 0, void 0, function* () {
-                    const room = this.store.getRoom(roomOrId);
-                    const txnId = yield this.createTxnId();
-                    return this.eventService.sendMessage(accessToken, room, {
-                        msgtype: 'm.text',
-                        body: message
-                    }, txnId);
-                }));
-            }
-            catch (error) {
-                console.error(error);
-            }
-        });
-    }
-    /**
-     * Poll the server to get the latest data and get notified of changes
-     *
-     * @param interval
-     * @param onSyncSuccess
-     * @param onSyncError
-     */
-    poll(interval, onSyncSuccess, onSyncError) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const store = this.store;
-            const sync = this.sync.bind(this);
-            const pollSync = (resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-                let continueSyncing = false;
-                try {
-                    const response = yield sync();
-                    onSyncSuccess(response);
-                    continueSyncing = true;
-                }
-                catch (error) {
-                    onSyncError(error);
-                    continueSyncing = store.get('pollingRetries') < MAX_POLLING_RETRIES;
-                    // console.warn('Could not sync:', error)
-                    if (continueSyncing) {
-                        console.log('Retry syncing...');
-                    }
-                }
-                finally {
-                    if (continueSyncing) {
-                        setTimeout(() => __awaiter(this, void 0, void 0, function* () {
-                            yield pollSync(resolve, reject);
-                        }), interval);
-                    }
-                    else {
-                        reject(new Error(`Max polling retries exeeded: ${MAX_POLLING_RETRIES}`));
-                    }
-                }
-            });
-            return new Promise(pollSync);
-        });
-    }
-    /**
-     * Get state from server
-     */
-    sync() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.requiresAuthorization('sync', (accessToken) => __awaiter(this, void 0, void 0, function* () {
-                return this.eventService.sync(accessToken, {
-                    pollingTimeout: this.store.get('pollingTimeout'),
-                    syncToken: this.store.get('syncToken')
-                });
-            }));
-        });
-    }
-    /**
-     * A helper method that makes sure an access token is provided
-     *
-     * @param name
-     * @param action
-     */
-    requiresAuthorization(name, action) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const storedToken = this.store.get('accessToken');
-            if (!storedToken) {
-                return Promise.reject(`${name} requires authorization but no access token has been provided.`);
-            }
-            return action(storedToken);
-        });
-    }
-    /**
-     * Create a transaction ID
-     */
-    createTxnId() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const timestamp = new Date().getTime();
-            const counter = this.store.get('txnNo');
-            yield this.store.update({
-                txnNo: counter + 1
-            });
-            return `m${timestamp}.${counter}`;
-        });
-    }
-}
-//# sourceMappingURL=MatrixClient.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/matrix-client/MatrixClientEventEmitter.js":
-/*!************************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/matrix-client/MatrixClientEventEmitter.js ***!
-  \************************************************************************/
-/*! exports provided: MatrixClientEventEmitter */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MatrixClientEventEmitter", function() { return MatrixClientEventEmitter; });
-/* harmony import */ var events__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! events */ "./node_modules/events/events.js");
-/* harmony import */ var events__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(events__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/utils */ "../beacon-sdk/dist/esm/utils/utils.js");
-/* harmony import */ var _models_MatrixRoom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./models/MatrixRoom */ "../beacon-sdk/dist/esm/matrix-client/models/MatrixRoom.js");
-/* harmony import */ var _models_MatrixClientEvent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./models/MatrixClientEvent */ "../beacon-sdk/dist/esm/matrix-client/models/MatrixClientEvent.js");
-
-
-
-
-class MatrixClientEventEmitter extends events__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"] {
-    constructor() {
-        super(...arguments);
-        this.eventEmitProviders = new Map([
-            [_models_MatrixClientEvent__WEBPACK_IMPORTED_MODULE_3__["MatrixClientEventType"].INVITE, () => [this.isInvite, this.emitInvite.bind(this)]],
-            [_models_MatrixClientEvent__WEBPACK_IMPORTED_MODULE_3__["MatrixClientEventType"].MESSAGE, () => [this.isMessage, this.emitMessage.bind(this)]]
-        ]);
-    }
-    /**
-     * This method is called every time the state is changed
-     *
-     * @param _oldState
-     * @param _newState
-     * @param stateChange
-     */
-    onStateChanged(_oldState, _newState, stateChange) {
-        for (const event of Object(_utils_utils__WEBPACK_IMPORTED_MODULE_1__["keys"])(_models_MatrixClientEvent__WEBPACK_IMPORTED_MODULE_3__["MatrixClientEventType"])) {
-            this.emitIfEvent(_models_MatrixClientEvent__WEBPACK_IMPORTED_MODULE_3__["MatrixClientEventType"][event], stateChange);
-        }
-    }
-    /**
-     * Emit the message if we have listeners registered for that type
-     *
-     * @param eventType
-     * @param object
-     */
-    emitIfEvent(eventType, object) {
-        const provider = this.eventEmitProviders.get(eventType);
-        if (provider) {
-            const [predicate, emitter] = provider();
-            if (predicate(object)) {
-                emitter(eventType, object);
-            }
-        }
-    }
-    /**
-     * Emit a client event
-     *
-     * @param eventType
-     * @param content
-     */
-    emitClientEvent(eventType, content) {
-        this.emit(eventType, {
-            type: eventType,
-            content
-        });
-    }
-    /**
-     * Check if event is an invite
-     *
-     * @param stateChange
-     */
-    isInvite(stateChange) {
-        return stateChange.rooms
-            ? stateChange.rooms.some((room) => room.status === _models_MatrixRoom__WEBPACK_IMPORTED_MODULE_2__["MatrixRoomStatus"].INVITED)
-            : false;
-    }
-    /**
-     * Emit an invite
-     *
-     * @param eventType
-     * @param stateChange
-     */
-    emitInvite(eventType, stateChange) {
-        stateChange.rooms
-            .filter((room) => room.status === _models_MatrixRoom__WEBPACK_IMPORTED_MODULE_2__["MatrixRoomStatus"].INVITED)
-            .map((room) => room.id)
-            .forEach((id) => {
-            this.emitClientEvent(eventType, {
-                roomId: id
-            });
-        });
-    }
-    /**
-     * Check if event is a message
-     *
-     * @param stateChange
-     */
-    isMessage(stateChange) {
-        return stateChange.rooms ? stateChange.rooms.some((room) => room.messages.length > 0) : false;
-    }
-    /**
-     * Emit an event to all rooms
-     *
-     * @param eventType
-     * @param stateChange
-     */
-    emitMessage(eventType, stateChange) {
-        stateChange.rooms
-            .filter((room) => room.messages.length > 0)
-            .map((room) => room.messages.map((message) => [room.id, message]))
-            .reduce((flatten, toFlatten) => flatten.concat(toFlatten), [])
-            .forEach(([roomId, message]) => {
-            this.emitClientEvent(eventType, {
-                roomId,
-                message
-            });
-        });
-    }
-}
-//# sourceMappingURL=MatrixClientEventEmitter.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/matrix-client/MatrixClientStore.js":
-/*!*****************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/matrix-client/MatrixClientStore.js ***!
-  \*****************************************************************/
-/*! exports provided: MatrixClientStore */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MatrixClientStore", function() { return MatrixClientStore; });
-/* harmony import */ var _utils_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/utils */ "../beacon-sdk/dist/esm/utils/utils.js");
-/* harmony import */ var _models_MatrixRoom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./models/MatrixRoom */ "../beacon-sdk/dist/esm/matrix-client/models/MatrixRoom.js");
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-const PRESERVED_FIELDS = ['syncToken', 'rooms'];
-/**
- * The class managing the local state of matrix
- */
-class MatrixClientStore {
-    constructor(storage) {
-        this.storage = storage;
-        /**
-         * The state of the matrix client
-         */
-        this.state = {
-            isRunning: false,
-            userId: undefined,
-            deviceId: undefined,
-            txnNo: 0,
-            accessToken: undefined,
-            syncToken: undefined,
-            pollingTimeout: undefined,
-            pollingRetries: 0,
-            rooms: {}
-        };
-        /**
-         * Listeners that will be called when the state changes
-         */
-        this.onStateChangedListeners = new Map();
-        /**
-         * A promise that resolves once the client is ready
-         */
-        this.waitReadyPromise = new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                yield this.initFromStorage();
-                resolve();
-            }
-            catch (error) {
-                reject(error);
-            }
-        }));
-    }
-    /**
-     * Get an item from the state
-     *
-     * @param key
-     */
-    get(key) {
-        return this.state[key];
-    }
-    /**
-     * Get the room from an ID or room instance
-     *
-     * @param roomOrId
-     */
-    getRoom(roomOrId) {
-        const room = _models_MatrixRoom__WEBPACK_IMPORTED_MODULE_1__["MatrixRoom"].from(roomOrId, _models_MatrixRoom__WEBPACK_IMPORTED_MODULE_1__["MatrixRoomStatus"].UNKNOWN);
-        return this.state.rooms[room.id] || room;
-    }
-    /**
-     * Update the state with a partial state
-     *
-     * @param stateUpdate
-     */
-    update(stateUpdate) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.waitReady();
-            const oldState = Object.assign({}, this.state);
-            this.setState(stateUpdate);
-            this.updateStorage(stateUpdate);
-            this.notifyListeners(oldState, this.state, stateUpdate);
-        });
-    }
-    /**
-     * Register listeners that are called once the state has changed
-     *
-     * @param listener
-     * @param subscribed
-     */
-    onStateChanged(listener, ...subscribed) {
-        if (subscribed.length > 0) {
-            subscribed.forEach((key) => {
-                this.onStateChangedListeners.set(key, listener);
-            });
-        }
-        else {
-            this.onStateChangedListeners.set('all', listener);
-        }
-    }
-    /**
-     * A promise that resolves once the client is ready
-     */
-    waitReady() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.waitReadyPromise;
-        });
-    }
-    /**
-     * Read state from storage
-     */
-    initFromStorage() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const preserved = yield this.storage.get(___WEBPACK_IMPORTED_MODULE_2__["StorageKey"].MATRIX_PRESERVED_STATE);
-            this.setState(preserved);
-        });
-    }
-    /**
-     * Prepare data before persisting it in storage
-     *
-     * @param toStore
-     */
-    prepareData(toStore) {
-        const requiresPreparation = ['rooms'];
-        const toStoreCopy = requiresPreparation.some((key) => toStore[key] !== undefined)
-            ? JSON.parse(JSON.stringify(toStore))
-            : toStore;
-        // there is no need for saving messages in a persistent storage
-        Object.values(toStoreCopy.rooms || {}).forEach((room) => {
-            room.messages = [];
-        });
-        return toStoreCopy;
-    }
-    /**
-     * Persist state in storage
-     *
-     * @param stateUpdate
-     */
-    updateStorage(stateUpdate) {
-        const updatedCachedFields = Object.entries(stateUpdate).filter(([key, value]) => PRESERVED_FIELDS.includes(key) && Boolean(value));
-        if (updatedCachedFields.length > 0) {
-            const filteredState = {};
-            PRESERVED_FIELDS.forEach((key) => {
-                filteredState[key] = this.state[key];
-            });
-            this.storage.set(___WEBPACK_IMPORTED_MODULE_2__["StorageKey"].MATRIX_PRESERVED_STATE, this.prepareData(filteredState));
-        }
-    }
-    /**
-     * Set the state
-     *
-     * @param partialState
-     */
-    setState(partialState) {
-        this.state = {
-            isRunning: partialState.isRunning || this.state.isRunning,
-            userId: partialState.userId || this.state.userId,
-            deviceId: partialState.deviceId || this.state.deviceId,
-            txnNo: partialState.txnNo || this.state.txnNo,
-            accessToken: partialState.accessToken || this.state.accessToken,
-            syncToken: partialState.syncToken || this.state.syncToken,
-            pollingTimeout: partialState.pollingTimeout || this.state.pollingTimeout,
-            pollingRetries: partialState.pollingRetries || this.state.pollingRetries,
-            rooms: this.mergeRooms(this.state.rooms, partialState.rooms)
-        };
-    }
-    /**
-     * Merge room records and eliminate duplicates
-     *
-     * @param oldRooms
-     * @param _newRooms
-     */
-    mergeRooms(oldRooms, _newRooms) {
-        if (!_newRooms) {
-            return oldRooms;
-        }
-        const newRooms = Array.isArray(_newRooms) ? _newRooms : Object.values(_newRooms);
-        const merged = Object.assign({}, oldRooms);
-        newRooms.forEach((newRoom) => {
-            merged[newRoom.id] = _models_MatrixRoom__WEBPACK_IMPORTED_MODULE_1__["MatrixRoom"].merge(newRoom, oldRooms[newRoom.id]);
-        });
-        return merged;
-    }
-    /**
-     * Notify listeners of state changes
-     *
-     * @param oldState
-     * @param newState
-     * @param stateChange
-     */
-    notifyListeners(oldState, newState, stateChange) {
-        const listenForAll = this.onStateChangedListeners.get('all');
-        if (listenForAll) {
-            listenForAll(oldState, newState, stateChange);
-        }
-        Object(_utils_utils__WEBPACK_IMPORTED_MODULE_0__["keys"])(stateChange)
-            .filter((key) => stateChange[key] !== undefined)
-            .forEach((key) => {
-            const listener = this.onStateChangedListeners.get(key);
-            if (listener) {
-                listener(oldState, newState, stateChange);
-            }
-        });
-    }
-}
-//# sourceMappingURL=MatrixClientStore.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/matrix-client/MatrixHttpClient.js":
-/*!****************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/matrix-client/MatrixHttpClient.js ***!
-  \****************************************************************/
-/*! exports provided: MatrixHttpClient */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MatrixHttpClient", function() { return MatrixHttpClient; });
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "../beacon-sdk/node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/utils */ "../beacon-sdk/dist/esm/utils/utils.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-const CLIENT_API_R0 = '/_matrix/client/r0';
-/**
- * Handling the HTTP connection to the matrix synapse node
- */
-class MatrixHttpClient {
-    constructor(baseUrl) {
-        this.baseUrl = baseUrl;
-    }
-    /**
-     * Get data from the synapse node
-     *
-     * @param endpoint
-     * @param params
-     * @param options
-     */
-    get(endpoint, params, options) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.send('GET', endpoint, options, params);
-        });
-    }
-    /**
-     * Post data to the synapse node
-     *
-     * @param endpoint
-     * @param body
-     * @param options
-     * @param params
-     */
-    post(endpoint, body, options, params) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.send('POST', endpoint, options, params, body);
-        });
-    }
-    /**
-     * Put data to the synapse node
-     *
-     * @param endpoint
-     * @param body
-     * @param options
-     * @param params
-     */
-    put(endpoint, body, options, params) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.send('PUT', endpoint, options, params, body);
-        });
-    }
-    /**
-     * Send a request to the synapse node
-     *
-     * @param method
-     * @param endpoint
-     * @param config
-     * @param requestParams
-     * @param data
-     */
-    send(method, endpoint, config, requestParams, data) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const headers = config ? this.getHeaders(config) : undefined;
-            const params = requestParams ? this.getParams(requestParams) : undefined;
-            const response = yield axios__WEBPACK_IMPORTED_MODULE_0___default.a.request({
-                method,
-                url: endpoint,
-                baseURL: this.apiUrl(CLIENT_API_R0),
-                headers,
-                data,
-                params
-            });
-            return response.data;
-        });
-    }
-    /**
-     * Get the headers based on the options object
-     *
-     * @param options
-     */
-    getHeaders(options) {
-        const headers = {};
-        const entries = [];
-        if (options.accessToken) {
-            entries.push(['Authorization', `Bearer ${options.accessToken}`]);
-        }
-        if (entries.length === 0) {
-            return undefined;
-        }
-        for (const [key, value] of entries) {
-            headers[key] = value;
-        }
-        return headers;
-    }
-    /**
-     * Get parameters
-     *
-     * @param _params
-     */
-    getParams(_params) {
-        if (!_params) {
-            return undefined;
-        }
-        const params = Object.assign(_params, {});
-        Object(_utils_utils__WEBPACK_IMPORTED_MODULE_1__["keys"])(params).forEach((key) => params[key] === undefined && delete params[key]);
-        return params;
-    }
-    /**
-     * Construct API URL
-     */
-    apiUrl(...parts) {
-        const apiBase = this.baseUrl.endsWith('/')
-            ? this.baseUrl.substr(0, this.baseUrl.length - 1)
-            : this.baseUrl;
-        const apiParts = parts.map((path) => (path.startsWith('/') ? path.substr(1) : path));
-        return [apiBase, ...apiParts].join('/');
-    }
-}
-//# sourceMappingURL=MatrixHttpClient.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/matrix-client/models/MatrixClientEvent.js":
-/*!************************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/matrix-client/models/MatrixClientEvent.js ***!
-  \************************************************************************/
-/*! exports provided: MatrixClientEventType */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MatrixClientEventType", function() { return MatrixClientEventType; });
-var MatrixClientEventType;
-(function (MatrixClientEventType) {
-    MatrixClientEventType["INVITE"] = "invite";
-    MatrixClientEventType["MESSAGE"] = "message";
-})(MatrixClientEventType || (MatrixClientEventType = {}));
-//# sourceMappingURL=MatrixClientEvent.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/matrix-client/models/MatrixMessage.js":
-/*!********************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/matrix-client/models/MatrixMessage.js ***!
-  \********************************************************************/
-/*! exports provided: MatrixMessageType, MatrixMessage */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MatrixMessageType", function() { return MatrixMessageType; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MatrixMessage", function() { return MatrixMessage; });
-/* harmony import */ var _utils_events__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/events */ "../beacon-sdk/dist/esm/matrix-client/utils/events.js");
-
-var MatrixMessageType;
-(function (MatrixMessageType) {
-    MatrixMessageType["TEXT"] = "m.text";
-})(MatrixMessageType || (MatrixMessageType = {}));
-class MatrixMessage {
-    constructor(type, sender, content) {
-        this.type = type;
-        this.sender = sender;
-        this.content = content;
-    }
-    /**
-     * Construct a message from a message event
-     *
-     * @param event
-     */
-    static from(event) {
-        if (Object(_utils_events__WEBPACK_IMPORTED_MODULE_0__["isTextMessageEvent"])(event)) {
-            return new MatrixMessage(event.content.msgtype, event.sender, event.content.body);
-        }
-        // for now only text messages are supported
-        return undefined;
-    }
-}
-//# sourceMappingURL=MatrixMessage.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/matrix-client/models/MatrixRoom.js":
-/*!*****************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/matrix-client/models/MatrixRoom.js ***!
-  \*****************************************************************/
-/*! exports provided: MatrixRoomStatus, MatrixRoom */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MatrixRoomStatus", function() { return MatrixRoomStatus; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MatrixRoom", function() { return MatrixRoom; });
-/* harmony import */ var _utils_events__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/events */ "../beacon-sdk/dist/esm/matrix-client/utils/events.js");
-/* harmony import */ var _MatrixMessage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MatrixMessage */ "../beacon-sdk/dist/esm/matrix-client/models/MatrixMessage.js");
-
-
-var MatrixRoomStatus;
-(function (MatrixRoomStatus) {
-    MatrixRoomStatus[MatrixRoomStatus["UNKNOWN"] = 0] = "UNKNOWN";
-    MatrixRoomStatus[MatrixRoomStatus["JOINED"] = 1] = "JOINED";
-    MatrixRoomStatus[MatrixRoomStatus["INVITED"] = 2] = "INVITED";
-    MatrixRoomStatus[MatrixRoomStatus["LEFT"] = 3] = "LEFT";
-})(MatrixRoomStatus || (MatrixRoomStatus = {}));
-class MatrixRoom {
-    constructor(id, status = MatrixRoomStatus.UNKNOWN, members = [], messages = []) {
-        this.id = id;
-        this.status = status;
-        this.members = members;
-        this.messages = messages;
-    }
-    /**
-     * Reconstruct rooms from a sync response
-     *
-     * @param roomSync
-     */
-    static fromSync(roomSync) {
-        function create(rooms, creator) {
-            return Object.entries(rooms).map(([id, room]) => creator(id, room));
-        }
-        return [
-            ...create(roomSync.join, MatrixRoom.fromJoined),
-            ...create(roomSync.invite, MatrixRoom.fromInvited),
-            ...create(roomSync.leave, MatrixRoom.fromLeft)
-        ];
-    }
-    /**
-     * Reconstruct a room from an ID or object
-     *
-     * @param roomOrId
-     * @param status
-     */
-    static from(roomOrId, status) {
-        return roomOrId instanceof MatrixRoom
-            ? status
-                ? new MatrixRoom(roomOrId.id, status, roomOrId.members, roomOrId.messages)
-                : roomOrId
-            : new MatrixRoom(roomOrId, status || MatrixRoomStatus.UNKNOWN);
-    }
-    /**
-     * Merge new and old state and remove duplicates
-     *
-     * @param newState
-     * @param previousState
-     */
-    static merge(newState, previousState) {
-        if (!previousState || previousState.id !== newState.id) {
-            return MatrixRoom.from(newState);
-        }
-        return new MatrixRoom(newState.id, newState.status, [...previousState.members, ...newState.members].filter((member, index, array) => array.indexOf(member) === index), [...previousState.messages, ...newState.messages]);
-    }
-    /**
-     * Create a room from a join
-     *
-     * @param id
-     * @param joined
-     */
-    static fromJoined(id, joined) {
-        const events = [...joined.state.events, ...joined.timeline.events];
-        const members = MatrixRoom.getMembersFromEvents(events);
-        const messages = MatrixRoom.getMessagesFromEvents(events);
-        return new MatrixRoom(id, MatrixRoomStatus.JOINED, members, messages);
-    }
-    /**
-     * Create a room from an invite
-     *
-     * @param id
-     * @param invited
-     */
-    static fromInvited(id, invited) {
-        const members = MatrixRoom.getMembersFromEvents(invited.invite_state.events);
-        return new MatrixRoom(id, MatrixRoomStatus.INVITED, members);
-    }
-    /**
-     * Create a room from a leave
-     *
-     * @param id
-     * @param left
-     */
-    static fromLeft(id, left) {
-        const events = [...left.state.events, ...left.timeline.events];
-        const members = MatrixRoom.getMembersFromEvents(events);
-        const messages = MatrixRoom.getMessagesFromEvents(events);
-        return new MatrixRoom(id, MatrixRoomStatus.LEFT, members, messages);
-    }
-    /**
-     * Extract members from an event
-     *
-     * @param events
-     */
-    static getMembersFromEvents(events) {
-        return MatrixRoom.getUniqueEvents(events.filter((event) => Object(_utils_events__WEBPACK_IMPORTED_MODULE_0__["isCreateEvent"])(event) || Object(_utils_events__WEBPACK_IMPORTED_MODULE_0__["isJoinEvent"])(event)))
-            .map((event) => event.sender)
-            .filter((member, index, array) => array.indexOf(member) === index);
-    }
-    /**
-     * Extract messages from an event
-     *
-     * @param events
-     */
-    static getMessagesFromEvents(events) {
-        return MatrixRoom.getUniqueEvents(events.filter(_utils_events__WEBPACK_IMPORTED_MODULE_0__["isMessageEvent"]))
-            .map((event) => _MatrixMessage__WEBPACK_IMPORTED_MODULE_1__["MatrixMessage"].from(event))
-            .filter(Boolean);
-    }
-    /**
-     * Get unique events and remove duplicates
-     *
-     * @param events
-     */
-    static getUniqueEvents(events) {
-        const eventIds = {};
-        const uniqueEvents = [];
-        events.forEach((event, index) => {
-            const eventId = event.event_id;
-            if (eventId === undefined || !(eventId in eventIds)) {
-                if (eventId !== undefined) {
-                    eventIds[eventId] = index;
-                }
-                uniqueEvents.push(event);
-            }
-        });
-        return uniqueEvents;
-    }
-}
-//# sourceMappingURL=MatrixRoom.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/matrix-client/services/MatrixEventService.js":
-/*!***************************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/matrix-client/services/MatrixEventService.js ***!
-  \***************************************************************************/
-/*! exports provided: MatrixEventService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MatrixEventService", function() { return MatrixEventService; });
-/* harmony import */ var _models_MatrixRoom__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../models/MatrixRoom */ "../beacon-sdk/dist/esm/matrix-client/models/MatrixRoom.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-/**
- * A service to help with matrix event management
- */
-class MatrixEventService {
-    constructor(httpClient) {
-        this.httpClient = httpClient;
-        this.cachedPromises = new Map();
-    }
-    /**
-     * Get the latest state from the matrix node
-     *
-     * @param accessToken
-     * @param options
-     */
-    sync(accessToken, options) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.withCache('sync', () => this.httpClient.get('/sync', {
-                timeout: options ? options.pollingTimeout : undefined,
-                since: options ? options.syncToken : undefined
-            }, { accessToken }));
-        });
-    }
-    /**
-     * Send a message to a room
-     *
-     * @param accessToken
-     * @param room
-     * @param content
-     * @param txnId
-     */
-    sendMessage(accessToken, room, content, txnId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve, reject) => this.scheduleEvent({
-                accessToken,
-                room,
-                type: 'm.room.message',
-                content,
-                txnId,
-                onSuccess: resolve,
-                onError: reject
-            }));
-        });
-    }
-    /**
-     * Schedules an event to be sent to the node
-     *
-     * @param event
-     */
-    scheduleEvent(event) {
-        // TODO: actual scheduling
-        this.sendEvent(event);
-    }
-    /**
-     * Send an event to the matrix node
-     *
-     * @param scheduledEvent
-     */
-    sendEvent(scheduledEvent) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { room, type, txnId, content, accessToken } = scheduledEvent;
-            if (room.status !== _models_MatrixRoom__WEBPACK_IMPORTED_MODULE_0__["MatrixRoomStatus"].JOINED && room.status !== _models_MatrixRoom__WEBPACK_IMPORTED_MODULE_0__["MatrixRoomStatus"].UNKNOWN) {
-                return Promise.reject(`User is not a member of room ${room.id}.`);
-            }
-            try {
-                const response = yield this.httpClient.put(`/rooms/${room.id}/send/${type}/${txnId}`, content, { accessToken });
-                scheduledEvent.onSuccess(response);
-            }
-            catch (error) {
-                scheduledEvent.onError(error);
-            }
-        });
-    }
-    /**
-     * Check the cache when interacting with the Matrix node, if there is an already ongoing call for the specified key, return its promise instead of duplicating the call.
-     *
-     * @param key
-     * @param promiseProvider
-     */
-    withCache(key, promiseProvider) {
-        let promise = this.cachedPromises.get(key);
-        if (!promise) {
-            promise = promiseProvider().finally(() => {
-                this.cachedPromises.delete(key);
-            });
-            this.cachedPromises.set(key, promise);
-        }
-        return promise;
-    }
-}
-//# sourceMappingURL=MatrixEventService.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/matrix-client/services/MatrixRoomService.js":
-/*!**************************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/matrix-client/services/MatrixRoomService.js ***!
-  \**************************************************************************/
-/*! exports provided: MatrixRoomService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MatrixRoomService", function() { return MatrixRoomService; });
-/* harmony import */ var _models_MatrixRoom__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../models/MatrixRoom */ "../beacon-sdk/dist/esm/matrix-client/models/MatrixRoom.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-/**
- * A service to help with matrix room management
- */
-class MatrixRoomService {
-    constructor(httpClient) {
-        this.httpClient = httpClient;
-    }
-    /**
-     * Create a room
-     *
-     * @param accessToken
-     * @param config
-     */
-    createRoom(accessToken, config = {}) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.httpClient.post('/createRoom', config, { accessToken });
-        });
-    }
-    /**
-     * Invite a user to a room
-     *
-     * @param accessToken
-     * @param user
-     * @param room
-     */
-    inviteToRoom(accessToken, user, room) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (room.status !== _models_MatrixRoom__WEBPACK_IMPORTED_MODULE_0__["MatrixRoomStatus"].JOINED && room.status !== _models_MatrixRoom__WEBPACK_IMPORTED_MODULE_0__["MatrixRoomStatus"].UNKNOWN) {
-                return Promise.reject(`User is not a member of room ${room.id}.`);
-            }
-            return this.httpClient.post(`/rooms/${room.id}/invite`, { user_id: user }, { accessToken });
-        });
-    }
-    /**
-     * Join a specific room
-     *
-     * @param accessToken
-     * @param room
-     */
-    joinRoom(accessToken, room) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (room.status === _models_MatrixRoom__WEBPACK_IMPORTED_MODULE_0__["MatrixRoomStatus"].JOINED) {
-                return Promise.resolve({ room_id: room.id });
-            }
-            return this.httpClient.post(`/rooms/${room.id}/join`, {}, { accessToken });
-        });
-    }
-}
-//# sourceMappingURL=MatrixRoomService.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/matrix-client/services/MatrixUserService.js":
-/*!**************************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/matrix-client/services/MatrixUserService.js ***!
-  \**************************************************************************/
-/*! exports provided: MatrixUserService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MatrixUserService", function() { return MatrixUserService; });
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-class MatrixUserService {
-    constructor(httpClient) {
-        this.httpClient = httpClient;
-    }
-    /**
-     * Log in to the matrix node with username and password
-     *
-     * @param user
-     * @param password
-     * @param deviceId
-     */
-    login(user, password, deviceId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.httpClient.post('/login', {
-                type: 'm.login.password',
-                identifier: {
-                    type: 'm.id.user',
-                    user
-                },
-                password,
-                device_id: deviceId
-            });
-        });
-    }
-}
-//# sourceMappingURL=MatrixUserService.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/matrix-client/utils/events.js":
-/*!************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/matrix-client/utils/events.js ***!
-  \************************************************************/
-/*! exports provided: isCreateEvent, isJoinEvent, isMessageEvent, isTextMessageEvent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isCreateEvent", function() { return isCreateEvent; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isJoinEvent", function() { return isJoinEvent; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isMessageEvent", function() { return isMessageEvent; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isTextMessageEvent", function() { return isTextMessageEvent; });
-/* harmony import */ var _models_MatrixMessage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../models/MatrixMessage */ "../beacon-sdk/dist/esm/matrix-client/models/MatrixMessage.js");
-
-/**
- * Check if an event is a create event
- *
- * @param event MatrixStateEvent
- */
-const isCreateEvent = (event) => event.type === 'm.room.create' && event.content instanceof Object && 'creator' in event.content;
-/**
- * Check if an event is a join event
- *
- * @param event MatrixStateEvent
- */
-const isJoinEvent = (event) => event.type === 'm.room.member' &&
-    event.content instanceof Object &&
-    'membership' in event.content &&
-    // eslint-disable-next-line dot-notation
-    event.content['membership'] === 'join';
-/**
- * Check if an event is a message event
- *
- * @param event MatrixStateEvent
- */
-const isMessageEvent = (event) => event.type === 'm.room.message';
-/**
- * Check if an event is a text message event
- *
- * @param event MatrixStateEvent
- */
-const isTextMessageEvent = (event) => isMessageEvent(event) &&
-    event.content instanceof Object &&
-    'msgtype' in event.content &&
-    // eslint-disable-next-line dot-notation
-    event.content['msgtype'] === _models_MatrixMessage__WEBPACK_IMPORTED_MODULE_0__["MatrixMessageType"].TEXT;
-//# sourceMappingURL=events.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/storage/ChromeStorage.js":
-/*!*******************************************************!*\
-  !*** ../beacon-sdk/dist/esm/storage/ChromeStorage.js ***!
-  \*******************************************************/
-/*! exports provided: ChromeStorage */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ChromeStorage", function() { return ChromeStorage; });
-/* harmony import */ var _types_storage_StorageKeyReturnDefaults__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../types/storage/StorageKeyReturnDefaults */ "../beacon-sdk/dist/esm/types/storage/StorageKeyReturnDefaults.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-class ChromeStorage {
-    static isSupported() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return (typeof window !== 'undefined' &&
-                typeof chrome !== 'undefined' &&
-                Boolean(chrome) &&
-                Boolean(chrome.runtime) &&
-                Boolean(chrome.runtime.id));
-        });
-    }
-    get(key) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve) => {
-                chrome.storage.local.get(null, (storageContent) => {
-                    if (storageContent[key]) {
-                        resolve(storageContent[key]);
-                    }
-                    else {
-                        if (typeof _types_storage_StorageKeyReturnDefaults__WEBPACK_IMPORTED_MODULE_0__["defaultValues"][key] === 'object') {
-                            resolve(JSON.parse(JSON.stringify(_types_storage_StorageKeyReturnDefaults__WEBPACK_IMPORTED_MODULE_0__["defaultValues"][key])));
-                        }
-                        else {
-                            resolve(_types_storage_StorageKeyReturnDefaults__WEBPACK_IMPORTED_MODULE_0__["defaultValues"][key]);
-                        }
-                    }
-                });
-            });
-        });
-    }
-    set(key, value) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve) => {
-                chrome.storage.local.set({ [key]: value }, () => {
-                    resolve();
-                });
-            });
-        });
-    }
-    delete(key) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve) => {
-                chrome.storage.local.set({ [key]: undefined }, () => {
-                    resolve();
-                });
-            });
-        });
-    }
-}
-//# sourceMappingURL=ChromeStorage.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/storage/LocalStorage.js":
-/*!******************************************************!*\
-  !*** ../beacon-sdk/dist/esm/storage/LocalStorage.js ***!
-  \******************************************************/
-/*! exports provided: LocalStorage */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LocalStorage", function() { return LocalStorage; });
-/* harmony import */ var _types_storage_StorageKeyReturnDefaults__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../types/storage/StorageKeyReturnDefaults */ "../beacon-sdk/dist/esm/types/storage/StorageKeyReturnDefaults.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-class LocalStorage {
-    constructor(prefix) {
-        this.prefix = prefix;
-    }
-    static isSupported() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return Promise.resolve(Boolean(typeof window !== 'undefined') && Boolean(window.localStorage));
-        });
-    }
-    get(key) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const value = localStorage.getItem(this.getPrefixedKey(key));
-            if (!value) {
-                if (typeof _types_storage_StorageKeyReturnDefaults__WEBPACK_IMPORTED_MODULE_0__["defaultValues"][key] === 'object') {
-                    return JSON.parse(JSON.stringify(_types_storage_StorageKeyReturnDefaults__WEBPACK_IMPORTED_MODULE_0__["defaultValues"][key]));
-                }
-                else {
-                    return _types_storage_StorageKeyReturnDefaults__WEBPACK_IMPORTED_MODULE_0__["defaultValues"][key];
-                }
-            }
-            else {
-                try {
-                    return JSON.parse(value);
-                }
-                catch (jsonParseError) {
-                    return value; // TODO: Validate storage
-                }
-            }
-        });
-    }
-    set(key, value) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (typeof value === 'string') {
-                return localStorage.setItem(this.getPrefixedKey(key), value);
-            }
-            else {
-                return localStorage.setItem(this.getPrefixedKey(key), JSON.stringify(value));
-            }
-        });
-    }
-    delete(key) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return Promise.resolve(localStorage.removeItem(this.getPrefixedKey(key)));
-        });
-    }
-    getPrefixedKey(key) {
-        return this.prefix ? `${this.prefix}-${key}` : key;
-    }
-}
-//# sourceMappingURL=LocalStorage.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/storage/Storage.js":
-/*!*************************************************!*\
-  !*** ../beacon-sdk/dist/esm/storage/Storage.js ***!
-  \*************************************************/
-/*! exports provided: Storage */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Storage", function() { return Storage; });
-/**
- * The storage used in the SDK
- */
-class Storage {
-    /**
-     * Returns a promise that resolves to true if the storage option is available on this platform.
-     */
-    static isSupported() {
-        return Promise.resolve(false);
-    }
-}
-//# sourceMappingURL=Storage.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/storage/getStorage.js":
-/*!****************************************************!*\
-  !*** ../beacon-sdk/dist/esm/storage/getStorage.js ***!
-  \****************************************************/
-/*! exports provided: getStorage */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getStorage", function() { return getStorage; });
-/* harmony import */ var _utils_Logger__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/Logger */ "../beacon-sdk/dist/esm/utils/Logger.js");
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-const logger = new _utils_Logger__WEBPACK_IMPORTED_MODULE_0__["Logger"]('STORAGE');
-/**
- * Get a supported storage on this platform
- */
-const getStorage = () => __awaiter(void 0, void 0, void 0, function* () {
-    if (yield ___WEBPACK_IMPORTED_MODULE_1__["ChromeStorage"].isSupported()) {
-        logger.log('getStorage', 'USING CHROME STORAGE');
-        return new ___WEBPACK_IMPORTED_MODULE_1__["ChromeStorage"]();
-    }
-    else if (yield ___WEBPACK_IMPORTED_MODULE_1__["LocalStorage"].isSupported()) {
-        logger.log('getStorage', 'USING LOCAL STORAGE');
-        return new ___WEBPACK_IMPORTED_MODULE_1__["LocalStorage"]();
-    }
-    else {
-        throw new Error('no storage type supported');
-    }
-});
-//# sourceMappingURL=getStorage.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/transports/ChromeMessageTransport.js":
-/*!*******************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/transports/ChromeMessageTransport.js ***!
-  \*******************************************************************/
-/*! exports provided: ChromeMessageTransport */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ChromeMessageTransport", function() { return ChromeMessageTransport; });
-/* harmony import */ var _utils_Logger__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/Logger */ "../beacon-sdk/dist/esm/utils/Logger.js");
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-/* harmony import */ var _managers_PeerManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../managers/PeerManager */ "../beacon-sdk/dist/esm/managers/PeerManager.js");
-/* harmony import */ var _types_transport_TransportStatus__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../types/transport/TransportStatus */ "../beacon-sdk/dist/esm/types/transport/TransportStatus.js");
-/* harmony import */ var _clients_ChromeMessageClient__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./clients/ChromeMessageClient */ "../beacon-sdk/dist/esm/transports/clients/ChromeMessageClient.js");
-// eslint-disable-next-line spaced-comment
-/// <reference types="chrome"/>
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-
-
-const logger = new _utils_Logger__WEBPACK_IMPORTED_MODULE_0__["Logger"]('ChromeMessageTransport');
-class ChromeMessageTransport extends ___WEBPACK_IMPORTED_MODULE_1__["Transport"] {
-    constructor(name, keyPair, storage) {
-        super(name);
-        this.type = ___WEBPACK_IMPORTED_MODULE_1__["TransportType"].CHROME_MESSAGE;
-        this.keyPair = keyPair;
-        this.client = new _clients_ChromeMessageClient__WEBPACK_IMPORTED_MODULE_4__["ChromeMessageClient"](this.name, this.keyPair, false);
-        this.peerManager = new _managers_PeerManager__WEBPACK_IMPORTED_MODULE_2__["PeerManager"](storage, ___WEBPACK_IMPORTED_MODULE_1__["StorageKey"].TRANSPORT_POSTMESSAGE_PEERS);
-        this.init().catch((error) => console.error(error));
-        this.connect().catch((error) => console.error(error));
-    }
-    static isAvailable() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const isAvailable = Boolean(window.chrome && chrome.runtime && chrome.runtime.id);
-            return Promise.resolve(isAvailable);
-        });
-    }
-    connect() {
-        const _super = Object.create(null, {
-            connect: { get: () => super.connect }
-        });
-        return __awaiter(this, void 0, void 0, function* () {
-            logger.log('connect');
-            this._isConnected = _types_transport_TransportStatus__WEBPACK_IMPORTED_MODULE_3__["TransportStatus"].CONNECTING;
-            const knownPeers = yield this.peerManager.getPeers();
-            if (knownPeers.length > 0) {
-                logger.log('connect', `connecting to ${knownPeers.length} peers`);
-                const connectionPromises = knownPeers.map((peer) => __awaiter(this, void 0, void 0, function* () { return this.listen(peer.publicKey); }));
-                yield Promise.all(connectionPromises);
-            }
-            yield _super.connect.call(this);
-        });
-    }
-    send(payload) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const message = {
-                target: ___WEBPACK_IMPORTED_MODULE_1__["ExtensionMessageTarget"].PAGE,
-                payload
-            };
-            chrome.runtime.sendMessage(message, (data) => {
-                logger.log('send', 'got response', data);
-            });
-        });
-    }
-    sendToTabs(publicKey, payload) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.client.sendMessage(publicKey, payload);
-        });
-    }
-    getPeers() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.peerManager.getPeers();
-        });
-    }
-    addPeer(newPeer) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!(yield this.peerManager.hasPeer(newPeer.publicKey))) {
-                logger.log('addPeer', newPeer);
-                yield this.peerManager.addPeer(newPeer);
-                yield this.listen(newPeer.publicKey);
-            }
-            else {
-                logger.log('addPeer', 'peer already added, skipping', newPeer);
-            }
-            yield this.client.sendPairingResponse(newPeer);
-        });
-    }
-    removePeer(peerToBeRemoved) {
-        return __awaiter(this, void 0, void 0, function* () {
-            logger.log('removePeer', peerToBeRemoved);
-            yield this.peerManager.removePeer(peerToBeRemoved.publicKey);
-            if (this.client) {
-                yield this.client.unsubscribeFromEncryptedMessage(peerToBeRemoved.publicKey);
-            }
-        });
-    }
-    removeAllPeers() {
-        return __awaiter(this, void 0, void 0, function* () {
-            logger.log('removeAllPeers');
-            yield this.peerManager.removeAllPeers();
-            yield this.client.unsubscribeFromEncryptedMessages();
-        });
-    }
-    listen(publicKey) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.client
-                .listenForEncryptedMessage(publicKey, (message, sender, sendResponse) => __awaiter(this, void 0, void 0, function* () {
-                const connectionContext = {
-                    origin: ___WEBPACK_IMPORTED_MODULE_1__["Origin"].WEBSITE,
-                    id: sender.url ? sender.url : '',
-                    extras: { sender, sendResponse }
-                };
-                this.notifyListeners(message, connectionContext).catch((error) => {
-                    throw error;
-                });
-            }))
-                .catch((error) => {
-                throw error;
-            });
-        });
-    }
-    init() {
-        return __awaiter(this, void 0, void 0, function* () {
-            chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-                logger.log('init', 'receiving chrome message', message, sender);
-                if (message && message.payload && typeof message.payload === 'string') {
-                    // Handling PairingRequest and connect peer
-                    new ___WEBPACK_IMPORTED_MODULE_1__["Serializer"]()
-                        .deserialize(message.payload)
-                        .then((deserialized) => {
-                        // TODO: Add check if it's a peer
-                        if (deserialized.publicKey) {
-                            this.addPeer(deserialized).catch(console.error);
-                        }
-                        else {
-                            // V1 does not support encryption, so we handle the message directly
-                            if (deserialized.version === '1') {
-                                this.notify(message, sender, sendResponse).catch((error) => {
-                                    throw error;
-                                });
-                            }
-                        }
-                    })
-                        .catch(undefined);
-                }
-                else if (message && message.payload) {
-                    // Most likely an internal, unencrypted message
-                    this.notify(message, sender, sendResponse).catch((error) => {
-                        throw error;
-                    });
-                }
-                // return true from the event listener to indicate you wish to send a response asynchronously
-                // (this will keep the message channel open to the other end until sendResponse is called).
-                // return true
-            });
-        });
-    }
-    notify(message, sender, sendResponse) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const connectionContext = {
-                origin: ___WEBPACK_IMPORTED_MODULE_1__["Origin"].WEBSITE,
-                id: sender.url ? sender.url : '',
-                extras: { sender, sendResponse }
-            };
-            this.notifyListeners(message, connectionContext).catch((error) => {
-                throw error;
-            });
-        });
-    }
-}
-//# sourceMappingURL=ChromeMessageTransport.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/transports/P2PTransport.js":
-/*!*********************************************************!*\
-  !*** ../beacon-sdk/dist/esm/transports/P2PTransport.js ***!
-  \*********************************************************/
-/*! exports provided: P2PTransport */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "P2PTransport", function() { return P2PTransport; });
-/* harmony import */ var _utils_Logger__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/Logger */ "../beacon-sdk/dist/esm/utils/Logger.js");
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-/* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../events */ "../beacon-sdk/dist/esm/events.js");
-/* harmony import */ var _managers_PeerManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../managers/PeerManager */ "../beacon-sdk/dist/esm/managers/PeerManager.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-
-const logger = new _utils_Logger__WEBPACK_IMPORTED_MODULE_0__["Logger"]('P2PTransport');
-class P2PTransport extends ___WEBPACK_IMPORTED_MODULE_1__["Transport"] {
-    constructor(name, keyPair, storage, events, matrixNodes, isDapp) {
-        super(name);
-        this.type = ___WEBPACK_IMPORTED_MODULE_1__["TransportType"].P2P;
-        this.isDapp = true;
-        // Make sure we only listen once
-        this.listeningForChannelOpenings = false;
-        this.events = events;
-        this.isDapp = isDapp;
-        this.client = new ___WEBPACK_IMPORTED_MODULE_1__["P2PCommunicationClient"](this.name, keyPair, 1, storage, matrixNodes, false);
-        this.peerManager = new _managers_PeerManager__WEBPACK_IMPORTED_MODULE_3__["PeerManager"](storage, ___WEBPACK_IMPORTED_MODULE_1__["StorageKey"].TRANSPORT_P2P_PEERS);
-    }
-    static isAvailable() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return Promise.resolve(true);
-        });
-    }
-    connect() {
-        const _super = Object.create(null, {
-            connect: { get: () => super.connect }
-        });
-        return __awaiter(this, void 0, void 0, function* () {
-            logger.log('connect');
-            this._isConnected = ___WEBPACK_IMPORTED_MODULE_1__["TransportStatus"].CONNECTING;
-            yield this.client.start();
-            const knownPeers = yield this.peerManager.getPeers();
-            if (knownPeers.length > 0) {
-                logger.log('connect', `connecting to ${knownPeers.length} peers`);
-                const connectionPromises = knownPeers.map((peer) => __awaiter(this, void 0, void 0, function* () { return this.listen(peer.publicKey); }));
-                yield Promise.all(connectionPromises);
-            }
-            else {
-                if (this.isDapp) {
-                    yield this.connectNewPeer();
-                }
-            }
-            yield _super.connect.call(this);
-        });
-    }
-    reconnect() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this.isDapp) {
-                yield this.connectNewPeer();
-            }
-        });
-    }
-    connectNewPeer() {
-        return __awaiter(this, void 0, void 0, function* () {
-            logger.log('connectNewPeer');
-            return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
-                if (!this.listeningForChannelOpenings) {
-                    yield this.client.listenForChannelOpening((peer) => __awaiter(this, void 0, void 0, function* () {
-                        logger.log('connectNewPeer', `new publicKey`, peer.publicKey);
-                        yield this.addPeer(peer);
-                        this.events
-                            .emit(_events__WEBPACK_IMPORTED_MODULE_2__["BeaconEvent"].P2P_CHANNEL_CONNECT_SUCCESS, peer)
-                            .catch((emitError) => console.warn(emitError));
-                        resolve();
-                    }));
-                    this.listeningForChannelOpenings = true;
-                }
-                this.events
-                    .emit(_events__WEBPACK_IMPORTED_MODULE_2__["BeaconEvent"].P2P_LISTEN_FOR_CHANNEL_OPEN, yield this.client.getHandshakeInfo())
-                    .catch((emitError) => console.warn(emitError));
-            }));
-        });
-    }
-    getPeers() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.peerManager.getPeers();
-        });
-    }
-    addPeer(newPeer) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!(yield this.peerManager.hasPeer(newPeer.publicKey))) {
-                logger.log('addPeer', newPeer);
-                yield this.peerManager.addPeer(newPeer);
-                yield this.listen(newPeer.publicKey); // TODO: Prevent channels from being opened multiple times
-            }
-            else {
-                logger.log('addPeer', 'peer already added, skipping', newPeer);
-            }
-            yield this.client.sendPairingResponse(newPeer); // TODO: Should we have a confirmation here?
-        });
-    }
-    removePeer(peerToBeRemoved) {
-        return __awaiter(this, void 0, void 0, function* () {
-            logger.log('removePeer', peerToBeRemoved);
-            yield this.peerManager.removePeer(peerToBeRemoved.publicKey);
-            if (this.client) {
-                yield this.client.unsubscribeFromEncryptedMessage(peerToBeRemoved.publicKey);
-            }
-        });
-    }
-    removeAllPeers() {
-        return __awaiter(this, void 0, void 0, function* () {
-            logger.log('removeAllPeers');
-            yield this.peerManager.removeAllPeers();
-            yield this.client.unsubscribeFromEncryptedMessages();
-        });
-    }
-    send(message, recipient) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const knownPeers = yield this.peerManager.getPeers();
-            if (recipient) {
-                if (!knownPeers.some((peer) => peer.publicKey === recipient)) {
-                    throw new Error('Recipient unknown');
-                }
-                return this.client.sendMessage(recipient, message);
-            }
-            else {
-                // A broadcast request has to be sent everywhere.
-                const promises = knownPeers.map((peer) => this.client.sendMessage(peer.publicKey, message));
-                return (yield Promise.all(promises))[0];
-            }
-        });
-    }
-    listen(publicKey) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.client
-                .listenForEncryptedMessage(publicKey, (message) => {
-                const connectionContext = {
-                    origin: ___WEBPACK_IMPORTED_MODULE_1__["Origin"].P2P,
-                    id: publicKey
-                };
-                this.notifyListeners(message, connectionContext).catch((error) => {
-                    throw error;
-                });
-            })
-                .catch((error) => {
-                throw error;
-            });
-        });
-    }
-}
-//# sourceMappingURL=P2PTransport.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/transports/PostMessageTransport.js":
-/*!*****************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/transports/PostMessageTransport.js ***!
-  \*****************************************************************/
-/*! exports provided: PostMessageTransport */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PostMessageTransport", function() { return PostMessageTransport; });
-/* harmony import */ var _MockWindow__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../MockWindow */ "../beacon-sdk/dist/esm/MockWindow.js");
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-/* harmony import */ var _types_Origin__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../types/Origin */ "../beacon-sdk/dist/esm/types/Origin.js");
-/* harmony import */ var _managers_PeerManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../managers/PeerManager */ "../beacon-sdk/dist/esm/managers/PeerManager.js");
-/* harmony import */ var _utils_Logger__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/Logger */ "../beacon-sdk/dist/esm/utils/Logger.js");
-/* harmony import */ var _Transport__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Transport */ "../beacon-sdk/dist/esm/transports/Transport.js");
-/* harmony import */ var _clients_PostMessageClient__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./clients/PostMessageClient */ "../beacon-sdk/dist/esm/transports/clients/PostMessageClient.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-
-
-
-
-const logger = new _utils_Logger__WEBPACK_IMPORTED_MODULE_4__["Logger"]('PostMessageTransport');
-class PostMessageTransport extends _Transport__WEBPACK_IMPORTED_MODULE_5__["Transport"] {
-    constructor(name, keyPair, storage, isDapp) {
-        super(name);
-        this.type = ___WEBPACK_IMPORTED_MODULE_1__["TransportType"].POST_MESSAGE;
-        /**
-         * A flag indicating whether
-         */
-        this.isDapp = true;
-        // Make sure we only listen once
-        this.listeningForChannelOpenings = false;
-        this.isDapp = isDapp;
-        this.client = new _clients_PostMessageClient__WEBPACK_IMPORTED_MODULE_6__["PostMessageClient"](this.name, keyPair, false);
-        this.peerManager = new _managers_PeerManager__WEBPACK_IMPORTED_MODULE_3__["PeerManager"](storage, ___WEBPACK_IMPORTED_MODULE_1__["StorageKey"].TRANSPORT_POSTMESSAGE_PEERS);
-    }
-    static isAvailable() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve) => {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const fn = (event) => {
-                    const data = event.data;
-                    if (data && data.payload === 'pong') {
-                        resolve(true);
-                        _MockWindow__WEBPACK_IMPORTED_MODULE_0__["myWindow"].removeEventListener('message', fn);
-                    }
-                };
-                _MockWindow__WEBPACK_IMPORTED_MODULE_0__["myWindow"].addEventListener('message', fn);
-                const message = {
-                    target: ___WEBPACK_IMPORTED_MODULE_1__["ExtensionMessageTarget"].EXTENSION,
-                    payload: 'ping'
-                };
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                _MockWindow__WEBPACK_IMPORTED_MODULE_0__["myWindow"].postMessage(message, window.location.origin);
-            });
-        });
-    }
-    connect() {
-        const _super = Object.create(null, {
-            connect: { get: () => super.connect }
-        });
-        return __awaiter(this, void 0, void 0, function* () {
-            logger.log('connect');
-            this._isConnected = ___WEBPACK_IMPORTED_MODULE_1__["TransportStatus"].CONNECTING;
-            const knownPeers = yield this.peerManager.getPeers();
-            if (knownPeers.length > 0) {
-                logger.log('connect', `connecting to ${knownPeers.length} peers`);
-                const connectionPromises = knownPeers.map((peer) => __awaiter(this, void 0, void 0, function* () { return this.listen(peer.publicKey); }));
-                yield Promise.all(connectionPromises);
-            }
-            else {
-                if (this.isDapp) {
-                    yield this.connectNewPeer();
-                }
-            }
-            yield _super.connect.call(this);
-        });
-    }
-    reconnect() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this.isDapp) {
-                yield this.connectNewPeer();
-            }
-        });
-    }
-    connectNewPeer() {
-        return __awaiter(this, void 0, void 0, function* () {
-            logger.log('connectNewPeer');
-            return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
-                if (!this.listeningForChannelOpenings) {
-                    yield this.client.listenForChannelOpening((pairingResponse) => __awaiter(this, void 0, void 0, function* () {
-                        logger.log('connectNewPeer', `received PairingResponse`, pairingResponse);
-                        yield this.addPeer(pairingResponse);
-                        resolve();
-                    }));
-                    this.listeningForChannelOpenings = true;
-                }
-            }));
-        });
-    }
-    getPeers() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.peerManager.getPeers();
-        });
-    }
-    addPeer(newPeer) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!(yield this.peerManager.hasPeer(newPeer.publicKey))) {
-                logger.log('addPeer', newPeer);
-                yield this.peerManager.addPeer(newPeer);
-                yield this.listen(newPeer.publicKey);
-            }
-            else {
-                logger.log('addPeer', 'peer already added, skipping', newPeer);
-            }
-        });
-    }
-    removePeer(peerToBeRemoved) {
-        return __awaiter(this, void 0, void 0, function* () {
-            logger.log('removePeer', peerToBeRemoved);
-            yield this.peerManager.removePeer(peerToBeRemoved.publicKey);
-            yield this.client.unsubscribeFromEncryptedMessage(peerToBeRemoved.publicKey);
-        });
-    }
-    removeAllPeers() {
-        return __awaiter(this, void 0, void 0, function* () {
-            logger.log('removeAllPeers');
-            yield this.peerManager.removeAllPeers();
-            yield this.client.unsubscribeFromEncryptedMessages();
-        });
-    }
-    send(message, recipient) {
-        return __awaiter(this, void 0, void 0, function* () {
-            logger.log('send', recipient, message);
-            if (recipient) {
-                yield this.client.sendMessage(recipient, message);
-            }
-            else {
-                const peers = yield this.peerManager.getPeers();
-                yield Promise.all(peers.map((peer) => this.client.sendMessage(peer.publicKey, message).catch(console.error)));
-            }
-        });
-    }
-    listen(publicKey) {
-        return __awaiter(this, void 0, void 0, function* () {
-            logger.log('listen', publicKey);
-            yield this.client
-                .listenForEncryptedMessage(publicKey, (message, context) => {
-                const connectionContext = {
-                    origin: _types_Origin__WEBPACK_IMPORTED_MODULE_2__["Origin"].EXTENSION,
-                    id: context.id
-                };
-                this.notifyListeners(message, connectionContext).catch((error) => {
-                    throw error;
-                });
-            })
-                .catch((error) => {
-                throw error;
-            });
-        });
-    }
-}
-//# sourceMappingURL=PostMessageTransport.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/transports/Transport.js":
-/*!******************************************************!*\
-  !*** ../beacon-sdk/dist/esm/transports/Transport.js ***!
-  \******************************************************/
-/*! exports provided: Transport */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Transport", function() { return Transport; });
-/* harmony import */ var _utils_Logger__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/Logger */ "../beacon-sdk/dist/esm/utils/Logger.js");
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-const logger = new _utils_Logger__WEBPACK_IMPORTED_MODULE_0__["Logger"]('Transport');
-class Transport {
-    constructor(name) {
-        /**
-         * The type of the transport
-         */
-        this.type = ___WEBPACK_IMPORTED_MODULE_1__["TransportType"].POST_MESSAGE;
-        /**
-         * The status of the transport
-         */
-        this._isConnected = ___WEBPACK_IMPORTED_MODULE_1__["TransportStatus"].NOT_CONNECTED;
-        /**
-         * The listeners that will be notified when new messages are coming in
-         */
-        this.listeners = [];
-        this.name = name;
-    }
-    /**
-     * Return the status of the connection
-     */
-    get connectionStatus() {
-        return this._isConnected;
-    }
-    /**
-     * Returns a promise that resolves to true if the transport is available, false if it is not
-     */
-    static isAvailable() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return Promise.resolve(false);
-        });
-    }
-    /**
-     * Connect the transport
-     */
-    connect() {
-        return __awaiter(this, void 0, void 0, function* () {
-            logger.log('connect');
-            this._isConnected = ___WEBPACK_IMPORTED_MODULE_1__["TransportStatus"].CONNECTED;
-            return;
-        });
-    }
-    /**
-     * Reconnect the transport
-     *
-     * This method will be called if we tried to connect, but it didn't work
-     */
-    reconnect() {
-        return __awaiter(this, void 0, void 0, function* () {
-            logger.log('reconnect');
-            return;
-        });
-    }
-    /**
-     * Send a message through the transport
-     *
-     * @param message The message to send
-     * @param recipient The recipient of the message
-     */
-    send(message, recipient) {
-        return __awaiter(this, void 0, void 0, function* () {
-            logger.log('send', message, recipient);
-            return;
-        });
-    }
-    /**
-     * Add a listener to be called when a new message is received
-     *
-     * @param listener The listener that will be registered
-     */
-    addListener(listener) {
-        return __awaiter(this, void 0, void 0, function* () {
-            logger.log('addListener');
-            this.listeners.push(listener);
-            return;
-        });
-    }
-    /**
-     * Remove a listener
-     *
-     * @param listener
-     */
-    removeListener(listener) {
-        return __awaiter(this, void 0, void 0, function* () {
-            logger.log('removeListener');
-            this.listeners = this.listeners.filter((element) => element !== listener);
-            return;
-        });
-    }
-    /**
-     * Notify the listeners when a new message comes in
-     *
-     * @param message Message
-     * @param connectionInfo Context info about the connection
-     */
-    notifyListeners(message, connectionInfo) {
-        return __awaiter(this, void 0, void 0, function* () {
-            logger.log('notifyListeners');
-            if (this.listeners.length === 0) {
-                logger.warn('notifyListeners', '0 listeners notified!', this);
-            }
-            else {
-                logger.log(`Notifying ${this.listeners.length} listeners`, this);
-            }
-            this.listeners.forEach((listener) => {
-                listener(message, connectionInfo);
-            });
-            return;
-        });
-    }
-}
-//# sourceMappingURL=Transport.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/transports/clients/ChromeMessageClient.js":
-/*!************************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/transports/clients/ChromeMessageClient.js ***!
-  \************************************************************************/
-/*! exports provided: ChromeMessageClient */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(Buffer) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ChromeMessageClient", function() { return ChromeMessageClient; });
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../.. */ "../beacon-sdk/dist/esm/index.js");
-/* harmony import */ var _utils_crypto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/crypto */ "../beacon-sdk/dist/esm/utils/crypto.js");
-/* harmony import */ var _MessageBasedClient__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MessageBasedClient */ "../beacon-sdk/dist/esm/transports/clients/MessageBasedClient.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-class ChromeMessageClient extends _MessageBasedClient__WEBPACK_IMPORTED_MODULE_2__["MessageBasedClient"] {
-    constructor() {
-        super(...arguments);
-        this.activeListeners = new Map();
-    }
-    init() {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.subscribeToMessages().catch(console.error);
-        });
-    }
-    listenForEncryptedMessage(senderPublicKey, messageCallback) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this.activeListeners.has(senderPublicKey)) {
-                return;
-            }
-            const callbackFunction = (message, sender, sendResponse) => __awaiter(this, void 0, void 0, function* () {
-                if (message.hasOwnProperty('encryptedPayload')) {
-                    const encryptedMessage = message;
-                    try {
-                        const decrypted = yield this.decryptMessage(senderPublicKey, encryptedMessage.encryptedPayload);
-                        const decryptedMessage = {
-                            payload: decrypted,
-                            target: encryptedMessage.target,
-                            sender: encryptedMessage.sender
-                        };
-                        messageCallback(decryptedMessage, sender, sendResponse);
-                    }
-                    catch (decryptionError) {
-                        /* NO-OP. We try to decode every message, but some might not be addressed to us. */
-                    }
-                }
-            });
-            this.activeListeners.set(senderPublicKey, callbackFunction);
-        });
-    }
-    sendMessage(recipientPublicKey, message) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let msg = {
-                target: ___WEBPACK_IMPORTED_MODULE_0__["ExtensionMessageTarget"].PAGE,
-                payload: message
-            };
-            // If no recipient public key is provided, we respond with an unencrypted message
-            if (recipientPublicKey) {
-                const payload = yield this.encryptMessage(recipientPublicKey, message);
-                msg = {
-                    target: ___WEBPACK_IMPORTED_MODULE_0__["ExtensionMessageTarget"].PAGE,
-                    encryptedPayload: payload
-                };
-            }
-            chrome.tabs.query({}, (tabs) => {
-                // TODO: Find way to have direct communication with tab
-                tabs.forEach(({ id }) => {
-                    if (id) {
-                        chrome.tabs.sendMessage(id, msg);
-                    }
-                }); // Send message to all tabs
-            });
-        });
-    }
-    sendPairingResponse(pairingRequest) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const encryptedMessage = yield Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_1__["sealCryptobox"])(JSON.stringify(yield this.getHandshakeInfo()), Buffer.from(pairingRequest.publicKey, 'hex'));
-            const message = {
-                target: ___WEBPACK_IMPORTED_MODULE_0__["ExtensionMessageTarget"].PAGE,
-                payload: encryptedMessage
-            };
-            chrome.tabs.query({}, (tabs) => {
-                // TODO: Find way to have direct communication with tab
-                tabs.forEach(({ id }) => {
-                    if (id) {
-                        chrome.tabs.sendMessage(id, message);
-                    }
-                }); // Send message to all tabs
-            });
-        });
-    }
-    subscribeToMessages() {
-        return __awaiter(this, void 0, void 0, function* () {
-            chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-                this.activeListeners.forEach((listener) => {
-                    listener(message, sender, sendResponse);
-                });
-                // return true from the event listener to indicate you wish to send a response asynchronously
-                // (this will keep the message channel open to the other end until sendResponse is called).
-                return true;
-            });
-        });
-    }
-}
-//# sourceMappingURL=ChromeMessageClient.js.map
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../kukai/node_modules/node-libs-browser/node_modules/buffer/index.js */ "./node_modules/node-libs-browser/node_modules/buffer/index.js").Buffer))
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/transports/clients/CommunicationClient.js":
-/*!************************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/transports/clients/CommunicationClient.js ***!
-  \************************************************************************/
-/*! exports provided: CommunicationClient */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(Buffer) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CommunicationClient", function() { return CommunicationClient; });
-/* harmony import */ var libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libsodium-wrappers */ "../beacon-sdk/node_modules/libsodium-wrappers/dist/modules/libsodium-wrappers.js");
-/* harmony import */ var libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_crypto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/crypto */ "../beacon-sdk/dist/esm/utils/crypto.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-class CommunicationClient {
-    constructor(keyPair) {
-        this.keyPair = keyPair;
-    }
-    /**
-     * Get the public key
-     */
-    getPublicKey() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_1__["toHex"])(this.keyPair.publicKey);
-        });
-    }
-    /**
-     * get the public key hash
-     */
-    getPublicKeyHash() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_1__["getHexHash"])(this.keyPair.publicKey);
-        });
-    }
-    /**
-     * Create a cryptobox shared key
-     *
-     * @param otherPublicKey
-     * @param selfPrivateKey
-     */
-    createCryptoBox(otherPublicKey, selfPrivateKey) {
-        return __awaiter(this, void 0, void 0, function* () {
-            // TODO: Don't calculate it every time?
-            const kxSelfPrivateKey = libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__["crypto_sign_ed25519_sk_to_curve25519"](Buffer.from(selfPrivateKey)); // Secret bytes to scalar bytes
-            const kxSelfPublicKey = libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__["crypto_sign_ed25519_pk_to_curve25519"](Buffer.from(selfPrivateKey).slice(32, 64)); // Secret bytes to scalar bytes
-            const kxOtherPublicKey = libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__["crypto_sign_ed25519_pk_to_curve25519"](Buffer.from(otherPublicKey, 'hex')); // Secret bytes to scalar bytes
-            return [
-                Buffer.from(kxSelfPublicKey),
-                Buffer.from(kxSelfPrivateKey),
-                Buffer.from(kxOtherPublicKey)
-            ];
-        });
-    }
-    /**
-     * Create a cryptobox server
-     *
-     * @param otherPublicKey
-     * @param selfPrivateKey
-     */
-    createCryptoBoxServer(otherPublicKey, selfPrivateKey) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const keys = yield this.createCryptoBox(otherPublicKey, selfPrivateKey);
-            return libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__["crypto_kx_server_session_keys"](...keys);
-        });
-    }
-    /**
-     * Create a cryptobox client
-     *
-     * @param otherPublicKey
-     * @param selfPrivateKey
-     */
-    createCryptoBoxClient(otherPublicKey, selfPrivateKey) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const keys = yield this.createCryptoBox(otherPublicKey, selfPrivateKey);
-            return libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__["crypto_kx_client_session_keys"](...keys);
-        });
-    }
-}
-//# sourceMappingURL=CommunicationClient.js.map
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../kukai/node_modules/node-libs-browser/node_modules/buffer/index.js */ "./node_modules/node-libs-browser/node_modules/buffer/index.js").Buffer))
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/transports/clients/MessageBasedClient.js":
-/*!***********************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/transports/clients/MessageBasedClient.js ***!
-  \***********************************************************************/
-/*! exports provided: MessageBasedClient */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(Buffer) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MessageBasedClient", function() { return MessageBasedClient; });
-/* harmony import */ var libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libsodium-wrappers */ "../beacon-sdk/node_modules/libsodium-wrappers/dist/modules/libsodium-wrappers.js");
-/* harmony import */ var libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../constants */ "../beacon-sdk/dist/esm/constants.js");
-/* harmony import */ var _utils_crypto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils/crypto */ "../beacon-sdk/dist/esm/utils/crypto.js");
-/* harmony import */ var _CommunicationClient__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CommunicationClient */ "../beacon-sdk/dist/esm/transports/clients/CommunicationClient.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-
-class MessageBasedClient extends _CommunicationClient__WEBPACK_IMPORTED_MODULE_3__["CommunicationClient"] {
-    constructor(name, keyPair, debug = true) {
-        super(keyPair);
-        this.name = name;
-        this.debug = debug;
-        /**
-         * The listeners that will be notified of new messages
-         */
-        this.activeListeners = new Map();
-        this.init().catch(console.error);
-    }
-    /**
-     * start the client and make sure all dependencies are ready
-     */
-    start() {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__["ready"];
-        });
-    }
-    /**
-     * Get the handshake information. This will be shared with the peer during the connection setup
-     */
-    getHandshakeInfo() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return {
-                name: this.name,
-                version: _constants__WEBPACK_IMPORTED_MODULE_1__["BEACON_VERSION"],
-                publicKey: yield this.getPublicKey()
-            };
-        });
-    }
-    /**
-     * Unsubscribe from encrypted messages from a specific peer
-     *
-     * @param senderPublicKey
-     */
-    unsubscribeFromEncryptedMessage(senderPublicKey) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const listener = this.activeListeners.get(senderPublicKey);
-            if (!listener) {
-                return;
-            }
-            this.activeListeners.delete(senderPublicKey);
-        });
-    }
-    /**
-     * Unsubscribe from all encrypted messages
-     */
-    unsubscribeFromEncryptedMessages() {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.activeListeners.clear();
-        });
-    }
-    /**
-     * Decrypt a message from a specific peer
-     *
-     * @param senderPublicKey
-     * @param payload
-     */
-    decryptMessage(senderPublicKey, payload) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { sharedRx } = yield this.createCryptoBoxServer(senderPublicKey, this.keyPair.privateKey);
-            const hexPayload = Buffer.from(payload, 'hex');
-            if (hexPayload.length >=
-                libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__["crypto_secretbox_NONCEBYTES"] + libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__["crypto_secretbox_MACBYTES"]) {
-                try {
-                    return yield Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_2__["decryptCryptoboxPayload"])(hexPayload, sharedRx);
-                }
-                catch (decryptionError) {
-                    /* NO-OP. We try to decode every message, but some might not be addressed to us. */
-                }
-            }
-            throw new Error('Could not decrypt message');
-        });
-    }
-    /**
-     * Encrypt a message for a specific publicKey (receiver)
-     *
-     * @param recipientPublicKey
-     * @param message
-     */
-    encryptMessage(recipientPublicKey, message) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { sharedTx } = yield this.createCryptoBoxClient(recipientPublicKey, this.keyPair.privateKey);
-            return Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_2__["encryptCryptoboxPayload"])(message, sharedTx);
-        });
-    }
-}
-//# sourceMappingURL=MessageBasedClient.js.map
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../kukai/node_modules/node-libs-browser/node_modules/buffer/index.js */ "./node_modules/node-libs-browser/node_modules/buffer/index.js").Buffer))
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/transports/clients/P2PCommunicationClient.js":
-/*!***************************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/transports/clients/P2PCommunicationClient.js ***!
-  \***************************************************************************/
-/*! exports provided: P2PCommunicationClient */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(Buffer) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "P2PCommunicationClient", function() { return P2PCommunicationClient; });
-/* harmony import */ var libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libsodium-wrappers */ "../beacon-sdk/node_modules/libsodium-wrappers/dist/modules/libsodium-wrappers.js");
-/* harmony import */ var libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var bignumber_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! bignumber.js */ "../beacon-sdk/node_modules/bignumber.js/bignumber.js");
-/* harmony import */ var bignumber_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(bignumber_js__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _utils_crypto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils/crypto */ "../beacon-sdk/dist/esm/utils/crypto.js");
-/* harmony import */ var _matrix_client_MatrixClient__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../matrix-client/MatrixClient */ "../beacon-sdk/dist/esm/matrix-client/MatrixClient.js");
-/* harmony import */ var _matrix_client_models_MatrixClientEvent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../matrix-client/models/MatrixClientEvent */ "../beacon-sdk/dist/esm/matrix-client/models/MatrixClientEvent.js");
-/* harmony import */ var _matrix_client_models_MatrixMessage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../matrix-client/models/MatrixMessage */ "../beacon-sdk/dist/esm/matrix-client/models/MatrixMessage.js");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../constants */ "../beacon-sdk/dist/esm/constants.js");
-/* harmony import */ var _CommunicationClient__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./CommunicationClient */ "../beacon-sdk/dist/esm/transports/clients/CommunicationClient.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-
-
-
-
-
-const KNOWN_RELAY_SERVERS = [
-    'matrix.papers.tech'
-    // 'matrix.tez.ie',
-    // 'matrix-dev.papers.tech',
-    // "matrix.stove-labs.com",
-    // "yadayada.cryptonomic-infra.tech"
-];
-class P2PCommunicationClient extends _CommunicationClient__WEBPACK_IMPORTED_MODULE_7__["CommunicationClient"] {
-    constructor(name, keyPair, replicationCount, storage, matrixNodes, debug = false) {
-        super(keyPair);
-        this.name = name;
-        this.replicationCount = replicationCount;
-        this.storage = storage;
-        this.debug = debug;
-        this.clients = [];
-        this.activeListeners = new Map();
-        this.KNOWN_RELAY_SERVERS = matrixNodes.length > 0 ? matrixNodes : KNOWN_RELAY_SERVERS;
-    }
-    getHandshakeInfo() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return {
-                name: this.name,
-                version: _constants__WEBPACK_IMPORTED_MODULE_6__["BEACON_VERSION"],
-                publicKey: yield this.getPublicKey(),
-                relayServer: yield this.getRelayServer()
-            };
-        });
-    }
-    getRelayServer(publicKeyHash, nonce = '') {
-        return __awaiter(this, void 0, void 0, function* () {
-            const hash = publicKeyHash || (yield Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_2__["getHexHash"])(this.keyPair.publicKey));
-            return this.KNOWN_RELAY_SERVERS.reduce((prevPromise, curr) => __awaiter(this, void 0, void 0, function* () {
-                const prev = yield prevPromise;
-                const prevRelayServerHash = yield Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_2__["getHexHash"])(prev + nonce);
-                const currRelayServerHash = yield Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_2__["getHexHash"])(curr + nonce);
-                const prevBigInt = yield this.getAbsoluteBigIntDifference(hash, prevRelayServerHash);
-                const currBigInt = yield this.getAbsoluteBigIntDifference(hash, currRelayServerHash);
-                return prevBigInt.isLessThan(currBigInt) ? prev : curr;
-            }), Promise.resolve(this.KNOWN_RELAY_SERVERS[0]));
-        });
-    }
-    start() {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.log('starting client');
-            yield libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__["ready"];
-            const loginRawDigest = libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__["crypto_generichash"](32, libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__["from_string"](`login:${Math.floor(Date.now() / 1000 / (5 * 60))}`));
-            const rawSignature = libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__["crypto_sign_detached"](loginRawDigest, this.keyPair.privateKey);
-            yield this.log(`connecting to ${this.replicationCount} servers`);
-            for (let i = 0; i < this.replicationCount; i++) {
-                // TODO: Parallel
-                const client = _matrix_client_MatrixClient__WEBPACK_IMPORTED_MODULE_3__["MatrixClient"].create({
-                    baseUrl: `https://${yield this.getRelayServer(yield this.getPublicKeyHash(), i.toString())}`,
-                    storage: this.storage
-                });
-                client.subscribe(_matrix_client_models_MatrixClientEvent__WEBPACK_IMPORTED_MODULE_4__["MatrixClientEventType"].INVITE, (event) => __awaiter(this, void 0, void 0, function* () {
-                    yield client.joinRooms(event.content.roomId);
-                }));
-                yield this.log('login', yield this.getPublicKeyHash(), 'on', yield this.getRelayServer(yield this.getPublicKeyHash(), i.toString()));
-                yield client
-                    .start({
-                    id: yield this.getPublicKeyHash(),
-                    password: `ed:${Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_2__["toHex"])(rawSignature)}:${yield this.getPublicKey()}`,
-                    deviceId: Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_2__["toHex"])(this.keyPair.publicKey)
-                })
-                    .catch((error) => this.log(error));
-                yield client.joinRooms(...client.invitedRooms).catch((error) => this.log(error));
-                this.clients.push(client);
-            }
-        });
-    }
-    listenForEncryptedMessage(senderPublicKey, messageCallback) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this.activeListeners.has(senderPublicKey)) {
-                return;
-            }
-            const { sharedRx } = yield this.createCryptoBoxServer(senderPublicKey, this.keyPair.privateKey);
-            const callbackFunction = (event) => __awaiter(this, void 0, void 0, function* () {
-                if (this.isTextMessage(event.content) && (yield this.isSender(event, senderPublicKey))) {
-                    let payload;
-                    try {
-                        payload = Buffer.from(event.content.message.content, 'hex');
-                        // content can be non-hex if it's a connection open request
-                    }
-                    catch (_a) {
-                        /* */
-                    }
-                    if (payload &&
-                        payload.length >= libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__["crypto_secretbox_NONCEBYTES"] + libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__["crypto_secretbox_MACBYTES"]) {
-                        try {
-                            messageCallback(yield Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_2__["decryptCryptoboxPayload"])(payload, sharedRx));
-                        }
-                        catch (decryptionError) {
-                            /* NO-OP. We try to decode every message, but some might not be addressed to us. */
-                        }
-                    }
-                }
-            });
-            this.activeListeners.set(senderPublicKey, callbackFunction);
-            for (const client of this.clients) {
-                client.subscribe(_matrix_client_models_MatrixClientEvent__WEBPACK_IMPORTED_MODULE_4__["MatrixClientEventType"].MESSAGE, callbackFunction);
-            }
-        });
-    }
-    unsubscribeFromEncryptedMessage(senderPublicKey) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const listener = this.activeListeners.get(senderPublicKey);
-            if (!listener) {
-                return;
-            }
-            for (const client of this.clients) {
-                client.unsubscribe(_matrix_client_models_MatrixClientEvent__WEBPACK_IMPORTED_MODULE_4__["MatrixClientEventType"].MESSAGE, listener);
-            }
-            this.activeListeners.delete(senderPublicKey);
-        });
-    }
-    unsubscribeFromEncryptedMessages() {
-        return __awaiter(this, void 0, void 0, function* () {
-            for (const client of this.clients) {
-                client.unsubscribe(_matrix_client_models_MatrixClientEvent__WEBPACK_IMPORTED_MODULE_4__["MatrixClientEventType"].MESSAGE);
-            }
-            this.activeListeners.clear();
-        });
-    }
-    sendMessage(recipientPublicKey, message) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { sharedTx } = yield this.createCryptoBoxClient(recipientPublicKey, this.keyPair.privateKey);
-            for (let i = 0; i < this.replicationCount; i++) {
-                const recipientHash = yield Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_2__["getHexHash"])(Buffer.from(recipientPublicKey, 'hex'));
-                const recipient = Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_2__["recipientString"])(recipientHash, yield this.getRelayServer(recipientHash, i.toString()));
-                for (const client of this.clients) {
-                    const room = yield this.getRelevantRoom(client, recipient);
-                    client
-                        .sendTextMessage(room.id, yield Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_2__["encryptCryptoboxPayload"])(message, sharedTx))
-                        .catch((error) => this.log(error));
-                }
-            }
-        });
-    }
-    listenForChannelOpening(messageCallback) {
-        return __awaiter(this, void 0, void 0, function* () {
-            for (const client of this.clients) {
-                client.subscribe(_matrix_client_models_MatrixClientEvent__WEBPACK_IMPORTED_MODULE_4__["MatrixClientEventType"].MESSAGE, (event) => __awaiter(this, void 0, void 0, function* () {
-                    yield this.log('channel opening', event);
-                    if (this.isTextMessage(event.content) && (yield this.isChannelOpenMessage(event.content))) {
-                        yield this.log('new channel open event!');
-                        const splits = event.content.message.content.split(':');
-                        const payload = Buffer.from(splits[splits.length - 1], 'hex');
-                        if (payload.length >=
-                            libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__["crypto_secretbox_NONCEBYTES"] + libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__["crypto_secretbox_MACBYTES"]) {
-                            try {
-                                messageCallback(JSON.parse(yield Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_2__["openCryptobox"])(payload, this.keyPair.publicKey, this.keyPair.privateKey)));
-                            }
-                            catch (decryptionError) {
-                                /* NO-OP. We try to decode every message, but some might not be addressed to us. */
-                            }
-                        }
-                    }
-                }));
-            }
-        });
-    }
-    sendPairingResponse(pairingRequest) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.log('open channel');
-            const recipientHash = yield Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_2__["getHexHash"])(Buffer.from(pairingRequest.publicKey, 'hex'));
-            const recipient = Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_2__["recipientString"])(recipientHash, pairingRequest.relayServer);
-            yield this.log(`currently there are ${this.clients.length} clients open`);
-            for (const client of this.clients) {
-                const room = yield this.getRelevantRoom(client, recipient);
-                // TODO: remove v1 backwards-compatibility
-                const message = typeof pairingRequest.version === 'undefined'
-                    ? yield this.getPublicKey() // v1
-                    : JSON.stringify(yield this.getHandshakeInfo()); // v2
-                const encryptedMessage = yield Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_2__["sealCryptobox"])(message, Buffer.from(pairingRequest.publicKey, 'hex'));
-                client
-                    .sendTextMessage(room.id, ['@channel-open', recipient, encryptedMessage].join(':'))
-                    .catch((error) => this.log(error));
-            }
-        });
-    }
-    isTextMessage(content) {
-        return content.message.type === _matrix_client_models_MatrixMessage__WEBPACK_IMPORTED_MODULE_5__["MatrixMessageType"].TEXT;
-    }
-    isChannelOpenMessage(content) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return content.message.content.startsWith(`@channel-open:@${yield Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_2__["getHexHash"])(Buffer.from(yield this.getPublicKey(), 'hex'))}`);
-        });
-    }
-    isSender(event, senderPublicKey) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return event.content.message.sender.startsWith(`@${yield Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_2__["getHexHash"])(Buffer.from(senderPublicKey, 'hex'))}`);
-        });
-    }
-    getAbsoluteBigIntDifference(firstHash, secondHash) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const difference = new bignumber_js__WEBPACK_IMPORTED_MODULE_1___default.a(`0x${firstHash}`).minus(`0x${secondHash}`);
-            return difference.absoluteValue();
-        });
-    }
-    getRelevantRoom(client, recipient) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const joinedRooms = client.joinedRooms;
-            const relevantRooms = joinedRooms.filter((roomElement) => roomElement.members.some((member) => member === recipient));
-            let room;
-            if (relevantRooms.length === 0) {
-                yield this.log(`no relevant rooms found`);
-                const roomId = yield client.createTrustedPrivateRoom(recipient);
-                room = client.getRoomById(roomId);
-            }
-            else {
-                room = relevantRooms[0];
-                yield this.log(`channel already open, reusing room ${room.id}`);
-            }
-            return room;
-        });
-    }
-    log(...args) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this.debug) {
-                console.log(`--- [P2PCommunicationClient]:${this.name}: `, ...args);
-            }
-        });
-    }
-}
-//# sourceMappingURL=P2PCommunicationClient.js.map
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../kukai/node_modules/node-libs-browser/node_modules/buffer/index.js */ "./node_modules/node-libs-browser/node_modules/buffer/index.js").Buffer))
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/transports/clients/PostMessageClient.js":
-/*!**********************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/transports/clients/PostMessageClient.js ***!
-  \**********************************************************************/
-/*! exports provided: PostMessageClient */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(Buffer) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PostMessageClient", function() { return PostMessageClient; });
-/* harmony import */ var libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libsodium-wrappers */ "../beacon-sdk/node_modules/libsodium-wrappers/dist/modules/libsodium-wrappers.js");
-/* harmony import */ var libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _MockWindow__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../MockWindow */ "../beacon-sdk/dist/esm/MockWindow.js");
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../.. */ "../beacon-sdk/dist/esm/index.js");
-/* harmony import */ var _utils_crypto__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils/crypto */ "../beacon-sdk/dist/esm/utils/crypto.js");
-/* harmony import */ var _MessageBasedClient__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./MessageBasedClient */ "../beacon-sdk/dist/esm/transports/clients/MessageBasedClient.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-
-
-class PostMessageClient extends _MessageBasedClient__WEBPACK_IMPORTED_MODULE_4__["MessageBasedClient"] {
-    constructor() {
-        super(...arguments);
-        this.activeListeners = new Map();
-    }
-    init() {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.subscribeToMessages().catch(console.error);
-        });
-    }
-    listenForEncryptedMessage(senderPublicKey, messageCallback) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this.activeListeners.has(senderPublicKey)) {
-                return;
-            }
-            const callbackFunction = (message, context) => __awaiter(this, void 0, void 0, function* () {
-                try {
-                    messageCallback(yield this.decryptMessage(senderPublicKey, message.encryptedPayload), context);
-                }
-                catch (decryptionError) {
-                    /* NO-OP. We try to decode every message, but some might not be addressed to us. */
-                }
-            });
-            this.activeListeners.set(senderPublicKey, callbackFunction);
-        });
-    }
-    sendMessage(recipientPublicKey, message) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const payload = yield this.encryptMessage(recipientPublicKey, message);
-            const msg = {
-                target: ___WEBPACK_IMPORTED_MODULE_2__["ExtensionMessageTarget"].EXTENSION,
-                encryptedPayload: payload
-            };
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            _MockWindow__WEBPACK_IMPORTED_MODULE_1__["myWindow"].postMessage(msg, window.location.origin);
-        });
-    }
-    listenForChannelOpening(messageCallback) {
-        return __awaiter(this, void 0, void 0, function* () {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const fn = (event) => __awaiter(this, void 0, void 0, function* () {
-                var _a;
-                const data = (_a = event === null || event === void 0 ? void 0 : event.data) === null || _a === void 0 ? void 0 : _a.message;
-                if (data &&
-                    data.target === ___WEBPACK_IMPORTED_MODULE_2__["ExtensionMessageTarget"].PAGE &&
-                    (yield this.isChannelOpenMessage(data))) {
-                    const payload = Buffer.from(data.payload, 'hex');
-                    if (payload.length >=
-                        libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__["crypto_secretbox_NONCEBYTES"] + libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__["crypto_secretbox_MACBYTES"]) {
-                        try {
-                            const decrypted = yield Object(_utils_crypto__WEBPACK_IMPORTED_MODULE_3__["openCryptobox"])(payload, this.keyPair.publicKey, this.keyPair.privateKey);
-                            messageCallback(JSON.parse(decrypted));
-                            _MockWindow__WEBPACK_IMPORTED_MODULE_1__["myWindow"].removeEventListener('message', fn);
-                        }
-                        catch (decryptionError) {
-                            /* NO-OP. We try to decode every message, but some might not be addressed to us. */
-                        }
-                    }
-                }
-            });
-            _MockWindow__WEBPACK_IMPORTED_MODULE_1__["myWindow"].addEventListener('message', fn);
-            const message = {
-                target: ___WEBPACK_IMPORTED_MODULE_2__["ExtensionMessageTarget"].EXTENSION,
-                payload: yield new ___WEBPACK_IMPORTED_MODULE_2__["Serializer"]().serialize(yield this.getHandshakeInfo())
-            };
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            _MockWindow__WEBPACK_IMPORTED_MODULE_1__["myWindow"].postMessage(message, window.location.origin);
-        });
-    }
-    isChannelOpenMessage(message) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return typeof message === 'object' && message.hasOwnProperty('payload');
-        });
-    }
-    subscribeToMessages() {
-        return __awaiter(this, void 0, void 0, function* () {
-            _MockWindow__WEBPACK_IMPORTED_MODULE_1__["myWindow"].addEventListener('message', (message) => {
-                if (typeof message === 'object' && message) {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    const data = message.data;
-                    if (data.message && data.message.target === ___WEBPACK_IMPORTED_MODULE_2__["ExtensionMessageTarget"].PAGE) {
-                        this.activeListeners.forEach((listener) => {
-                            listener(data.message, {
-                                origin: ___WEBPACK_IMPORTED_MODULE_2__["Origin"].EXTENSION,
-                                id: data.sender.id || ''
-                            });
-                        });
-                    }
-                }
-            });
-        });
-    }
-}
-//# sourceMappingURL=PostMessageClient.js.map
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../kukai/node_modules/node-libs-browser/node_modules/buffer/index.js */ "./node_modules/node-libs-browser/node_modules/buffer/index.js").Buffer))
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/types/BeaconErrorType.js":
-/*!*******************************************************!*\
-  !*** ../beacon-sdk/dist/esm/types/BeaconErrorType.js ***!
-  \*******************************************************/
-/*! exports provided: BeaconErrorType */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BeaconErrorType", function() { return BeaconErrorType; });
-var BeaconErrorType;
-(function (BeaconErrorType) {
-    BeaconErrorType["BROADCAST_ERROR"] = "BROADCAST_ERROR";
-    BeaconErrorType["NETWORK_NOT_SUPPORTED"] = "NETWORK_NOT_SUPPORTED";
-    BeaconErrorType["NO_ADDRESS_ERROR"] = "NO_ADDRESS_ERROR";
-    BeaconErrorType["NO_PRIVATE_KEY_FOUND_ERROR"] = "NO_PRIVATE_KEY_FOUND_ERROR";
-    BeaconErrorType["NOT_GRANTED_ERROR"] = "NOT_GRANTED_ERROR";
-    BeaconErrorType["PARAMETERS_INVALID_ERROR"] = "PARAMETERS_INVALID_ERROR";
-    BeaconErrorType["TOO_MANY_OPERATIONS"] = "TOO_MANY_OPERATIONS";
-    BeaconErrorType["TRANSACTION_INVALID_ERROR"] = "TRANSACTION_INVALID_ERROR";
-    BeaconErrorType["ABORTED_ERROR"] = "ABORTED_ERROR";
-    BeaconErrorType["UNKNOWN_ERROR"] = "UNKNOWN_ERROR"; // Used as a wildcard if an unexpected error occured.
-})(BeaconErrorType || (BeaconErrorType = {}));
-//# sourceMappingURL=BeaconErrorType.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/types/ExtensionMessageTarget.js":
-/*!**************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/types/ExtensionMessageTarget.js ***!
-  \**************************************************************/
-/*! exports provided: ExtensionMessageTarget */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ExtensionMessageTarget", function() { return ExtensionMessageTarget; });
-var ExtensionMessageTarget;
-(function (ExtensionMessageTarget) {
-    ExtensionMessageTarget["BACKGROUND"] = "toBackground";
-    ExtensionMessageTarget["PAGE"] = "toPage";
-    ExtensionMessageTarget["EXTENSION"] = "toExtension";
-})(ExtensionMessageTarget || (ExtensionMessageTarget = {}));
-//# sourceMappingURL=ExtensionMessageTarget.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/types/Origin.js":
-/*!**********************************************!*\
-  !*** ../beacon-sdk/dist/esm/types/Origin.js ***!
-  \**********************************************/
-/*! exports provided: Origin */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Origin", function() { return Origin; });
-var Origin;
-(function (Origin) {
-    Origin["WEBSITE"] = "website";
-    Origin["EXTENSION"] = "extension";
-    Origin["P2P"] = "p2p";
-})(Origin || (Origin = {}));
-//# sourceMappingURL=Origin.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/types/beacon/BeaconMessageType.js":
-/*!****************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/types/beacon/BeaconMessageType.js ***!
-  \****************************************************************/
-/*! exports provided: BeaconMessageType */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BeaconMessageType", function() { return BeaconMessageType; });
-var BeaconMessageType;
-(function (BeaconMessageType) {
-    BeaconMessageType["PermissionRequest"] = "permission_request";
-    BeaconMessageType["SignPayloadRequest"] = "sign_payload_request";
-    BeaconMessageType["OperationRequest"] = "operation_request";
-    BeaconMessageType["BroadcastRequest"] = "broadcast_request";
-    BeaconMessageType["PermissionResponse"] = "permission_response";
-    BeaconMessageType["SignPayloadResponse"] = "sign_payload_response";
-    BeaconMessageType["OperationResponse"] = "operation_response";
-    BeaconMessageType["BroadcastResponse"] = "broadcast_response";
-    BeaconMessageType["Disconnect"] = "disconnect";
-    BeaconMessageType["Error"] = "error";
-})(BeaconMessageType || (BeaconMessageType = {}));
-//# sourceMappingURL=BeaconMessageType.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/types/beacon/NetworkType.js":
-/*!**********************************************************!*\
-  !*** ../beacon-sdk/dist/esm/types/beacon/NetworkType.js ***!
-  \**********************************************************/
-/*! exports provided: NetworkType */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NetworkType", function() { return NetworkType; });
-var NetworkType;
-(function (NetworkType) {
-    NetworkType["MAINNET"] = "mainnet";
-    NetworkType["CARTHAGENET"] = "carthagenet";
-    NetworkType["DELPHINET"] = "delphinet";
-    NetworkType["CUSTOM"] = "custom";
-})(NetworkType || (NetworkType = {}));
-//# sourceMappingURL=NetworkType.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/types/beacon/PermissionScope.js":
-/*!**************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/types/beacon/PermissionScope.js ***!
-  \**************************************************************/
-/*! exports provided: PermissionScope */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PermissionScope", function() { return PermissionScope; });
-var PermissionScope;
-(function (PermissionScope) {
-    PermissionScope["SIGN"] = "sign";
-    PermissionScope["OPERATION_REQUEST"] = "operation_request";
-    PermissionScope["THRESHOLD"] = "threshold"; // Allows the DApp to sign transactions below a certain threshold. This is currently not fully defined and unused
-})(PermissionScope || (PermissionScope = {}));
-//# sourceMappingURL=PermissionScope.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/types/storage/StorageKey.js":
-/*!**********************************************************!*\
-  !*** ../beacon-sdk/dist/esm/types/storage/StorageKey.js ***!
-  \**********************************************************/
-/*! exports provided: StorageKey */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StorageKey", function() { return StorageKey; });
-var StorageKey;
-(function (StorageKey) {
-    StorageKey["TRANSPORT_P2P_PEERS"] = "beacon:communication-peers";
-    StorageKey["TRANSPORT_POSTMESSAGE_PEERS"] = "beacon:postmessage-peers";
-    StorageKey["ACCOUNTS"] = "beacon:accounts";
-    StorageKey["ACTIVE_ACCOUNT"] = "beacon:active-account";
-    StorageKey["BEACON_SDK_SECRET_SEED"] = "beacon:sdk-secret-seed";
-    StorageKey["APP_METADATA_LIST"] = "beacon:app-metadata-list";
-    StorageKey["PERMISSION_LIST"] = "beacon:permissions";
-    StorageKey["BEACON_SDK_VERSION"] = "beacon:sdk_version";
-    StorageKey["MATRIX_PRESERVED_STATE"] = "beacon:sdk-matrix-preserved-state";
-})(StorageKey || (StorageKey = {}));
-//# sourceMappingURL=StorageKey.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/types/storage/StorageKeyReturnDefaults.js":
-/*!************************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/types/storage/StorageKeyReturnDefaults.js ***!
-  \************************************************************************/
-/*! exports provided: defaultValues */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultValues", function() { return defaultValues; });
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../.. */ "../beacon-sdk/dist/esm/index.js");
-
-const defaultValues = {
-    [___WEBPACK_IMPORTED_MODULE_0__["StorageKey"].TRANSPORT_P2P_PEERS]: [],
-    [___WEBPACK_IMPORTED_MODULE_0__["StorageKey"].TRANSPORT_POSTMESSAGE_PEERS]: [],
-    [___WEBPACK_IMPORTED_MODULE_0__["StorageKey"].ACCOUNTS]: [],
-    [___WEBPACK_IMPORTED_MODULE_0__["StorageKey"].ACTIVE_ACCOUNT]: undefined,
-    [___WEBPACK_IMPORTED_MODULE_0__["StorageKey"].BEACON_SDK_SECRET_SEED]: undefined,
-    [___WEBPACK_IMPORTED_MODULE_0__["StorageKey"].APP_METADATA_LIST]: [],
-    [___WEBPACK_IMPORTED_MODULE_0__["StorageKey"].PERMISSION_LIST]: [],
-    [___WEBPACK_IMPORTED_MODULE_0__["StorageKey"].BEACON_SDK_VERSION]: undefined,
-    [___WEBPACK_IMPORTED_MODULE_0__["StorageKey"].MATRIX_PRESERVED_STATE]: {}
-};
-//# sourceMappingURL=StorageKeyReturnDefaults.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/types/tezos/OperationTypes.js":
-/*!************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/types/tezos/OperationTypes.js ***!
-  \************************************************************/
-/*! exports provided: TezosOperationType */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TezosOperationType", function() { return TezosOperationType; });
-var TezosOperationType;
-(function (TezosOperationType) {
-    TezosOperationType["ENDORSEMENT"] = "endorsement";
-    TezosOperationType["SEED_NONCE_REVELATION"] = "seed_nonce_revelation";
-    TezosOperationType["DOUBLE_ENDORSEMENT_EVIDENCE"] = "double_endorsement_evidence";
-    TezosOperationType["DOUBLE_BAKING_EVIDENCE"] = "double_baking_evidence";
-    TezosOperationType["ACTIVATE_ACCOUNT"] = "activate_account";
-    TezosOperationType["PROPOSALS"] = "proposals";
-    TezosOperationType["BALLOT"] = "ballot";
-    TezosOperationType["REVEAL"] = "reveal";
-    TezosOperationType["TRANSACTION"] = "transaction";
-    TezosOperationType["ORIGINATION"] = "origination";
-    TezosOperationType["DELEGATION"] = "delegation";
-})(TezosOperationType || (TezosOperationType = {}));
-//# sourceMappingURL=OperationTypes.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/types/transport/TransportStatus.js":
-/*!*****************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/types/transport/TransportStatus.js ***!
-  \*****************************************************************/
-/*! exports provided: TransportStatus */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TransportStatus", function() { return TransportStatus; });
-var TransportStatus;
-(function (TransportStatus) {
-    TransportStatus["NOT_CONNECTED"] = "NOT_CONNECTED";
-    TransportStatus["CONNECTING"] = "CONNECTING";
-    TransportStatus["CONNECTED"] = "CONNECTED";
-})(TransportStatus || (TransportStatus = {}));
-//# sourceMappingURL=TransportStatus.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/types/transport/TransportType.js":
-/*!***************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/types/transport/TransportType.js ***!
-  \***************************************************************/
-/*! exports provided: TransportType */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TransportType", function() { return TransportType; });
-var TransportType;
-(function (TransportType) {
-    TransportType["CHROME_MESSAGE"] = "chrome_message";
-    TransportType["POST_MESSAGE"] = "post_message";
-    TransportType["LEDGER"] = "ledger";
-    TransportType["P2P"] = "p2p";
-})(TransportType || (TransportType = {}));
-//# sourceMappingURL=TransportType.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/utils/Logger.js":
-/*!**********************************************!*\
-  !*** ../beacon-sdk/dist/esm/utils/Logger.js ***!
-  \**********************************************/
-/*! exports provided: Logger */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Logger", function() { return Logger; });
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants */ "../beacon-sdk/dist/esm/constants.js");
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/**
- * The logger that is used internally
- */
-class Logger {
-    constructor(service, debug = _constants__WEBPACK_IMPORTED_MODULE_0__["DEBUG"]) {
-        this.name = service;
-        this.debug = debug;
-    }
-    _log(color, method, args) {
-        if (!this.debug) {
-            return;
-        }
-        const origin = `%c[${this.name}](${method})`;
-        const css = `background: #${color}`;
-        if (args.length === 0) {
-            console.log(origin, css);
-        }
-        else if (args.every((arg) => typeof arg === 'string')) {
-            console.log(`${origin}:`, css, ...args);
-        }
-        else {
-            console.log(`${origin}:`, css, ...args);
-        }
-    }
-    log(method, ...args) {
-        this._log('d3ffcf', method, args);
-    }
-    warn(method, ...args) {
-        this._log('fff4cf', method, args);
-    }
-    error(method, ...args) {
-        this._log('ffcfcf', method, args);
-    }
-}
-//# sourceMappingURL=Logger.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/utils/assert-never.js":
-/*!****************************************************!*\
-  !*** ../beacon-sdk/dist/esm/utils/assert-never.js ***!
-  \****************************************************/
-/*! exports provided: assertNever */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "assertNever", function() { return assertNever; });
-/* eslint-disable prefer-arrow/prefer-arrow-functions */
-/**
- * A helper function to make sure if/elses and switch/cases are exhaustive
- *
- * @param empty The data that has to be empty
- */
-function assertNever(empty) {
-    return empty;
-}
-/* eslint-enable prefer-arrow/prefer-arrow-functions */
-//# sourceMappingURL=assert-never.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/utils/available-transports.js":
-/*!************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/utils/available-transports.js ***!
-  \************************************************************/
-/*! exports provided: availableTransports */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "availableTransports", function() { return availableTransports; });
-/* harmony import */ var _transports_PostMessageTransport__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../transports/PostMessageTransport */ "../beacon-sdk/dist/esm/transports/PostMessageTransport.js");
-
-/**
- * An object with promises to indicate whether or not that transport is available.
- */
-const availableTransports = {
-    extension: _transports_PostMessageTransport__WEBPACK_IMPORTED_MODULE_0__["PostMessageTransport"].isAvailable()
-};
-//# sourceMappingURL=available-transports.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/utils/block-explorer.js":
-/*!******************************************************!*\
-  !*** ../beacon-sdk/dist/esm/utils/block-explorer.js ***!
-  \******************************************************/
-/*! exports provided: BlockExplorer */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BlockExplorer", function() { return BlockExplorer; });
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-class BlockExplorer {
-    constructor(rpcUrls) {
-        this.rpcUrls = rpcUrls;
-    }
-    getLinkForNetwork(network) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.rpcUrls[network.type];
-        });
-    }
-}
-//# sourceMappingURL=block-explorer.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/utils/crypto.js":
-/*!**********************************************!*\
-  !*** ../beacon-sdk/dist/esm/utils/crypto.js ***!
-  \**********************************************/
-/*! exports provided: toHex, getHexHash, getKeypairFromSeed, encryptCryptoboxPayload, decryptCryptoboxPayload, sealCryptobox, openCryptobox, getAddressFromPublicKey, recipientString */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(Buffer) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toHex", function() { return toHex; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getHexHash", function() { return getHexHash; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getKeypairFromSeed", function() { return getKeypairFromSeed; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "encryptCryptoboxPayload", function() { return encryptCryptoboxPayload; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "decryptCryptoboxPayload", function() { return decryptCryptoboxPayload; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sealCryptobox", function() { return sealCryptobox; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "openCryptobox", function() { return openCryptobox; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAddressFromPublicKey", function() { return getAddressFromPublicKey; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "recipientString", function() { return recipientString; });
-/* harmony import */ var bs58check__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bs58check */ "../beacon-sdk/node_modules/bs58check/index.js");
-/* harmony import */ var bs58check__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(bs58check__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! libsodium-wrappers */ "../beacon-sdk/node_modules/libsodium-wrappers/dist/modules/libsodium-wrappers.js");
-/* harmony import */ var libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__);
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-/* eslint-disable prefer-arrow/prefer-arrow-functions */
-/**
- * Convert a value to hex
- *
- * @param value
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function toHex(value) {
-    return Buffer.from(value).toString('hex');
-}
-/**
- * Get the hex hash of a value
- *
- * @param key
- */
-function getHexHash(key) {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["ready"];
-        return toHex(libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["crypto_generichash"](32, key));
-    });
-}
-/**
- * Get a keypair from a seed
- *
- * @param seed
- */
-function getKeypairFromSeed(seed) {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["ready"];
-        return libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["crypto_sign_seed_keypair"](libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["crypto_generichash"](32, libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["from_string"](seed)));
-    });
-}
-/**
- * Encrypt a message with a shared key
- *
- * @param message
- * @param sharedKey
- */
-function encryptCryptoboxPayload(message, sharedKey) {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["ready"];
-        const nonce = Buffer.from(libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["randombytes_buf"](libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["crypto_secretbox_NONCEBYTES"]));
-        const combinedPayload = Buffer.concat([
-            nonce,
-            Buffer.from(libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["crypto_secretbox_easy"](Buffer.from(message, 'utf8'), nonce, sharedKey))
-        ]);
-        return toHex(combinedPayload);
-    });
-}
-/**
- * Decrypt a message with a shared key
- *
- * @param payload
- * @param sharedKey
- */
-function decryptCryptoboxPayload(payload, sharedKey) {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["ready"];
-        const nonce = payload.slice(0, libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["crypto_secretbox_NONCEBYTES"]);
-        const ciphertext = payload.slice(libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["crypto_secretbox_NONCEBYTES"]);
-        return Buffer.from(libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["crypto_secretbox_open_easy"](ciphertext, nonce, sharedKey)).toString('utf8');
-    });
-}
-/**
- * Encrypt a message with a public key
- *
- * @param payload
- * @param publicKey
- */
-function sealCryptobox(payload, publicKey) {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["ready"];
-        const kxSelfPublicKey = libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["crypto_sign_ed25519_pk_to_curve25519"](Buffer.from(publicKey)); // Secret bytes to scalar bytes
-        const encryptedMessage = libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["crypto_box_seal"](payload, kxSelfPublicKey);
-        return toHex(encryptedMessage);
-    });
-}
-/**
- * Decrypt a message with public + private key
- *
- * @param encryptedPayload
- * @param publicKey
- * @param privateKey
- */
-function openCryptobox(encryptedPayload, publicKey, privateKey) {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["ready"];
-        const kxSelfPrivateKey = libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["crypto_sign_ed25519_sk_to_curve25519"](Buffer.from(privateKey)); // Secret bytes to scalar bytes
-        const kxSelfPublicKey = libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["crypto_sign_ed25519_pk_to_curve25519"](Buffer.from(publicKey)); // Secret bytes to scalar bytes
-        const decryptedMessage = libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["crypto_box_seal_open"](encryptedPayload, kxSelfPublicKey, kxSelfPrivateKey);
-        return Buffer.from(decryptedMessage).toString();
-    });
-}
-/**
- * Get an address from the public key
- *
- * @param publicKey
- */
-function getAddressFromPublicKey(publicKey) {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["ready"];
-        const prefixes = {
-            edpk: {
-                length: 54,
-                prefix: Buffer.from(new Uint8Array([6, 161, 159]))
-            },
-            sppk: {
-                length: 55,
-                prefix: Buffer.from(new Uint8Array([6, 161, 161]))
-            },
-            p2pk: {
-                length: 55,
-                prefix: Buffer.from(new Uint8Array([6, 161, 164]))
-            }
-        };
-        let prefix;
-        let plainPublicKey;
-        if (publicKey.length === 64) {
-            prefix = prefixes.edpk.prefix;
-            plainPublicKey = publicKey;
-        }
-        else {
-            Object.entries(prefixes).forEach(([key, value]) => {
-                if (publicKey.startsWith(key) && publicKey.length === value.length) {
-                    prefix = value.prefix;
-                    const decoded = bs58check__WEBPACK_IMPORTED_MODULE_0__["decode"](publicKey);
-                    plainPublicKey = decoded.slice(key.length, decoded.length).toString('hex');
-                }
-            });
-        }
-        if (!prefix || !plainPublicKey) {
-            throw new Error(`invalid publicKey: ${publicKey}`);
-        }
-        const payload = libsodium_wrappers__WEBPACK_IMPORTED_MODULE_1__["crypto_generichash"](20, Buffer.from(plainPublicKey, 'hex'));
-        return bs58check__WEBPACK_IMPORTED_MODULE_0__["encode"](Buffer.concat([prefix, Buffer.from(payload)]));
-    });
-}
-/**
- * Get the recipient string used in the matrix message
- *
- * @param recipientHash
- * @param relayServer
- */
-function recipientString(recipientHash, relayServer) {
-    return `@${recipientHash}:${relayServer}`;
-}
-/* eslint-enable prefer-arrow/prefer-arrow-functions */
-//# sourceMappingURL=crypto.js.map
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../kukai/node_modules/node-libs-browser/node_modules/buffer/index.js */ "./node_modules/node-libs-browser/node_modules/buffer/index.js").Buffer))
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/utils/exposed-promise.js":
-/*!*******************************************************!*\
-  !*** ../beacon-sdk/dist/esm/utils/exposed-promise.js ***!
-  \*******************************************************/
-/*! exports provided: ExposedPromiseStatus, ExposedPromise */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ExposedPromiseStatus", function() { return ExposedPromiseStatus; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ExposedPromise", function() { return ExposedPromise; });
-var ExposedPromiseStatus;
-(function (ExposedPromiseStatus) {
-    ExposedPromiseStatus["PENDING"] = "pending";
-    ExposedPromiseStatus["RESOLVED"] = "resolved";
-    ExposedPromiseStatus["REJECTED"] = "rejected";
-})(ExposedPromiseStatus || (ExposedPromiseStatus = {}));
-const notInitialized = () => {
-    throw new Error('ExposedPromise not initialized yet.');
-};
-/**
- * Exposed promise allow you to create a promise and then resolve it later, from the outside
- */
-class ExposedPromise {
-    constructor() {
-        this._resolve = notInitialized;
-        this._reject = notInitialized;
-        this._status = ExposedPromiseStatus.PENDING;
-        this._promise = new Promise((innerResolve, innerReject) => {
-            this._resolve = (value) => {
-                if (this.isSettled()) {
-                    return;
-                }
-                this._promiseResult = value;
-                innerResolve(value);
-                this._status = ExposedPromiseStatus.RESOLVED;
-                return;
-            };
-            this._reject = (reason) => {
-                if (this.isSettled()) {
-                    return;
-                }
-                this._promiseError = reason;
-                innerReject(reason);
-                this._status = ExposedPromiseStatus.REJECTED;
-                return;
-            };
-        });
-    }
-    get promise() {
-        return this._promise;
-    }
-    get resolve() {
-        return this._resolve;
-    }
-    get reject() {
-        return this._reject;
-    }
-    get status() {
-        return this._status;
-    }
-    get promiseResult() {
-        return this._promiseResult;
-    }
-    get promiseError() {
-        return this._promiseError;
-    }
-    static resolve(value) {
-        const promise = new ExposedPromise();
-        promise.resolve(value);
-        return promise;
-    }
-    static reject(reason) {
-        const promise = new ExposedPromise();
-        promise.reject(reason);
-        return promise;
-    }
-    isPending() {
-        return this.status === ExposedPromiseStatus.PENDING;
-    }
-    isResolved() {
-        return this.status === ExposedPromiseStatus.RESOLVED;
-    }
-    isRejected() {
-        return this.status === ExposedPromiseStatus.REJECTED;
-    }
-    isSettled() {
-        return this.isResolved() || this.isRejected();
-    }
-}
-//# sourceMappingURL=exposed-promise.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/utils/generate-uuid.js":
-/*!*****************************************************!*\
-  !*** ../beacon-sdk/dist/esm/utils/generate-uuid.js ***!
-  \*****************************************************/
-/*! exports provided: generateGUID */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(Buffer) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generateGUID", function() { return generateGUID; });
-/* harmony import */ var libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libsodium-wrappers */ "../beacon-sdk/node_modules/libsodium-wrappers/dist/modules/libsodium-wrappers.js");
-/* harmony import */ var libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__);
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-/* eslint-disable prefer-arrow/prefer-arrow-functions */
-
-/**
- * Generate a random GUID
- */
-function generateGUID() {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__["ready"];
-        const buf = libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__["randombytes_buf"](16);
-        return [buf.slice(0, 4), buf.slice(4, 6), buf.slice(6, 8), buf.slice(8, 10), buf.slice(10, 16)]
-            .map(function (subbuf) {
-            return Buffer.from(subbuf).toString('hex');
-        })
-            .join('-');
-    });
-}
-/* eslint-enable prefer-arrow/prefer-arrow-functions */
-//# sourceMappingURL=generate-uuid.js.map
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../kukai/node_modules/node-libs-browser/node_modules/buffer/index.js */ "./node_modules/node-libs-browser/node_modules/buffer/index.js").Buffer))
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/utils/get-account-identifier.js":
-/*!**************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/utils/get-account-identifier.js ***!
-  \**************************************************************/
-/*! exports provided: getAccountIdentifier */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(Buffer) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAccountIdentifier", function() { return getAccountIdentifier; });
-/* harmony import */ var libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libsodium-wrappers */ "../beacon-sdk/node_modules/libsodium-wrappers/dist/modules/libsodium-wrappers.js");
-/* harmony import */ var libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var bs58check__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! bs58check */ "../beacon-sdk/node_modules/bs58check/index.js");
-/* harmony import */ var bs58check__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(bs58check__WEBPACK_IMPORTED_MODULE_1__);
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-/**
- * Generate a deterministic account identifier based on an address and a network
- *
- * @param address
- * @param network
- */
-const getAccountIdentifier = (address, network) => __awaiter(void 0, void 0, void 0, function* () {
-    const data = [address, network.type];
-    if (network.name) {
-        data.push(`name:${network.name}`);
-    }
-    if (network.rpcUrl) {
-        data.push(`rpc:${network.rpcUrl}`);
-    }
-    yield libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__["ready"];
-    const buffer = Buffer.from(libsodium_wrappers__WEBPACK_IMPORTED_MODULE_0__["crypto_generichash"](10, data.join('-')));
-    return bs58check__WEBPACK_IMPORTED_MODULE_1__["encode"](buffer);
-});
-//# sourceMappingURL=get-account-identifier.js.map
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../kukai/node_modules/node-libs-browser/node_modules/buffer/index.js */ "./node_modules/node-libs-browser/node_modules/buffer/index.js").Buffer))
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/utils/get-tzip10-link.js":
-/*!*******************************************************!*\
-  !*** ../beacon-sdk/dist/esm/utils/get-tzip10-link.js ***!
-  \*******************************************************/
-/*! exports provided: getTzip10Link */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTzip10Link", function() { return getTzip10Link; });
-const getTzip10Link = (url, payload) => `${url}?type=tzip10&data=${payload}`;
-//# sourceMappingURL=get-tzip10-link.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/utils/platform.js":
-/*!************************************************!*\
-  !*** ../beacon-sdk/dist/esm/utils/platform.js ***!
-  \************************************************/
-/*! exports provided: testUserAgent, isMobile, isIOS, isAndroid, isDesktop */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "testUserAgent", function() { return testUserAgent; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isMobile", function() { return isMobile; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isIOS", function() { return isIOS; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isAndroid", function() { return isAndroid; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isDesktop", function() { return isDesktop; });
-// Helper functions from https://github.com/ionic-team/ionic-framework/blob/master/core/src/utils/platform.ts
-const testUserAgent = (win, expr) => expr.test(win.navigator.userAgent);
-const matchMedia = (win, query) => win.matchMedia(query).matches;
-const isMobile = (win) => matchMedia(win, '(any-pointer:coarse)');
-// const isCordova = (win: any): boolean => Boolean(win.cordova || win.phonegap || win.PhoneGap)
-// const isCapacitorNative = (win: any): boolean => {
-//   const capacitor = win.Capacitor
-//   return Boolean(capacitor && capacitor.isNative)
-// }
-// const isHybrid = (win: Window): boolean => isCordova(win) || isCapacitorNative(win)
-// const isMobileWeb = (win: Window): boolean => isMobile(win) && !isHybrid(win)
-const isIpad = (win) => {
-    // iOS 12 and below
-    if (testUserAgent(win, /iPad/i)) {
-        return true;
-    }
-    // iOS 13+
-    if (testUserAgent(win, /Macintosh/i) && isMobile(win)) {
-        return true;
-    }
-    return false;
-};
-const isIOS = (win) => testUserAgent(win, /iPhone|iPod/i) || isIpad(win);
-const isAndroid = (win) => testUserAgent(win, /android|sink/i);
-const isDesktop = (win) => !isMobile(win);
-//# sourceMappingURL=platform.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/utils/qr.js":
-/*!******************************************!*\
-  !*** ../beacon-sdk/dist/esm/utils/qr.js ***!
-  \******************************************/
-/*! exports provided: getQrData */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getQrData", function() { return getQrData; });
-/* harmony import */ var qrcode_generator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! qrcode-generator */ "../beacon-sdk/node_modules/qrcode-generator/qrcode.js");
-/* harmony import */ var qrcode_generator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(qrcode_generator__WEBPACK_IMPORTED_MODULE_0__);
-
-/**
- * Convert data to a QR code
- *
- * @param payload The data to be encoded as a QR code
- * @param type How the QR code will be encoded
- */
-const getQrData = (payload, type) => {
-    const typeNumber = 0;
-    const errorCorrectionLevel = 'L';
-    const qr = qrcode_generator__WEBPACK_IMPORTED_MODULE_0__(typeNumber, errorCorrectionLevel);
-    try {
-        qr.addData(payload);
-        qr.make();
-        if (type === 'svg') {
-            return qr.createSvgTag();
-        }
-        else if (type === 'ascii') {
-            const length = qr.getModuleCount();
-            const black = '\x1B[40m  \x1B[0m';
-            const white = '\x1B[47m  \x1B[0m';
-            const whiteLine = new Array(length + 3).join(white);
-            const blackLine = new Array(length + 3).join(black);
-            let ascii = '';
-            ascii += `${blackLine}\n`;
-            ascii += `${whiteLine}\n`;
-            for (let x = 0; x < length; x++) {
-                ascii += white;
-                for (let y = 0; y < length; y++) {
-                    ascii += qr.isDark(x, y) ? black : white;
-                }
-                ascii += `${white}\n`;
-            }
-            ascii += whiteLine;
-            ascii += blackLine;
-            return ascii;
-        }
-        else {
-            return qr.createDataURL();
-        }
-    }
-    catch (qrError) {
-        console.error('error', qrError);
-        throw qrError;
-    }
-};
-//# sourceMappingURL=qr.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/utils/replace-in-template.js":
-/*!***********************************************************!*\
-  !*** ../beacon-sdk/dist/esm/utils/replace-in-template.js ***!
-  \***********************************************************/
-/*! exports provided: replaceInTemplate */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replaceInTemplate", function() { return replaceInTemplate; });
-const replaceInTemplate = (text, placeholder, value) => text.split(`{{${placeholder}}}`).join(value);
-//# sourceMappingURL=replace-in-template.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/utils/tezblock-blockexplorer.js":
-/*!**************************************************************!*\
-  !*** ../beacon-sdk/dist/esm/utils/tezblock-blockexplorer.js ***!
-  \**************************************************************/
-/*! exports provided: TezblockBlockExplorer */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TezblockBlockExplorer", function() { return TezblockBlockExplorer; });
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! .. */ "../beacon-sdk/dist/esm/index.js");
-/* harmony import */ var _block_explorer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./block-explorer */ "../beacon-sdk/dist/esm/utils/block-explorer.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-class TezblockBlockExplorer extends _block_explorer__WEBPACK_IMPORTED_MODULE_1__["BlockExplorer"] {
-    constructor(rpcUrls = {
-        [___WEBPACK_IMPORTED_MODULE_0__["NetworkType"].MAINNET]: 'https://tezblock.io',
-        [___WEBPACK_IMPORTED_MODULE_0__["NetworkType"].CARTHAGENET]: 'https://carthagenet.tezblock.io',
-        [___WEBPACK_IMPORTED_MODULE_0__["NetworkType"].DELPHINET]: 'https://delphinet.tezblock.io',
-        [___WEBPACK_IMPORTED_MODULE_0__["NetworkType"].CUSTOM]: 'https://delphinet.tezblock.io'
-    }) {
-        super(rpcUrls);
-        this.rpcUrls = rpcUrls;
-    }
-    getAddressLink(address, network) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const blockExplorer = yield this.getLinkForNetwork(network);
-            return `${blockExplorer}/account/${address}`;
-        });
-    }
-    getTransactionLink(transactionId, network) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const blockExplorer = yield this.getLinkForNetwork(network);
-            return `${blockExplorer}/transaction/${transactionId}`;
-        });
-    }
-}
-//# sourceMappingURL=tezblock-blockexplorer.js.map
-
-/***/ }),
-
-/***/ "../beacon-sdk/dist/esm/utils/utils.js":
-/*!*********************************************!*\
-  !*** ../beacon-sdk/dist/esm/utils/utils.js ***!
-  \*********************************************/
-/*! exports provided: keys */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "keys", function() { return keys; });
-/* eslint-disable prefer-arrow/prefer-arrow-functions */
-/**
- * A helper function to improve typings of object keys
- *
- * @param obj Object
- */
-function keys(obj) {
-    return Object.keys(obj);
-}
-//# sourceMappingURL=utils.js.map
-
-/***/ }),
-
 /***/ "./node_modules/webpack/buildin/global.js":
 /*!***********************************!*\
   !*** (webpack)/buildin/global.js ***!
@@ -7181,12 +154,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./services/wallet/wallet.service */ "./src/app/services/wallet/wallet.service.ts");
 /* harmony import */ var _services_coordinator_coordinator_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./services/coordinator/coordinator.service */ "./src/app/services/coordinator/coordinator.service.ts");
 /* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/__ivy_ngcc__/fesm2015/ngx-translate-core.js");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./constants */ "./src/app/constants.ts");
-/* harmony import */ var _components_messages_messages_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/messages/messages.component */ "./src/app/components/messages/messages.component.ts");
-/* harmony import */ var _components_spinner_spinner_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/spinner/spinner.component */ "./src/app/components/spinner/spinner.component.ts");
-/* harmony import */ var _components_agreement_agreement_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/agreement/agreement.component */ "./src/app/components/agreement/agreement.component.ts");
-/* harmony import */ var _components_footer_footer_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/footer/footer.component */ "./src/app/components/footer/footer.component.ts");
-
+/* harmony import */ var _components_messages_messages_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/messages/messages.component */ "./src/app/components/messages/messages.component.ts");
+/* harmony import */ var _components_spinner_spinner_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/spinner/spinner.component */ "./src/app/components/spinner/spinner.component.ts");
+/* harmony import */ var _components_agreement_agreement_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/agreement/agreement.component */ "./src/app/components/agreement/agreement.component.ts");
+/* harmony import */ var _components_footer_footer_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/footer/footer.component */ "./src/app/components/footer/footer.component.ts");
 
 
 
@@ -7207,7 +178,6 @@ class AppComponent {
         this.coordinatorService = coordinatorService;
         this.router = router;
         this.translate = translate;
-        this.CONSTANTS = new _constants__WEBPACK_IMPORTED_MODULE_5__["Constants"]();
         // this language will be used as a fallback when a translation isn't found in the current language
         translate.setDefaultLang('en');
         // the lang to use, if the lang isn't available, it will use the current loader to get them
@@ -7267,7 +237,7 @@ AppComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineCompo
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](2, "app-spinner");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](3, "app-agreement");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](4, "app-footer");
-    } }, directives: [_angular_router__WEBPACK_IMPORTED_MODULE_1__["RouterOutlet"], _components_messages_messages_component__WEBPACK_IMPORTED_MODULE_6__["MessagesComponent"], _components_spinner_spinner_component__WEBPACK_IMPORTED_MODULE_7__["SpinnerComponent"], _components_agreement_agreement_component__WEBPACK_IMPORTED_MODULE_8__["AgreementComponent"], _components_footer_footer_component__WEBPACK_IMPORTED_MODULE_9__["FooterComponent"]], styles: [".main-container[_ngcontent-%COMP%] {\n  width: 100%;\n  min-height: 100%;\n  margin-left: 0;\n  margin-right: 0;\n  margin-top: 1.5rem;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  padding-bottom: 8rem;\n}\n\n#top-main-container[_ngcontent-%COMP%] {\n  min-height: 100%;\n  min-height: 100%;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvQzpcXFVzZXJzXFxrbGFzX1xcR2l0XFxrdWthaS9zcmNcXGFwcFxcYXBwLmNvbXBvbmVudC5zY3NzIiwic3JjL2FwcC9hcHAuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSSxXQUFBO0VBQ0EsZ0JBQUE7RUFDQSxjQUFBO0VBQ0EsZUFBQTtFQUNBLGtCQUFBO0VBQ0EsYUFBQTtFQUNBLG1CQUFBO0VBQ0EsdUJBQUE7RUFDQSxvQkFBQTtBQ0NKOztBRENBO0VBQ0ksZ0JBQUE7RUFDQSxnQkFBQTtBQ0VKIiwiZmlsZSI6InNyYy9hcHAvYXBwLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLm1haW4tY29udGFpbmVyIHtcclxuICAgIHdpZHRoOiAxMDAlO1xyXG4gICAgbWluLWhlaWdodDogMTAwJTtcclxuICAgIG1hcmdpbi1sZWZ0OiAwO1xyXG4gICAgbWFyZ2luLXJpZ2h0OiAwO1xyXG4gICAgbWFyZ2luLXRvcDogMS41cmVtO1xyXG4gICAgZGlzcGxheTogZmxleDtcclxuICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XHJcbiAgICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcclxuICAgIHBhZGRpbmctYm90dG9tOiA4cmVtO1xyXG59XHJcbiN0b3AtbWFpbi1jb250YWluZXIge1xyXG4gICAgbWluLWhlaWdodDogMTAwJTtcclxuICAgIG1pbi1oZWlnaHQ6IDEwMCU7XHJcbn0iLCIubWFpbi1jb250YWluZXIge1xuICB3aWR0aDogMTAwJTtcbiAgbWluLWhlaWdodDogMTAwJTtcbiAgbWFyZ2luLWxlZnQ6IDA7XG4gIG1hcmdpbi1yaWdodDogMDtcbiAgbWFyZ2luLXRvcDogMS41cmVtO1xuICBkaXNwbGF5OiBmbGV4O1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgcGFkZGluZy1ib3R0b206IDhyZW07XG59XG5cbiN0b3AtbWFpbi1jb250YWluZXIge1xuICBtaW4taGVpZ2h0OiAxMDAlO1xuICBtaW4taGVpZ2h0OiAxMDAlO1xufSJdfQ== */"] });
+    } }, directives: [_angular_router__WEBPACK_IMPORTED_MODULE_1__["RouterOutlet"], _components_messages_messages_component__WEBPACK_IMPORTED_MODULE_5__["MessagesComponent"], _components_spinner_spinner_component__WEBPACK_IMPORTED_MODULE_6__["SpinnerComponent"], _components_agreement_agreement_component__WEBPACK_IMPORTED_MODULE_7__["AgreementComponent"], _components_footer_footer_component__WEBPACK_IMPORTED_MODULE_8__["FooterComponent"]], styles: [".main-container[_ngcontent-%COMP%] {\n  width: 100%;\n  min-height: 100%;\n  margin-left: 0;\n  margin-right: 0;\n  margin-top: 1.5rem;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  padding-bottom: 8rem;\n}\n\n#top-main-container[_ngcontent-%COMP%] {\n  min-height: 100%;\n  min-height: 100%;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvQzpcXFVzZXJzXFxrbGFzX1xcR2l0XFxrdWthaS9zcmNcXGFwcFxcYXBwLmNvbXBvbmVudC5zY3NzIiwic3JjL2FwcC9hcHAuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSSxXQUFBO0VBQ0EsZ0JBQUE7RUFDQSxjQUFBO0VBQ0EsZUFBQTtFQUNBLGtCQUFBO0VBQ0EsYUFBQTtFQUNBLG1CQUFBO0VBQ0EsdUJBQUE7RUFDQSxvQkFBQTtBQ0NKOztBRENBO0VBQ0ksZ0JBQUE7RUFDQSxnQkFBQTtBQ0VKIiwiZmlsZSI6InNyYy9hcHAvYXBwLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLm1haW4tY29udGFpbmVyIHtcclxuICAgIHdpZHRoOiAxMDAlO1xyXG4gICAgbWluLWhlaWdodDogMTAwJTtcclxuICAgIG1hcmdpbi1sZWZ0OiAwO1xyXG4gICAgbWFyZ2luLXJpZ2h0OiAwO1xyXG4gICAgbWFyZ2luLXRvcDogMS41cmVtO1xyXG4gICAgZGlzcGxheTogZmxleDtcclxuICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XHJcbiAgICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcclxuICAgIHBhZGRpbmctYm90dG9tOiA4cmVtO1xyXG59XHJcbiN0b3AtbWFpbi1jb250YWluZXIge1xyXG4gICAgbWluLWhlaWdodDogMTAwJTtcclxuICAgIG1pbi1oZWlnaHQ6IDEwMCU7XHJcbn0iLCIubWFpbi1jb250YWluZXIge1xuICB3aWR0aDogMTAwJTtcbiAgbWluLWhlaWdodDogMTAwJTtcbiAgbWFyZ2luLWxlZnQ6IDA7XG4gIG1hcmdpbi1yaWdodDogMDtcbiAgbWFyZ2luLXRvcDogMS41cmVtO1xuICBkaXNwbGF5OiBmbGV4O1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgcGFkZGluZy1ib3R0b206IDhyZW07XG59XG5cbiN0b3AtbWFpbi1jb250YWluZXIge1xuICBtaW4taGVpZ2h0OiAxMDAlO1xuICBtaW4taGVpZ2h0OiAxMDAlO1xufSJdfQ== */"] });
 /*@__PURE__*/ (function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](AppComponent, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"],
         args: [{
@@ -7635,7 +605,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs_internal_operators_filter__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! rxjs/internal/operators/filter */ "./node_modules/rxjs/internal/operators/filter.js");
 /* harmony import */ var rxjs_internal_operators_filter__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(rxjs_internal_operators_filter__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _services_coordinator_coordinator_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../services/coordinator/coordinator.service */ "./src/app/services/coordinator/coordinator.service.ts");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../constants */ "./src/app/constants.ts");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../environments/environment */ "./src/environments/environment.ts");
 /* harmony import */ var _services_lookup_lookup_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../services/lookup/lookup.service */ "./src/app/services/lookup/lookup.service.ts");
 /* harmony import */ var _services_activity_activity_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../services/activity/activity.service */ "./src/app/services/activity/activity.service.ts");
 /* harmony import */ var _header_header_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../header/header.component */ "./src/app/components/header/header.component.ts");
@@ -8123,7 +1093,6 @@ class AccountViewComponent {
         this.coordinatorService = coordinatorService;
         this.lookupService = lookupService;
         this.activityService = activityService;
-        this.CONSTANTS = new _constants__WEBPACK_IMPORTED_MODULE_9__["Constants"]();
         this.trigger = true;
     }
     ngOnInit() {
@@ -8181,7 +1150,7 @@ class AccountViewComponent {
         this.messageService.add(account.address + ' ' + copyToClipboard, 5);
     }
     explorerURL(hash) {
-        const baseURL = this.CONSTANTS.NET.BLOCK_EXPLORER_URL;
+        const baseURL = _environments_environment__WEBPACK_IMPORTED_MODULE_9__["CONSTANTS"].BLOCK_EXPLORER_URL;
         return `${baseURL}/${hash}`;
     }
 }
@@ -8631,7 +1600,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function AgreementComponent_div_0_Template(rf, ctx) { if (rf & 1) {
-    const _r337 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
+    const _r338 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 1);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "div", 2);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "div", 3);
@@ -8649,7 +1618,7 @@ function AgreementComponent_div_0_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](11, "div");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](12, "div", 6);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](13, "button", 7);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function AgreementComponent_div_0_Template_button_click_13_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r337); const ctx_r336 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r336.accept(); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function AgreementComponent_div_0_Template_button_click_13_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r338); const ctx_r337 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r337.accept(); });
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](14, "Accept");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](15, "p");
@@ -9141,17 +2110,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/__ivy_ngcc__/fesm2015/router.js");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../constants */ "./src/app/constants.ts");
-/* harmony import */ var _services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../services/wallet/wallet.service */ "./src/app/services/wallet/wallet.service.ts");
-/* harmony import */ var _services_ledger_ledger_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../services/ledger/ledger.service */ "./src/app/services/ledger/ledger.service.ts");
-/* harmony import */ var _services_import_import_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../services/import/import.service */ "./src/app/services/import/import.service.ts");
-/* harmony import */ var _services_message_message_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../services/message/message.service */ "./src/app/services/message/message.service.ts");
-/* harmony import */ var _services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../services/input-validation/input-validation.service */ "./src/app/services/input-validation/input-validation.service.ts");
-/* harmony import */ var _tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @tezos-core-tools/crypto-utils */ "./node_modules/@tezos-core-tools/crypto-utils/dist/main.js");
-/* harmony import */ var _tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/__ivy_ngcc__/fesm2015/forms.js");
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
-
+/* harmony import */ var _services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/wallet/wallet.service */ "./src/app/services/wallet/wallet.service.ts");
+/* harmony import */ var _services_ledger_ledger_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../services/ledger/ledger.service */ "./src/app/services/ledger/ledger.service.ts");
+/* harmony import */ var _services_import_import_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../services/import/import.service */ "./src/app/services/import/import.service.ts");
+/* harmony import */ var _services_message_message_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../services/message/message.service */ "./src/app/services/message/message.service.ts");
+/* harmony import */ var _services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../services/input-validation/input-validation.service */ "./src/app/services/input-validation/input-validation.service.ts");
+/* harmony import */ var _tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @tezos-core-tools/crypto-utils */ "./node_modules/@tezos-core-tools/crypto-utils/dist/main.js");
+/* harmony import */ var _tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/__ivy_ngcc__/fesm2015/forms.js");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
 
 
 
@@ -9189,7 +2156,6 @@ class ConnectLedgerComponent {
         this.inputValidationService = inputValidationService;
         this.walletService = walletService;
         this.activePanel = 0;
-        this.CONSTANTS = new _constants__WEBPACK_IMPORTED_MODULE_3__["Constants"]();
         this.defaultPath = '44\'/1729\'/0\'/0\'';
         this.defaultText = 'Default derivation path';
         this.pendingLedgerConfirmation = false;
@@ -9224,7 +2190,7 @@ class ConnectLedgerComponent {
     }
     importFromPk(pk, path) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            if (_tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_9__["utils"].validPublicKey(pk)) {
+            if (_tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_8__["utils"].validPublicKey(pk)) {
                 if (yield this.importService.importWalletFromPk(pk, path)) {
                     if (this.walletService.wallet.implicitAccounts.length === 1 && this.walletService.wallet.implicitAccounts[0].originatedAccounts.length === 0) {
                         this.router.navigate([`/account/${this.walletService.wallet.implicitAccounts[0].address}`]);
@@ -9251,7 +2217,7 @@ class ConnectLedgerComponent {
         }
     }
 }
-ConnectLedgerComponent.ɵfac = function ConnectLedgerComponent_Factory(t) { return new (t || ConnectLedgerComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_ledger_ledger_service__WEBPACK_IMPORTED_MODULE_5__["LedgerService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_import_import_service__WEBPACK_IMPORTED_MODULE_6__["ImportService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_message_message_service__WEBPACK_IMPORTED_MODULE_7__["MessageService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_8__["InputValidationService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_4__["WalletService"])); };
+ConnectLedgerComponent.ɵfac = function ConnectLedgerComponent_Factory(t) { return new (t || ConnectLedgerComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_ledger_ledger_service__WEBPACK_IMPORTED_MODULE_4__["LedgerService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_import_import_service__WEBPACK_IMPORTED_MODULE_5__["ImportService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_message_message_service__WEBPACK_IMPORTED_MODULE_6__["MessageService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_7__["InputValidationService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_3__["WalletService"])); };
 ConnectLedgerComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({ type: ConnectLedgerComponent, selectors: [["app-connect-ledger"]], decls: 24, vars: 5, consts: [[1, "kukai-card"], [1, "grey-card"], [1, "description", "bold"], [1, "description"], ["type", "text", "value", "'44\\'/1729\\'/0\\'/0\\''", 1, "text", 3, "disabled", "ngModel", "ngModelChange"], [1, "switch-container"], [1, "switch"], ["type", "checkbox", 3, "ngModel", "ngModelChange", "click"], [1, "slider", "round"], [1, "switch-desc"], [4, "ngIf"], [1, "buttons"], ["routerLink", "/"], [1, "button", "back"], [1, "button", "next", 3, "click"]], template: function ConnectLedgerComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "div", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](1, "H1");
@@ -9304,7 +2270,7 @@ ConnectLedgerComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵd
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx.isHDDerivationPathCustom);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx.isHDDerivationPathCustom);
-    } }, directives: [_angular_forms__WEBPACK_IMPORTED_MODULE_10__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_10__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_10__["NgModel"], _angular_forms__WEBPACK_IMPORTED_MODULE_10__["CheckboxControlValueAccessor"], _angular_common__WEBPACK_IMPORTED_MODULE_11__["NgIf"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterLinkWithHref"]], styles: [".kukai-card[_ngcontent-%COMP%]   H1[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   span[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   p[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   div.whitebox[_ngcontent-%COMP%] {\r\n  font-style: normal;\r\n  display: flex;\r\n  align-items: center;\r\n  text-align: center;\r\n  color: white;\r\n  margin-bottom: 0;\r\n  max-width: 34rem;\r\n  padding: 0 0.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   p.description[_ngcontent-%COMP%] {\r\n  margin-top: 1.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   p.description.bold[_ngcontent-%COMP%] {\r\n  font-weight: bold;\r\n  font-size: 1rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   p.description.blue[_ngcontent-%COMP%] {\r\n  color: #5963FF;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   p.description.red[_ngcontent-%COMP%] {\r\n  font-size: 0.875rem;\r\n  line-height: 1.25rem;\r\n  color: #C83532;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   H1[_ngcontent-%COMP%] {\r\n  -webkit-margin-after: 0;\r\n          margin-block-end: 0;\r\n  font-weight: 500;\r\n  font-size: 2.25rem;\r\n  line-height: 2.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   span[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\r\n  font-weight: normal;\r\n  justify-content: center;\r\n  font-size: 1.25rem;\r\n  line-height: 2rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   .grey-card[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\r\n  font-size: 1.125rem;\r\n  line-height: 1.5rem;\r\n  margin-top: 2.5rem 1.5rem 0;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   p[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\r\n  color: #303030;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.whitebox[_ngcontent-%COMP%] {\r\n  font-size: 1rem;\r\n  line-height: 1.5rem;\r\n  width: 100%;\r\n  height: 8.5rem;\r\n  z-index: 1;\r\n  color: black;\r\n  padding: 1.25rem;\r\n  border: 0;\r\n  border-top-left-radius: 0.75rem;\r\n  border-top-right-radius: 0.75rem;\r\n  font-weight: bold;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.seed-blur[_ngcontent-%COMP%] {\r\n  margin-top: -8.5rem;\r\n  margin-bottom: 0.0625rem;\r\n  height: 8.5rem;\r\n  width: 100%;\r\n  z-index: 2;\r\n  -webkit-backdrop-filter: blur(8px);\r\n          backdrop-filter: blur(8px);\r\n  border-radius: 0.75rem;\r\n  background-color: rgb(238, 238, 238);\r\n  background-color: rgba(238, 238, 238, 0.4);\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  flex-direction: column;\r\n  border-radius: 0;\r\n  border-top-left-radius: 0.75rem;\r\n  border-top-right-radius: 0.75rem;\r\n}\r\n@-moz-document url-prefix() {\r\n  .kukai-card div.seed-blur {\r\n    position: relative;\r\n    background-color: rgb(238, 238, 238) !important;\r\n  }\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   span.black[_ngcontent-%COMP%] {\r\n  color: black;\r\n  font-size: 1rem;\r\n  line-height: 1.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   span.step-counter[_ngcontent-%COMP%] {\r\n  font-size: 1rem;\r\n  line-height: 1.5rem;\r\n  display: block;\r\n  margin-top: 2.5rem;\r\n  width: 100%;\r\n  text-align: center;\r\n  max-width: 100%;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.buttons[_ngcontent-%COMP%] {\r\n  margin: 3rem 2rem 1.5rem;\r\n  width: auto;\r\n  display: flex;\r\n  justify-content: space-between;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.whitebox[_ngcontent-%COMP%]   div.buttons.single[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   div.buttons.single[_ngcontent-%COMP%] {\r\n  margin-top: 2rem;\r\n  justify-content: center;\r\n  width: auto;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.buttons.single.finish[_ngcontent-%COMP%] {\r\n  margin-top: 2.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\r\n  border-radius: 0.75rem;\r\n  width: 8rem;\r\n  height: 3rem;\r\n  font-style: normal;\r\n  font-weight: bold;\r\n  font-size: 1rem;\r\n  line-height: 1rem;\r\n  border: none;\r\n  padding: 0;\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  justify-content: center;\r\n  cursor: pointer;\r\n  transition: margin-top 0.1s ease-in, margin-bottom 0.1s ease-in;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:hover {\r\n  margin-top: -0.125rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.buttons.single[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:hover {\r\n  margin-bottom: 0.125rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   button.next[_ngcontent-%COMP%] {\r\n  color: white;\r\n  background: #5963FF;\r\n  box-shadow: 0px 0px 1px rgba(89, 99, 255, 0.04), 0px 2px 6px rgba(89, 99, 255, 0.04), 0px 16px 24px rgba(89, 99, 255, 0.24);\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   button.back[_ngcontent-%COMP%] {\r\n  color: #727AFD;\r\n  background: rgba(114, 122, 253, 0.16)\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   button.disabled-button[_ngcontent-%COMP%] {\r\n  pointer-events: none;\r\n  opacity: 0.4;\r\n  -webkit-opacity: 0.4;\r\n  -khtml-opacity: 0.4;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\r\n  color: inherit;\r\n  text-decoration: inherit;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, .kukai-card[_ngcontent-%COMP%]   textarea[_ngcontent-%COMP%]:focus {\r\n  outline: none;\r\n}\r\n\r\n\r\n.kukai-card[_ngcontent-%COMP%]   div.word-verify[_ngcontent-%COMP%] {\r\n  margin-top: 2.75rem;\r\n  display: flex;\r\n  justify-content: space-evenly;\r\n  align-items: flex-start;\r\n  flex-direction: row;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.word-input[_ngcontent-%COMP%]    > input[_ngcontent-%COMP%] {\r\n  margin-top: 0.5rem;\r\n  height: 2.5rem;\r\n  width: 17.5rem;\r\n  border-radius: 0.75rem;\r\n  text-align: center;\r\n  border-width: 0;\r\n  background: rgba(0, 0, 0, 0.08);\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   span.word-index[_ngcontent-%COMP%] {\r\n  display: block;\r\n  font-style: normal;\r\n  font-weight: normal;\r\n  font-size: 0.75rem;\r\n  line-height: 1rem;\r\n  text-align: center;\r\n  letter-spacing: 0.32px;\r\n  color: black;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.word-hint[_ngcontent-%COMP%] {\r\n  width: 9.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.word-hint[_ngcontent-%COMP%]    > span.word-value[_ngcontent-%COMP%] {\r\n  display: block;\r\n  margin-top: 1.25rem;\r\n  font-style: normal;\r\n  font-weight: normal;\r\n  font-size: 1rem;\r\n  line-height: 1.125rem;\r\n  text-align: center;\r\n  letter-spacing: 0.16px;\r\n  color: black;\r\n  opacity: 0.6;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   progress[value][_ngcontent-%COMP%] {\r\n  -webkit-appearance: none;\r\n  -moz-appearance: none;\r\n       appearance: none;\r\n  border: none;\r\n  width: 28rem;\r\n  height: 0.5rem;\r\n  margin-top: 2.5rem;\r\n  margin-left: 2rem;\r\n  border-radius: 4px;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   progress[_ngcontent-%COMP%]::-webkit-progress-bar, .kukai-card[_ngcontent-%COMP%]   progress[_ngcontent-%COMP%] {\r\n  background-color: #e1e1e1;\r\n  border-radius: 4px;\r\n  width: 100%;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   progress[_ngcontent-%COMP%]::-webkit-progress-value {\r\n  background-color: #5963FF !important;\r\n  border-radius: 20px;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   progress[_ngcontent-%COMP%]::-moz-progress-bar {\r\n  background-color: #5963FF !important;\r\n  border-radius: 20px;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   progress[_ngcontent-%COMP%] {\r\n  color: #5963FF;\r\n  border-radius: 20px;\r\n}\r\n\r\n\r\n.kukai-card[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\r\n  display: inline-block;\r\n  font-style: normal;\r\n  font-weight: normal;\r\n  font-size: 0.875rem;\r\n  line-height: 1rem;\r\n  letter-spacing: 0.32px;\r\n  color: #393939;\r\n  margin-top: 1.5rem;\r\n  margin-left: 2rem;\r\n  margin-bottom: 0.5rem;\r\n  width: 28rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   small.grey[_ngcontent-%COMP%] {\r\n  margin-top: 0.25rem;\r\n  margin-bottom: -1.25rem;\r\n  color: #393939;\r\n  opacity: 0.4;\r\n  -webkit-opacity: 0.4;\r\n  -khtml-opacity: 0.4;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%] {\r\n  width: 28rem;\r\n  background: #d9d9d9;\r\n  border-radius: 0.75rem;\r\n  border: 0px solid;\r\n  height: 3rem;\r\n  padding-left: 1rem;\r\n  padding-right: 1rem;\r\n  margin-left: 2rem;\r\n  margin-right: 2rem;\r\n  font-style: normal;\r\n  font-weight: normal;\r\n  font-size: 1rem;\r\n  line-height: 1.125rem;\r\n  letter-spacing: 0.16px;\r\n  color: #393939;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   input.text[disabled][_ngcontent-%COMP%] {\r\n  color: #808080;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%] {\r\n  height: 7rem;\r\n  padding-top: 0.5rem;\r\n  padding-bottom: 0.5rem;\r\n  resize: none;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   [_ngcontent-%COMP%]::-webkit-input-placeholder, .kukai-card[_ngcontent-%COMP%]   [_ngcontent-%COMP%]::-moz-input-placeholder, .kukai-card[_ngcontent-%COMP%]   [_ngcontent-%COMP%]:-ms-input-placeholder {\r\n  color: rgba(0, 0, 0, 0.6);\r\n}\r\n\r\n.kukai-card[_ngcontent-%COMP%]   p.description.bold.pkh[_ngcontent-%COMP%] {\r\n  margin-top: 2rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.whitebox.final[_ngcontent-%COMP%] {\r\n  padding-bottom: 0;\r\n  justify-content: center;\r\n  align-items: center;\r\n  flex-direction: column;\r\n  height: auto;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.whitebox[_ngcontent-%COMP%]   .buttons[_ngcontent-%COMP%] {\r\n  margin-top: 1rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   div.switch-container[_ngcontent-%COMP%] {\r\n  margin-left: 2rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%] {\r\n  margin-top: 3rem;\r\n  width: 32rem;\r\n  background: white;\r\n  background: #F4F4F4;\r\n  border: 1px solid rgba(255, 255, 255, 0.8);\r\n  box-sizing: border-box;\r\n  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.14), 0px 16px 24px rgba(0, 0, 0, 0.16);\r\n  border-radius: 0.75rem;\r\n}\r\n@media screen and (max-width: 32.5rem) {\r\n  .kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]{\r\n    width: 21.875rem;\r\n    \r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   progress[value][_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   small[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%] {\r\n    width: 19.875rem;\r\n    margin-left: 1rem;\r\n    margin-right: 1rem;\r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   div.seed-blur[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   div.whitebox[_ngcontent-%COMP%] {\r\n    height: 9.5rem;\r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   div.seed-blur[_ngcontent-%COMP%] {\r\n    margin-top: -9.5rem;\r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   p.description.bold.pkh[_ngcontent-%COMP%] {\r\n    margin-top: 0.75rem;\r\n    font-size: 0.9375rem;\r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   div.switch-container[_ngcontent-%COMP%] {\r\n    margin-left: 1rem;\r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   div.buttons[_ngcontent-%COMP%] {\r\n    margin-left: 1rem;\r\n    margin-right: 1rem;\r\n    margin-bottom: 1rem;\r\n  }\r\n}\r\n[_nghost-%COMP%] {\n  width: 100%;\n  min-height: 100vh;\n  padding-bottom: 8rem;\n  overflow: hidden;\n  display: flex;\n  background: #5963FF;\n}\r\n[_nghost-%COMP%]    > div[_ngcontent-%COMP%] {\n  margin-top: 5rem;\n  width: 100vw;\n  min-height: 100%;\n  display: flex;\n  justify-content: flex-start;\n  align-items: center;\n  flex-direction: column;\n}\r\n[_nghost-%COMP%]   input.text[_ngcontent-%COMP%] {\n  margin-top: 2.5rem;\n}\r\n[_nghost-%COMP%]   input.text[disabled][_ngcontent-%COMP%] {\n  background: #e1e1e1;\n}\r\n[_nghost-%COMP%]   small[_ngcontent-%COMP%] {\n  margin-top: 1rem;\n}\r\n.switch[_ngcontent-%COMP%] {\n  position: relative;\n  display: inline-block;\n  width: 3rem;\n  height: 1.5rem;\n  margin-bottom: 0;\n}\r\n.switch[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  opacity: 0;\n  -webkit-opacity: 0;\n  -khtml-opacity: 0;\n  width: 0;\n  height: 0;\n}\r\n.slider[_ngcontent-%COMP%] {\n  position: absolute;\n  cursor: pointer;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background-color: #d9d9d9;\n  transition: 0.4s;\n}\r\n.slider[_ngcontent-%COMP%]:before {\n  position: absolute;\n  content: \"\";\n  height: 1.125rem;\n  width: 1.125rem;\n  left: 0.1875rem;\n  bottom: 0.1875rem;\n  background-color: #7B7B7B;\n  transition: 0.4s;\n}\r\ninput[_ngcontent-%COMP%]:checked    + .slider[_ngcontent-%COMP%] {\n  box-shadow: 0px 0px 1px rgba(89, 99, 255, 0.04), 0px 2px 6px rgba(89, 99, 255, 0.04), 0px 16px 24px rgba(89, 99, 255, 0.24);\n}\r\ninput[_ngcontent-%COMP%]:checked    + .slider[_ngcontent-%COMP%]:before {\n  background-color: #5963FF;\n  transform: translateX(1.5rem);\n}\r\n.slider.round[_ngcontent-%COMP%] {\n  border-radius: 2.125rem;\n}\r\n.slider.round[_ngcontent-%COMP%]:before {\n  border-radius: 50%;\n}\r\ninput[_ngcontent-%COMP%]:checked    + .slider[_ngcontent-%COMP%] {\n  background-color: rgba(89, 99, 255, 0.4);\n}\r\ndiv.kukai-card[_ngcontent-%COMP%]    > div.grey-card[_ngcontent-%COMP%]    > div.switch-container[_ngcontent-%COMP%]    > span.switch-desc[_ngcontent-%COMP%], span.switch-desc[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 14px;\n  line-height: 18px;\n  letter-spacing: 0.16px;\n  color: #161616;\n  margin-left: 0.5rem;\n}\r\ndiv.switch-container[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: flex-start;\n  align-items: center;\n  flex-direction: row;\n  width: 28rem;\n}\r\nsmall[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.75rem;\n  line-height: 1rem;\n  letter-spacing: 0.32px;\n  color: #393939;\n  margin-top: 2.5rem;\n  margin-bottom: 0.5rem;\n}\r\n@media screen and (max-width: 29rem) {\n  div.switch-container[_ngcontent-%COMP%] {\n    width: 20rem;\n  }\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9zY3NzL2NhcmQuY3NzIiwic3JjL2FwcC9jb21wb25lbnRzL2Nvbm5lY3QtbGVkZ2VyL0M6XFxVc2Vyc1xca2xhc19cXEdpdFxca3VrYWkvc3JjXFxhcHBcXGNvbXBvbmVudHNcXGNvbm5lY3QtbGVkZ2VyXFxjb25uZWN0LWxlZGdlci5jb21wb25lbnQuc2NzcyIsInNyYy9hcHAvY29tcG9uZW50cy9jb25uZWN0LWxlZGdlci9jb25uZWN0LWxlZGdlci5jb21wb25lbnQuc2NzcyIsInNyYy9hcHAvY29tcG9uZW50cy9jb25uZWN0LWxlZGdlci9DOlxcVXNlcnNcXGtsYXNfXFxHaXRcXGt1a2FpL3NyY1xcc2Nzc1xcc3dpdGNoLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7Ozs7RUFJRSxrQkFBa0I7RUFDbEIsYUFBYTtFQUNiLG1CQUFtQjtFQUNuQixrQkFBa0I7RUFDbEIsWUFBWTtFQUNaLGdCQUFnQjtFQUNoQixnQkFBZ0I7RUFDaEIsaUJBQWlCO0FBQ25CO0FBQ0E7RUFDRSxrQkFBa0I7QUFDcEI7QUFDQTtFQUNFLGlCQUFpQjtFQUNqQixlQUFlO0FBQ2pCO0FBQ0E7RUFDRSxjQUFjO0FBQ2hCO0FBQ0E7RUFDRSxtQkFBbUI7RUFDbkIsb0JBQW9CO0VBQ3BCLGNBQWM7QUFDaEI7QUFDQTtFQUNFLHVCQUFtQjtVQUFuQixtQkFBbUI7RUFDbkIsZ0JBQWdCO0VBQ2hCLGtCQUFrQjtFQUNsQixtQkFBbUI7QUFDckI7QUFDQTs7RUFFRSxtQkFBbUI7RUFDbkIsdUJBQXVCO0VBQ3ZCLGtCQUFrQjtFQUNsQixpQkFBaUI7QUFDbkI7QUFDQTtFQUNFLG1CQUFtQjtFQUNuQixtQkFBbUI7RUFDbkIsMkJBQTJCO0FBQzdCO0FBQ0E7O0VBRUUsY0FBYztBQUNoQjtBQUNBO0VBQ0UsZUFBZTtFQUNmLG1CQUFtQjtFQUNuQixXQUFXO0VBQ1gsY0FBYztFQUNkLFVBQVU7RUFDVixZQUFZO0VBQ1osZ0JBQWdCO0VBQ2hCLFNBQVM7RUFDVCwrQkFB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RUFDRSxrQkFBQTtFQUNBLG1CQUFBO0VBQ0Esa0JBQUE7RUFDQSxpQkFBQTtFQUNBLHNCQUFBO0VBQ0EsY0FBQTtFQUNBLGtCQUFBO0VBQ0EscUJBQUE7QURzQ0Y7QUNwQ0E7RUFDRTtJQUNJLFlBQUE7RUR1Q0o7QUFDRiIsImZpbGUiOiJzcmMvYXBwL2NvbXBvbmVudHMvY29ubmVjdC1sZWRnZXIvY29ubmVjdC1sZWRnZXIuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIua3VrYWktY2FyZCBIMSxcclxuLmt1a2FpLWNhcmQgc3BhbixcclxuLmt1a2FpLWNhcmQgcCxcclxuLmt1a2FpLWNhcmQgZGl2LndoaXRlYm94IHtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICBjb2xvcjogd2hpdGU7XHJcbiAgbWFyZ2luLWJvdHRvbTogMDtcclxuICBtYXgtd2lkdGg6IDM0cmVtO1xyXG4gIHBhZGRpbmc6IDAgMC41cmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIHAuZGVzY3JpcHRpb24ge1xyXG4gIG1hcmdpbi10b3A6IDEuNXJlbTtcclxufVxyXG4ua3VrYWktY2FyZCBwLmRlc2NyaXB0aW9uLmJvbGQge1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxufVxyXG4ua3VrYWktY2FyZCBkaXYuZ3JleS1jYXJkIHAuZGVzY3JpcHRpb24uYmx1ZSB7XHJcbiAgY29sb3I6ICM1OTYzRkY7XHJcbn1cclxuLmt1a2FpLWNhcmQgZGl2LmdyZXktY2FyZCBwLmRlc2NyaXB0aW9uLnJlZCB7XHJcbiAgZm9udC1zaXplOiAwLjg3NXJlbTtcclxuICBsaW5lLWhlaWdodDogMS4yNXJlbTtcclxuICBjb2xvcjogI0M4MzUzMjtcclxufVxyXG4ua3VrYWktY2FyZCBIMSB7XHJcbiAgbWFyZ2luLWJsb2NrLWVuZDogMDtcclxuICBmb250LXdlaWdodDogNTAwO1xyXG4gIGZvbnQtc2l6ZTogMi4yNXJlbTtcclxuICBsaW5lLWhlaWdodDogMi41cmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIHNwYW4sXHJcbi5rdWthaS1jYXJkIHAge1xyXG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XHJcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XHJcbiAgZm9udC1zaXplOiAxLjI1cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAycmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIC5ncmV5LWNhcmQgcCB7XHJcbiAgZm9udC1zaXplOiAxLjEyNXJlbTtcclxuICBsaW5lLWhlaWdodDogMS41cmVtO1xyXG4gIG1hcmdpbi10b3A6IDIuNXJlbSAxLjVyZW0gMDtcclxufVxyXG4ua3VrYWktY2FyZCBkaXYuZ3JleS1jYXJkIHAsXHJcbi5rdWthaS1jYXJkIGRpdi5ncmV5LWNhcmQgc3BhbiB7XHJcbiAgY29sb3I6ICMzMDMwMzA7XHJcbn1cclxuLmt1a2FpLWNhcmQgZGl2LndoaXRlYm94IHtcclxuICBmb250LXNpemU6IDFyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDEuNXJlbTtcclxuICB3aWR0aDogMTAwJTtcclxuICBoZWlnaHQ6IDguNXJlbTtcclxuICB6LWluZGV4OiAxO1xyXG4gIGNvbG9yOiBibGFjaztcclxuICBwYWRkaW5nOiAxLjI1cmVtO1xyXG4gIGJvcmRlcjogMDtcclxuICBib3JkZXItdG9wLWxlZnQtcmFkaXVzOiAwLjc1cmVtO1xyXG4gIGJvcmRlci10b3AtcmlnaHQtcmFkaXVzOiAwLjc1cmVtO1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG59XHJcbi5rdWthaS1jYXJkIGRpdi5zZWVkLWJsdXIge1xyXG4gIG1hcmdpbi10b3A6IC04LjVyZW07XHJcbiAgbWFyZ2luLWJvdHRvbTogMC4wNjI1cmVtO1xyXG4gIGhlaWdodDogOC41cmVtO1xyXG4gIHdpZHRoOiAxMDAlO1xyXG4gIHotaW5kZXg6IDI7XHJcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDhweCk7XHJcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjM4LCAyMzgsIDIzOCk7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogcmdiYSgyMzgsIDIzOCwgMjM4LCAwLjQpO1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XHJcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xyXG4gIGJvcmRlci1yYWRpdXM6IDA7XHJcbiAgYm9yZGVyLXRvcC1sZWZ0LXJhZGl1czogMC43NXJlbTtcclxuICBib3JkZXItdG9wLXJpZ2h0LXJhZGl1czogMC43NXJlbTtcclxufVxyXG5ALW1vei1kb2N1bWVudCB1cmwtcHJlZml4KCkge1xyXG4gIC5rdWthaS1jYXJkIGRpdi5zZWVkLWJsdXIge1xyXG4gICAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogcmdiKDIzOCwgMjM4LCAyMzgpICFpbXBvcnRhbnQ7XHJcbiAgfVxyXG59XHJcbi5rdWthaS1jYXJkIHNwYW4uYmxhY2sge1xyXG4gIGNvbG9yOiBibGFjaztcclxuICBmb250LXNpemU6IDFyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDEuNXJlbTtcclxufVxyXG4ua3VrYWktY2FyZCBzcGFuLnN0ZXAtY291bnRlciB7XHJcbiAgZm9udC1zaXplOiAxcmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxLjVyZW07XHJcbiAgZGlzcGxheTogYmxvY2s7XHJcbiAgbWFyZ2luLXRvcDogMi41cmVtO1xyXG4gIHdpZHRoOiAxMDAlO1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICBtYXgtd2lkdGg6IDEwMCU7XHJcbn1cclxuLmt1a2FpLWNhcmQgZGl2LmJ1dHRvbnMge1xyXG4gIG1hcmdpbjogM3JlbSAycmVtIDEuNXJlbTtcclxuICB3aWR0aDogYXV0bztcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcclxufVxyXG4ua3VrYWktY2FyZCBkaXYud2hpdGVib3ggZGl2LmJ1dHRvbnMuc2luZ2xlLFxyXG4ua3VrYWktY2FyZCBkaXYuYnV0dG9ucy5zaW5nbGUge1xyXG4gIG1hcmdpbi10b3A6IDJyZW07XHJcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XHJcbiAgd2lkdGg6IGF1dG87XHJcbn1cclxuLmt1a2FpLWNhcmQgZGl2LmJ1dHRvbnMuc2luZ2xlLmZpbmlzaCB7XHJcbiAgbWFyZ2luLXRvcDogMi41cmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIGJ1dHRvbiB7XHJcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcclxuICB3aWR0aDogOHJlbTtcclxuICBoZWlnaHQ6IDNyZW07XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBib3JkZXI6IG5vbmU7XHJcbiAgcGFkZGluZzogMDtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XHJcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcclxuICBjdXJzb3I6IHBvaW50ZXI7XHJcbiAgdHJhbnNpdGlvbjogbWFyZ2luLXRvcCAwLjFzIGVhc2UtaW4sIG1hcmdpbi1ib3R0b20gMC4xcyBlYXNlLWluO1xyXG59XHJcbi5rdWthaS1jYXJkIGJ1dHRvbjpob3ZlciB7XHJcbiAgbWFyZ2luLXRvcDogLTAuMTI1cmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIGRpdi5idXR0b25zLnNpbmdsZSBidXR0b246aG92ZXIge1xyXG4gIG1hcmdpbi1ib3R0b206IDAuMTI1cmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIGJ1dHRvbi5uZXh0IHtcclxuICBjb2xvcjogd2hpdGU7XHJcbiAgYmFja2dyb3VuZDogIzU5NjNGRjtcclxuICBib3gtc2hhZG93OiAwcHggMHB4IDFweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjA0KSwgMHB4IDJweCA2cHggcmdiYSg4OSwgOTksIDI1NSwgMC4wNCksIDBweCAxNnB4IDI0cHggcmdiYSg4OSwgOTksIDI1NSwgMC4yNCk7XHJcbn1cclxuLmt1a2FpLWNhcmQgYnV0dG9uLmJhY2sge1xyXG4gIGNvbG9yOiAjNzI3QUZEO1xyXG4gIGJhY2tncm91bmQ6IHJnYmEoMTE0LCAxMjIsIDI1MywgMC4xNilcclxufVxyXG4ua3VrYWktY2FyZCBidXR0b24uZGlzYWJsZWQtYnV0dG9uIHtcclxuICBwb2ludGVyLWV2ZW50czogbm9uZTtcclxuICBvcGFjaXR5OiAwLjQ7XHJcbiAgLXdlYmtpdC1vcGFjaXR5OiAwLjQ7XHJcbiAgLWtodG1sLW9wYWNpdHk6IDAuNDtcclxufVxyXG4ua3VrYWktY2FyZCBhIHtcclxuICBjb2xvcjogaW5oZXJpdDtcclxuICB0ZXh0LWRlY29yYXRpb246IGluaGVyaXQ7XHJcbn1cclxuLmt1a2FpLWNhcmQgaW5wdXQ6Zm9jdXMsXHJcbi5rdWthaS1jYXJkIHRleHRhcmVhOmZvY3VzIHtcclxuICBvdXRsaW5lOiBub25lO1xyXG59XHJcbi8qXHJcbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDMwcmVtKSB7XHJcbiAgLmt1a2FpLWNhcmQgZGl2LndoaXRlYm94IHtcclxuICAgIG1hcmdpbi10b3A6IDRyZW07XHJcbiAgICB3aWR0aDogMjJyZW07XHJcbiAgICBoZWlnaHQ6IDExLjVyZW07XHJcbiAgfVxyXG4gIC5rdWthaS1jYXJkIGRpdi5zZWVkLWJsdXIge1xyXG4gICAgd2lkdGg6IDIycmVtO1xyXG4gICAgaGVpZ2h0OiAxMS41cmVtO1xyXG4gICAgbWFyZ2luLXRvcDogLTExLjU2MjVyZW07XHJcbiAgfVxyXG59Ki9cclxuLyogU3RlcCAyICovXHJcbi5rdWthaS1jYXJkIGRpdi53b3JkLXZlcmlmeSB7XHJcbiAgbWFyZ2luLXRvcDogMi43NXJlbTtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtZXZlbmx5O1xyXG4gIGFsaWduLWl0ZW1zOiBmbGV4LXN0YXJ0O1xyXG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XHJcbn1cclxuLmt1a2FpLWNhcmQgZGl2LndvcmQtaW5wdXQgPiBpbnB1dCB7XHJcbiAgbWFyZ2luLXRvcDogMC41cmVtO1xyXG4gIGhlaWdodDogMi41cmVtO1xyXG4gIHdpZHRoOiAxNy41cmVtO1xyXG4gIGJvcmRlci1yYWRpdXM6IDAuNzVyZW07XHJcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xyXG4gIGJvcmRlci13aWR0aDogMDtcclxuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuMDgpO1xyXG59XHJcbi5rdWthaS1jYXJkIHNwYW4ud29yZC1pbmRleCB7XHJcbiAgZGlzcGxheTogYmxvY2s7XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XHJcbiAgZm9udC1zaXplOiAwLjc1cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICBsZXR0ZXItc3BhY2luZzogMC4zMnB4O1xyXG4gIGNvbG9yOiBibGFjaztcclxufVxyXG4ua3VrYWktY2FyZCBkaXYud29yZC1oaW50IHtcclxuICB3aWR0aDogOS41cmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIGRpdi53b3JkLWhpbnQgPiBzcGFuLndvcmQtdmFsdWUge1xyXG4gIGRpc3BsYXk6IGJsb2NrO1xyXG4gIG1hcmdpbi10b3A6IDEuMjVyZW07XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XHJcbiAgZm9udC1zaXplOiAxcmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxLjEyNXJlbTtcclxuICB0ZXh0LWFsaWduOiBjZW50ZXI7XHJcbiAgbGV0dGVyLXNwYWNpbmc6IDAuMTZweDtcclxuICBjb2xvcjogYmxhY2s7XHJcbiAgb3BhY2l0eTogMC42O1xyXG59XHJcbi5rdWthaS1jYXJkIHByb2dyZXNzW3ZhbHVlXSB7XHJcbiAgLXdlYmtpdC1hcHBlYXJhbmNlOiBub25lO1xyXG4gIGFwcGVhcmFuY2U6IG5vbmU7XHJcbiAgYm9yZGVyOiBub25lO1xyXG4gIHdpZHRoOiAyOHJlbTtcclxuICBoZWlnaHQ6IDAuNXJlbTtcclxuICBtYXJnaW4tdG9wOiAyLjVyZW07XHJcbiAgbWFyZ2luLWxlZnQ6IDJyZW07XHJcbiAgYm9yZGVyLXJhZGl1czogNHB4O1xyXG59XHJcbi5rdWthaS1jYXJkIHByb2dyZXNzOjotd2Via2l0LXByb2dyZXNzLWJhcixcclxuLmt1a2FpLWNhcmQgcHJvZ3Jlc3Mge1xyXG4gIGJhY2tncm91bmQtY29sb3I6ICNlMWUxZTE7XHJcbiAgYm9yZGVyLXJhZGl1czogNHB4O1xyXG4gIHdpZHRoOiAxMDAlO1xyXG59XHJcbi5rdWthaS1jYXJkIHByb2dyZXNzOjotd2Via2l0LXByb2dyZXNzLXZhbHVlIHtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiAjNTk2M0ZGICFpbXBvcnRhbnQ7XHJcbiAgYm9yZGVyLXJhZGl1czogMjBweDtcclxufVxyXG4ua3VrYWktY2FyZCBwcm9ncmVzczo6LW1vei1wcm9ncmVzcy1iYXIge1xyXG4gIGJhY2tncm91bmQtY29sb3I6ICM1OTYzRkYgIWltcG9ydGFudDtcclxuICBib3JkZXItcmFkaXVzOiAyMHB4O1xyXG59XHJcblxyXG4ua3VrYWktY2FyZCBwcm9ncmVzcyB7XHJcbiAgY29sb3I6ICM1OTYzRkY7XHJcbiAgYm9yZGVyLXJhZGl1czogMjBweDtcclxufVxyXG4vKlxyXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAzNnJlbSkge1xyXG4gIC5rdWthaS1jYXJkIGRpdi53b3JkLWlucHV0IHtcclxuICAgIG1hcmdpbi1sZWZ0OiAxcmVtO1xyXG4gICAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xyXG4gIH1cclxufVxyXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAzMnJlbSkge1xyXG4gIC5rdWthaS1jYXJkIGRpdi53b3JkLWlucHV0IHtcclxuICAgIG1hcmdpbi1sZWZ0OiAwLjVyZW07XHJcbiAgICBtYXJnaW4tcmlnaHQ6IDAuNXJlbTtcclxuICB9XHJcbiAgLmt1a2FpLWNhcmQgZGl2LndvcmQtaW5wdXQgPiBpbnB1dCB7XHJcbiAgICB3aWR0aDogMTByZW07XHJcbiAgfVxyXG4gIC5rdWthaS1jYXJkIHByb2dyZXNzW3ZhbHVlXSB7XHJcbiAgICB3aWR0aDogMjByZW07XHJcbiAgfVxyXG59Ki9cclxuLyogU3RlcCAzICovXHJcbi5rdWthaS1jYXJkIHNtYWxsIHtcclxuICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XHJcbiAgZm9udC1zaXplOiAwLjg3NXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBsZXR0ZXItc3BhY2luZzogMC4zMnB4O1xyXG4gIGNvbG9yOiAjMzkzOTM5O1xyXG4gIG1hcmdpbi10b3A6IDEuNXJlbTtcclxuICBtYXJnaW4tbGVmdDogMnJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAwLjVyZW07XHJcbiAgd2lkdGg6IDI4cmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIHNtYWxsLmdyZXkge1xyXG4gIG1hcmdpbi10b3A6IDAuMjVyZW07XHJcbiAgbWFyZ2luLWJvdHRvbTogLTEuMjVyZW07XHJcbiAgY29sb3I6ICMzOTM5Mzk7XHJcbiAgb3BhY2l0eTogMC40O1xyXG4gIC13ZWJraXQtb3BhY2l0eTogMC40O1xyXG4gIC1raHRtbC1vcGFjaXR5OiAwLjQ7XHJcbn1cclxuLmt1a2FpLWNhcmQgaW5wdXQudGV4dCxcclxuLmt1a2FpLWNhcmQgdGV4dGFyZWEudGV4dCB7XHJcbiAgd2lkdGg6IDI4cmVtO1xyXG4gIGJhY2tncm91bmQ6ICNkOWQ5ZDk7XHJcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcclxuICBib3JkZXI6IDBweCBzb2xpZDtcclxuICBoZWlnaHQ6IDNyZW07XHJcbiAgcGFkZGluZy1sZWZ0OiAxcmVtO1xyXG4gIHBhZGRpbmctcmlnaHQ6IDFyZW07XHJcbiAgbWFyZ2luLWxlZnQ6IDJyZW07XHJcbiAgbWFyZ2luLXJpZ2h0OiAycmVtO1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMS4xMjVyZW07XHJcbiAgbGV0dGVyLXNwYWNpbmc6IDAuMTZweDtcclxuICBjb2xvcjogIzM5MzkzOTtcclxufVxyXG4ua3VrYWktY2FyZCBpbnB1dC50ZXh0W2Rpc2FibGVkXSB7XHJcbiAgY29sb3I6ICM4MDgwODA7XHJcbn1cclxuLmt1a2FpLWNhcmQgdGV4dGFyZWEudGV4dCB7XHJcbiAgaGVpZ2h0OiA3cmVtO1xyXG4gIHBhZGRpbmctdG9wOiAwLjVyZW07XHJcbiAgcGFkZGluZy1ib3R0b206IDAuNXJlbTtcclxuICByZXNpemU6IG5vbmU7XHJcbn1cclxuLmt1a2FpLWNhcmQgOjotd2Via2l0LWlucHV0LXBsYWNlaG9sZGVyLFxyXG4ua3VrYWktY2FyZCA6Oi1tb3otaW5wdXQtcGxhY2Vob2xkZXIsXHJcbi5rdWthaS1jYXJkIDotbXMtaW5wdXQtcGxhY2Vob2xkZXIge1xyXG4gIGNvbG9yOiByZ2JhKDAsIDAsIDAsIDAuNik7XHJcbn1cclxuXHJcbi8qIFN0ZXAgNCAqL1xyXG4ua3VrYWktY2FyZCBwLmRlc2NyaXB0aW9uLmJvbGQucGtoIHtcclxuICBtYXJnaW4tdG9wOiAycmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIGRpdi53aGl0ZWJveC5maW5hbCB7XHJcbiAgcGFkZGluZy1ib3R0b206IDA7XHJcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XHJcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xyXG4gIGhlaWdodDogYXV0bztcclxufVxyXG4ua3VrYWktY2FyZCBkaXYud2hpdGVib3ggLmJ1dHRvbnMge1xyXG4gIG1hcmdpbi10b3A6IDFyZW07XHJcbn1cclxuLmt1a2FpLWNhcmQgZGl2LmdyZXktY2FyZCBkaXYuc3dpdGNoLWNvbnRhaW5lciB7XHJcbiAgbWFyZ2luLWxlZnQ6IDJyZW07XHJcbn1cclxuXHJcbi5rdWthaS1jYXJkIGRpdi5ncmV5LWNhcmQge1xyXG4gIG1hcmdpbi10b3A6IDNyZW07XHJcbiAgd2lkdGg6IDMycmVtO1xyXG4gIGJhY2tncm91bmQ6IHdoaXRlO1xyXG4gIGJhY2tncm91bmQ6ICNGNEY0RjQ7XHJcbiAgYm9yZGVyOiAxcHggc29saWQgcmdiYSgyNTUsIDI1NSwgMjU1LCAwLjgpO1xyXG4gIGJveC1zaXppbmc6IGJvcmRlci1ib3g7XHJcbiAgYm94LXNoYWRvdzogMHB4IDBweCAxcHggcmdiYSgwLCAwLCAwLCAwLjA0KSwgMHB4IDJweCA2cHggcmdiYSgwLCAwLCAwLCAwLjE0KSwgMHB4IDE2cHggMjRweCByZ2JhKDAsIDAsIDAsIDAuMTYpO1xyXG4gIGJvcmRlci1yYWRpdXM6IDAuNzVyZW07XHJcbn1cclxuXHJcbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDMyLjVyZW0pIHtcclxuICAua3VrYWktY2FyZCBkaXYuZ3JleS1jYXJke1xyXG4gICAgd2lkdGg6IDIxLjg3NXJlbTtcclxuICAgIC8qd2lkdGg6IDIyLjVyZW07Ki9cclxuICB9XHJcbiAgLmt1a2FpLWNhcmQgcHJvZ3Jlc3NbdmFsdWVdLFxyXG4gIC5rdWthaS1jYXJkIHNtYWxsLFxyXG4gIC5rdWthaS1jYXJkIGlucHV0LnRleHQsXHJcbiAgLmt1a2FpLWNhcmQgdGV4dGFyZWEudGV4dCB7XHJcbiAgICB3aWR0aDogMTkuODc1cmVtO1xyXG4gICAgbWFyZ2luLWxlZnQ6IDFyZW07XHJcbiAgICBtYXJnaW4tcmlnaHQ6IDFyZW07XHJcbiAgfVxyXG4gIC5rdWthaS1jYXJkIGRpdi5zZWVkLWJsdXIsXHJcbiAgLmt1a2FpLWNhcmQgZGl2LndoaXRlYm94IHtcclxuICAgIGhlaWdodDogOS41cmVtO1xyXG4gIH1cclxuICAua3VrYWktY2FyZCBkaXYuc2VlZC1ibHVyIHtcclxuICAgIG1hcmdpbi10b3A6IC05LjVyZW07XHJcbiAgfVxyXG4gIC5rdWthaS1jYXJkIHAuZGVzY3JpcHRpb24uYm9sZC5wa2gge1xyXG4gICAgbWFyZ2luLXRvcDogMC43NXJlbTtcclxuICAgIGZvbnQtc2l6ZTogMC45Mzc1cmVtO1xyXG4gIH1cclxuICAua3VrYWktY2FyZCBkaXYuZ3JleS1jYXJkIGRpdi5zd2l0Y2gtY29udGFpbmVyIHtcclxuICAgIG1hcmdpbi1sZWZ0OiAxcmVtO1xyXG4gIH1cclxuICAua3VrYWktY2FyZCBkaXYuYnV0dG9ucyB7XHJcbiAgICBtYXJnaW4tbGVmdDogMXJlbTtcclxuICAgIG1hcmdpbi1yaWdodDogMXJlbTtcclxuICAgIG1hcmdpbi1ib3R0b206IDFyZW07XHJcbiAgfVxyXG59IiwiQGltcG9ydCBcIi4uLy4uLy4uL3Njc3MvY2FyZC5jc3NcIjtcclxuOmhvc3Qge1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbiAgICBtaW4taGVpZ2h0OiAxMDB2aDtcclxuICAgIHBhZGRpbmctYm90dG9tOiA4cmVtO1xyXG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcclxuICAgIGRpc3BsYXk6IGZsZXg7XHJcbiAgICBiYWNrZ3JvdW5kOiAjNTk2M0ZGO1xyXG59XHJcbjpob3N0ID4gZGl2IHtcclxuICAgIG1hcmdpbi10b3A6IDVyZW07XHJcbiAgICB3aWR0aDogMTAwdnc7XHJcbiAgICBtaW4taGVpZ2h0OiAxMDAlO1xyXG4gICAgZGlzcGxheTogZmxleDtcclxuICAgIGp1c3RpZnktY29udGVudDogZmxleC1zdGFydDtcclxuICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XHJcbiAgICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xyXG59XHJcbjpob3N0IGlucHV0LnRleHQge1xyXG4gICAgbWFyZ2luLXRvcDogMi41cmVtO1xyXG59XHJcbjpob3N0IGlucHV0LnRleHRbZGlzYWJsZWRdIHtcclxuICBiYWNrZ3JvdW5kOiAjZTFlMWUxO1xyXG59XHJcbjpob3N0IHNtYWxsIHtcclxuICAgIG1hcmdpbi10b3A6IDFyZW07XHJcbn1cclxuQGltcG9ydCAnLi4vLi4vLi4vc2Nzcy9zd2l0Y2guc2NzcyciLCJAaW1wb3J0IFwiLi4vLi4vLi4vc2Nzcy9jYXJkLmNzc1wiO1xuOmhvc3Qge1xuICB3aWR0aDogMTAwJTtcbiAgbWluLWhlaWdodDogMTAwdmg7XG4gIHBhZGRpbmctYm90dG9tOiA4cmVtO1xuICBvdmVyZmxvdzogaGlkZGVuO1xuICBkaXNwbGF5OiBmbGV4O1xuICBiYWNrZ3JvdW5kOiAjNTk2M0ZGO1xufVxuXG46aG9zdCA+IGRpdiB7XG4gIG1hcmdpbi10b3A6IDVyZW07XG4gIHdpZHRoOiAxMDB2dztcbiAgbWluLWhlaWdodDogMTAwJTtcbiAgZGlzcGxheTogZmxleDtcbiAganVzdGlmeS1jb250ZW50OiBmbGV4LXN0YXJ0O1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xufVxuXG46aG9zdCBpbnB1dC50ZXh0IHtcbiAgbWFyZ2luLXRvcDogMi41cmVtO1xufVxuXG46aG9zdCBpbnB1dC50ZXh0W2Rpc2FibGVkXSB7XG4gIGJhY2tncm91bmQ6ICNlMWUxZTE7XG59XG5cbjpob3N0IHNtYWxsIHtcbiAgbWFyZ2luLXRvcDogMXJlbTtcbn1cblxuLnN3aXRjaCB7XG4gIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB3aWR0aDogM3JlbTtcbiAgaGVpZ2h0OiAxLjVyZW07XG4gIG1hcmdpbi1ib3R0b206IDA7XG59XG5cbi5zd2l0Y2ggaW5wdXQge1xuICBvcGFjaXR5OiAwO1xuICAtd2Via2l0LW9wYWNpdHk6IDA7XG4gIC1raHRtbC1vcGFjaXR5OiAwO1xuICB3aWR0aDogMDtcbiAgaGVpZ2h0OiAwO1xufVxuXG4uc2xpZGVyIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBjdXJzb3I6IHBvaW50ZXI7XG4gIHRvcDogMDtcbiAgbGVmdDogMDtcbiAgcmlnaHQ6IDA7XG4gIGJvdHRvbTogMDtcbiAgYmFja2dyb3VuZC1jb2xvcjogI2Q5ZDlkOTtcbiAgLXdlYmtpdC10cmFuc2l0aW9uOiAwLjRzO1xuICB0cmFuc2l0aW9uOiAwLjRzO1xufVxuXG4uc2xpZGVyOmJlZm9yZSB7XG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgY29udGVudDogXCJcIjtcbiAgaGVpZ2h0OiAxLjEyNXJlbTtcbiAgd2lkdGg6IDEuMTI1cmVtO1xuICBsZWZ0OiAwLjE4NzVyZW07XG4gIGJvdHRvbTogMC4xODc1cmVtO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjN0I3QjdCO1xuICAtd2Via2l0LXRyYW5zaXRpb246IDAuNHM7XG4gIHRyYW5zaXRpb246IDAuNHM7XG59XG5cbmlucHV0OmNoZWNrZWQgKyAuc2xpZGVyIHtcbiAgYm94LXNoYWRvdzogMHB4IDBweCAxcHggcmdiYSg4OSwgOTksIDI1NSwgMC4wNCksIDBweCAycHggNnB4IHJnYmEoODksIDk5LCAyNTUsIDAuMDQpLCAwcHggMTZweCAyNHB4IHJnYmEoODksIDk5LCAyNTUsIDAuMjQpO1xufVxuXG5pbnB1dDpjaGVja2VkICsgLnNsaWRlcjpiZWZvcmUge1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjNTk2M0ZGO1xuICAtd2Via2l0LXRyYW5zZm9ybTogdHJhbnNsYXRlWCgxLjVyZW0pO1xuICAtbXMtdHJhbnNmb3JtOiB0cmFuc2xhdGVYKDEuNXJlbSk7XG4gIHRyYW5zZm9ybTogdHJhbnNsYXRlWCgxLjVyZW0pO1xufVxuXG4uc2xpZGVyLnJvdW5kIHtcbiAgYm9yZGVyLXJhZGl1czogMi4xMjVyZW07XG59XG5cbi5zbGlkZXIucm91bmQ6YmVmb3JlIHtcbiAgYm9yZGVyLXJhZGl1czogNTAlO1xufVxuXG5pbnB1dDpjaGVja2VkICsgLnNsaWRlciB7XG4gIGJhY2tncm91bmQtY29sb3I6IHJnYmEoODksIDk5LCAyNTUsIDAuNCk7XG59XG5cbmRpdi5rdWthaS1jYXJkID4gZGl2LmdyZXktY2FyZCA+IGRpdi5zd2l0Y2gtY29udGFpbmVyID4gc3Bhbi5zd2l0Y2gtZGVzYyxcbnNwYW4uc3dpdGNoLWRlc2Mge1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG4gIGZvbnQtc2l6ZTogMTRweDtcbiAgbGluZS1oZWlnaHQ6IDE4cHg7XG4gIGxldHRlci1zcGFjaW5nOiAwLjE2cHg7XG4gIGNvbG9yOiAjMTYxNjE2O1xuICBtYXJnaW4tbGVmdDogMC41cmVtO1xufVxuXG5kaXYuc3dpdGNoLWNvbnRhaW5lciB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGp1c3RpZnktY29udGVudDogZmxleC1zdGFydDtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcbiAgd2lkdGg6IDI4cmVtO1xufVxuXG5zbWFsbCB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcbiAgZm9udC1zaXplOiAwLjc1cmVtO1xuICBsaW5lLWhlaWdodDogMXJlbTtcbiAgbGV0dGVyLXNwYWNpbmc6IDAuMzJweDtcbiAgY29sb3I6ICMzOTM5Mzk7XG4gIG1hcmdpbi10b3A6IDIuNXJlbTtcbiAgbWFyZ2luLWJvdHRvbTogMC41cmVtO1xufVxuXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAyOXJlbSkge1xuICBkaXYuc3dpdGNoLWNvbnRhaW5lciB7XG4gICAgd2lkdGg6IDIwcmVtO1xuICB9XG59IiwiLnN3aXRjaCB7XHJcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG4gIGRpc3BsYXk6IGlubGluZS1ibG9jaztcclxuICB3aWR0aDogM3JlbTtcclxuICBoZWlnaHQ6IDEuNXJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAwO1xyXG59XHJcblxyXG4uc3dpdGNoIGlucHV0IHsgXHJcbiAgb3BhY2l0eTogMDtcclxuICAtd2Via2l0LW9wYWNpdHk6IDA7XHJcbiAgLWtodG1sLW9wYWNpdHk6IDA7XHJcbiAgd2lkdGg6IDA7XHJcbiAgaGVpZ2h0OiAwO1xyXG59XHJcblxyXG4uc2xpZGVyIHtcclxuICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcbiAgY3Vyc29yOiBwb2ludGVyO1xyXG4gIHRvcDogMDtcclxuICBsZWZ0OiAwO1xyXG4gIHJpZ2h0OiAwO1xyXG4gIGJvdHRvbTogMDtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZDlkOWQ5O1xyXG4gIC13ZWJraXQtdHJhbnNpdGlvbjogLjRzO1xyXG4gIHRyYW5zaXRpb246IC40cztcclxufVxyXG5cclxuLnNsaWRlcjpiZWZvcmUge1xyXG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxuICBjb250ZW50OiBcIlwiO1xyXG4gIGhlaWdodDogMS4xMjVyZW07XHJcbiAgd2lkdGg6IDEuMTI1cmVtO1xyXG4gIGxlZnQ6IDAuMTg3NXJlbTtcclxuICBib3R0b206IDAuMTg3NXJlbTtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiAjN0I3QjdCO1xyXG4gIC13ZWJraXQtdHJhbnNpdGlvbjogLjRzO1xyXG4gIHRyYW5zaXRpb246IC40cztcclxufVxyXG5cclxuaW5wdXQ6Y2hlY2tlZCArIC5zbGlkZXIge1xyXG4gIGJveC1zaGFkb3c6IDBweCAwcHggMXB4IHJnYmEoODksIDk5LCAyNTUsIDAuMDQpLCAwcHggMnB4IDZweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjA0KSwgMHB4IDE2cHggMjRweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjI0KTtcclxufVxyXG5cclxuaW5wdXQ6Y2hlY2tlZCArIC5zbGlkZXI6YmVmb3JlIHtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiAjNTk2M0ZGO1xyXG4gIC13ZWJraXQtdHJhbnNmb3JtOiB0cmFuc2xhdGVYKDEuNXJlbSk7XHJcbiAgLW1zLXRyYW5zZm9ybTogdHJhbnNsYXRlWCgxLjVyZW0pO1xyXG4gIHRyYW5zZm9ybTogdHJhbnNsYXRlWCgxLjVyZW0pO1xyXG59XHJcblxyXG4uc2xpZGVyLnJvdW5kIHtcclxuICBib3JkZXItcmFkaXVzOiAyLjEyNXJlbTtcclxufVxyXG4uc2xpZGVyLnJvdW5kOmJlZm9yZSB7XHJcbiAgYm9yZGVyLXJhZGl1czogNTAlO1xyXG59XHJcbmlucHV0OmNoZWNrZWQgKyAuc2xpZGVyIHtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDg5LCA5OSwgMjU1LCAwLjQpOztcclxufVxyXG5kaXYua3VrYWktY2FyZCA+IGRpdi5ncmV5LWNhcmQgPiBkaXYuc3dpdGNoLWNvbnRhaW5lciA+IHNwYW4uc3dpdGNoLWRlc2MsXHJcbnNwYW4uc3dpdGNoLWRlc2Mge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtc2l6ZTogMTRweDtcclxuICBsaW5lLWhlaWdodDogMThweDtcclxuICBsZXR0ZXItc3BhY2luZzogMC4xNnB4O1xyXG4gIGNvbG9yOiAjMTYxNjE2O1xyXG4gIG1hcmdpbi1sZWZ0OiAwLjVyZW07XHJcbn1cclxuZGl2LnN3aXRjaC1jb250YWluZXIge1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAganVzdGlmeS1jb250ZW50OiBmbGV4LXN0YXJ0O1xyXG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XHJcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcclxuICB3aWR0aDogMjhyZW07XHJcbn1cclxuc21hbGwge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtc2l6ZTogMC43NXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBsZXR0ZXItc3BhY2luZzogMC4zMnB4O1xyXG4gIGNvbG9yOiAjMzkzOTM5O1xyXG4gIG1hcmdpbi10b3A6IDIuNXJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAwLjVyZW07XHJcbn1cclxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDogMjlyZW0pIHtcclxuICBkaXYuc3dpdGNoLWNvbnRhaW5lciB7XHJcbiAgICAgIHdpZHRoOiAyMHJlbTtcclxuICB9XHJcbn0iXX0= */"] });
+    } }, directives: [_angular_forms__WEBPACK_IMPORTED_MODULE_9__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_9__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_9__["NgModel"], _angular_forms__WEBPACK_IMPORTED_MODULE_9__["CheckboxControlValueAccessor"], _angular_common__WEBPACK_IMPORTED_MODULE_10__["NgIf"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterLinkWithHref"]], styles: [".kukai-card[_ngcontent-%COMP%]   H1[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   span[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   p[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   div.whitebox[_ngcontent-%COMP%] {\r\n  font-style: normal;\r\n  display: flex;\r\n  align-items: center;\r\n  text-align: center;\r\n  color: white;\r\n  margin-bottom: 0;\r\n  max-width: 34rem;\r\n  padding: 0 0.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   p.description[_ngcontent-%COMP%] {\r\n  margin-top: 1.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   p.description.bold[_ngcontent-%COMP%] {\r\n  font-weight: bold;\r\n  font-size: 1rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   p.description.blue[_ngcontent-%COMP%] {\r\n  color: #5963FF;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   p.description.red[_ngcontent-%COMP%] {\r\n  font-size: 0.875rem;\r\n  line-height: 1.25rem;\r\n  color: #C83532;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   H1[_ngcontent-%COMP%] {\r\n  -webkit-margin-after: 0;\r\n          margin-block-end: 0;\r\n  font-weight: 500;\r\n  font-size: 2.25rem;\r\n  line-height: 2.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   span[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\r\n  font-weight: normal;\r\n  justify-content: center;\r\n  font-size: 1.25rem;\r\n  line-height: 2rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   .grey-card[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\r\n  font-size: 1.125rem;\r\n  line-height: 1.5rem;\r\n  margin-top: 2.5rem 1.5rem 0;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   p[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\r\n  color: #303030;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.whitebox[_ngcontent-%COMP%] {\r\n  font-size: 1rem;\r\n  line-height: 1.5rem;\r\n  width: 100%;\r\n  height: 8.5rem;\r\n  z-index: 1;\r\n  color: black;\r\n  padding: 1.25rem;\r\n  border: 0;\r\n  border-top-left-radius: 0.75rem;\r\n  border-top-right-radius: 0.75rem;\r\n  font-weight: bold;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.seed-blur[_ngcontent-%COMP%] {\r\n  margin-top: -8.5rem;\r\n  margin-bottom: 0.0625rem;\r\n  height: 8.5rem;\r\n  width: 100%;\r\n  z-index: 2;\r\n  -webkit-backdrop-filter: blur(8px);\r\n          backdrop-filter: blur(8px);\r\n  border-radius: 0.75rem;\r\n  background-color: rgb(238, 238, 238);\r\n  background-color: rgba(238, 238, 238, 0.4);\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  flex-direction: column;\r\n  border-radius: 0;\r\n  border-top-left-radius: 0.75rem;\r\n  border-top-right-radius: 0.75rem;\r\n}\r\n@-moz-document url-prefix() {\r\n  .kukai-card div.seed-blur {\r\n    position: relative;\r\n    background-color: rgb(238, 238, 238) !important;\r\n  }\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   span.black[_ngcontent-%COMP%] {\r\n  color: black;\r\n  font-size: 1rem;\r\n  line-height: 1.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   span.step-counter[_ngcontent-%COMP%] {\r\n  font-size: 1rem;\r\n  line-height: 1.5rem;\r\n  display: block;\r\n  margin-top: 2.5rem;\r\n  width: 100%;\r\n  text-align: center;\r\n  max-width: 100%;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.buttons[_ngcontent-%COMP%] {\r\n  margin: 3rem 2rem 1.5rem;\r\n  width: auto;\r\n  display: flex;\r\n  justify-content: space-between;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.whitebox[_ngcontent-%COMP%]   div.buttons.single[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   div.buttons.single[_ngcontent-%COMP%] {\r\n  margin-top: 2rem;\r\n  justify-content: center;\r\n  width: auto;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.buttons.single.finish[_ngcontent-%COMP%] {\r\n  margin-top: 2.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\r\n  border-radius: 0.75rem;\r\n  width: 8rem;\r\n  height: 3rem;\r\n  font-style: normal;\r\n  font-weight: bold;\r\n  font-size: 1rem;\r\n  line-height: 1rem;\r\n  border: none;\r\n  padding: 0;\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  justify-content: center;\r\n  cursor: pointer;\r\n  transition: margin-top 0.1s ease-in, margin-bottom 0.1s ease-in;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:hover {\r\n  margin-top: -0.125rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.buttons.single[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:hover {\r\n  margin-bottom: 0.125rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   button.next[_ngcontent-%COMP%] {\r\n  color: white;\r\n  background: #5963FF;\r\n  box-shadow: 0px 0px 1px rgba(89, 99, 255, 0.04), 0px 2px 6px rgba(89, 99, 255, 0.04), 0px 16px 24px rgba(89, 99, 255, 0.24);\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   button.back[_ngcontent-%COMP%] {\r\n  color: #727AFD;\r\n  background: rgba(114, 122, 253, 0.16)\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   button.disabled-button[_ngcontent-%COMP%] {\r\n  pointer-events: none;\r\n  opacity: 0.4;\r\n  -webkit-opacity: 0.4;\r\n  -khtml-opacity: 0.4;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\r\n  color: inherit;\r\n  text-decoration: inherit;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, .kukai-card[_ngcontent-%COMP%]   textarea[_ngcontent-%COMP%]:focus {\r\n  outline: none;\r\n}\r\n\r\n\r\n.kukai-card[_ngcontent-%COMP%]   div.word-verify[_ngcontent-%COMP%] {\r\n  margin-top: 2.75rem;\r\n  display: flex;\r\n  justify-content: space-evenly;\r\n  align-items: flex-start;\r\n  flex-direction: row;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.word-input[_ngcontent-%COMP%]    > input[_ngcontent-%COMP%] {\r\n  margin-top: 0.5rem;\r\n  height: 2.5rem;\r\n  width: 17.5rem;\r\n  border-radius: 0.75rem;\r\n  text-align: center;\r\n  border-width: 0;\r\n  background: rgba(0, 0, 0, 0.08);\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   span.word-index[_ngcontent-%COMP%] {\r\n  display: block;\r\n  font-style: normal;\r\n  font-weight: normal;\r\n  font-size: 0.75rem;\r\n  line-height: 1rem;\r\n  text-align: center;\r\n  letter-spacing: 0.32px;\r\n  color: black;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.word-hint[_ngcontent-%COMP%] {\r\n  width: 9.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.word-hint[_ngcontent-%COMP%]    > span.word-value[_ngcontent-%COMP%] {\r\n  display: block;\r\n  margin-top: 1.25rem;\r\n  font-style: normal;\r\n  font-weight: normal;\r\n  font-size: 1rem;\r\n  line-height: 1.125rem;\r\n  text-align: center;\r\n  letter-spacing: 0.16px;\r\n  color: black;\r\n  opacity: 0.6;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   progress[value][_ngcontent-%COMP%] {\r\n  -webkit-appearance: none;\r\n  -moz-appearance: none;\r\n       appearance: none;\r\n  border: none;\r\n  width: 28rem;\r\n  height: 0.5rem;\r\n  margin-top: 2.5rem;\r\n  margin-left: 2rem;\r\n  border-radius: 4px;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   progress[_ngcontent-%COMP%]::-webkit-progress-bar, .kukai-card[_ngcontent-%COMP%]   progress[_ngcontent-%COMP%] {\r\n  background-color: #e1e1e1;\r\n  border-radius: 4px;\r\n  width: 100%;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   progress[_ngcontent-%COMP%]::-webkit-progress-value {\r\n  background-color: #5963FF !important;\r\n  border-radius: 20px;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   progress[_ngcontent-%COMP%]::-moz-progress-bar {\r\n  background-color: #5963FF !important;\r\n  border-radius: 20px;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   progress[_ngcontent-%COMP%] {\r\n  color: #5963FF;\r\n  border-radius: 20px;\r\n}\r\n\r\n\r\n.kukai-card[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\r\n  display: inline-block;\r\n  font-style: normal;\r\n  font-weight: normal;\r\n  font-size: 0.875rem;\r\n  line-height: 1rem;\r\n  letter-spacing: 0.32px;\r\n  color: #393939;\r\n  margin-top: 1.5rem;\r\n  margin-left: 2rem;\r\n  margin-bottom: 0.5rem;\r\n  width: 28rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   small.grey[_ngcontent-%COMP%] {\r\n  margin-top: 0.25rem;\r\n  margin-bottom: -1.25rem;\r\n  color: #393939;\r\n  opacity: 0.4;\r\n  -webkit-opacity: 0.4;\r\n  -khtml-opacity: 0.4;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%] {\r\n  width: 28rem;\r\n  background: #d9d9d9;\r\n  border-radius: 0.75rem;\r\n  border: 0px solid;\r\n  height: 3rem;\r\n  padding-left: 1rem;\r\n  padding-right: 1rem;\r\n  margin-left: 2rem;\r\n  margin-right: 2rem;\r\n  font-style: normal;\r\n  font-weight: normal;\r\n  font-size: 1rem;\r\n  line-height: 1.125rem;\r\n  letter-spacing: 0.16px;\r\n  color: #393939;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   input.text[disabled][_ngcontent-%COMP%] {\r\n  color: #808080;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%] {\r\n  height: 7rem;\r\n  padding-top: 0.5rem;\r\n  padding-bottom: 0.5rem;\r\n  resize: none;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   [_ngcontent-%COMP%]::-webkit-input-placeholder, .kukai-card[_ngcontent-%COMP%]   [_ngcontent-%COMP%]::-moz-input-placeholder, .kukai-card[_ngcontent-%COMP%]   [_ngcontent-%COMP%]:-ms-input-placeholder {\r\n  color: rgba(0, 0, 0, 0.6);\r\n}\r\n\r\n.kukai-card[_ngcontent-%COMP%]   p.description.bold.pkh[_ngcontent-%COMP%] {\r\n  margin-top: 2rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.whitebox.final[_ngcontent-%COMP%] {\r\n  padding-bottom: 0;\r\n  justify-content: center;\r\n  align-items: center;\r\n  flex-direction: column;\r\n  height: auto;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.whitebox[_ngcontent-%COMP%]   .buttons[_ngcontent-%COMP%] {\r\n  margin-top: 1rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   div.switch-container[_ngcontent-%COMP%] {\r\n  margin-left: 2rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%] {\r\n  margin-top: 3rem;\r\n  width: 32rem;\r\n  background: white;\r\n  background: #F4F4F4;\r\n  border: 1px solid rgba(255, 255, 255, 0.8);\r\n  box-sizing: border-box;\r\n  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.14), 0px 16px 24px rgba(0, 0, 0, 0.16);\r\n  border-radius: 0.75rem;\r\n}\r\n@media screen and (max-width: 32.5rem) {\r\n  .kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]{\r\n    width: 21.875rem;\r\n    \r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   progress[value][_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   small[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%] {\r\n    width: 19.875rem;\r\n    margin-left: 1rem;\r\n    margin-right: 1rem;\r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   div.seed-blur[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   div.whitebox[_ngcontent-%COMP%] {\r\n    height: 9.5rem;\r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   div.seed-blur[_ngcontent-%COMP%] {\r\n    margin-top: -9.5rem;\r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   p.description.bold.pkh[_ngcontent-%COMP%] {\r\n    margin-top: 0.75rem;\r\n    font-size: 0.9375rem;\r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   div.switch-container[_ngcontent-%COMP%] {\r\n    margin-left: 1rem;\r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   div.buttons[_ngcontent-%COMP%] {\r\n    margin-left: 1rem;\r\n    margin-right: 1rem;\r\n    margin-bottom: 1rem;\r\n  }\r\n}\r\n[_nghost-%COMP%] {\n  width: 100%;\n  min-height: 100vh;\n  padding-bottom: 8rem;\n  overflow: hidden;\n  display: flex;\n  background: #5963FF;\n}\r\n[_nghost-%COMP%]    > div[_ngcontent-%COMP%] {\n  margin-top: 5rem;\n  width: 100vw;\n  min-height: 100%;\n  display: flex;\n  justify-content: flex-start;\n  align-items: center;\n  flex-direction: column;\n}\r\n[_nghost-%COMP%]   input.text[_ngcontent-%COMP%] {\n  margin-top: 2.5rem;\n}\r\n[_nghost-%COMP%]   input.text[disabled][_ngcontent-%COMP%] {\n  background: #e1e1e1;\n}\r\n[_nghost-%COMP%]   small[_ngcontent-%COMP%] {\n  margin-top: 1rem;\n}\r\n.switch[_ngcontent-%COMP%] {\n  position: relative;\n  display: inline-block;\n  width: 3rem;\n  height: 1.5rem;\n  margin-bottom: 0;\n}\r\n.switch[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  opacity: 0;\n  -webkit-opacity: 0;\n  -khtml-opacity: 0;\n  width: 0;\n  height: 0;\n}\r\n.slider[_ngcontent-%COMP%] {\n  position: absolute;\n  cursor: pointer;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background-color: #d9d9d9;\n  transition: 0.4s;\n}\r\n.slider[_ngcontent-%COMP%]:before {\n  position: absolute;\n  content: \"\";\n  height: 1.125rem;\n  width: 1.125rem;\n  left: 0.1875rem;\n  bottom: 0.1875rem;\n  background-color: #7B7B7B;\n  transition: 0.4s;\n}\r\ninput[_ngcontent-%COMP%]:checked    + .slider[_ngcontent-%COMP%] {\n  box-shadow: 0px 0px 1px rgba(89, 99, 255, 0.04), 0px 2px 6px rgba(89, 99, 255, 0.04), 0px 16px 24px rgba(89, 99, 255, 0.24);\n}\r\ninput[_ngcontent-%COMP%]:checked    + .slider[_ngcontent-%COMP%]:before {\n  background-color: #5963FF;\n  transform: translateX(1.5rem);\n}\r\n.slider.round[_ngcontent-%COMP%] {\n  border-radius: 2.125rem;\n}\r\n.slider.round[_ngcontent-%COMP%]:before {\n  border-radius: 50%;\n}\r\ninput[_ngcontent-%COMP%]:checked    + .slider[_ngcontent-%COMP%] {\n  background-color: rgba(89, 99, 255, 0.4);\n}\r\ndiv.kukai-card[_ngcontent-%COMP%]    > div.grey-card[_ngcontent-%COMP%]    > div.switch-container[_ngcontent-%COMP%]    > span.switch-desc[_ngcontent-%COMP%], span.switch-desc[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 14px;\n  line-height: 18px;\n  letter-spacing: 0.16px;\n  color: #161616;\n  margin-left: 0.5rem;\n}\r\ndiv.switch-container[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: flex-start;\n  align-items: center;\n  flex-direction: row;\n  width: 28rem;\n}\r\nsmall[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.75rem;\n  line-height: 1rem;\n  letter-spacing: 0.32px;\n  color: #393939;\n  margin-top: 2.5rem;\n  margin-bottom: 0.5rem;\n}\r\n@media screen and (max-width: 29rem) {\n  div.switch-container[_ngcontent-%COMP%] {\n    width: 20rem;\n  }\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9zY3NzL2NhcmQuY3NzIiwic3JjL2FwcC9jb21wb25lbnRzL2Nvbm5lY3QtbGVkZ2VyL0M6XFxVc2Vyc1xca2xhc19cXEdpdFxca3VrYWkvc3JjXFxhcHBcXGNvbXBvbmVudHNcXGNvbm5lY3QtbGVkZ2VyXFxjb25uZWN0LWxlZGdlci5jb21wb25lbnQuc2NzcyIsInNyYy9hcHAvY29tcG9uZW50cy9jb25uZWN0LWxlZGdlci9jb25uZWN0LWxlZGdlci5jb21wb25lbnQuc2NzcyIsInNyYy9hcHAvY29tcG9uZW50cy9jb25uZWN0LWxlZGdlci9DOlxcVXNlcnNcXGtsYXNfXFxHaXRcXGt1a2FpL3NyY1xcc2Nzc1xcc3dpdGNoLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7Ozs7RUFJRSxrQkFBa0I7RUFDbEIsYUFBYTtFQUNiLG1CQUFtQjtFQUNuQixrQkFBa0I7RUFDbEIsWUFBWTtFQUNaLGdCQUFnQjtFQUNoQixnQkFBZ0I7RUFDaEIsaUJBQWlCO0FBQ25CO0FBQ0E7RUFDRSxrQkFBa0I7QUFDcEI7QUFDQTtFQUNFLGlCQUFpQjtFQUNqQixlQUFlO0FBQ2pCO0FBQ0E7RUFDRSxjQUFjO0FBQ2hCO0FBQ0E7RUFDRSxtQkFBbUI7RUFDbkIsb0JBQW9CO0VBQ3BCLGNBQWM7QUFDaEI7QUFDQTtFQUNFLHVCQUFtQjtVQUFuQixtQkFBbUI7RUFDbkIsZ0JBQWdCO0VBQ2hCLGtCQUFrQjtFQUNsQixtQkFBbUI7QUFDckI7QUFDQTs7RUFFRSxtQkFBbUI7RUFDbkIsdUJBQXVCO0VBQ3ZCLGtCQUFrQjtFQUNsQixpQkFBaUI7QUFDbkI7QUFDQTtFQUNFLG1CQUFtQjtFQUNuQixtQkFBbUI7RUFDbkIsMkJBQTJCO0FBQzdCO0FBQ0E7O0VBRUUsY0FBYztBQUNoQjtBQUNBO0VBQ0UsZUFBZTtFQUNmLG1CQUFtQjtFQUNuQixXQUFXO0VBQ1gsY0FBYztFQUNkLFVBQVU7RUFDVixZQUFZO0VBQ1osZ0JBQWdCO0VBQ2hCLFNBQVM7RUFDVCwrQkFB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RUFDRSxrQkFBQTtFQUNBLG1CQUFBO0VBQ0Esa0JBQUE7RUFDQSxpQkFBQTtFQUNBLHNCQUFBO0VBQ0EsY0FBQTtFQUNBLGtCQUFBO0VBQ0EscUJBQUE7QURzQ0Y7QUNwQ0E7RUFDRTtJQUNJLFlBQUE7RUR1Q0o7QUFDRiIsImZpbGUiOiJzcmMvYXBwL2NvbXBvbmVudHMvY29ubmVjdC1sZWRnZXIvY29ubmVjdC1sZWRnZXIuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIua3VrYWktY2FyZCBIMSxcclxuLmt1a2FpLWNhcmQgc3BhbixcclxuLmt1a2FpLWNhcmQgcCxcclxuLmt1a2FpLWNhcmQgZGl2LndoaXRlYm94IHtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICBjb2xvcjogd2hpdGU7XHJcbiAgbWFyZ2luLWJvdHRvbTogMDtcclxuICBtYXgtd2lkdGg6IDM0cmVtO1xyXG4gIHBhZGRpbmc6IDAgMC41cmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIHAuZGVzY3JpcHRpb24ge1xyXG4gIG1hcmdpbi10b3A6IDEuNXJlbTtcclxufVxyXG4ua3VrYWktY2FyZCBwLmRlc2NyaXB0aW9uLmJvbGQge1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxufVxyXG4ua3VrYWktY2FyZCBkaXYuZ3JleS1jYXJkIHAuZGVzY3JpcHRpb24uYmx1ZSB7XHJcbiAgY29sb3I6ICM1OTYzRkY7XHJcbn1cclxuLmt1a2FpLWNhcmQgZGl2LmdyZXktY2FyZCBwLmRlc2NyaXB0aW9uLnJlZCB7XHJcbiAgZm9udC1zaXplOiAwLjg3NXJlbTtcclxuICBsaW5lLWhlaWdodDogMS4yNXJlbTtcclxuICBjb2xvcjogI0M4MzUzMjtcclxufVxyXG4ua3VrYWktY2FyZCBIMSB7XHJcbiAgbWFyZ2luLWJsb2NrLWVuZDogMDtcclxuICBmb250LXdlaWdodDogNTAwO1xyXG4gIGZvbnQtc2l6ZTogMi4yNXJlbTtcclxuICBsaW5lLWhlaWdodDogMi41cmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIHNwYW4sXHJcbi5rdWthaS1jYXJkIHAge1xyXG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XHJcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XHJcbiAgZm9udC1zaXplOiAxLjI1cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAycmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIC5ncmV5LWNhcmQgcCB7XHJcbiAgZm9udC1zaXplOiAxLjEyNXJlbTtcclxuICBsaW5lLWhlaWdodDogMS41cmVtO1xyXG4gIG1hcmdpbi10b3A6IDIuNXJlbSAxLjVyZW0gMDtcclxufVxyXG4ua3VrYWktY2FyZCBkaXYuZ3JleS1jYXJkIHAsXHJcbi5rdWthaS1jYXJkIGRpdi5ncmV5LWNhcmQgc3BhbiB7XHJcbiAgY29sb3I6ICMzMDMwMzA7XHJcbn1cclxuLmt1a2FpLWNhcmQgZGl2LndoaXRlYm94IHtcclxuICBmb250LXNpemU6IDFyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDEuNXJlbTtcclxuICB3aWR0aDogMTAwJTtcclxuICBoZWlnaHQ6IDguNXJlbTtcclxuICB6LWluZGV4OiAxO1xyXG4gIGNvbG9yOiBibGFjaztcclxuICBwYWRkaW5nOiAxLjI1cmVtO1xyXG4gIGJvcmRlcjogMDtcclxuICBib3JkZXItdG9wLWxlZnQtcmFkaXVzOiAwLjc1cmVtO1xyXG4gIGJvcmRlci10b3AtcmlnaHQtcmFkaXVzOiAwLjc1cmVtO1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG59XHJcbi5rdWthaS1jYXJkIGRpdi5zZWVkLWJsdXIge1xyXG4gIG1hcmdpbi10b3A6IC04LjVyZW07XHJcbiAgbWFyZ2luLWJvdHRvbTogMC4wNjI1cmVtO1xyXG4gIGhlaWdodDogOC41cmVtO1xyXG4gIHdpZHRoOiAxMDAlO1xyXG4gIHotaW5kZXg6IDI7XHJcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDhweCk7XHJcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjM4LCAyMzgsIDIzOCk7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogcmdiYSgyMzgsIDIzOCwgMjM4LCAwLjQpO1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XHJcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xyXG4gIGJvcmRlci1yYWRpdXM6IDA7XHJcbiAgYm9yZGVyLXRvcC1sZWZ0LXJhZGl1czogMC43NXJlbTtcclxuICBib3JkZXItdG9wLXJpZ2h0LXJhZGl1czogMC43NXJlbTtcclxufVxyXG5ALW1vei1kb2N1bWVudCB1cmwtcHJlZml4KCkge1xyXG4gIC5rdWthaS1jYXJkIGRpdi5zZWVkLWJsdXIge1xyXG4gICAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogcmdiKDIzOCwgMjM4LCAyMzgpICFpbXBvcnRhbnQ7XHJcbiAgfVxyXG59XHJcbi5rdWthaS1jYXJkIHNwYW4uYmxhY2sge1xyXG4gIGNvbG9yOiBibGFjaztcclxuICBmb250LXNpemU6IDFyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDEuNXJlbTtcclxufVxyXG4ua3VrYWktY2FyZCBzcGFuLnN0ZXAtY291bnRlciB7XHJcbiAgZm9udC1zaXplOiAxcmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxLjVyZW07XHJcbiAgZGlzcGxheTogYmxvY2s7XHJcbiAgbWFyZ2luLXRvcDogMi41cmVtO1xyXG4gIHdpZHRoOiAxMDAlO1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICBtYXgtd2lkdGg6IDEwMCU7XHJcbn1cclxuLmt1a2FpLWNhcmQgZGl2LmJ1dHRvbnMge1xyXG4gIG1hcmdpbjogM3JlbSAycmVtIDEuNXJlbTtcclxuICB3aWR0aDogYXV0bztcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcclxufVxyXG4ua3VrYWktY2FyZCBkaXYud2hpdGVib3ggZGl2LmJ1dHRvbnMuc2luZ2xlLFxyXG4ua3VrYWktY2FyZCBkaXYuYnV0dG9ucy5zaW5nbGUge1xyXG4gIG1hcmdpbi10b3A6IDJyZW07XHJcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XHJcbiAgd2lkdGg6IGF1dG87XHJcbn1cclxuLmt1a2FpLWNhcmQgZGl2LmJ1dHRvbnMuc2luZ2xlLmZpbmlzaCB7XHJcbiAgbWFyZ2luLXRvcDogMi41cmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIGJ1dHRvbiB7XHJcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcclxuICB3aWR0aDogOHJlbTtcclxuICBoZWlnaHQ6IDNyZW07XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBib3JkZXI6IG5vbmU7XHJcbiAgcGFkZGluZzogMDtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XHJcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcclxuICBjdXJzb3I6IHBvaW50ZXI7XHJcbiAgdHJhbnNpdGlvbjogbWFyZ2luLXRvcCAwLjFzIGVhc2UtaW4sIG1hcmdpbi1ib3R0b20gMC4xcyBlYXNlLWluO1xyXG59XHJcbi5rdWthaS1jYXJkIGJ1dHRvbjpob3ZlciB7XHJcbiAgbWFyZ2luLXRvcDogLTAuMTI1cmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIGRpdi5idXR0b25zLnNpbmdsZSBidXR0b246aG92ZXIge1xyXG4gIG1hcmdpbi1ib3R0b206IDAuMTI1cmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIGJ1dHRvbi5uZXh0IHtcclxuICBjb2xvcjogd2hpdGU7XHJcbiAgYmFja2dyb3VuZDogIzU5NjNGRjtcclxuICBib3gtc2hhZG93OiAwcHggMHB4IDFweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjA0KSwgMHB4IDJweCA2cHggcmdiYSg4OSwgOTksIDI1NSwgMC4wNCksIDBweCAxNnB4IDI0cHggcmdiYSg4OSwgOTksIDI1NSwgMC4yNCk7XHJcbn1cclxuLmt1a2FpLWNhcmQgYnV0dG9uLmJhY2sge1xyXG4gIGNvbG9yOiAjNzI3QUZEO1xyXG4gIGJhY2tncm91bmQ6IHJnYmEoMTE0LCAxMjIsIDI1MywgMC4xNilcclxufVxyXG4ua3VrYWktY2FyZCBidXR0b24uZGlzYWJsZWQtYnV0dG9uIHtcclxuICBwb2ludGVyLWV2ZW50czogbm9uZTtcclxuICBvcGFjaXR5OiAwLjQ7XHJcbiAgLXdlYmtpdC1vcGFjaXR5OiAwLjQ7XHJcbiAgLWtodG1sLW9wYWNpdHk6IDAuNDtcclxufVxyXG4ua3VrYWktY2FyZCBhIHtcclxuICBjb2xvcjogaW5oZXJpdDtcclxuICB0ZXh0LWRlY29yYXRpb246IGluaGVyaXQ7XHJcbn1cclxuLmt1a2FpLWNhcmQgaW5wdXQ6Zm9jdXMsXHJcbi5rdWthaS1jYXJkIHRleHRhcmVhOmZvY3VzIHtcclxuICBvdXRsaW5lOiBub25lO1xyXG59XHJcbi8qXHJcbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDMwcmVtKSB7XHJcbiAgLmt1a2FpLWNhcmQgZGl2LndoaXRlYm94IHtcclxuICAgIG1hcmdpbi10b3A6IDRyZW07XHJcbiAgICB3aWR0aDogMjJyZW07XHJcbiAgICBoZWlnaHQ6IDExLjVyZW07XHJcbiAgfVxyXG4gIC5rdWthaS1jYXJkIGRpdi5zZWVkLWJsdXIge1xyXG4gICAgd2lkdGg6IDIycmVtO1xyXG4gICAgaGVpZ2h0OiAxMS41cmVtO1xyXG4gICAgbWFyZ2luLXRvcDogLTExLjU2MjVyZW07XHJcbiAgfVxyXG59Ki9cclxuLyogU3RlcCAyICovXHJcbi5rdWthaS1jYXJkIGRpdi53b3JkLXZlcmlmeSB7XHJcbiAgbWFyZ2luLXRvcDogMi43NXJlbTtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtZXZlbmx5O1xyXG4gIGFsaWduLWl0ZW1zOiBmbGV4LXN0YXJ0O1xyXG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XHJcbn1cclxuLmt1a2FpLWNhcmQgZGl2LndvcmQtaW5wdXQgPiBpbnB1dCB7XHJcbiAgbWFyZ2luLXRvcDogMC41cmVtO1xyXG4gIGhlaWdodDogMi41cmVtO1xyXG4gIHdpZHRoOiAxNy41cmVtO1xyXG4gIGJvcmRlci1yYWRpdXM6IDAuNzVyZW07XHJcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xyXG4gIGJvcmRlci13aWR0aDogMDtcclxuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuMDgpO1xyXG59XHJcbi5rdWthaS1jYXJkIHNwYW4ud29yZC1pbmRleCB7XHJcbiAgZGlzcGxheTogYmxvY2s7XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XHJcbiAgZm9udC1zaXplOiAwLjc1cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICBsZXR0ZXItc3BhY2luZzogMC4zMnB4O1xyXG4gIGNvbG9yOiBibGFjaztcclxufVxyXG4ua3VrYWktY2FyZCBkaXYud29yZC1oaW50IHtcclxuICB3aWR0aDogOS41cmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIGRpdi53b3JkLWhpbnQgPiBzcGFuLndvcmQtdmFsdWUge1xyXG4gIGRpc3BsYXk6IGJsb2NrO1xyXG4gIG1hcmdpbi10b3A6IDEuMjVyZW07XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XHJcbiAgZm9udC1zaXplOiAxcmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxLjEyNXJlbTtcclxuICB0ZXh0LWFsaWduOiBjZW50ZXI7XHJcbiAgbGV0dGVyLXNwYWNpbmc6IDAuMTZweDtcclxuICBjb2xvcjogYmxhY2s7XHJcbiAgb3BhY2l0eTogMC42O1xyXG59XHJcbi5rdWthaS1jYXJkIHByb2dyZXNzW3ZhbHVlXSB7XHJcbiAgLXdlYmtpdC1hcHBlYXJhbmNlOiBub25lO1xyXG4gIGFwcGVhcmFuY2U6IG5vbmU7XHJcbiAgYm9yZGVyOiBub25lO1xyXG4gIHdpZHRoOiAyOHJlbTtcclxuICBoZWlnaHQ6IDAuNXJlbTtcclxuICBtYXJnaW4tdG9wOiAyLjVyZW07XHJcbiAgbWFyZ2luLWxlZnQ6IDJyZW07XHJcbiAgYm9yZGVyLXJhZGl1czogNHB4O1xyXG59XHJcbi5rdWthaS1jYXJkIHByb2dyZXNzOjotd2Via2l0LXByb2dyZXNzLWJhcixcclxuLmt1a2FpLWNhcmQgcHJvZ3Jlc3Mge1xyXG4gIGJhY2tncm91bmQtY29sb3I6ICNlMWUxZTE7XHJcbiAgYm9yZGVyLXJhZGl1czogNHB4O1xyXG4gIHdpZHRoOiAxMDAlO1xyXG59XHJcbi5rdWthaS1jYXJkIHByb2dyZXNzOjotd2Via2l0LXByb2dyZXNzLXZhbHVlIHtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiAjNTk2M0ZGICFpbXBvcnRhbnQ7XHJcbiAgYm9yZGVyLXJhZGl1czogMjBweDtcclxufVxyXG4ua3VrYWktY2FyZCBwcm9ncmVzczo6LW1vei1wcm9ncmVzcy1iYXIge1xyXG4gIGJhY2tncm91bmQtY29sb3I6ICM1OTYzRkYgIWltcG9ydGFudDtcclxuICBib3JkZXItcmFkaXVzOiAyMHB4O1xyXG59XHJcblxyXG4ua3VrYWktY2FyZCBwcm9ncmVzcyB7XHJcbiAgY29sb3I6ICM1OTYzRkY7XHJcbiAgYm9yZGVyLXJhZGl1czogMjBweDtcclxufVxyXG4vKlxyXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAzNnJlbSkge1xyXG4gIC5rdWthaS1jYXJkIGRpdi53b3JkLWlucHV0IHtcclxuICAgIG1hcmdpbi1sZWZ0OiAxcmVtO1xyXG4gICAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xyXG4gIH1cclxufVxyXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAzMnJlbSkge1xyXG4gIC5rdWthaS1jYXJkIGRpdi53b3JkLWlucHV0IHtcclxuICAgIG1hcmdpbi1sZWZ0OiAwLjVyZW07XHJcbiAgICBtYXJnaW4tcmlnaHQ6IDAuNXJlbTtcclxuICB9XHJcbiAgLmt1a2FpLWNhcmQgZGl2LndvcmQtaW5wdXQgPiBpbnB1dCB7XHJcbiAgICB3aWR0aDogMTByZW07XHJcbiAgfVxyXG4gIC5rdWthaS1jYXJkIHByb2dyZXNzW3ZhbHVlXSB7XHJcbiAgICB3aWR0aDogMjByZW07XHJcbiAgfVxyXG59Ki9cclxuLyogU3RlcCAzICovXHJcbi5rdWthaS1jYXJkIHNtYWxsIHtcclxuICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XHJcbiAgZm9udC1zaXplOiAwLjg3NXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBsZXR0ZXItc3BhY2luZzogMC4zMnB4O1xyXG4gIGNvbG9yOiAjMzkzOTM5O1xyXG4gIG1hcmdpbi10b3A6IDEuNXJlbTtcclxuICBtYXJnaW4tbGVmdDogMnJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAwLjVyZW07XHJcbiAgd2lkdGg6IDI4cmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIHNtYWxsLmdyZXkge1xyXG4gIG1hcmdpbi10b3A6IDAuMjVyZW07XHJcbiAgbWFyZ2luLWJvdHRvbTogLTEuMjVyZW07XHJcbiAgY29sb3I6ICMzOTM5Mzk7XHJcbiAgb3BhY2l0eTogMC40O1xyXG4gIC13ZWJraXQtb3BhY2l0eTogMC40O1xyXG4gIC1raHRtbC1vcGFjaXR5OiAwLjQ7XHJcbn1cclxuLmt1a2FpLWNhcmQgaW5wdXQudGV4dCxcclxuLmt1a2FpLWNhcmQgdGV4dGFyZWEudGV4dCB7XHJcbiAgd2lkdGg6IDI4cmVtO1xyXG4gIGJhY2tncm91bmQ6ICNkOWQ5ZDk7XHJcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcclxuICBib3JkZXI6IDBweCBzb2xpZDtcclxuICBoZWlnaHQ6IDNyZW07XHJcbiAgcGFkZGluZy1sZWZ0OiAxcmVtO1xyXG4gIHBhZGRpbmctcmlnaHQ6IDFyZW07XHJcbiAgbWFyZ2luLWxlZnQ6IDJyZW07XHJcbiAgbWFyZ2luLXJpZ2h0OiAycmVtO1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMS4xMjVyZW07XHJcbiAgbGV0dGVyLXNwYWNpbmc6IDAuMTZweDtcclxuICBjb2xvcjogIzM5MzkzOTtcclxufVxyXG4ua3VrYWktY2FyZCBpbnB1dC50ZXh0W2Rpc2FibGVkXSB7XHJcbiAgY29sb3I6ICM4MDgwODA7XHJcbn1cclxuLmt1a2FpLWNhcmQgdGV4dGFyZWEudGV4dCB7XHJcbiAgaGVpZ2h0OiA3cmVtO1xyXG4gIHBhZGRpbmctdG9wOiAwLjVyZW07XHJcbiAgcGFkZGluZy1ib3R0b206IDAuNXJlbTtcclxuICByZXNpemU6IG5vbmU7XHJcbn1cclxuLmt1a2FpLWNhcmQgOjotd2Via2l0LWlucHV0LXBsYWNlaG9sZGVyLFxyXG4ua3VrYWktY2FyZCA6Oi1tb3otaW5wdXQtcGxhY2Vob2xkZXIsXHJcbi5rdWthaS1jYXJkIDotbXMtaW5wdXQtcGxhY2Vob2xkZXIge1xyXG4gIGNvbG9yOiByZ2JhKDAsIDAsIDAsIDAuNik7XHJcbn1cclxuXHJcbi8qIFN0ZXAgNCAqL1xyXG4ua3VrYWktY2FyZCBwLmRlc2NyaXB0aW9uLmJvbGQucGtoIHtcclxuICBtYXJnaW4tdG9wOiAycmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIGRpdi53aGl0ZWJveC5maW5hbCB7XHJcbiAgcGFkZGluZy1ib3R0b206IDA7XHJcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XHJcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xyXG4gIGhlaWdodDogYXV0bztcclxufVxyXG4ua3VrYWktY2FyZCBkaXYud2hpdGVib3ggLmJ1dHRvbnMge1xyXG4gIG1hcmdpbi10b3A6IDFyZW07XHJcbn1cclxuLmt1a2FpLWNhcmQgZGl2LmdyZXktY2FyZCBkaXYuc3dpdGNoLWNvbnRhaW5lciB7XHJcbiAgbWFyZ2luLWxlZnQ6IDJyZW07XHJcbn1cclxuXHJcbi5rdWthaS1jYXJkIGRpdi5ncmV5LWNhcmQge1xyXG4gIG1hcmdpbi10b3A6IDNyZW07XHJcbiAgd2lkdGg6IDMycmVtO1xyXG4gIGJhY2tncm91bmQ6IHdoaXRlO1xyXG4gIGJhY2tncm91bmQ6ICNGNEY0RjQ7XHJcbiAgYm9yZGVyOiAxcHggc29saWQgcmdiYSgyNTUsIDI1NSwgMjU1LCAwLjgpO1xyXG4gIGJveC1zaXppbmc6IGJvcmRlci1ib3g7XHJcbiAgYm94LXNoYWRvdzogMHB4IDBweCAxcHggcmdiYSgwLCAwLCAwLCAwLjA0KSwgMHB4IDJweCA2cHggcmdiYSgwLCAwLCAwLCAwLjE0KSwgMHB4IDE2cHggMjRweCByZ2JhKDAsIDAsIDAsIDAuMTYpO1xyXG4gIGJvcmRlci1yYWRpdXM6IDAuNzVyZW07XHJcbn1cclxuXHJcbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDMyLjVyZW0pIHtcclxuICAua3VrYWktY2FyZCBkaXYuZ3JleS1jYXJke1xyXG4gICAgd2lkdGg6IDIxLjg3NXJlbTtcclxuICAgIC8qd2lkdGg6IDIyLjVyZW07Ki9cclxuICB9XHJcbiAgLmt1a2FpLWNhcmQgcHJvZ3Jlc3NbdmFsdWVdLFxyXG4gIC5rdWthaS1jYXJkIHNtYWxsLFxyXG4gIC5rdWthaS1jYXJkIGlucHV0LnRleHQsXHJcbiAgLmt1a2FpLWNhcmQgdGV4dGFyZWEudGV4dCB7XHJcbiAgICB3aWR0aDogMTkuODc1cmVtO1xyXG4gICAgbWFyZ2luLWxlZnQ6IDFyZW07XHJcbiAgICBtYXJnaW4tcmlnaHQ6IDFyZW07XHJcbiAgfVxyXG4gIC5rdWthaS1jYXJkIGRpdi5zZWVkLWJsdXIsXHJcbiAgLmt1a2FpLWNhcmQgZGl2LndoaXRlYm94IHtcclxuICAgIGhlaWdodDogOS41cmVtO1xyXG4gIH1cclxuICAua3VrYWktY2FyZCBkaXYuc2VlZC1ibHVyIHtcclxuICAgIG1hcmdpbi10b3A6IC05LjVyZW07XHJcbiAgfVxyXG4gIC5rdWthaS1jYXJkIHAuZGVzY3JpcHRpb24uYm9sZC5wa2gge1xyXG4gICAgbWFyZ2luLXRvcDogMC43NXJlbTtcclxuICAgIGZvbnQtc2l6ZTogMC45Mzc1cmVtO1xyXG4gIH1cclxuICAua3VrYWktY2FyZCBkaXYuZ3JleS1jYXJkIGRpdi5zd2l0Y2gtY29udGFpbmVyIHtcclxuICAgIG1hcmdpbi1sZWZ0OiAxcmVtO1xyXG4gIH1cclxuICAua3VrYWktY2FyZCBkaXYuYnV0dG9ucyB7XHJcbiAgICBtYXJnaW4tbGVmdDogMXJlbTtcclxuICAgIG1hcmdpbi1yaWdodDogMXJlbTtcclxuICAgIG1hcmdpbi1ib3R0b206IDFyZW07XHJcbiAgfVxyXG59IiwiQGltcG9ydCBcIi4uLy4uLy4uL3Njc3MvY2FyZC5jc3NcIjtcclxuOmhvc3Qge1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbiAgICBtaW4taGVpZ2h0OiAxMDB2aDtcclxuICAgIHBhZGRpbmctYm90dG9tOiA4cmVtO1xyXG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcclxuICAgIGRpc3BsYXk6IGZsZXg7XHJcbiAgICBiYWNrZ3JvdW5kOiAjNTk2M0ZGO1xyXG59XHJcbjpob3N0ID4gZGl2IHtcclxuICAgIG1hcmdpbi10b3A6IDVyZW07XHJcbiAgICB3aWR0aDogMTAwdnc7XHJcbiAgICBtaW4taGVpZ2h0OiAxMDAlO1xyXG4gICAgZGlzcGxheTogZmxleDtcclxuICAgIGp1c3RpZnktY29udGVudDogZmxleC1zdGFydDtcclxuICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XHJcbiAgICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xyXG59XHJcbjpob3N0IGlucHV0LnRleHQge1xyXG4gICAgbWFyZ2luLXRvcDogMi41cmVtO1xyXG59XHJcbjpob3N0IGlucHV0LnRleHRbZGlzYWJsZWRdIHtcclxuICBiYWNrZ3JvdW5kOiAjZTFlMWUxO1xyXG59XHJcbjpob3N0IHNtYWxsIHtcclxuICAgIG1hcmdpbi10b3A6IDFyZW07XHJcbn1cclxuQGltcG9ydCAnLi4vLi4vLi4vc2Nzcy9zd2l0Y2guc2NzcyciLCJAaW1wb3J0IFwiLi4vLi4vLi4vc2Nzcy9jYXJkLmNzc1wiO1xuOmhvc3Qge1xuICB3aWR0aDogMTAwJTtcbiAgbWluLWhlaWdodDogMTAwdmg7XG4gIHBhZGRpbmctYm90dG9tOiA4cmVtO1xuICBvdmVyZmxvdzogaGlkZGVuO1xuICBkaXNwbGF5OiBmbGV4O1xuICBiYWNrZ3JvdW5kOiAjNTk2M0ZGO1xufVxuXG46aG9zdCA+IGRpdiB7XG4gIG1hcmdpbi10b3A6IDVyZW07XG4gIHdpZHRoOiAxMDB2dztcbiAgbWluLWhlaWdodDogMTAwJTtcbiAgZGlzcGxheTogZmxleDtcbiAganVzdGlmeS1jb250ZW50OiBmbGV4LXN0YXJ0O1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xufVxuXG46aG9zdCBpbnB1dC50ZXh0IHtcbiAgbWFyZ2luLXRvcDogMi41cmVtO1xufVxuXG46aG9zdCBpbnB1dC50ZXh0W2Rpc2FibGVkXSB7XG4gIGJhY2tncm91bmQ6ICNlMWUxZTE7XG59XG5cbjpob3N0IHNtYWxsIHtcbiAgbWFyZ2luLXRvcDogMXJlbTtcbn1cblxuLnN3aXRjaCB7XG4gIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB3aWR0aDogM3JlbTtcbiAgaGVpZ2h0OiAxLjVyZW07XG4gIG1hcmdpbi1ib3R0b206IDA7XG59XG5cbi5zd2l0Y2ggaW5wdXQge1xuICBvcGFjaXR5OiAwO1xuICAtd2Via2l0LW9wYWNpdHk6IDA7XG4gIC1raHRtbC1vcGFjaXR5OiAwO1xuICB3aWR0aDogMDtcbiAgaGVpZ2h0OiAwO1xufVxuXG4uc2xpZGVyIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBjdXJzb3I6IHBvaW50ZXI7XG4gIHRvcDogMDtcbiAgbGVmdDogMDtcbiAgcmlnaHQ6IDA7XG4gIGJvdHRvbTogMDtcbiAgYmFja2dyb3VuZC1jb2xvcjogI2Q5ZDlkOTtcbiAgLXdlYmtpdC10cmFuc2l0aW9uOiAwLjRzO1xuICB0cmFuc2l0aW9uOiAwLjRzO1xufVxuXG4uc2xpZGVyOmJlZm9yZSB7XG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgY29udGVudDogXCJcIjtcbiAgaGVpZ2h0OiAxLjEyNXJlbTtcbiAgd2lkdGg6IDEuMTI1cmVtO1xuICBsZWZ0OiAwLjE4NzVyZW07XG4gIGJvdHRvbTogMC4xODc1cmVtO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjN0I3QjdCO1xuICAtd2Via2l0LXRyYW5zaXRpb246IDAuNHM7XG4gIHRyYW5zaXRpb246IDAuNHM7XG59XG5cbmlucHV0OmNoZWNrZWQgKyAuc2xpZGVyIHtcbiAgYm94LXNoYWRvdzogMHB4IDBweCAxcHggcmdiYSg4OSwgOTksIDI1NSwgMC4wNCksIDBweCAycHggNnB4IHJnYmEoODksIDk5LCAyNTUsIDAuMDQpLCAwcHggMTZweCAyNHB4IHJnYmEoODksIDk5LCAyNTUsIDAuMjQpO1xufVxuXG5pbnB1dDpjaGVja2VkICsgLnNsaWRlcjpiZWZvcmUge1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjNTk2M0ZGO1xuICAtd2Via2l0LXRyYW5zZm9ybTogdHJhbnNsYXRlWCgxLjVyZW0pO1xuICAtbXMtdHJhbnNmb3JtOiB0cmFuc2xhdGVYKDEuNXJlbSk7XG4gIHRyYW5zZm9ybTogdHJhbnNsYXRlWCgxLjVyZW0pO1xufVxuXG4uc2xpZGVyLnJvdW5kIHtcbiAgYm9yZGVyLXJhZGl1czogMi4xMjVyZW07XG59XG5cbi5zbGlkZXIucm91bmQ6YmVmb3JlIHtcbiAgYm9yZGVyLXJhZGl1czogNTAlO1xufVxuXG5pbnB1dDpjaGVja2VkICsgLnNsaWRlciB7XG4gIGJhY2tncm91bmQtY29sb3I6IHJnYmEoODksIDk5LCAyNTUsIDAuNCk7XG59XG5cbmRpdi5rdWthaS1jYXJkID4gZGl2LmdyZXktY2FyZCA+IGRpdi5zd2l0Y2gtY29udGFpbmVyID4gc3Bhbi5zd2l0Y2gtZGVzYyxcbnNwYW4uc3dpdGNoLWRlc2Mge1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG4gIGZvbnQtc2l6ZTogMTRweDtcbiAgbGluZS1oZWlnaHQ6IDE4cHg7XG4gIGxldHRlci1zcGFjaW5nOiAwLjE2cHg7XG4gIGNvbG9yOiAjMTYxNjE2O1xuICBtYXJnaW4tbGVmdDogMC41cmVtO1xufVxuXG5kaXYuc3dpdGNoLWNvbnRhaW5lciB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGp1c3RpZnktY29udGVudDogZmxleC1zdGFydDtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcbiAgd2lkdGg6IDI4cmVtO1xufVxuXG5zbWFsbCB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcbiAgZm9udC1zaXplOiAwLjc1cmVtO1xuICBsaW5lLWhlaWdodDogMXJlbTtcbiAgbGV0dGVyLXNwYWNpbmc6IDAuMzJweDtcbiAgY29sb3I6ICMzOTM5Mzk7XG4gIG1hcmdpbi10b3A6IDIuNXJlbTtcbiAgbWFyZ2luLWJvdHRvbTogMC41cmVtO1xufVxuXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAyOXJlbSkge1xuICBkaXYuc3dpdGNoLWNvbnRhaW5lciB7XG4gICAgd2lkdGg6IDIwcmVtO1xuICB9XG59IiwiLnN3aXRjaCB7XHJcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG4gIGRpc3BsYXk6IGlubGluZS1ibG9jaztcclxuICB3aWR0aDogM3JlbTtcclxuICBoZWlnaHQ6IDEuNXJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAwO1xyXG59XHJcblxyXG4uc3dpdGNoIGlucHV0IHsgXHJcbiAgb3BhY2l0eTogMDtcclxuICAtd2Via2l0LW9wYWNpdHk6IDA7XHJcbiAgLWtodG1sLW9wYWNpdHk6IDA7XHJcbiAgd2lkdGg6IDA7XHJcbiAgaGVpZ2h0OiAwO1xyXG59XHJcblxyXG4uc2xpZGVyIHtcclxuICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcbiAgY3Vyc29yOiBwb2ludGVyO1xyXG4gIHRvcDogMDtcclxuICBsZWZ0OiAwO1xyXG4gIHJpZ2h0OiAwO1xyXG4gIGJvdHRvbTogMDtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZDlkOWQ5O1xyXG4gIC13ZWJraXQtdHJhbnNpdGlvbjogLjRzO1xyXG4gIHRyYW5zaXRpb246IC40cztcclxufVxyXG5cclxuLnNsaWRlcjpiZWZvcmUge1xyXG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxuICBjb250ZW50OiBcIlwiO1xyXG4gIGhlaWdodDogMS4xMjVyZW07XHJcbiAgd2lkdGg6IDEuMTI1cmVtO1xyXG4gIGxlZnQ6IDAuMTg3NXJlbTtcclxuICBib3R0b206IDAuMTg3NXJlbTtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiAjN0I3QjdCO1xyXG4gIC13ZWJraXQtdHJhbnNpdGlvbjogLjRzO1xyXG4gIHRyYW5zaXRpb246IC40cztcclxufVxyXG5cclxuaW5wdXQ6Y2hlY2tlZCArIC5zbGlkZXIge1xyXG4gIGJveC1zaGFkb3c6IDBweCAwcHggMXB4IHJnYmEoODksIDk5LCAyNTUsIDAuMDQpLCAwcHggMnB4IDZweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjA0KSwgMHB4IDE2cHggMjRweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjI0KTtcclxufVxyXG5cclxuaW5wdXQ6Y2hlY2tlZCArIC5zbGlkZXI6YmVmb3JlIHtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiAjNTk2M0ZGO1xyXG4gIC13ZWJraXQtdHJhbnNmb3JtOiB0cmFuc2xhdGVYKDEuNXJlbSk7XHJcbiAgLW1zLXRyYW5zZm9ybTogdHJhbnNsYXRlWCgxLjVyZW0pO1xyXG4gIHRyYW5zZm9ybTogdHJhbnNsYXRlWCgxLjVyZW0pO1xyXG59XHJcblxyXG4uc2xpZGVyLnJvdW5kIHtcclxuICBib3JkZXItcmFkaXVzOiAyLjEyNXJlbTtcclxufVxyXG4uc2xpZGVyLnJvdW5kOmJlZm9yZSB7XHJcbiAgYm9yZGVyLXJhZGl1czogNTAlO1xyXG59XHJcbmlucHV0OmNoZWNrZWQgKyAuc2xpZGVyIHtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDg5LCA5OSwgMjU1LCAwLjQpOztcclxufVxyXG5kaXYua3VrYWktY2FyZCA+IGRpdi5ncmV5LWNhcmQgPiBkaXYuc3dpdGNoLWNvbnRhaW5lciA+IHNwYW4uc3dpdGNoLWRlc2MsXHJcbnNwYW4uc3dpdGNoLWRlc2Mge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtc2l6ZTogMTRweDtcclxuICBsaW5lLWhlaWdodDogMThweDtcclxuICBsZXR0ZXItc3BhY2luZzogMC4xNnB4O1xyXG4gIGNvbG9yOiAjMTYxNjE2O1xyXG4gIG1hcmdpbi1sZWZ0OiAwLjVyZW07XHJcbn1cclxuZGl2LnN3aXRjaC1jb250YWluZXIge1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAganVzdGlmeS1jb250ZW50OiBmbGV4LXN0YXJ0O1xyXG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XHJcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcclxuICB3aWR0aDogMjhyZW07XHJcbn1cclxuc21hbGwge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtc2l6ZTogMC43NXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBsZXR0ZXItc3BhY2luZzogMC4zMnB4O1xyXG4gIGNvbG9yOiAjMzkzOTM5O1xyXG4gIG1hcmdpbi10b3A6IDIuNXJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAwLjVyZW07XHJcbn1cclxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDogMjlyZW0pIHtcclxuICBkaXYuc3dpdGNoLWNvbnRhaW5lciB7XHJcbiAgICAgIHdpZHRoOiAyMHJlbTtcclxuICB9XHJcbn0iXX0= */"] });
 /*@__PURE__*/ (function () { _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵsetClassMetadata"](ConnectLedgerComponent, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"],
         args: [{
@@ -9312,7 +2278,7 @@ ConnectLedgerComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵd
                 templateUrl: './connect-ledger.component.html',
                 styleUrls: ['./connect-ledger.component.scss']
             }]
-    }], function () { return [{ type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"] }, { type: _services_ledger_ledger_service__WEBPACK_IMPORTED_MODULE_5__["LedgerService"] }, { type: _services_import_import_service__WEBPACK_IMPORTED_MODULE_6__["ImportService"] }, { type: _services_message_message_service__WEBPACK_IMPORTED_MODULE_7__["MessageService"] }, { type: _services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_8__["InputValidationService"] }, { type: _services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_4__["WalletService"] }]; }, null); })();
+    }], function () { return [{ type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"] }, { type: _services_ledger_ledger_service__WEBPACK_IMPORTED_MODULE_4__["LedgerService"] }, { type: _services_import_import_service__WEBPACK_IMPORTED_MODULE_5__["ImportService"] }, { type: _services_message_message_service__WEBPACK_IMPORTED_MODULE_6__["MessageService"] }, { type: _services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_7__["InputValidationService"] }, { type: _services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_3__["WalletService"] }]; }, null); })();
 
 
 /***/ }),
@@ -9336,15 +2302,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_export_export_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../services/export/export.service */ "./src/app/services/export/export.service.ts");
 /* harmony import */ var _services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../services/input-validation/input-validation.service */ "./src/app/services/input-validation/input-validation.service.ts");
 /* harmony import */ var _services_ledger_ledger_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../services/ledger/ledger.service */ "./src/app/services/ledger/ledger.service.ts");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../constants */ "./src/app/constants.ts");
-/* harmony import */ var _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../services/wallet/wallet */ "./src/app/services/wallet/wallet.ts");
-/* harmony import */ var _services_message_message_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../services/message/message.service */ "./src/app/services/message/message.service.ts");
-/* harmony import */ var big_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! big.js */ "./node_modules/big.js/big.js");
-/* harmony import */ var big_js__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(big_js__WEBPACK_IMPORTED_MODULE_12__);
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/__ivy_ngcc__/fesm2015/forms.js");
-/* harmony import */ var _pipes_delegator_name_pipe__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../pipes/delegator-name.pipe */ "./src/app/pipes/delegator-name.pipe.ts");
-
+/* harmony import */ var _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../services/wallet/wallet */ "./src/app/services/wallet/wallet.ts");
+/* harmony import */ var _services_message_message_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../services/message/message.service */ "./src/app/services/message/message.service.ts");
+/* harmony import */ var big_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! big.js */ "./node_modules/big.js/big.js");
+/* harmony import */ var big_js__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(big_js__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/__ivy_ngcc__/fesm2015/forms.js");
+/* harmony import */ var _pipes_delegator_name_pipe__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../pipes/delegator-name.pipe */ "./src/app/pipes/delegator-name.pipe.ts");
 
 
 
@@ -9591,7 +2555,6 @@ class DelegateComponent {
         this.ktFee = 0.0008;
         this.beaconMode = false;
         this.operationResponse = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
-        this.CONSTANTS = new _constants__WEBPACK_IMPORTED_MODULE_9__["Constants"]();
         this.formInvalid = '';
         this.ledgerError = '';
     }
@@ -9696,7 +2659,7 @@ class DelegateComponent {
                 }
                 else {
                     this.messageService.stopSpinner();
-                    if (this.walletService.wallet instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_10__["TorusWallet"]) {
+                    if (this.walletService.wallet instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_9__["TorusWallet"]) {
                         this.pwdValid = `Authorization failed`;
                     }
                     else {
@@ -9785,7 +2748,7 @@ class DelegateComponent {
     }
     requestLedgerSignature() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            if (this.walletService.wallet instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_10__["LedgerWallet"]) {
+            if (this.walletService.wallet instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_9__["LedgerWallet"]) {
                 const op = this.sendResponse.payload.unsignedOperation;
                 this.messageService.startSpinner('Waiting for Ledger signature');
                 let signature;
@@ -9840,11 +2803,11 @@ class DelegateComponent {
         });
     }
     checkSource() {
-        if (this.activeAccount instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_10__["ImplicitAccount"]) {
-            this.recommendedFee = Number(new big_js__WEBPACK_IMPORTED_MODULE_12___default.a(this.revealFee).plus(this.pkhFee));
+        if (this.activeAccount instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_9__["ImplicitAccount"]) {
+            this.recommendedFee = Number(new big_js__WEBPACK_IMPORTED_MODULE_11___default.a(this.revealFee).plus(this.pkhFee));
         }
-        else if (this.activeAccount instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_10__["OriginatedAccount"]) {
-            this.recommendedFee = Number(new big_js__WEBPACK_IMPORTED_MODULE_12___default.a(this.revealFee).plus(this.ktFee));
+        else if (this.activeAccount instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_9__["OriginatedAccount"]) {
+            this.recommendedFee = Number(new big_js__WEBPACK_IMPORTED_MODULE_11___default.a(this.revealFee).plus(this.ktFee));
         }
     }
     getFee() {
@@ -9884,7 +2847,7 @@ class DelegateComponent {
         this.exportService.downloadOperationData(this.sendResponse.payload.unsignedOperation, false);
     }
 }
-DelegateComponent.ɵfac = function DelegateComponent_Factory(t) { return new (t || DelegateComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](ngx_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2__["BsModalService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_3__["WalletService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_operation_operation_service__WEBPACK_IMPORTED_MODULE_5__["OperationService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_coordinator_coordinator_service__WEBPACK_IMPORTED_MODULE_4__["CoordinatorService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_export_export_service__WEBPACK_IMPORTED_MODULE_6__["ExportService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_7__["InputValidationService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_ledger_ledger_service__WEBPACK_IMPORTED_MODULE_8__["LedgerService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_message_message_service__WEBPACK_IMPORTED_MODULE_11__["MessageService"])); };
+DelegateComponent.ɵfac = function DelegateComponent_Factory(t) { return new (t || DelegateComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](ngx_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2__["BsModalService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_3__["WalletService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_operation_operation_service__WEBPACK_IMPORTED_MODULE_5__["OperationService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_coordinator_coordinator_service__WEBPACK_IMPORTED_MODULE_4__["CoordinatorService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_export_export_service__WEBPACK_IMPORTED_MODULE_6__["ExportService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_7__["InputValidationService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_ledger_ledger_service__WEBPACK_IMPORTED_MODULE_8__["LedgerService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_message_message_service__WEBPACK_IMPORTED_MODULE_10__["MessageService"])); };
 DelegateComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({ type: DelegateComponent, selectors: [["app-delegate"]], viewQuery: function DelegateComponent_Query(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵviewQuery"](_c0, true);
     } if (rf & 2) {
@@ -9897,7 +2860,7 @@ DelegateComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefine
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx.beaconMode);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx.modalOpen);
-    } }, directives: [_angular_common__WEBPACK_IMPORTED_MODULE_13__["NgIf"], _angular_forms__WEBPACK_IMPORTED_MODULE_14__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_14__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_14__["NgModel"]], pipes: [_angular_common__WEBPACK_IMPORTED_MODULE_13__["DecimalPipe"], _pipes_delegator_name_pipe__WEBPACK_IMPORTED_MODULE_15__["DelegatorNamePipe"]], styles: ["div.kukai-modal[_ngcontent-%COMP%] {\n  position: fixed;\n  z-index: 100;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%;\n  overflow: auto;\n  background-color: black;\n  background-color: rgba(0, 0, 0, 0.4);\n}\ndiv.kukai-modal.top[_ngcontent-%COMP%] {\n  z-index: 101;\n}\n\ndiv.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%] {\n  position: relative;\n  background-color: #fcfcfc;\n  margin: 5rem auto;\n  border: 1px solid #ffffff;\n  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.06);\n  border-radius: 0.75rem;\n  width: 25rem;\n  -webkit-animation-name: animatetop;\n  -webkit-animation-duration: 0.5s;\n  animation-name: animatetop;\n  animation-duration: 0.5s;\n}\n\n@-webkit-keyframes animatetop {\n  from {\n    top: 20rem;\n    opacity: 0;\n  }\n  to {\n    top: 0;\n    opacity: 1;\n  }\n}\n@keyframes animatetop {\n  from {\n    top: -300px;\n    opacity: 0;\n  }\n  to {\n    top: 0;\n    opacity: 1;\n  }\n}\ndiv.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%]    > div.km-header[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: space-between;\n  flex-direction: row;\n  border-bottom: 1px solid black;\n  border-bottom: 1px solid rgba(0, 0, 0, 0.04);\n}\ndiv.km-header[_ngcontent-%COMP%]    > H1[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: bold;\n  font-size: 1.25rem;\n  line-height: 1.5rem;\n  display: flex;\n  align-items: center;\n  color: #2c323a;\n  margin: 1rem;\n}\ndiv.km-header[_ngcontent-%COMP%]    > span.close[_ngcontent-%COMP%] {\n  margin: 0.25rem 0.5rem;\n  color: #aaa;\n  font-size: 28px;\n  font-weight: bold;\n}\ndiv.km-header[_ngcontent-%COMP%]    > span.close[_ngcontent-%COMP%]:hover, div.km-header[_ngcontent-%COMP%]    > span.close[_ngcontent-%COMP%]:focus {\n  color: #2c323a;\n  text-decoration: none;\n  cursor: pointer;\n}\ndiv.km-body[_ngcontent-%COMP%] {\n  margin: 1rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.amount[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: center;\n  flex-direction: row;\n  height: 5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.custom-large[_ngcontent-%COMP%] {\n  width: auto;\n  font-style: normal;\n  font-weight: normal;\n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 5rem;\n  line-height: 5rem;\n  color: #2C323A;\n  background: #fcfcfc;\n  opacity: 0.4;\n  padding: 0;\n  text-align: center;\n  border: 0;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.custom-large[_ngcontent-%COMP%]:disabled {\n  background-color: rgba(0, 0, 0, 0);\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, div.kukai-modal[_ngcontent-%COMP%]   textarea[_ngcontent-%COMP%]:focus {\n  outline: none;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   span.tez[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: 500;\n  font-size: 1rem;\n  line-height: 1rem;\n  color: #2C323A;\n  opacity: 0.4;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   p.fee[_ngcontent-%COMP%] {\n  margin-top: 0.375rem;\n  font-style: normal;\n  font-weight: 500;\n  font-size: 0.75rem;\n  line-height: 1rem;\n  color: #2C323A;\n  opacity: 0.4;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   p.preview[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.875rem;\n  line-height: 1rem;\n  display: flex;\n  align-items: flex-end;\n  color: #000000;\n  opacity: 0.6;\n  margin-bottom: 0.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   td[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   th[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.75rem;\n  line-height: 1rem;\n  color: #000000;\n  opacity: 0.6;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   th[_ngcontent-%COMP%] {\n  font-weight: bold;\n}\ndiv.km-content[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]:not(.switch) {\n  margin-bottom: 0.5rem;\n  font-style: normal;\n  font-weight: 500;\n  font-size: 1rem;\n  line-height: 1.125rem;\n  display: flex;\n  align-items: center;\n  color: #2C323A;\n  opacity: 0.4;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   p[_ngcontent-%COMP%], span.danger[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.875rem;\n  line-height: 1rem;\n  display: flex;\n  align-items: flex-end;\n  color: #000000;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   span.no-margin[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   span.margin[_ngcontent-%COMP%] {\n  color: #FF0000;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   span.no-margin[_ngcontent-%COMP%] {\n  margin-top: 0.75rem;\n  margin-bottom: -1.75rem;\n  color: #FF0000;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.group[_ngcontent-%COMP%] {\n  margin-top: 1.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%] {\n  width: 100%;\n  background: #E1E1E1;\n  border-radius: 0.75rem;\n  height: 3rem;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 1rem;\n  line-height: 3rem;\n  letter-spacing: 0.16px;\n  color: #000000;\n  padding-left: 1rem;\n  padding-right: 1rem;\n  border: 0;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.text.password[_ngcontent-%COMP%] {\n  width: 200%;\n  margin-right: 1rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%] {\n  padding-top: 0.5rem;\n  height: 7rem;\n  line-height: 1.25rem;\n  resize: none;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%]::-moz-placeholder, div.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%]::-moz-placeholder {\n  color: #808080;\n  opacity: 1;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%]::placeholder, div.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%]::placeholder {\n  color: #808080;\n  opacity: 1;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%]::placeholder, div.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%]::-webkit-input-placeholder, div.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%]:-ms-input-placeholder {\n  padding-top: 0.5rem;\n  line-height: 1.25rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.row-group[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: space-between;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.row-group[_ngcontent-%COMP%]    > div.group[_ngcontent-%COMP%]:first-child {\n  margin-right: 1rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.advanced[_ngcontent-%COMP%] {\n  margin-top: 1.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.blue[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: bold;\n  font-size: 1rem;\n  line-height: 1rem;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  text-align: center;\n  color: white;\n  background: #5963FF;\n  box-shadow: 0px 0px 1px rgba(89, 99, 255, 0.04), 0px 2px 6px rgba(89, 99, 255, 0.04), 0px 16px 24px rgba(89, 99, 255, 0.24);\n  width: 100%;\n  height: 3rem;\n  border-radius: 0.75rem;\n  border: 0;\n  margin-top: 2.5rem;\n  margin-bottom: 1.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.blue.confirm[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   button.retry[_ngcontent-%COMP%] {\n  height: 3rem;\n  margin: 0;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.retry[_ngcontent-%COMP%] {\n  width: 100%;\n  font-size: 1rem;\n  background-color: #d3d3d3;\n  color: #212529;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:focus {\n  outline: none;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.switch-container[_ngcontent-%COMP%] {\n  width: auto !important;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.small[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: 500;\n  font-size: 0.75rem;\n  line-height: 1rem;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  text-align: center;\n  width: auto;\n  height: 1.5rem;\n  color: #000000;\n  opacity: 0.6;\n  background: rgba(214, 214, 214, 0.4);\n  border-radius: 0.3125rem;\n  border: 0;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.small.max[_ngcontent-%COMP%] {\n  background: #d5f2dc;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.small.multiple-destinations[_ngcontent-%COMP%] {\n  color: #5963FF;\n  opacity: 1;\n  margin: 1rem 1.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.advanced[_ngcontent-%COMP%]    > div.row-group[_ngcontent-%COMP%] {\n  height: 1.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.x[_ngcontent-%COMP%] {\n  position: absolute;\n  top: -1rem;\n  right: -1rem;\n  width: 2rem;\n  height: 2rem;\n  z-index: 120;\n  background: #FCFCFC;\n  border: 1px solid #FFFFFF;\n  border-radius: 1rem;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n@media screen and (max-width: 27rem) {\n  div.kukai-modal[_ngcontent-%COMP%]   div.x[_ngcontent-%COMP%] {\n    right: -1px;\n    border-bottom-right-radius: 0;\n  }\n\n  div.kukai-modal[_ngcontent-%COMP%]   button.small.multiple-destinations[_ngcontent-%COMP%] {\n    margin-right: 2.5rem;\n  }\n}\n@media screen and (max-width: 25rem) {\n  div.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%] {\n    width: 23rem;\n  }\n\n  div.kukai-modal[_ngcontent-%COMP%]   input.text.password[_ngcontent-%COMP%] {\n    width: 11rem;\n  }\n}\n.modal-footer[_ngcontent-%COMP%] {\n  padding-bottom: 0rem;\n}\ndiv.outside-container[_ngcontent-%COMP%] {\n  padding: 0.5rem 0;\n}\ndiv.outside-container[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.8125rem;\n  line-height: 1rem;\n  color: #2C323A;\n}\ndiv.outside-container[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%] {\n  color: #5963FF;\n  cursor: pointer;\n}\n.fa-check-circle[_ngcontent-%COMP%] {\n  color: #28a745;\n  font-size: 96px;\n}\nbutton[_ngcontent-%COMP%] {\n  border-radius: 0.75rem;\n  height: 3rem;\n  width: 8rem;\n  font-style: normal;\n  font-weight: bold;\n  font-size: 0.875rem;\n  line-height: 1rem;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n  -webkit-appearance: none !important;\n  transition: margin-top 0.1s ease-in, margin-bottom 0.1s ease-in;\n}\nbutton.blue[_ngcontent-%COMP%]:hover {\n  margin-top: -0.125rem;\n}\nbutton[_ngcontent-%COMP%]:focus {\n  outline: none;\n}\nbutton.blue[_ngcontent-%COMP%] {\n  color: #5963ff;\n  background: #a4a8ec;\n  box-shadow: 0px 0px 1px rgba(164, 168, 236, 0.04), 0px 2px 6px rgba(164, 168, 236, 0.04), 0px 16px 24px rgba(164, 168, 236, 0.24);\n  transition: margin-top 0.1s ease-in, margin-bottom 0.1s ease-in;\n}\ninput.custom-textbox[_ngcontent-%COMP%] {\n  padding-left: 0.75rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%]    > div.km-body[_ngcontent-%COMP%]    > div.group[_ngcontent-%COMP%]    > input.text[_ngcontent-%COMP%] {\n  font-size: 0.8125rem;\n}\n@supports (-webkit-touch-callout: none) {\n  div.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%]    > div.km-body[_ngcontent-%COMP%]    > div.group[_ngcontent-%COMP%]    > input.text[_ngcontent-%COMP%] {\n    font-size: 1rem;\n  }\n}\n@media screen and (max-width: 25rem) {\n  input#toAddress[_ngcontent-%COMP%], input.custom-textbox[_ngcontent-%COMP%] {\n    font-size: 0.8125rem;\n  }\n}\n@media screen and (max-width: 22rem) {\n  input#toAddress[_ngcontent-%COMP%], input.custom-textbox[_ngcontent-%COMP%] {\n    font-size: 0.75rem;\n  }\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY29tcG9uZW50cy9kZWxlZ2F0ZS9DOlxcVXNlcnNcXGtsYXNfXFxHaXRcXGt1a2FpL3NyY1xcc2Nzc1xcbW9kYWwuc2NzcyIsInNyYy9hcHAvY29tcG9uZW50cy9kZWxlZ2F0ZS9kZWxlZ2F0ZS5jb21wb25lbnQuc2NzcyIsInNyYy9hcHAvY29tcG9uZW50cy9kZWxlZ2F0ZS9DOlxcVXNlcnNcXGtsYXNfXFxHaXRcXGt1a2FpL3NyY1xcYXBwXFxjb21wb25lbnRzXFxkZWxlZ2F0ZVxcZGVsZWdhdGUuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsVUFBQTtBQUNBO0VBQ0UsZUFBQTtFQUNBLFlBQUE7RUFDQSxPQUFBO0VBQ0EsTUFBQTtFQUNBLFdBQUE7RUFDQSxZQUFBO0VBQ0EsY0FBQTtFQUNBLHVCQUFBO0VBQ0Esb0NBQUE7QUNDRjtBRENBO0VBQ0UsWUFBQTtBQ0VGO0FEQUEsc0JBQUE7QUFDQTtFQUNFLGtCQUFBO0VBQ0EseUJBQUE7RUFDQSxpQkFBQTtFQUNBLHlCQUFBO0VBQ0EsK0dBQUE7RUFFQSxzQkFBQTtFQUNBLFlBQUE7RUFDQSxrQ0FBQTtFQUNBLGdDQUFBO0VBQ0EsMEJBQUE7RUFDQSx3QkFBQTtBQ0VGO0FEQUEsa0JBQUE7QUFDQTtFQUNFO0lBQ0UsVUFBQTtJQUNBLFVBQUE7RUNHRjtFRERBO0lBQ0UsTUFBQTtJQUNBLFVBQUE7RUNHRjtBQUNGO0FEREE7RUFDRTtJQUNFLFdBQUE7SUFDQSxVQUFBO0VDR0Y7RUREQTtJQUNFLE1BQUE7SUFDQSxVQUFBO0VDR0Y7QUFDRjtBRERBO0VBQ0UsYUFBQTtFQUNBLDhCQUFBO0VBQ0EsbUJBQUE7RUFDQSw4QkFBQTtFQUNBLDRDQUFBO0FDR0Y7QUREQTtFQUNFLGtCQUFBO0VBQ0EsaUJBQUE7RUFDQSxrQkFBQTtFQUNBLG1CQUFBO0VBQ0EsYUFBQTtFQUNBLG1CQUFBO0VBQ0EsY0FBQTtFQUNBLFlBQUE7QUNJRjtBREZBO0VBQ0Usc0JBQUE7RUFD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QUMxWEE7RUFDRSxvQkFBQTtBRDZYRjtBQzNYQTtFQUNFO0lBQ0UsZUFBQTtFRDhYRjtBQUNGO0FDNVhBO0VBQ0U7O0lBRUUsb0JBQUE7RUQ4WEY7QUFDRjtBQzVYQTtFQUNFOztJQUVFLGtCQUFBO0VEOFhGO0FBQ0YiLCJmaWxlIjoic3JjL2FwcC9jb21wb25lbnRzL2RlbGVnYXRlL2RlbGVnYXRlLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLyogTW9kYWwgKi9cclxuZGl2Lmt1a2FpLW1vZGFsIHtcclxuICBwb3NpdGlvbjogZml4ZWQ7XHJcbiAgei1pbmRleDogMTAwO1xyXG4gIGxlZnQ6IDA7XHJcbiAgdG9wOiAwO1xyXG4gIHdpZHRoOiAxMDAlO1xyXG4gIGhlaWdodDogMTAwJTtcclxuICBvdmVyZmxvdzogYXV0bztcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMCwgMCwgMCk7IC8vZmFsbGJhY2tcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDAsIDAsIDAsIDAuNCk7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsLnRvcCB7XHJcbiAgei1pbmRleDogMTAxO1xyXG59XHJcbi8qIE1vZGFsIENvbnRlbnQvQm94ICovXHJcbmRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50IHtcclxuICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogI2ZjZmNmYztcclxuICBtYXJnaW46IDVyZW0gYXV0bztcclxuICBib3JkZXI6IDFweCBzb2xpZCAjZmZmZmZmO1xyXG4gIGJveC1zaGFkb3c6IDBweCAwcHggMXB4IHJnYmEoMCwgMCwgMCwgMC4wNCksIDBweCAycHggNnB4IHJnYmEoMCwgMCwgMCwgMC4wNCksXHJcbiAgICAwcHggMTZweCAyNHB4IHJnYmEoMCwgMCwgMCwgMC4wNik7XHJcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcclxuICB3aWR0aDogMjVyZW07XHJcbiAgLXdlYmtpdC1hbmltYXRpb24tbmFtZTogYW5pbWF0ZXRvcDtcclxuICAtd2Via2l0LWFuaW1hdGlvbi1kdXJhdGlvbjogMC41cztcclxuICBhbmltYXRpb24tbmFtZTogYW5pbWF0ZXRvcDtcclxuICBhbmltYXRpb24tZHVyYXRpb246IDAuNXM7XHJcbn1cclxuLyogQWRkIEFuaW1hdGlvbiAqL1xyXG5ALXdlYmtpdC1rZXlmcmFtZXMgYW5pbWF0ZXRvcCB7XHJcbiAgZnJvbSB7XHJcbiAgICB0b3A6IDIwcmVtO1xyXG4gICAgb3BhY2l0eTogMDtcclxuICB9XHJcbiAgdG8ge1xyXG4gICAgdG9wOiAwO1xyXG4gICAgb3BhY2l0eTogMTtcclxuICB9XHJcbn1cclxuQGtleWZyYW1lcyBhbmltYXRldG9wIHtcclxuICBmcm9tIHtcclxuICAgIHRvcDogLTMwMHB4O1xyXG4gICAgb3BhY2l0eTogMDtcclxuICB9XHJcbiAgdG8ge1xyXG4gICAgdG9wOiAwO1xyXG4gICAgb3BhY2l0eTogMTtcclxuICB9XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsID4gZGl2LmttLWNvbnRlbnQgPiBkaXYua20taGVhZGVyIHtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcclxuICBmbGV4LWRpcmVjdGlvbjogcm93O1xyXG4gIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCByZ2JhKDAsIDAsIDApO1xyXG4gIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCByZ2JhKDAsIDAsIDAsIDAuMDQpO1xyXG59XHJcbmRpdi5rbS1oZWFkZXIgPiBIMSB7XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG4gIGZvbnQtc2l6ZTogMS4yNXJlbTtcclxuICBsaW5lLWhlaWdodDogMS41cmVtO1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxuICBjb2xvcjogIzJjMzIzYTtcclxuICBtYXJnaW46IDFyZW07XHJcbn1cclxuZGl2LmttLWhlYWRlciA+IHNwYW4uY2xvc2Uge1xyXG4gIG1hcmdpbjogMC4yNXJlbSAwLjVyZW07XHJcbiAgY29sb3I6ICNhYWE7XHJcbiAgZm9udC1zaXplOiAyOHB4O1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG59XHJcbmRpdi5rbS1oZWFkZXIgPiBzcGFuLmNsb3NlOmhvdmVyLFxyXG5kaXYua20taGVhZGVyID4gc3Bhbi5jbG9zZTpmb2N1cyB7XHJcbiAgY29sb3I6ICMyYzMyM2E7XHJcbiAgdGV4dC1kZWNvcmF0aW9uOiBub25lO1xyXG4gIGN1cnNvcjogcG9pbnRlcjtcclxufVxyXG5kaXYua20tYm9keSB7XHJcbiAgbWFyZ2luOiAxcmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYuYW1vdW50IHtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xyXG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XHJcbiAgaGVpZ2h0OiA1cmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBpbnB1dC5jdXN0b20tbGFyZ2Uge1xyXG4gIHdpZHRoOiBhdXRvO1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtZmFtaWx5OiBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmO1xyXG4gIGZvbnQtc2l6ZTogNXJlbTtcclxuICBsaW5lLWhlaWdodDogNXJlbTtcclxuICBjb2xvcjogIzJDMzIzQTtcclxuICBiYWNrZ3JvdW5kOiAjZmNmY2ZjO1xyXG4gIG9wYWNpdHk6IDAuNDtcclxuICBwYWRkaW5nOiAwO1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICBib3JkZXI6IDA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LmN1c3RvbS1sYXJnZTpkaXNhYmxlZCB7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogcmdiYSgwLCAwLCAwLCAwKTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgaW5wdXQ6Zm9jdXMsXHJcbmRpdi5rdWthaS1tb2RhbCB0ZXh0YXJlYTpmb2N1cyB7XHJcbiAgb3V0bGluZTogbm9uZTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgc3Bhbi50ZXoge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogNTAwO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBjb2xvcjogIzJDMzIzQTtcclxuICBvcGFjaXR5OiAwLjQ7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIHAuZmVlIHtcclxuICBtYXJnaW4tdG9wOiAwLjM3NXJlbTtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IDUwMDtcclxuICBmb250LXNpemU6IDAuNzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgY29sb3I6ICMyQzMyM0E7XHJcbiAgb3BhY2l0eTogMC40O1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBwLnByZXZpZXcge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogZmxleC1lbmQ7XHJcbiAgY29sb3I6ICMwMDAwMDA7XHJcbiAgb3BhY2l0eTogMC42O1xyXG4gIG1hcmdpbi1ib3R0b206IDAuNXJlbTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgdGQsXHJcbmRpdi5rdWthaS1tb2RhbCB0aCB7XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XHJcbiAgZm9udC1zaXplOiAwLjc1cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xyXG4gIGNvbG9yOiAjMDAwMDAwO1xyXG4gIG9wYWNpdHk6IDAuNjtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgdGgge1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG59XHJcbmRpdi5rbS1jb250ZW50IGxhYmVsOm5vdCguc3dpdGNoKSB7XHJcbiAgbWFyZ2luLWJvdHRvbTogMC41cmVtO1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogNTAwO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMS4xMjVyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGNvbG9yOiAjMkMzMjNBO1xyXG4gIG9wYWNpdHk6IDAuNDtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgcCwgc3Bhbi5kYW5nZXIge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogZmxleC1lbmQ7XHJcbiAgY29sb3I6ICMwMDAwMDA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIHNwYW4ubm8tbWFyZ2luLFxyXG5kaXYua3VrYWktbW9kYWwgc3Bhbi5tYXJnaW4ge1xyXG4gIGNvbG9yOiAjRkYwMDAwO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBzcGFuLm5vLW1hcmdpbiB7XHJcbiAgbWFyZ2luLXRvcDogMC43NXJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAtMS43NXJlbTtcclxuICBjb2xvcjogI0ZGMDAwMDtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgZGl2Lmdyb3VwIHtcclxuICBtYXJnaW4tdG9wOiAxLjVyZW07XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQsXHJcbmRpdi5rdWthaS1tb2RhbCB0ZXh0YXJlYS50ZXh0IHtcclxuICB3aWR0aDogMTAwJTtcclxuICBiYWNrZ3JvdW5kOiAjRTFFMUUxO1xyXG4gIGJvcmRlci1yYWRpdXM6IDAuNzVyZW07XHJcbiAgaGVpZ2h0OiAzcmVtO1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogM3JlbTtcclxuICBsZXR0ZXItc3BhY2luZzogMC4xNnB4O1xyXG4gIGNvbG9yOiAjMDAwMDAwO1xyXG4gIHBhZGRpbmctbGVmdDogMXJlbTtcclxuICBwYWRkaW5nLXJpZ2h0OiAxcmVtO1xyXG4gIGJvcmRlcjogMDtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgaW5wdXQudGV4dC5wYXNzd29yZCB7XHJcbiAgd2lkdGg6IDIwMCU7XHJcbiAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCB0ZXh0YXJlYS50ZXh0IHtcclxuICBwYWRkaW5nLXRvcDogMC41cmVtO1xyXG4gIGhlaWdodDogN3JlbTtcclxuICBsaW5lLWhlaWdodDogMS4yNXJlbTtcclxuICByZXNpemU6IG5vbmU7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQ6OnBsYWNlaG9sZGVyLFxyXG5kaXYua3VrYWktbW9kYWwgdGV4dGFyZWEudGV4dDo6cGxhY2Vob2xkZXIge1xyXG4gIGNvbG9yOiAjODA4MDgwO1xyXG4gIG9wYWNpdHk6IDE7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQ6Oi13ZWJraXQtaW5wdXQtcGxhY2Vob2xkZXIsXHJcbmRpdi5rdWthaS1tb2RhbCBpbnB1dC50ZXh0Oi1tcy1pbnB1dC1wbGFjZWhvbGRlcixcclxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6Oi13ZWJraXQtaW5wdXQtcGxhY2Vob2xkZXIsXHJcbmRpdi5rdWthaS1tb2RhbCB0ZXh0YXJlYS50ZXh0Oi1tcy1pbnB1dC1wbGFjZWhvbGRlciB7XHJcbiAgY29sb3I6ICM4MDgwODA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6OnBsYWNlaG9sZGVyLFxyXG5kaXYua3VrYWktbW9kYWwgdGV4dGFyZWEudGV4dDo6LXdlYmtpdC1pbnB1dC1wbGFjZWhvbGRlcixcclxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6LW1zLWlucHV0LXBsYWNlaG9sZGVyIHtcclxuICBwYWRkaW5nLXRvcDogMC41cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxLjI1cmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYucm93LWdyb3VwIHtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgZGl2LnJvdy1ncm91cCA+IGRpdi5ncm91cDpmaXJzdC1jaGlsZCB7XHJcbiAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYuYWR2YW5jZWQge1xyXG4gIG1hcmdpbi10b3A6IDEuNXJlbTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uLmJsdWUge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogYm9sZDtcclxuICBmb250LXNpemU6IDFyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICBjb2xvcjogd2hpdGU7XHJcbiAgYmFja2dyb3VuZDogIzU5NjNGRjtcclxuICBib3gtc2hhZG93OiAwcHggMHB4IDFweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjA0KSwgMHB4IDJweCA2cHggcmdiYSg4OSwgOTksIDI1NSwgMC4wNCksIDBweCAxNnB4IDI0cHggcmdiYSg4OSwgOTksIDI1NSwgMC4yNCk7XHJcbiAgd2lkdGg6IDEwMCU7XHJcbiAgaGVpZ2h0OiAzcmVtO1xyXG4gIGJvcmRlci1yYWRpdXM6IDAuNzVyZW07XHJcbiAgYm9yZGVyOiAwO1xyXG4gIG1hcmdpbi10b3A6IDIuNXJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAxLjVyZW07XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5ibHVlLmNvbmZpcm0sXHJcbmRpdi5rdWthaS1tb2RhbCBidXR0b24ucmV0cnkge1xyXG4gIGhlaWdodDogM3JlbTtcclxuICBtYXJnaW46IDA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5yZXRyeSB7XHJcbiAgd2lkdGg6IDEwMCU7XHJcbiAgZm9udC1zaXplOiAxcmVtO1xyXG4gIGJhY2tncm91bmQtY29sb3I6ICNkM2QzZDM7XHJcbiAgY29sb3I6IHJnYigzMywgMzcsIDQxKTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uOmZvY3VzIHtcclxuICBvdXRsaW5lOiBub25lO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYuc3dpdGNoLWNvbnRhaW5lciB7XHJcbiAgd2lkdGg6IGF1dG8gIWltcG9ydGFudDtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uLnNtYWxsIHtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IDUwMDtcclxuICBmb250LXNpemU6IDAuNzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICB3aWR0aDogYXV0bztcclxuICBoZWlnaHQ6IDEuNXJlbTtcclxuICBjb2xvcjogIzAwMDAwMDtcclxuICBvcGFjaXR5OiAwLjY7XHJcbiAgYmFja2dyb3VuZDogcmdiYSgyMTQsIDIxNCwgMjE0LCAwLjQpO1xyXG4gIGJvcmRlci1yYWRpdXM6IDAuMzEyNXJlbTtcclxuICBib3JkZXI6IDA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5zbWFsbC5tYXgge1xyXG4gIGJhY2tncm91bmQ6ICNkNWYyZGM7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5zbWFsbC5tdWx0aXBsZS1kZXN0aW5hdGlvbnMge1xyXG4gIGNvbG9yOiAjNTk2M0ZGO1xyXG4gIG9wYWNpdHk6IDE7XHJcbiAgbWFyZ2luOiAxcmVtIDEuNXJlbTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgZGl2LmFkdmFuY2VkID4gZGl2LnJvdy1ncm91cCB7XHJcbiAgaGVpZ2h0OiAxLjVyZW07XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGRpdi54IHtcclxuICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcbiAgdG9wOiAtMXJlbTtcclxuICByaWdodDogLTFyZW07XHJcbiAgd2lkdGg6IDJyZW07XHJcbiAgaGVpZ2h0OiAycmVtO1xyXG4gIHotaW5kZXg6IDEyMDtcclxuICBiYWNrZ3JvdW5kOiAjRkNGQ0ZDO1xyXG4gIGJvcmRlcjogMXB4IHNvbGlkICNGRkZGRkY7XHJcbiAgYm9yZGVyLXJhZGl1czogMXJlbTtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XHJcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XHJcbiAgY3Vyc29yOiBwb2ludGVyO1xyXG59XHJcbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDI3cmVtKSB7XHJcbiAgZGl2Lmt1a2FpLW1vZGFsIGRpdi54IHtcclxuICAgIHJpZ2h0OiAtMXB4O1xyXG4gICAgYm9yZGVyLWJvdHRvbS1yaWdodC1yYWRpdXM6IDA7XHJcbiAgfVxyXG4gIGRpdi5rdWthaS1tb2RhbCBidXR0b24uc21hbGwubXVsdGlwbGUtZGVzdGluYXRpb25zIHtcclxuICAgIG1hcmdpbi1yaWdodDogMi41cmVtO1xyXG4gIH1cclxufVxyXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAyNXJlbSkge1xyXG4gIGRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50IHtcclxuICAgIHdpZHRoOiAyM3JlbTtcclxuICB9XHJcbiAgZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQucGFzc3dvcmQge1xyXG4gICAgd2lkdGg6IDExcmVtO1xyXG4gIH1cclxufSIsIi8qIE1vZGFsICovXG5kaXYua3VrYWktbW9kYWwge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIHotaW5kZXg6IDEwMDtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwJTtcbiAgaGVpZ2h0OiAxMDAlO1xuICBvdmVyZmxvdzogYXV0bztcbiAgYmFja2dyb3VuZC1jb2xvcjogYmxhY2s7XG4gIGJhY2tncm91bmQtY29sb3I6IHJnYmEoMCwgMCwgMCwgMC40KTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsLnRvcCB7XG4gIHotaW5kZXg6IDEwMTtcbn1cblxuLyogTW9kYWwgQ29udGVudC9Cb3ggKi9cbmRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50IHtcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZmNmY2ZjO1xuICBtYXJnaW46IDVyZW0gYXV0bztcbiAgYm9yZGVyOiAxcHggc29saWQgI2ZmZmZmZjtcbiAgYm94LXNoYWRvdzogMHB4IDBweCAxcHggcmdiYSgwLCAwLCAwLCAwLjA0KSwgMHB4IDJweCA2cHggcmdiYSgwLCAwLCAwLCAwLjA0KSwgMHB4IDE2cHggMjRweCByZ2JhKDAsIDAsIDAsIDAuMDYpO1xuICBib3JkZXItcmFkaXVzOiAwLjc1cmVtO1xuICB3aWR0aDogMjVyZW07XG4gIC13ZWJraXQtYW5pbWF0aW9uLW5hbWU6IGFuaW1hdGV0b3A7XG4gIC13ZWJraXQtYW5pbWF0aW9uLWR1cmF0aW9uOiAwLjVzO1xuICBhbmltYXRpb24tbmFtZTogYW5pbWF0ZXRvcDtcbiAgYW5pbWF0aW9uLWR1cmF0aW9uOiAwLjVzO1xufVxuXG4vKiBBZGQgQW5pbWF0aW9uICovXG5ALXdlYmtpdC1rZXlmcmFtZXMgYW5pbWF0ZXRvcCB7XG4gIGZyb20ge1xuICAgIHRvcDogMjByZW07XG4gICAgb3BhY2l0eTogMDtcbiAgfVxuICB0byB7XG4gICAgdG9wOiAwO1xuICAgIG9wYWNpdHk6IDE7XG4gIH1cbn1cbkBrZXlmcmFtZXMgYW5pbWF0ZXRvcCB7XG4gIGZyb20ge1xuICAgIHRvcDogLTMwMHB4O1xuICAgIG9wYWNpdHk6IDA7XG4gIH1cbiAgdG8ge1xuICAgIHRvcDogMDtcbiAgICBvcGFjaXR5OiAxO1xuICB9XG59XG5kaXYua3VrYWktbW9kYWwgPiBkaXYua20tY29udGVudCA+IGRpdi5rbS1oZWFkZXIge1xuICBkaXNwbGF5OiBmbGV4O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XG4gIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCBibGFjaztcbiAgYm9yZGVyLWJvdHRvbTogMXB4IHNvbGlkIHJnYmEoMCwgMCwgMCwgMC4wNCk7XG59XG5cbmRpdi5rbS1oZWFkZXIgPiBIMSB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IGJvbGQ7XG4gIGZvbnQtc2l6ZTogMS4yNXJlbTtcbiAgbGluZS1oZWlnaHQ6IDEuNXJlbTtcbiAgZGlzcGxheTogZmxleDtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgY29sb3I6ICMyYzMyM2E7XG4gIG1hcmdpbjogMXJlbTtcbn1cblxuZGl2LmttLWhlYWRlciA+IHNwYW4uY2xvc2Uge1xuICBtYXJnaW46IDAuMjVyZW0gMC41cmVtO1xuICBjb2xvcjogI2FhYTtcbiAgZm9udC1zaXplOiAyOHB4O1xuICBmb250LXdlaWdodDogYm9sZDtcbn1cblxuZGl2LmttLWhlYWRlciA+IHNwYW4uY2xvc2U6aG92ZXIsXG5kaXYua20taGVhZGVyID4gc3Bhbi5jbG9zZTpmb2N1cyB7XG4gIGNvbG9yOiAjMmMzMjNhO1xuICB0ZXh0LWRlY29yYXRpb246IG5vbmU7XG4gIGN1cnNvcjogcG9pbnRlcjtcbn1cblxuZGl2LmttLWJvZHkge1xuICBtYXJnaW46IDFyZW07XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYuYW1vdW50IHtcbiAgZGlzcGxheTogZmxleDtcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XG4gIGhlaWdodDogNXJlbTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LmN1c3RvbS1sYXJnZSB7XG4gIHdpZHRoOiBhdXRvO1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG4gIGZvbnQtZmFtaWx5OiBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmO1xuICBmb250LXNpemU6IDVyZW07XG4gIGxpbmUtaGVpZ2h0OiA1cmVtO1xuICBjb2xvcjogIzJDMzIzQTtcbiAgYmFja2dyb3VuZDogI2ZjZmNmYztcbiAgb3BhY2l0eTogMC40O1xuICBwYWRkaW5nOiAwO1xuICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gIGJvcmRlcjogMDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LmN1c3RvbS1sYXJnZTpkaXNhYmxlZCB7XG4gIGJhY2tncm91bmQtY29sb3I6IHJnYmEoMCwgMCwgMCwgMCk7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBpbnB1dDpmb2N1cyxcbmRpdi5rdWthaS1tb2RhbCB0ZXh0YXJlYTpmb2N1cyB7XG4gIG91dGxpbmU6IG5vbmU7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBzcGFuLnRleiB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IDUwMDtcbiAgZm9udC1zaXplOiAxcmVtO1xuICBsaW5lLWhlaWdodDogMXJlbTtcbiAgY29sb3I6ICMyQzMyM0E7XG4gIG9wYWNpdHk6IDAuNDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIHAuZmVlIHtcbiAgbWFyZ2luLXRvcDogMC4zNzVyZW07XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IDUwMDtcbiAgZm9udC1zaXplOiAwLjc1cmVtO1xuICBsaW5lLWhlaWdodDogMXJlbTtcbiAgY29sb3I6ICMyQzMyM0E7XG4gIG9wYWNpdHk6IDAuNDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIHAucHJldmlldyB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcbiAgZm9udC1zaXplOiAwLjg3NXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBmbGV4LWVuZDtcbiAgY29sb3I6ICMwMDAwMDA7XG4gIG9wYWNpdHk6IDAuNjtcbiAgbWFyZ2luLWJvdHRvbTogMC41cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgdGQsXG5kaXYua3VrYWktbW9kYWwgdGgge1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG4gIGZvbnQtc2l6ZTogMC43NXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGNvbG9yOiAjMDAwMDAwO1xuICBvcGFjaXR5OiAwLjY7XG59XG5cbmRpdi5rdWthaS1tb2RhbCB0aCB7XG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xufVxuXG5kaXYua20tY29udGVudCBsYWJlbDpub3QoLnN3aXRjaCkge1xuICBtYXJnaW4tYm90dG9tOiAwLjVyZW07XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IDUwMDtcbiAgZm9udC1zaXplOiAxcmVtO1xuICBsaW5lLWhlaWdodDogMS4xMjVyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGNvbG9yOiAjMkMzMjNBO1xuICBvcGFjaXR5OiAwLjQ7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBwLCBzcGFuLmRhbmdlciB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcbiAgZm9udC1zaXplOiAwLjg3NXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBmbGV4LWVuZDtcbiAgY29sb3I6ICMwMDAwMDA7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBzcGFuLm5vLW1hcmdpbixcbmRpdi5rdWthaS1tb2RhbCBzcGFuLm1hcmdpbiB7XG4gIGNvbG9yOiAjRkYwMDAwO1xufVxuXG5kaXYua3VrYWktbW9kYWwgc3Bhbi5uby1tYXJnaW4ge1xuICBtYXJnaW4tdG9wOiAwLjc1cmVtO1xuICBtYXJnaW4tYm90dG9tOiAtMS43NXJlbTtcbiAgY29sb3I6ICNGRjAwMDA7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYuZ3JvdXAge1xuICBtYXJnaW4tdG9wOiAxLjVyZW07XG59XG5cbmRpdi5rdWthaS1tb2RhbCBpbnB1dC50ZXh0LFxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQge1xuICB3aWR0aDogMTAwJTtcbiAgYmFja2dyb3VuZDogI0UxRTFFMTtcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcbiAgaGVpZ2h0OiAzcmVtO1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG4gIGZvbnQtc2l6ZTogMXJlbTtcbiAgbGluZS1oZWlnaHQ6IDNyZW07XG4gIGxldHRlci1zcGFjaW5nOiAwLjE2cHg7XG4gIGNvbG9yOiAjMDAwMDAwO1xuICBwYWRkaW5nLWxlZnQ6IDFyZW07XG4gIHBhZGRpbmctcmlnaHQ6IDFyZW07XG4gIGJvcmRlcjogMDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQucGFzc3dvcmQge1xuICB3aWR0aDogMjAwJTtcbiAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgdGV4dGFyZWEudGV4dCB7XG4gIHBhZGRpbmctdG9wOiAwLjVyZW07XG4gIGhlaWdodDogN3JlbTtcbiAgbGluZS1oZWlnaHQ6IDEuMjVyZW07XG4gIHJlc2l6ZTogbm9uZTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQ6OnBsYWNlaG9sZGVyLFxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6OnBsYWNlaG9sZGVyIHtcbiAgY29sb3I6ICM4MDgwODA7XG4gIG9wYWNpdHk6IDE7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBpbnB1dC50ZXh0Ojotd2Via2l0LWlucHV0LXBsYWNlaG9sZGVyLFxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQ6LW1zLWlucHV0LXBsYWNlaG9sZGVyLFxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6Oi13ZWJraXQtaW5wdXQtcGxhY2Vob2xkZXIsXG5kaXYua3VrYWktbW9kYWwgdGV4dGFyZWEudGV4dDotbXMtaW5wdXQtcGxhY2Vob2xkZXIge1xuICBjb2xvcjogIzgwODA4MDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6OnBsYWNlaG9sZGVyLFxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6Oi13ZWJraXQtaW5wdXQtcGxhY2Vob2xkZXIsXG5kaXYua3VrYWktbW9kYWwgdGV4dGFyZWEudGV4dDotbXMtaW5wdXQtcGxhY2Vob2xkZXIge1xuICBwYWRkaW5nLXRvcDogMC41cmVtO1xuICBsaW5lLWhlaWdodDogMS4yNXJlbTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5yb3ctZ3JvdXAge1xuICBkaXNwbGF5OiBmbGV4O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYucm93LWdyb3VwID4gZGl2Lmdyb3VwOmZpcnN0LWNoaWxkIHtcbiAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2LmFkdmFuY2VkIHtcbiAgbWFyZ2luLXRvcDogMS41cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uLmJsdWUge1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xuICBmb250LXNpemU6IDFyZW07XG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xuICBkaXNwbGF5OiBmbGV4O1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xuICBjb2xvcjogd2hpdGU7XG4gIGJhY2tncm91bmQ6ICM1OTYzRkY7XG4gIGJveC1zaGFkb3c6IDBweCAwcHggMXB4IHJnYmEoODksIDk5LCAyNTUsIDAuMDQpLCAwcHggMnB4IDZweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjA0KSwgMHB4IDE2cHggMjRweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjI0KTtcbiAgd2lkdGg6IDEwMCU7XG4gIGhlaWdodDogM3JlbTtcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcbiAgYm9yZGVyOiAwO1xuICBtYXJnaW4tdG9wOiAyLjVyZW07XG4gIG1hcmdpbi1ib3R0b206IDEuNXJlbTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5ibHVlLmNvbmZpcm0sXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uLnJldHJ5IHtcbiAgaGVpZ2h0OiAzcmVtO1xuICBtYXJnaW46IDA7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBidXR0b24ucmV0cnkge1xuICB3aWR0aDogMTAwJTtcbiAgZm9udC1zaXplOiAxcmVtO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZDNkM2QzO1xuICBjb2xvcjogIzIxMjUyOTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbjpmb2N1cyB7XG4gIG91dGxpbmU6IG5vbmU7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYuc3dpdGNoLWNvbnRhaW5lciB7XG4gIHdpZHRoOiBhdXRvICFpbXBvcnRhbnQ7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBidXR0b24uc21hbGwge1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiA1MDA7XG4gIGZvbnQtc2l6ZTogMC43NXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gIHdpZHRoOiBhdXRvO1xuICBoZWlnaHQ6IDEuNXJlbTtcbiAgY29sb3I6ICMwMDAwMDA7XG4gIG9wYWNpdHk6IDAuNjtcbiAgYmFja2dyb3VuZDogcmdiYSgyMTQsIDIxNCwgMjE0LCAwLjQpO1xuICBib3JkZXItcmFkaXVzOiAwLjMxMjVyZW07XG4gIGJvcmRlcjogMDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5zbWFsbC5tYXgge1xuICBiYWNrZ3JvdW5kOiAjZDVmMmRjO1xufVxuXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uLnNtYWxsLm11bHRpcGxlLWRlc3RpbmF0aW9ucyB7XG4gIGNvbG9yOiAjNTk2M0ZGO1xuICBvcGFjaXR5OiAxO1xuICBtYXJnaW46IDFyZW0gMS41cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2LmFkdmFuY2VkID4gZGl2LnJvdy1ncm91cCB7XG4gIGhlaWdodDogMS41cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2Lngge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIHRvcDogLTFyZW07XG4gIHJpZ2h0OiAtMXJlbTtcbiAgd2lkdGg6IDJyZW07XG4gIGhlaWdodDogMnJlbTtcbiAgei1pbmRleDogMTIwO1xuICBiYWNrZ3JvdW5kOiAjRkNGQ0ZDO1xuICBib3JkZXI6IDFweCBzb2xpZCAjRkZGRkZGO1xuICBib3JkZXItcmFkaXVzOiAxcmVtO1xuICBkaXNwbGF5OiBmbGV4O1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgY3Vyc29yOiBwb2ludGVyO1xufVxuXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAyN3JlbSkge1xuICBkaXYua3VrYWktbW9kYWwgZGl2Lngge1xuICAgIHJpZ2h0OiAtMXB4O1xuICAgIGJvcmRlci1ib3R0b20tcmlnaHQtcmFkaXVzOiAwO1xuICB9XG5cbiAgZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5zbWFsbC5tdWx0aXBsZS1kZXN0aW5hdGlvbnMge1xuICAgIG1hcmdpbi1yaWdodDogMi41cmVtO1xuICB9XG59XG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAyNXJlbSkge1xuICBkaXYua3VrYWktbW9kYWwgPiBkaXYua20tY29udGVudCB7XG4gICAgd2lkdGg6IDIzcmVtO1xuICB9XG5cbiAgZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQucGFzc3dvcmQge1xuICAgIHdpZHRoOiAxMXJlbTtcbiAgfVxufVxuLm1vZGFsLWZvb3RlciB7XG4gIHBhZGRpbmctYm90dG9tOiAwcmVtO1xufVxuXG5kaXYub3V0c2lkZS1jb250YWluZXIge1xuICBwYWRkaW5nOiAwLjVyZW0gMDtcbn1cblxuZGl2Lm91dHNpZGUtY29udGFpbmVyID4gc3BhbiB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcbiAgZm9udC1zaXplOiAwLjgxMjVyZW07XG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xuICBjb2xvcjogIzJDMzIzQTtcbn1cblxuZGl2Lm91dHNpZGUtY29udGFpbmVyID4gc3BhbiA+IHNwYW4ge1xuICBjb2xvcjogIzU5NjNGRjtcbiAgY3Vyc29yOiBwb2ludGVyO1xufVxuXG4uZmEtY2hlY2stY2lyY2xlIHtcbiAgY29sb3I6ICMyOGE3NDU7XG4gIGZvbnQtc2l6ZTogOTZweDtcbn1cblxuYnV0dG9uIHtcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcbiAgaGVpZ2h0OiAzcmVtO1xuICB3aWR0aDogOHJlbTtcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xuICBmb250LXdlaWdodDogYm9sZDtcbiAgZm9udC1zaXplOiAwLjg3NXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICBjdXJzb3I6IHBvaW50ZXI7XG4gIC13ZWJraXQtYXBwZWFyYW5jZTogbm9uZSAhaW1wb3J0YW50O1xuICB0cmFuc2l0aW9uOiBtYXJnaW4tdG9wIDAuMXMgZWFzZS1pbiwgbWFyZ2luLWJvdHRvbSAwLjFzIGVhc2UtaW47XG59XG5cbmJ1dHRvbi5ibHVlOmhvdmVyIHtcbiAgbWFyZ2luLXRvcDogLTAuMTI1cmVtO1xufVxuXG5idXR0b246Zm9jdXMge1xuICBvdXRsaW5lOiBub25lO1xufVxuXG5idXR0b24uYmx1ZSB7XG4gIGNvbG9yOiAjNTk2M2ZmO1xuICBiYWNrZ3JvdW5kOiAjYTRhOGVjO1xuICBib3gtc2hhZG93OiAwcHggMHB4IDFweCByZ2JhKDE2NCwgMTY4LCAyMzYsIDAuMDQpLCAwcHggMnB4IDZweCByZ2JhKDE2NCwgMTY4LCAyMzYsIDAuMDQpLCAwcHggMTZweCAyNHB4IHJnYmEoMTY0LCAxNjgsIDIzNiwgMC4yNCk7XG4gIHRyYW5zaXRpb246IG1hcmdpbi10b3AgMC4xcyBlYXNlLWluLCBtYXJnaW4tYm90dG9tIDAuMXMgZWFzZS1pbjtcbn1cblxuaW5wdXQuY3VzdG9tLXRleHRib3gge1xuICBwYWRkaW5nLWxlZnQ6IDAuNzVyZW07XG59XG5cbmRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50ID4gZGl2LmttLWJvZHkgPiBkaXYuZ3JvdXAgPiBpbnB1dC50ZXh0IHtcbiAgZm9udC1zaXplOiAwLjgxMjVyZW07XG59XG5cbkBzdXBwb3J0cyAoLXdlYmtpdC10b3VjaC1jYWxsb3V0OiBub25lKSB7XG4gIGRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50ID4gZGl2LmttLWJvZHkgPiBkaXYuZ3JvdXAgPiBpbnB1dC50ZXh0IHtcbiAgICBmb250LXNpemU6IDFyZW07XG4gIH1cbn1cbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDI1cmVtKSB7XG4gIGlucHV0I3RvQWRkcmVzcyxcbmlucHV0LmN1c3RvbS10ZXh0Ym94IHtcbiAgICBmb250LXNpemU6IDAuODEyNXJlbTtcbiAgfVxufVxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDogMjJyZW0pIHtcbiAgaW5wdXQjdG9BZGRyZXNzLFxuaW5wdXQuY3VzdG9tLXRleHRib3gge1xuICAgIGZvbnQtc2l6ZTogMC43NXJlbTtcbiAgfVxufSIsIkBpbXBvcnQgXCIuLi8uLi8uLi9zY3NzL21vZGFsLnNjc3NcIjtcclxuLm1vZGFsLWZvb3RlciB7XHJcbiAgcGFkZGluZy1ib3R0b206IDByZW07XHJcbn1cclxuZGl2Lm91dHNpZGUtY29udGFpbmVyIHtcclxuICBwYWRkaW5nOiAwLjVyZW0gMDtcclxufVxyXG5kaXYub3V0c2lkZS1jb250YWluZXIgPiBzcGFuIHtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcclxuICBmb250LXNpemU6IDAuODEyNXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBjb2xvcjogIzJDMzIzQTtcclxufVxyXG5kaXYub3V0c2lkZS1jb250YWluZXIgPiBzcGFuID4gc3BhbiB7XHJcbiAgY29sb3I6ICM1OTYzRkY7XHJcbiAgY3Vyc29yOiBwb2ludGVyO1xyXG59XHJcbi5mYS1jaGVjay1jaXJjbGUge1xyXG4gIGNvbG9yOiAjMjhhNzQ1OyAvLyM1Y2I4NWM7XHJcbiAgZm9udC1zaXplOiA5NnB4O1xyXG59XHJcbmJ1dHRvbiB7XHJcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcclxuICBoZWlnaHQ6IDNyZW07XHJcbiAgd2lkdGg6IDhyZW07XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xyXG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XHJcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XHJcbiAgY3Vyc29yOiBwb2ludGVyO1xyXG4gIC13ZWJraXQtYXBwZWFyYW5jZTogbm9uZSAhaW1wb3J0YW50O1xyXG4gIHRyYW5zaXRpb246IG1hcmdpbi10b3AgMC4xcyBlYXNlLWluLCBtYXJnaW4tYm90dG9tIDAuMXMgZWFzZS1pbjtcclxufVxyXG5idXR0b24uYmx1ZTpob3ZlciB7XHJcbiAgbWFyZ2luLXRvcDogLTAuMTI1cmVtO1xyXG59XHJcbmJ1dHRvbjpmb2N1cyB7XHJcbiAgb3V0bGluZTogbm9uZTtcclxufVxyXG5idXR0b24uYmx1ZSB7XHJcbiAgY29sb3I6ICM1OTYzZmY7XHJcbiAgYmFja2dyb3VuZDogI2E0YThlYztcclxuICBib3gtc2hhZG93OiAwcHggMHB4IDFweCByZ2JhKDE2NCwgMTY4LCAyMzYsIDAuMDQpLFxyXG4gICAgMHB4IDJweCA2cHggcmdiYSgxNjQsIDE2OCwgMjM2LCAwLjA0KSxcclxuICAgIDBweCAxNnB4IDI0cHggcmdiYSgxNjQsIDE2OCwgMjM2LCAwLjI0KTtcclxuICB0cmFuc2l0aW9uOiBtYXJnaW4tdG9wIDAuMXMgZWFzZS1pbiwgbWFyZ2luLWJvdHRvbSAwLjFzIGVhc2UtaW47XHJcbn1cclxuaW5wdXQuY3VzdG9tLXRleHRib3gge1xyXG4gIHBhZGRpbmctbGVmdDogMC43NXJlbTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgPiBkaXYua20tY29udGVudCA+IGRpdi5rbS1ib2R5ID4gZGl2Lmdyb3VwID4gaW5wdXQudGV4dCB7XHJcbiAgZm9udC1zaXplOiAwLjgxMjVyZW07XHJcbn1cclxuQHN1cHBvcnRzICgtd2Via2l0LXRvdWNoLWNhbGxvdXQ6IG5vbmUpIHtcclxuICBkaXYua3VrYWktbW9kYWwgPiBkaXYua20tY29udGVudCA+IGRpdi5rbS1ib2R5ID4gZGl2Lmdyb3VwID4gaW5wdXQudGV4dCB7XHJcbiAgICBmb250LXNpemU6IDFyZW07XHJcbiAgfVxyXG59XHJcbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDI1cmVtKSB7XHJcbiAgaW5wdXQjdG9BZGRyZXNzLFxyXG4gIGlucHV0LmN1c3RvbS10ZXh0Ym94IHtcclxuICAgIGZvbnQtc2l6ZTogMC44MTI1cmVtO1xyXG4gIH1cclxufVxyXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAyMnJlbSkge1xyXG4gIGlucHV0I3RvQWRkcmVzcyxcclxuICBpbnB1dC5jdXN0b20tdGV4dGJveCB7XHJcbiAgICBmb250LXNpemU6IDAuNzVyZW07XHJcbiAgfVxyXG59XHJcbiJdfQ== */"] });
+    } }, directives: [_angular_common__WEBPACK_IMPORTED_MODULE_12__["NgIf"], _angular_forms__WEBPACK_IMPORTED_MODULE_13__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_13__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_13__["NgModel"]], pipes: [_angular_common__WEBPACK_IMPORTED_MODULE_12__["DecimalPipe"], _pipes_delegator_name_pipe__WEBPACK_IMPORTED_MODULE_14__["DelegatorNamePipe"]], styles: ["div.kukai-modal[_ngcontent-%COMP%] {\n  position: fixed;\n  z-index: 100;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%;\n  overflow: auto;\n  background-color: black;\n  background-color: rgba(0, 0, 0, 0.4);\n}\ndiv.kukai-modal.top[_ngcontent-%COMP%] {\n  z-index: 101;\n}\n\ndiv.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%] {\n  position: relative;\n  background-color: #fcfcfc;\n  margin: 5rem auto;\n  border: 1px solid #ffffff;\n  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.06);\n  border-radius: 0.75rem;\n  width: 25rem;\n  -webkit-animation-name: animatetop;\n  -webkit-animation-duration: 0.5s;\n  animation-name: animatetop;\n  animation-duration: 0.5s;\n}\n\n@-webkit-keyframes animatetop {\n  from {\n    top: 20rem;\n    opacity: 0;\n  }\n  to {\n    top: 0;\n    opacity: 1;\n  }\n}\n@keyframes animatetop {\n  from {\n    top: -300px;\n    opacity: 0;\n  }\n  to {\n    top: 0;\n    opacity: 1;\n  }\n}\ndiv.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%]    > div.km-header[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: space-between;\n  flex-direction: row;\n  border-bottom: 1px solid black;\n  border-bottom: 1px solid rgba(0, 0, 0, 0.04);\n}\ndiv.km-header[_ngcontent-%COMP%]    > H1[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: bold;\n  font-size: 1.25rem;\n  line-height: 1.5rem;\n  display: flex;\n  align-items: center;\n  color: #2c323a;\n  margin: 1rem;\n}\ndiv.km-header[_ngcontent-%COMP%]    > span.close[_ngcontent-%COMP%] {\n  margin: 0.25rem 0.5rem;\n  color: #aaa;\n  font-size: 28px;\n  font-weight: bold;\n}\ndiv.km-header[_ngcontent-%COMP%]    > span.close[_ngcontent-%COMP%]:hover, div.km-header[_ngcontent-%COMP%]    > span.close[_ngcontent-%COMP%]:focus {\n  color: #2c323a;\n  text-decoration: none;\n  cursor: pointer;\n}\ndiv.km-body[_ngcontent-%COMP%] {\n  margin: 1rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.amount[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: center;\n  flex-direction: row;\n  height: 5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.custom-large[_ngcontent-%COMP%] {\n  width: auto;\n  font-style: normal;\n  font-weight: normal;\n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 5rem;\n  line-height: 5rem;\n  color: #2C323A;\n  background: #fcfcfc;\n  opacity: 0.4;\n  padding: 0;\n  text-align: center;\n  border: 0;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.custom-large[_ngcontent-%COMP%]:disabled {\n  background-color: rgba(0, 0, 0, 0);\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, div.kukai-modal[_ngcontent-%COMP%]   textarea[_ngcontent-%COMP%]:focus {\n  outline: none;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   span.tez[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: 500;\n  font-size: 1rem;\n  line-height: 1rem;\n  color: #2C323A;\n  opacity: 0.4;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   p.fee[_ngcontent-%COMP%] {\n  margin-top: 0.375rem;\n  font-style: normal;\n  font-weight: 500;\n  font-size: 0.75rem;\n  line-height: 1rem;\n  color: #2C323A;\n  opacity: 0.4;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   p.preview[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.875rem;\n  line-height: 1rem;\n  display: flex;\n  align-items: flex-end;\n  color: #000000;\n  opacity: 0.6;\n  margin-bottom: 0.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   td[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   th[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.75rem;\n  line-height: 1rem;\n  color: #000000;\n  opacity: 0.6;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   th[_ngcontent-%COMP%] {\n  font-weight: bold;\n}\ndiv.km-content[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]:not(.switch) {\n  margin-bottom: 0.5rem;\n  font-style: normal;\n  font-weight: 500;\n  font-size: 1rem;\n  line-height: 1.125rem;\n  display: flex;\n  align-items: center;\n  color: #2C323A;\n  opacity: 0.4;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   p[_ngcontent-%COMP%], span.danger[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.875rem;\n  line-height: 1rem;\n  display: flex;\n  align-items: flex-end;\n  color: #000000;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   span.no-margin[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   span.margin[_ngcontent-%COMP%] {\n  color: #FF0000;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   span.no-margin[_ngcontent-%COMP%] {\n  margin-top: 0.75rem;\n  margin-bottom: -1.75rem;\n  color: #FF0000;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.group[_ngcontent-%COMP%] {\n  margin-top: 1.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%] {\n  width: 100%;\n  background: #E1E1E1;\n  border-radius: 0.75rem;\n  height: 3rem;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 1rem;\n  line-height: 3rem;\n  letter-spacing: 0.16px;\n  color: #000000;\n  padding-left: 1rem;\n  padding-right: 1rem;\n  border: 0;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.text.password[_ngcontent-%COMP%] {\n  width: 200%;\n  margin-right: 1rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%] {\n  padding-top: 0.5rem;\n  height: 7rem;\n  line-height: 1.25rem;\n  resize: none;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%]::-moz-placeholder, div.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%]::-moz-placeholder {\n  color: #808080;\n  opacity: 1;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%]::placeholder, div.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%]::placeholder {\n  color: #808080;\n  opacity: 1;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%]::placeholder, div.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%]::-webkit-input-placeholder, div.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%]:-ms-input-placeholder {\n  padding-top: 0.5rem;\n  line-height: 1.25rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.row-group[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: space-between;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.row-group[_ngcontent-%COMP%]    > div.group[_ngcontent-%COMP%]:first-child {\n  margin-right: 1rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.advanced[_ngcontent-%COMP%] {\n  margin-top: 1.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.blue[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: bold;\n  font-size: 1rem;\n  line-height: 1rem;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  text-align: center;\n  color: white;\n  background: #5963FF;\n  box-shadow: 0px 0px 1px rgba(89, 99, 255, 0.04), 0px 2px 6px rgba(89, 99, 255, 0.04), 0px 16px 24px rgba(89, 99, 255, 0.24);\n  width: 100%;\n  height: 3rem;\n  border-radius: 0.75rem;\n  border: 0;\n  margin-top: 2.5rem;\n  margin-bottom: 1.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.blue.confirm[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   button.retry[_ngcontent-%COMP%] {\n  height: 3rem;\n  margin: 0;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.retry[_ngcontent-%COMP%] {\n  width: 100%;\n  font-size: 1rem;\n  background-color: #d3d3d3;\n  color: #212529;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:focus {\n  outline: none;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.switch-container[_ngcontent-%COMP%] {\n  width: auto !important;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.small[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: 500;\n  font-size: 0.75rem;\n  line-height: 1rem;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  text-align: center;\n  width: auto;\n  height: 1.5rem;\n  color: #000000;\n  opacity: 0.6;\n  background: rgba(214, 214, 214, 0.4);\n  border-radius: 0.3125rem;\n  border: 0;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.small.max[_ngcontent-%COMP%] {\n  background: #d5f2dc;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.small.multiple-destinations[_ngcontent-%COMP%] {\n  color: #5963FF;\n  opacity: 1;\n  margin: 1rem 1.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.advanced[_ngcontent-%COMP%]    > div.row-group[_ngcontent-%COMP%] {\n  height: 1.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.x[_ngcontent-%COMP%] {\n  position: absolute;\n  top: -1rem;\n  right: -1rem;\n  width: 2rem;\n  height: 2rem;\n  z-index: 120;\n  background: #FCFCFC;\n  border: 1px solid #FFFFFF;\n  border-radius: 1rem;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n@media screen and (max-width: 27rem) {\n  div.kukai-modal[_ngcontent-%COMP%]   div.x[_ngcontent-%COMP%] {\n    right: -1px;\n    border-bottom-right-radius: 0;\n  }\n\n  div.kukai-modal[_ngcontent-%COMP%]   button.small.multiple-destinations[_ngcontent-%COMP%] {\n    margin-right: 2.5rem;\n  }\n}\n@media screen and (max-width: 25rem) {\n  div.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%] {\n    width: 23rem;\n  }\n\n  div.kukai-modal[_ngcontent-%COMP%]   input.text.password[_ngcontent-%COMP%] {\n    width: 11rem;\n  }\n}\n.modal-footer[_ngcontent-%COMP%] {\n  padding-bottom: 0rem;\n}\ndiv.outside-container[_ngcontent-%COMP%] {\n  padding: 0.5rem 0;\n}\ndiv.outside-container[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.8125rem;\n  line-height: 1rem;\n  color: #2C323A;\n}\ndiv.outside-container[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%] {\n  color: #5963FF;\n  cursor: pointer;\n}\n.fa-check-circle[_ngcontent-%COMP%] {\n  color: #28a745;\n  font-size: 96px;\n}\nbutton[_ngcontent-%COMP%] {\n  border-radius: 0.75rem;\n  height: 3rem;\n  width: 8rem;\n  font-style: normal;\n  font-weight: bold;\n  font-size: 0.875rem;\n  line-height: 1rem;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n  -webkit-appearance: none !important;\n  transition: margin-top 0.1s ease-in, margin-bottom 0.1s ease-in;\n}\nbutton.blue[_ngcontent-%COMP%]:hover {\n  margin-top: -0.125rem;\n}\nbutton[_ngcontent-%COMP%]:focus {\n  outline: none;\n}\nbutton.blue[_ngcontent-%COMP%] {\n  color: #5963ff;\n  background: #a4a8ec;\n  box-shadow: 0px 0px 1px rgba(164, 168, 236, 0.04), 0px 2px 6px rgba(164, 168, 236, 0.04), 0px 16px 24px rgba(164, 168, 236, 0.24);\n  transition: margin-top 0.1s ease-in, margin-bottom 0.1s ease-in;\n}\ninput.custom-textbox[_ngcontent-%COMP%] {\n  padding-left: 0.75rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%]    > div.km-body[_ngcontent-%COMP%]    > div.group[_ngcontent-%COMP%]    > input.text[_ngcontent-%COMP%] {\n  font-size: 0.8125rem;\n}\n@supports (-webkit-touch-callout: none) {\n  div.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%]    > div.km-body[_ngcontent-%COMP%]    > div.group[_ngcontent-%COMP%]    > input.text[_ngcontent-%COMP%] {\n    font-size: 1rem;\n  }\n}\n@media screen and (max-width: 25rem) {\n  input#toAddress[_ngcontent-%COMP%], input.custom-textbox[_ngcontent-%COMP%] {\n    font-size: 0.8125rem;\n  }\n}\n@media screen and (max-width: 22rem) {\n  input#toAddress[_ngcontent-%COMP%], input.custom-textbox[_ngcontent-%COMP%] {\n    font-size: 0.75rem;\n  }\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY29tcG9uZW50cy9kZWxlZ2F0ZS9DOlxcVXNlcnNcXGtsYXNfXFxHaXRcXGt1a2FpL3NyY1xcc2Nzc1xcbW9kYWwuc2NzcyIsInNyYy9hcHAvY29tcG9uZW50cy9kZWxlZ2F0ZS9kZWxlZ2F0ZS5jb21wb25lbnQuc2NzcyIsInNyYy9hcHAvY29tcG9uZW50cy9kZWxlZ2F0ZS9DOlxcVXNlcnNcXGtsYXNfXFxHaXRcXGt1a2FpL3NyY1xcYXBwXFxjb21wb25lbnRzXFxkZWxlZ2F0ZVxcZGVsZWdhdGUuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsVUFBQTtBQUNBO0VBQ0UsZUFBQTtFQUNBLFlBQUE7RUFDQSxPQUFBO0VBQ0EsTUFBQTtFQUNBLFdBQUE7RUFDQSxZQUFBO0VBQ0EsY0FBQTtFQUNBLHVCQUFBO0VBQ0Esb0NBQUE7QUNDRjtBRENBO0VBQ0UsWUFBQTtBQ0VGO0FEQUEsc0JBQUE7QUFDQTtFQUNFLGtCQUFBO0VBQ0EseUJBQUE7RUFDQSxpQkFBQTtFQUNBLHlCQUFBO0VBQ0EsK0dBQUE7RUFFQSxzQkFBQTtFQUNBLFlBQUE7RUFDQSxrQ0FBQTtFQUNBLGdDQUFBO0VBQ0EsMEJBQUE7RUFDQSx3QkFBQTtBQ0VGO0FEQUEsa0JBQUE7QUFDQTtFQUNFO0lBQ0UsVUFBQTtJQUNBLFVBQUE7RUNHRjtFRERBO0lBQ0UsTUFBQTtJQUNBLFVBQUE7RUNHRjtBQUNGO0FEREE7RUFDRTtJQUNFLFdBQUE7SUFDQSxVQUFBO0VDR0Y7RUREQTtJQUNFLE1BQUE7SUFDQSxVQUFBO0VDR0Y7QUFDRjtBRERBO0VBQ0UsYUFBQTtFQUNBLDhCQUFBO0VBQ0EsbUJBQUE7RUFDQSw4QkFBQTtFQUNBLDRDQUFBO0FDR0Y7QUREQTtFQUNFLGtCQUFBO0VBQ0EsaUJBQUE7RUFDQSxrQkFBQTtFQUNBLG1CQUFBO0VBQ0EsYUFBQTtFQUNBLG1CQUFBO0VBQ0EsY0FBQTtFQUNBLFlBQUE7QUNJRjtBREZBO0VBQ0Usc0JBQUE7RUFD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QUMxWEE7RUFDRSxvQkFBQTtBRDZYRjtBQzNYQTtFQUNFO0lBQ0UsZUFBQTtFRDhYRjtBQUNGO0FDNVhBO0VBQ0U7O0lBRUUsb0JBQUE7RUQ4WEY7QUFDRjtBQzVYQTtFQUNFOztJQUVFLGtCQUFBO0VEOFhGO0FBQ0YiLCJmaWxlIjoic3JjL2FwcC9jb21wb25lbnRzL2RlbGVnYXRlL2RlbGVnYXRlLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLyogTW9kYWwgKi9cclxuZGl2Lmt1a2FpLW1vZGFsIHtcclxuICBwb3NpdGlvbjogZml4ZWQ7XHJcbiAgei1pbmRleDogMTAwO1xyXG4gIGxlZnQ6IDA7XHJcbiAgdG9wOiAwO1xyXG4gIHdpZHRoOiAxMDAlO1xyXG4gIGhlaWdodDogMTAwJTtcclxuICBvdmVyZmxvdzogYXV0bztcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMCwgMCwgMCk7IC8vZmFsbGJhY2tcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDAsIDAsIDAsIDAuNCk7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsLnRvcCB7XHJcbiAgei1pbmRleDogMTAxO1xyXG59XHJcbi8qIE1vZGFsIENvbnRlbnQvQm94ICovXHJcbmRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50IHtcclxuICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogI2ZjZmNmYztcclxuICBtYXJnaW46IDVyZW0gYXV0bztcclxuICBib3JkZXI6IDFweCBzb2xpZCAjZmZmZmZmO1xyXG4gIGJveC1zaGFkb3c6IDBweCAwcHggMXB4IHJnYmEoMCwgMCwgMCwgMC4wNCksIDBweCAycHggNnB4IHJnYmEoMCwgMCwgMCwgMC4wNCksXHJcbiAgICAwcHggMTZweCAyNHB4IHJnYmEoMCwgMCwgMCwgMC4wNik7XHJcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcclxuICB3aWR0aDogMjVyZW07XHJcbiAgLXdlYmtpdC1hbmltYXRpb24tbmFtZTogYW5pbWF0ZXRvcDtcclxuICAtd2Via2l0LWFuaW1hdGlvbi1kdXJhdGlvbjogMC41cztcclxuICBhbmltYXRpb24tbmFtZTogYW5pbWF0ZXRvcDtcclxuICBhbmltYXRpb24tZHVyYXRpb246IDAuNXM7XHJcbn1cclxuLyogQWRkIEFuaW1hdGlvbiAqL1xyXG5ALXdlYmtpdC1rZXlmcmFtZXMgYW5pbWF0ZXRvcCB7XHJcbiAgZnJvbSB7XHJcbiAgICB0b3A6IDIwcmVtO1xyXG4gICAgb3BhY2l0eTogMDtcclxuICB9XHJcbiAgdG8ge1xyXG4gICAgdG9wOiAwO1xyXG4gICAgb3BhY2l0eTogMTtcclxuICB9XHJcbn1cclxuQGtleWZyYW1lcyBhbmltYXRldG9wIHtcclxuICBmcm9tIHtcclxuICAgIHRvcDogLTMwMHB4O1xyXG4gICAgb3BhY2l0eTogMDtcclxuICB9XHJcbiAgdG8ge1xyXG4gICAgdG9wOiAwO1xyXG4gICAgb3BhY2l0eTogMTtcclxuICB9XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsID4gZGl2LmttLWNvbnRlbnQgPiBkaXYua20taGVhZGVyIHtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcclxuICBmbGV4LWRpcmVjdGlvbjogcm93O1xyXG4gIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCByZ2JhKDAsIDAsIDApO1xyXG4gIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCByZ2JhKDAsIDAsIDAsIDAuMDQpO1xyXG59XHJcbmRpdi5rbS1oZWFkZXIgPiBIMSB7XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG4gIGZvbnQtc2l6ZTogMS4yNXJlbTtcclxuICBsaW5lLWhlaWdodDogMS41cmVtO1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxuICBjb2xvcjogIzJjMzIzYTtcclxuICBtYXJnaW46IDFyZW07XHJcbn1cclxuZGl2LmttLWhlYWRlciA+IHNwYW4uY2xvc2Uge1xyXG4gIG1hcmdpbjogMC4yNXJlbSAwLjVyZW07XHJcbiAgY29sb3I6ICNhYWE7XHJcbiAgZm9udC1zaXplOiAyOHB4O1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG59XHJcbmRpdi5rbS1oZWFkZXIgPiBzcGFuLmNsb3NlOmhvdmVyLFxyXG5kaXYua20taGVhZGVyID4gc3Bhbi5jbG9zZTpmb2N1cyB7XHJcbiAgY29sb3I6ICMyYzMyM2E7XHJcbiAgdGV4dC1kZWNvcmF0aW9uOiBub25lO1xyXG4gIGN1cnNvcjogcG9pbnRlcjtcclxufVxyXG5kaXYua20tYm9keSB7XHJcbiAgbWFyZ2luOiAxcmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYuYW1vdW50IHtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xyXG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XHJcbiAgaGVpZ2h0OiA1cmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBpbnB1dC5jdXN0b20tbGFyZ2Uge1xyXG4gIHdpZHRoOiBhdXRvO1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtZmFtaWx5OiBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmO1xyXG4gIGZvbnQtc2l6ZTogNXJlbTtcclxuICBsaW5lLWhlaWdodDogNXJlbTtcclxuICBjb2xvcjogIzJDMzIzQTtcclxuICBiYWNrZ3JvdW5kOiAjZmNmY2ZjO1xyXG4gIG9wYWNpdHk6IDAuNDtcclxuICBwYWRkaW5nOiAwO1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICBib3JkZXI6IDA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LmN1c3RvbS1sYXJnZTpkaXNhYmxlZCB7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogcmdiYSgwLCAwLCAwLCAwKTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgaW5wdXQ6Zm9jdXMsXHJcbmRpdi5rdWthaS1tb2RhbCB0ZXh0YXJlYTpmb2N1cyB7XHJcbiAgb3V0bGluZTogbm9uZTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgc3Bhbi50ZXoge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogNTAwO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBjb2xvcjogIzJDMzIzQTtcclxuICBvcGFjaXR5OiAwLjQ7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIHAuZmVlIHtcclxuICBtYXJnaW4tdG9wOiAwLjM3NXJlbTtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IDUwMDtcclxuICBmb250LXNpemU6IDAuNzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgY29sb3I6ICMyQzMyM0E7XHJcbiAgb3BhY2l0eTogMC40O1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBwLnByZXZpZXcge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogZmxleC1lbmQ7XHJcbiAgY29sb3I6ICMwMDAwMDA7XHJcbiAgb3BhY2l0eTogMC42O1xyXG4gIG1hcmdpbi1ib3R0b206IDAuNXJlbTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgdGQsXHJcbmRpdi5rdWthaS1tb2RhbCB0aCB7XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XHJcbiAgZm9udC1zaXplOiAwLjc1cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xyXG4gIGNvbG9yOiAjMDAwMDAwO1xyXG4gIG9wYWNpdHk6IDAuNjtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgdGgge1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG59XHJcbmRpdi5rbS1jb250ZW50IGxhYmVsOm5vdCguc3dpdGNoKSB7XHJcbiAgbWFyZ2luLWJvdHRvbTogMC41cmVtO1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogNTAwO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMS4xMjVyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGNvbG9yOiAjMkMzMjNBO1xyXG4gIG9wYWNpdHk6IDAuNDtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgcCwgc3Bhbi5kYW5nZXIge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogZmxleC1lbmQ7XHJcbiAgY29sb3I6ICMwMDAwMDA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIHNwYW4ubm8tbWFyZ2luLFxyXG5kaXYua3VrYWktbW9kYWwgc3Bhbi5tYXJnaW4ge1xyXG4gIGNvbG9yOiAjRkYwMDAwO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBzcGFuLm5vLW1hcmdpbiB7XHJcbiAgbWFyZ2luLXRvcDogMC43NXJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAtMS43NXJlbTtcclxuICBjb2xvcjogI0ZGMDAwMDtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgZGl2Lmdyb3VwIHtcclxuICBtYXJnaW4tdG9wOiAxLjVyZW07XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQsXHJcbmRpdi5rdWthaS1tb2RhbCB0ZXh0YXJlYS50ZXh0IHtcclxuICB3aWR0aDogMTAwJTtcclxuICBiYWNrZ3JvdW5kOiAjRTFFMUUxO1xyXG4gIGJvcmRlci1yYWRpdXM6IDAuNzVyZW07XHJcbiAgaGVpZ2h0OiAzcmVtO1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogM3JlbTtcclxuICBsZXR0ZXItc3BhY2luZzogMC4xNnB4O1xyXG4gIGNvbG9yOiAjMDAwMDAwO1xyXG4gIHBhZGRpbmctbGVmdDogMXJlbTtcclxuICBwYWRkaW5nLXJpZ2h0OiAxcmVtO1xyXG4gIGJvcmRlcjogMDtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgaW5wdXQudGV4dC5wYXNzd29yZCB7XHJcbiAgd2lkdGg6IDIwMCU7XHJcbiAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCB0ZXh0YXJlYS50ZXh0IHtcclxuICBwYWRkaW5nLXRvcDogMC41cmVtO1xyXG4gIGhlaWdodDogN3JlbTtcclxuICBsaW5lLWhlaWdodDogMS4yNXJlbTtcclxuICByZXNpemU6IG5vbmU7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQ6OnBsYWNlaG9sZGVyLFxyXG5kaXYua3VrYWktbW9kYWwgdGV4dGFyZWEudGV4dDo6cGxhY2Vob2xkZXIge1xyXG4gIGNvbG9yOiAjODA4MDgwO1xyXG4gIG9wYWNpdHk6IDE7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQ6Oi13ZWJraXQtaW5wdXQtcGxhY2Vob2xkZXIsXHJcbmRpdi5rdWthaS1tb2RhbCBpbnB1dC50ZXh0Oi1tcy1pbnB1dC1wbGFjZWhvbGRlcixcclxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6Oi13ZWJraXQtaW5wdXQtcGxhY2Vob2xkZXIsXHJcbmRpdi5rdWthaS1tb2RhbCB0ZXh0YXJlYS50ZXh0Oi1tcy1pbnB1dC1wbGFjZWhvbGRlciB7XHJcbiAgY29sb3I6ICM4MDgwODA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6OnBsYWNlaG9sZGVyLFxyXG5kaXYua3VrYWktbW9kYWwgdGV4dGFyZWEudGV4dDo6LXdlYmtpdC1pbnB1dC1wbGFjZWhvbGRlcixcclxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6LW1zLWlucHV0LXBsYWNlaG9sZGVyIHtcclxuICBwYWRkaW5nLXRvcDogMC41cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxLjI1cmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYucm93LWdyb3VwIHtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgZGl2LnJvdy1ncm91cCA+IGRpdi5ncm91cDpmaXJzdC1jaGlsZCB7XHJcbiAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYuYWR2YW5jZWQge1xyXG4gIG1hcmdpbi10b3A6IDEuNXJlbTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uLmJsdWUge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogYm9sZDtcclxuICBmb250LXNpemU6IDFyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICBjb2xvcjogd2hpdGU7XHJcbiAgYmFja2dyb3VuZDogIzU5NjNGRjtcclxuICBib3gtc2hhZG93OiAwcHggMHB4IDFweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjA0KSwgMHB4IDJweCA2cHggcmdiYSg4OSwgOTksIDI1NSwgMC4wNCksIDBweCAxNnB4IDI0cHggcmdiYSg4OSwgOTksIDI1NSwgMC4yNCk7XHJcbiAgd2lkdGg6IDEwMCU7XHJcbiAgaGVpZ2h0OiAzcmVtO1xyXG4gIGJvcmRlci1yYWRpdXM6IDAuNzVyZW07XHJcbiAgYm9yZGVyOiAwO1xyXG4gIG1hcmdpbi10b3A6IDIuNXJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAxLjVyZW07XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5ibHVlLmNvbmZpcm0sXHJcbmRpdi5rdWthaS1tb2RhbCBidXR0b24ucmV0cnkge1xyXG4gIGhlaWdodDogM3JlbTtcclxuICBtYXJnaW46IDA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5yZXRyeSB7XHJcbiAgd2lkdGg6IDEwMCU7XHJcbiAgZm9udC1zaXplOiAxcmVtO1xyXG4gIGJhY2tncm91bmQtY29sb3I6ICNkM2QzZDM7XHJcbiAgY29sb3I6IHJnYigzMywgMzcsIDQxKTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uOmZvY3VzIHtcclxuICBvdXRsaW5lOiBub25lO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYuc3dpdGNoLWNvbnRhaW5lciB7XHJcbiAgd2lkdGg6IGF1dG8gIWltcG9ydGFudDtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uLnNtYWxsIHtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IDUwMDtcclxuICBmb250LXNpemU6IDAuNzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICB3aWR0aDogYXV0bztcclxuICBoZWlnaHQ6IDEuNXJlbTtcclxuICBjb2xvcjogIzAwMDAwMDtcclxuICBvcGFjaXR5OiAwLjY7XHJcbiAgYmFja2dyb3VuZDogcmdiYSgyMTQsIDIxNCwgMjE0LCAwLjQpO1xyXG4gIGJvcmRlci1yYWRpdXM6IDAuMzEyNXJlbTtcclxuICBib3JkZXI6IDA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5zbWFsbC5tYXgge1xyXG4gIGJhY2tncm91bmQ6ICNkNWYyZGM7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5zbWFsbC5tdWx0aXBsZS1kZXN0aW5hdGlvbnMge1xyXG4gIGNvbG9yOiAjNTk2M0ZGO1xyXG4gIG9wYWNpdHk6IDE7XHJcbiAgbWFyZ2luOiAxcmVtIDEuNXJlbTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgZGl2LmFkdmFuY2VkID4gZGl2LnJvdy1ncm91cCB7XHJcbiAgaGVpZ2h0OiAxLjVyZW07XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGRpdi54IHtcclxuICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcbiAgdG9wOiAtMXJlbTtcclxuICByaWdodDogLTFyZW07XHJcbiAgd2lkdGg6IDJyZW07XHJcbiAgaGVpZ2h0OiAycmVtO1xyXG4gIHotaW5kZXg6IDEyMDtcclxuICBiYWNrZ3JvdW5kOiAjRkNGQ0ZDO1xyXG4gIGJvcmRlcjogMXB4IHNvbGlkICNGRkZGRkY7XHJcbiAgYm9yZGVyLXJhZGl1czogMXJlbTtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XHJcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XHJcbiAgY3Vyc29yOiBwb2ludGVyO1xyXG59XHJcbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDI3cmVtKSB7XHJcbiAgZGl2Lmt1a2FpLW1vZGFsIGRpdi54IHtcclxuICAgIHJpZ2h0OiAtMXB4O1xyXG4gICAgYm9yZGVyLWJvdHRvbS1yaWdodC1yYWRpdXM6IDA7XHJcbiAgfVxyXG4gIGRpdi5rdWthaS1tb2RhbCBidXR0b24uc21hbGwubXVsdGlwbGUtZGVzdGluYXRpb25zIHtcclxuICAgIG1hcmdpbi1yaWdodDogMi41cmVtO1xyXG4gIH1cclxufVxyXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAyNXJlbSkge1xyXG4gIGRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50IHtcclxuICAgIHdpZHRoOiAyM3JlbTtcclxuICB9XHJcbiAgZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQucGFzc3dvcmQge1xyXG4gICAgd2lkdGg6IDExcmVtO1xyXG4gIH1cclxufSIsIi8qIE1vZGFsICovXG5kaXYua3VrYWktbW9kYWwge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIHotaW5kZXg6IDEwMDtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwJTtcbiAgaGVpZ2h0OiAxMDAlO1xuICBvdmVyZmxvdzogYXV0bztcbiAgYmFja2dyb3VuZC1jb2xvcjogYmxhY2s7XG4gIGJhY2tncm91bmQtY29sb3I6IHJnYmEoMCwgMCwgMCwgMC40KTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsLnRvcCB7XG4gIHotaW5kZXg6IDEwMTtcbn1cblxuLyogTW9kYWwgQ29udGVudC9Cb3ggKi9cbmRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50IHtcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZmNmY2ZjO1xuICBtYXJnaW46IDVyZW0gYXV0bztcbiAgYm9yZGVyOiAxcHggc29saWQgI2ZmZmZmZjtcbiAgYm94LXNoYWRvdzogMHB4IDBweCAxcHggcmdiYSgwLCAwLCAwLCAwLjA0KSwgMHB4IDJweCA2cHggcmdiYSgwLCAwLCAwLCAwLjA0KSwgMHB4IDE2cHggMjRweCByZ2JhKDAsIDAsIDAsIDAuMDYpO1xuICBib3JkZXItcmFkaXVzOiAwLjc1cmVtO1xuICB3aWR0aDogMjVyZW07XG4gIC13ZWJraXQtYW5pbWF0aW9uLW5hbWU6IGFuaW1hdGV0b3A7XG4gIC13ZWJraXQtYW5pbWF0aW9uLWR1cmF0aW9uOiAwLjVzO1xuICBhbmltYXRpb24tbmFtZTogYW5pbWF0ZXRvcDtcbiAgYW5pbWF0aW9uLWR1cmF0aW9uOiAwLjVzO1xufVxuXG4vKiBBZGQgQW5pbWF0aW9uICovXG5ALXdlYmtpdC1rZXlmcmFtZXMgYW5pbWF0ZXRvcCB7XG4gIGZyb20ge1xuICAgIHRvcDogMjByZW07XG4gICAgb3BhY2l0eTogMDtcbiAgfVxuICB0byB7XG4gICAgdG9wOiAwO1xuICAgIG9wYWNpdHk6IDE7XG4gIH1cbn1cbkBrZXlmcmFtZXMgYW5pbWF0ZXRvcCB7XG4gIGZyb20ge1xuICAgIHRvcDogLTMwMHB4O1xuICAgIG9wYWNpdHk6IDA7XG4gIH1cbiAgdG8ge1xuICAgIHRvcDogMDtcbiAgICBvcGFjaXR5OiAxO1xuICB9XG59XG5kaXYua3VrYWktbW9kYWwgPiBkaXYua20tY29udGVudCA+IGRpdi5rbS1oZWFkZXIge1xuICBkaXNwbGF5OiBmbGV4O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XG4gIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCBibGFjaztcbiAgYm9yZGVyLWJvdHRvbTogMXB4IHNvbGlkIHJnYmEoMCwgMCwgMCwgMC4wNCk7XG59XG5cbmRpdi5rbS1oZWFkZXIgPiBIMSB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IGJvbGQ7XG4gIGZvbnQtc2l6ZTogMS4yNXJlbTtcbiAgbGluZS1oZWlnaHQ6IDEuNXJlbTtcbiAgZGlzcGxheTogZmxleDtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgY29sb3I6ICMyYzMyM2E7XG4gIG1hcmdpbjogMXJlbTtcbn1cblxuZGl2LmttLWhlYWRlciA+IHNwYW4uY2xvc2Uge1xuICBtYXJnaW46IDAuMjVyZW0gMC41cmVtO1xuICBjb2xvcjogI2FhYTtcbiAgZm9udC1zaXplOiAyOHB4O1xuICBmb250LXdlaWdodDogYm9sZDtcbn1cblxuZGl2LmttLWhlYWRlciA+IHNwYW4uY2xvc2U6aG92ZXIsXG5kaXYua20taGVhZGVyID4gc3Bhbi5jbG9zZTpmb2N1cyB7XG4gIGNvbG9yOiAjMmMzMjNhO1xuICB0ZXh0LWRlY29yYXRpb246IG5vbmU7XG4gIGN1cnNvcjogcG9pbnRlcjtcbn1cblxuZGl2LmttLWJvZHkge1xuICBtYXJnaW46IDFyZW07XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYuYW1vdW50IHtcbiAgZGlzcGxheTogZmxleDtcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XG4gIGhlaWdodDogNXJlbTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LmN1c3RvbS1sYXJnZSB7XG4gIHdpZHRoOiBhdXRvO1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG4gIGZvbnQtZmFtaWx5OiBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmO1xuICBmb250LXNpemU6IDVyZW07XG4gIGxpbmUtaGVpZ2h0OiA1cmVtO1xuICBjb2xvcjogIzJDMzIzQTtcbiAgYmFja2dyb3VuZDogI2ZjZmNmYztcbiAgb3BhY2l0eTogMC40O1xuICBwYWRkaW5nOiAwO1xuICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gIGJvcmRlcjogMDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LmN1c3RvbS1sYXJnZTpkaXNhYmxlZCB7XG4gIGJhY2tncm91bmQtY29sb3I6IHJnYmEoMCwgMCwgMCwgMCk7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBpbnB1dDpmb2N1cyxcbmRpdi5rdWthaS1tb2RhbCB0ZXh0YXJlYTpmb2N1cyB7XG4gIG91dGxpbmU6IG5vbmU7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBzcGFuLnRleiB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IDUwMDtcbiAgZm9udC1zaXplOiAxcmVtO1xuICBsaW5lLWhlaWdodDogMXJlbTtcbiAgY29sb3I6ICMyQzMyM0E7XG4gIG9wYWNpdHk6IDAuNDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIHAuZmVlIHtcbiAgbWFyZ2luLXRvcDogMC4zNzVyZW07XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IDUwMDtcbiAgZm9udC1zaXplOiAwLjc1cmVtO1xuICBsaW5lLWhlaWdodDogMXJlbTtcbiAgY29sb3I6ICMyQzMyM0E7XG4gIG9wYWNpdHk6IDAuNDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIHAucHJldmlldyB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcbiAgZm9udC1zaXplOiAwLjg3NXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBmbGV4LWVuZDtcbiAgY29sb3I6ICMwMDAwMDA7XG4gIG9wYWNpdHk6IDAuNjtcbiAgbWFyZ2luLWJvdHRvbTogMC41cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgdGQsXG5kaXYua3VrYWktbW9kYWwgdGgge1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG4gIGZvbnQtc2l6ZTogMC43NXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGNvbG9yOiAjMDAwMDAwO1xuICBvcGFjaXR5OiAwLjY7XG59XG5cbmRpdi5rdWthaS1tb2RhbCB0aCB7XG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xufVxuXG5kaXYua20tY29udGVudCBsYWJlbDpub3QoLnN3aXRjaCkge1xuICBtYXJnaW4tYm90dG9tOiAwLjVyZW07XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IDUwMDtcbiAgZm9udC1zaXplOiAxcmVtO1xuICBsaW5lLWhlaWdodDogMS4xMjVyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGNvbG9yOiAjMkMzMjNBO1xuICBvcGFjaXR5OiAwLjQ7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBwLCBzcGFuLmRhbmdlciB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcbiAgZm9udC1zaXplOiAwLjg3NXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBmbGV4LWVuZDtcbiAgY29sb3I6ICMwMDAwMDA7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBzcGFuLm5vLW1hcmdpbixcbmRpdi5rdWthaS1tb2RhbCBzcGFuLm1hcmdpbiB7XG4gIGNvbG9yOiAjRkYwMDAwO1xufVxuXG5kaXYua3VrYWktbW9kYWwgc3Bhbi5uby1tYXJnaW4ge1xuICBtYXJnaW4tdG9wOiAwLjc1cmVtO1xuICBtYXJnaW4tYm90dG9tOiAtMS43NXJlbTtcbiAgY29sb3I6ICNGRjAwMDA7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYuZ3JvdXAge1xuICBtYXJnaW4tdG9wOiAxLjVyZW07XG59XG5cbmRpdi5rdWthaS1tb2RhbCBpbnB1dC50ZXh0LFxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQge1xuICB3aWR0aDogMTAwJTtcbiAgYmFja2dyb3VuZDogI0UxRTFFMTtcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcbiAgaGVpZ2h0OiAzcmVtO1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG4gIGZvbnQtc2l6ZTogMXJlbTtcbiAgbGluZS1oZWlnaHQ6IDNyZW07XG4gIGxldHRlci1zcGFjaW5nOiAwLjE2cHg7XG4gIGNvbG9yOiAjMDAwMDAwO1xuICBwYWRkaW5nLWxlZnQ6IDFyZW07XG4gIHBhZGRpbmctcmlnaHQ6IDFyZW07XG4gIGJvcmRlcjogMDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQucGFzc3dvcmQge1xuICB3aWR0aDogMjAwJTtcbiAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgdGV4dGFyZWEudGV4dCB7XG4gIHBhZGRpbmctdG9wOiAwLjVyZW07XG4gIGhlaWdodDogN3JlbTtcbiAgbGluZS1oZWlnaHQ6IDEuMjVyZW07XG4gIHJlc2l6ZTogbm9uZTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQ6OnBsYWNlaG9sZGVyLFxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6OnBsYWNlaG9sZGVyIHtcbiAgY29sb3I6ICM4MDgwODA7XG4gIG9wYWNpdHk6IDE7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBpbnB1dC50ZXh0Ojotd2Via2l0LWlucHV0LXBsYWNlaG9sZGVyLFxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQ6LW1zLWlucHV0LXBsYWNlaG9sZGVyLFxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6Oi13ZWJraXQtaW5wdXQtcGxhY2Vob2xkZXIsXG5kaXYua3VrYWktbW9kYWwgdGV4dGFyZWEudGV4dDotbXMtaW5wdXQtcGxhY2Vob2xkZXIge1xuICBjb2xvcjogIzgwODA4MDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6OnBsYWNlaG9sZGVyLFxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6Oi13ZWJraXQtaW5wdXQtcGxhY2Vob2xkZXIsXG5kaXYua3VrYWktbW9kYWwgdGV4dGFyZWEudGV4dDotbXMtaW5wdXQtcGxhY2Vob2xkZXIge1xuICBwYWRkaW5nLXRvcDogMC41cmVtO1xuICBsaW5lLWhlaWdodDogMS4yNXJlbTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5yb3ctZ3JvdXAge1xuICBkaXNwbGF5OiBmbGV4O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYucm93LWdyb3VwID4gZGl2Lmdyb3VwOmZpcnN0LWNoaWxkIHtcbiAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2LmFkdmFuY2VkIHtcbiAgbWFyZ2luLXRvcDogMS41cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uLmJsdWUge1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xuICBmb250LXNpemU6IDFyZW07XG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xuICBkaXNwbGF5OiBmbGV4O1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xuICBjb2xvcjogd2hpdGU7XG4gIGJhY2tncm91bmQ6ICM1OTYzRkY7XG4gIGJveC1zaGFkb3c6IDBweCAwcHggMXB4IHJnYmEoODksIDk5LCAyNTUsIDAuMDQpLCAwcHggMnB4IDZweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjA0KSwgMHB4IDE2cHggMjRweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjI0KTtcbiAgd2lkdGg6IDEwMCU7XG4gIGhlaWdodDogM3JlbTtcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcbiAgYm9yZGVyOiAwO1xuICBtYXJnaW4tdG9wOiAyLjVyZW07XG4gIG1hcmdpbi1ib3R0b206IDEuNXJlbTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5ibHVlLmNvbmZpcm0sXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uLnJldHJ5IHtcbiAgaGVpZ2h0OiAzcmVtO1xuICBtYXJnaW46IDA7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBidXR0b24ucmV0cnkge1xuICB3aWR0aDogMTAwJTtcbiAgZm9udC1zaXplOiAxcmVtO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZDNkM2QzO1xuICBjb2xvcjogIzIxMjUyOTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbjpmb2N1cyB7XG4gIG91dGxpbmU6IG5vbmU7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYuc3dpdGNoLWNvbnRhaW5lciB7XG4gIHdpZHRoOiBhdXRvICFpbXBvcnRhbnQ7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBidXR0b24uc21hbGwge1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiA1MDA7XG4gIGZvbnQtc2l6ZTogMC43NXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gIHdpZHRoOiBhdXRvO1xuICBoZWlnaHQ6IDEuNXJlbTtcbiAgY29sb3I6ICMwMDAwMDA7XG4gIG9wYWNpdHk6IDAuNjtcbiAgYmFja2dyb3VuZDogcmdiYSgyMTQsIDIxNCwgMjE0LCAwLjQpO1xuICBib3JkZXItcmFkaXVzOiAwLjMxMjVyZW07XG4gIGJvcmRlcjogMDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5zbWFsbC5tYXgge1xuICBiYWNrZ3JvdW5kOiAjZDVmMmRjO1xufVxuXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uLnNtYWxsLm11bHRpcGxlLWRlc3RpbmF0aW9ucyB7XG4gIGNvbG9yOiAjNTk2M0ZGO1xuICBvcGFjaXR5OiAxO1xuICBtYXJnaW46IDFyZW0gMS41cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2LmFkdmFuY2VkID4gZGl2LnJvdy1ncm91cCB7XG4gIGhlaWdodDogMS41cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2Lngge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIHRvcDogLTFyZW07XG4gIHJpZ2h0OiAtMXJlbTtcbiAgd2lkdGg6IDJyZW07XG4gIGhlaWdodDogMnJlbTtcbiAgei1pbmRleDogMTIwO1xuICBiYWNrZ3JvdW5kOiAjRkNGQ0ZDO1xuICBib3JkZXI6IDFweCBzb2xpZCAjRkZGRkZGO1xuICBib3JkZXItcmFkaXVzOiAxcmVtO1xuICBkaXNwbGF5OiBmbGV4O1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgY3Vyc29yOiBwb2ludGVyO1xufVxuXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAyN3JlbSkge1xuICBkaXYua3VrYWktbW9kYWwgZGl2Lngge1xuICAgIHJpZ2h0OiAtMXB4O1xuICAgIGJvcmRlci1ib3R0b20tcmlnaHQtcmFkaXVzOiAwO1xuICB9XG5cbiAgZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5zbWFsbC5tdWx0aXBsZS1kZXN0aW5hdGlvbnMge1xuICAgIG1hcmdpbi1yaWdodDogMi41cmVtO1xuICB9XG59XG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAyNXJlbSkge1xuICBkaXYua3VrYWktbW9kYWwgPiBkaXYua20tY29udGVudCB7XG4gICAgd2lkdGg6IDIzcmVtO1xuICB9XG5cbiAgZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQucGFzc3dvcmQge1xuICAgIHdpZHRoOiAxMXJlbTtcbiAgfVxufVxuLm1vZGFsLWZvb3RlciB7XG4gIHBhZGRpbmctYm90dG9tOiAwcmVtO1xufVxuXG5kaXYub3V0c2lkZS1jb250YWluZXIge1xuICBwYWRkaW5nOiAwLjVyZW0gMDtcbn1cblxuZGl2Lm91dHNpZGUtY29udGFpbmVyID4gc3BhbiB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcbiAgZm9udC1zaXplOiAwLjgxMjVyZW07XG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xuICBjb2xvcjogIzJDMzIzQTtcbn1cblxuZGl2Lm91dHNpZGUtY29udGFpbmVyID4gc3BhbiA+IHNwYW4ge1xuICBjb2xvcjogIzU5NjNGRjtcbiAgY3Vyc29yOiBwb2ludGVyO1xufVxuXG4uZmEtY2hlY2stY2lyY2xlIHtcbiAgY29sb3I6ICMyOGE3NDU7XG4gIGZvbnQtc2l6ZTogOTZweDtcbn1cblxuYnV0dG9uIHtcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcbiAgaGVpZ2h0OiAzcmVtO1xuICB3aWR0aDogOHJlbTtcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xuICBmb250LXdlaWdodDogYm9sZDtcbiAgZm9udC1zaXplOiAwLjg3NXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICBjdXJzb3I6IHBvaW50ZXI7XG4gIC13ZWJraXQtYXBwZWFyYW5jZTogbm9uZSAhaW1wb3J0YW50O1xuICB0cmFuc2l0aW9uOiBtYXJnaW4tdG9wIDAuMXMgZWFzZS1pbiwgbWFyZ2luLWJvdHRvbSAwLjFzIGVhc2UtaW47XG59XG5cbmJ1dHRvbi5ibHVlOmhvdmVyIHtcbiAgbWFyZ2luLXRvcDogLTAuMTI1cmVtO1xufVxuXG5idXR0b246Zm9jdXMge1xuICBvdXRsaW5lOiBub25lO1xufVxuXG5idXR0b24uYmx1ZSB7XG4gIGNvbG9yOiAjNTk2M2ZmO1xuICBiYWNrZ3JvdW5kOiAjYTRhOGVjO1xuICBib3gtc2hhZG93OiAwcHggMHB4IDFweCByZ2JhKDE2NCwgMTY4LCAyMzYsIDAuMDQpLCAwcHggMnB4IDZweCByZ2JhKDE2NCwgMTY4LCAyMzYsIDAuMDQpLCAwcHggMTZweCAyNHB4IHJnYmEoMTY0LCAxNjgsIDIzNiwgMC4yNCk7XG4gIHRyYW5zaXRpb246IG1hcmdpbi10b3AgMC4xcyBlYXNlLWluLCBtYXJnaW4tYm90dG9tIDAuMXMgZWFzZS1pbjtcbn1cblxuaW5wdXQuY3VzdG9tLXRleHRib3gge1xuICBwYWRkaW5nLWxlZnQ6IDAuNzVyZW07XG59XG5cbmRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50ID4gZGl2LmttLWJvZHkgPiBkaXYuZ3JvdXAgPiBpbnB1dC50ZXh0IHtcbiAgZm9udC1zaXplOiAwLjgxMjVyZW07XG59XG5cbkBzdXBwb3J0cyAoLXdlYmtpdC10b3VjaC1jYWxsb3V0OiBub25lKSB7XG4gIGRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50ID4gZGl2LmttLWJvZHkgPiBkaXYuZ3JvdXAgPiBpbnB1dC50ZXh0IHtcbiAgICBmb250LXNpemU6IDFyZW07XG4gIH1cbn1cbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDI1cmVtKSB7XG4gIGlucHV0I3RvQWRkcmVzcyxcbmlucHV0LmN1c3RvbS10ZXh0Ym94IHtcbiAgICBmb250LXNpemU6IDAuODEyNXJlbTtcbiAgfVxufVxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDogMjJyZW0pIHtcbiAgaW5wdXQjdG9BZGRyZXNzLFxuaW5wdXQuY3VzdG9tLXRleHRib3gge1xuICAgIGZvbnQtc2l6ZTogMC43NXJlbTtcbiAgfVxufSIsIkBpbXBvcnQgXCIuLi8uLi8uLi9zY3NzL21vZGFsLnNjc3NcIjtcclxuLm1vZGFsLWZvb3RlciB7XHJcbiAgcGFkZGluZy1ib3R0b206IDByZW07XHJcbn1cclxuZGl2Lm91dHNpZGUtY29udGFpbmVyIHtcclxuICBwYWRkaW5nOiAwLjVyZW0gMDtcclxufVxyXG5kaXYub3V0c2lkZS1jb250YWluZXIgPiBzcGFuIHtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcclxuICBmb250LXNpemU6IDAuODEyNXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBjb2xvcjogIzJDMzIzQTtcclxufVxyXG5kaXYub3V0c2lkZS1jb250YWluZXIgPiBzcGFuID4gc3BhbiB7XHJcbiAgY29sb3I6ICM1OTYzRkY7XHJcbiAgY3Vyc29yOiBwb2ludGVyO1xyXG59XHJcbi5mYS1jaGVjay1jaXJjbGUge1xyXG4gIGNvbG9yOiAjMjhhNzQ1OyAvLyM1Y2I4NWM7XHJcbiAgZm9udC1zaXplOiA5NnB4O1xyXG59XHJcbmJ1dHRvbiB7XHJcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcclxuICBoZWlnaHQ6IDNyZW07XHJcbiAgd2lkdGg6IDhyZW07XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xyXG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XHJcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XHJcbiAgY3Vyc29yOiBwb2ludGVyO1xyXG4gIC13ZWJraXQtYXBwZWFyYW5jZTogbm9uZSAhaW1wb3J0YW50O1xyXG4gIHRyYW5zaXRpb246IG1hcmdpbi10b3AgMC4xcyBlYXNlLWluLCBtYXJnaW4tYm90dG9tIDAuMXMgZWFzZS1pbjtcclxufVxyXG5idXR0b24uYmx1ZTpob3ZlciB7XHJcbiAgbWFyZ2luLXRvcDogLTAuMTI1cmVtO1xyXG59XHJcbmJ1dHRvbjpmb2N1cyB7XHJcbiAgb3V0bGluZTogbm9uZTtcclxufVxyXG5idXR0b24uYmx1ZSB7XHJcbiAgY29sb3I6ICM1OTYzZmY7XHJcbiAgYmFja2dyb3VuZDogI2E0YThlYztcclxuICBib3gtc2hhZG93OiAwcHggMHB4IDFweCByZ2JhKDE2NCwgMTY4LCAyMzYsIDAuMDQpLFxyXG4gICAgMHB4IDJweCA2cHggcmdiYSgxNjQsIDE2OCwgMjM2LCAwLjA0KSxcclxuICAgIDBweCAxNnB4IDI0cHggcmdiYSgxNjQsIDE2OCwgMjM2LCAwLjI0KTtcclxuICB0cmFuc2l0aW9uOiBtYXJnaW4tdG9wIDAuMXMgZWFzZS1pbiwgbWFyZ2luLWJvdHRvbSAwLjFzIGVhc2UtaW47XHJcbn1cclxuaW5wdXQuY3VzdG9tLXRleHRib3gge1xyXG4gIHBhZGRpbmctbGVmdDogMC43NXJlbTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgPiBkaXYua20tY29udGVudCA+IGRpdi5rbS1ib2R5ID4gZGl2Lmdyb3VwID4gaW5wdXQudGV4dCB7XHJcbiAgZm9udC1zaXplOiAwLjgxMjVyZW07XHJcbn1cclxuQHN1cHBvcnRzICgtd2Via2l0LXRvdWNoLWNhbGxvdXQ6IG5vbmUpIHtcclxuICBkaXYua3VrYWktbW9kYWwgPiBkaXYua20tY29udGVudCA+IGRpdi5rbS1ib2R5ID4gZGl2Lmdyb3VwID4gaW5wdXQudGV4dCB7XHJcbiAgICBmb250LXNpemU6IDFyZW07XHJcbiAgfVxyXG59XHJcbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDI1cmVtKSB7XHJcbiAgaW5wdXQjdG9BZGRyZXNzLFxyXG4gIGlucHV0LmN1c3RvbS10ZXh0Ym94IHtcclxuICAgIGZvbnQtc2l6ZTogMC44MTI1cmVtO1xyXG4gIH1cclxufVxyXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAyMnJlbSkge1xyXG4gIGlucHV0I3RvQWRkcmVzcyxcclxuICBpbnB1dC5jdXN0b20tdGV4dGJveCB7XHJcbiAgICBmb250LXNpemU6IDAuNzVyZW07XHJcbiAgfVxyXG59XHJcbiJdfQ== */"] });
 /*@__PURE__*/ (function () { _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵsetClassMetadata"](DelegateComponent, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"],
         args: [{
@@ -9905,7 +2868,7 @@ DelegateComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefine
                 templateUrl: './delegate.component.html',
                 styleUrls: ['./delegate.component.scss']
             }]
-    }], function () { return [{ type: ngx_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2__["BsModalService"] }, { type: _services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_3__["WalletService"] }, { type: _services_operation_operation_service__WEBPACK_IMPORTED_MODULE_5__["OperationService"] }, { type: _services_coordinator_coordinator_service__WEBPACK_IMPORTED_MODULE_4__["CoordinatorService"] }, { type: _services_export_export_service__WEBPACK_IMPORTED_MODULE_6__["ExportService"] }, { type: _services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_7__["InputValidationService"] }, { type: _services_ledger_ledger_service__WEBPACK_IMPORTED_MODULE_8__["LedgerService"] }, { type: _services_message_message_service__WEBPACK_IMPORTED_MODULE_11__["MessageService"] }]; }, { toPkhView: [{
+    }], function () { return [{ type: ngx_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2__["BsModalService"] }, { type: _services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_3__["WalletService"] }, { type: _services_operation_operation_service__WEBPACK_IMPORTED_MODULE_5__["OperationService"] }, { type: _services_coordinator_coordinator_service__WEBPACK_IMPORTED_MODULE_4__["CoordinatorService"] }, { type: _services_export_export_service__WEBPACK_IMPORTED_MODULE_6__["ExportService"] }, { type: _services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_7__["InputValidationService"] }, { type: _services_ledger_ledger_service__WEBPACK_IMPORTED_MODULE_8__["LedgerService"] }, { type: _services_message_message_service__WEBPACK_IMPORTED_MODULE_10__["MessageService"] }]; }, { toPkhView: [{
             type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"],
             args: ['toPkhInput']
         }], beaconMode: [{
@@ -10029,7 +2992,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../services/wallet/wallet */ "./src/app/services/wallet/wallet.ts");
 /* harmony import */ var _services_lookup_lookup_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../services/lookup/lookup.service */ "./src/app/services/lookup/lookup.service.ts");
 /* harmony import */ var _services_message_message_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../services/message/message.service */ "./src/app/services/message/message.service.ts");
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../environments/environment */ "./src/environments/environment.ts");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
+
 
 
 
@@ -10045,17 +3010,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function HeaderComponent_img_2_Template(rf, ctx) { if (rf & 1) {
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](0, "img", 13);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](0, "img", 15);
 } }
 function HeaderComponent_img_3_Template(rf, ctx) { if (rf & 1) {
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](0, "img", 14);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](0, "img", 16);
 } }
 function HeaderComponent_ng_container_5_ng_container_1_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerStart"](0);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "a", 15);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "a", 17);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](2, " Accounts ");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](3, "img", 16);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](3, "img", 18);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](4, "span");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](5, "Settings");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
@@ -10063,7 +3028,7 @@ function HeaderComponent_ng_container_5_ng_container_1_Template(rf, ctx) { if (r
 } }
 function HeaderComponent_ng_container_5_ng_container_2_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerStart"](0);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "a", 17);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "a", 19);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](2, " Accounts ");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerEnd"]();
@@ -10082,52 +3047,52 @@ function HeaderComponent_ng_container_5_Template(rf, ctx) { if (rf & 1) {
 } }
 function HeaderComponent_ng_container_6_ng_container_10_ng_container_3_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerStart"](0);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "a", 25);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "a", 27);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](2);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerEnd"]();
 } if (rf & 2) {
-    const origAcc_r321 = ctx.$implicit;
-    const ctx_r320 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](3);
+    const origAcc_r322 = ctx.$implicit;
+    const ctx_r321 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](3);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassProp"]("selected", origAcc_r321.address === ctx_r320.activeAccount.address);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpropertyInterpolate1"]("routerLink", "/account/", origAcc_r321.address, "");
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassProp"]("selected", origAcc_r322.address === ctx_r321.activeAccount.address);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpropertyInterpolate1"]("routerLink", "/account/", origAcc_r322.address, "");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"](" ", origAcc_r321.shortAddress(), " ");
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"](" ", origAcc_r322.shortAddress(), " ");
 } }
 function HeaderComponent_ng_container_6_ng_container_10_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerStart"](0);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "a", 25);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "a", 27);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](2);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](3, HeaderComponent_ng_container_6_ng_container_10_ng_container_3_Template, 3, 4, "ng-container", 24);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](3, HeaderComponent_ng_container_6_ng_container_10_ng_container_3_Template, 3, 4, "ng-container", 26);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerEnd"]();
 } if (rf & 2) {
-    const impAcc_r319 = ctx.$implicit;
-    const ctx_r318 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2);
+    const impAcc_r320 = ctx.$implicit;
+    const ctx_r319 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassProp"]("selected", impAcc_r319.address === ctx_r318.activeAccount.address);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpropertyInterpolate1"]("routerLink", "/account/", impAcc_r319.address, "");
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassProp"]("selected", impAcc_r320.address === ctx_r319.activeAccount.address);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpropertyInterpolate1"]("routerLink", "/account/", impAcc_r320.address, "");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"](" ", impAcc_r319.shortAddress(), " ");
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"](" ", impAcc_r320.shortAddress(), " ");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", impAcc_r319.originatedAccounts);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", impAcc_r320.originatedAccounts);
 } }
 function HeaderComponent_ng_container_6_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerStart"](0);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "a", 18);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "a", 20);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](2, " Accounts ");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](3, "img", 19);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](4, "div", 20);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](5, "div", 21);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](3, "img", 21);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](4, "div", 22);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](5, "div", 23);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](6, "span");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](7);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](8, "img", 22);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](8, "img", 24);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](9, "div", 23);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](10, HeaderComponent_ng_container_6_ng_container_10_Template, 4, 5, "ng-container", 24);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](9, "div", 25);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](10, HeaderComponent_ng_container_6_ng_container_10_Template, 4, 5, "ng-container", 26);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerEnd"]();
@@ -10138,15 +3103,20 @@ function HeaderComponent_ng_container_6_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx_r314.impAccs);
 } }
-function HeaderComponent_ng_container_16_Template(rf, ctx) { if (rf & 1) {
+function HeaderComponent_ng_container_17_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerStart"](0);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](1, "img", 26);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](1, "TESTNET VERSION");
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerEnd"]();
+} }
+function HeaderComponent_ng_container_19_Template(rf, ctx) { if (rf & 1) {
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerStart"](0);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](1, "img", 28);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](2, "\u00A0");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerEnd"]();
 } if (rf & 2) {
-    const ctx_r315 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+    const ctx_r316 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpropertyInterpolate1"]("src", "../../../assets/img/", ctx_r315.getVerifier(), "-logo.svg", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsanitizeUrl"]);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpropertyInterpolate1"]("src", "../../../assets/img/", ctx_r316.getVerifier(), "-logo.svg", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsanitizeUrl"]);
 } }
 class HeaderComponent {
     constructor(router, walletService, lookupService, coordinatorService, messageService) {
@@ -10156,6 +3126,7 @@ class HeaderComponent {
         this.coordinatorService = coordinatorService;
         this.messageService = messageService;
         this.settings = false;
+        this.CONSTANTS = _environments_environment__WEBPACK_IMPORTED_MODULE_7__["CONSTANTS"];
     }
     ngOnInit() {
         if (this.walletService.wallet) {
@@ -10183,7 +3154,7 @@ class HeaderComponent {
     }
 }
 HeaderComponent.ɵfac = function HeaderComponent_Factory(t) { return new (t || HeaderComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_1__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_2__["WalletService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_lookup_lookup_service__WEBPACK_IMPORTED_MODULE_5__["LookupService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_coordinator_coordinator_service__WEBPACK_IMPORTED_MODULE_3__["CoordinatorService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_message_message_service__WEBPACK_IMPORTED_MODULE_6__["MessageService"])); };
-HeaderComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: HeaderComponent, selectors: [["app-header"]], inputs: { activeAccount: "activeAccount", settings: "settings" }, decls: 18, vars: 8, consts: [["id", "top-container"], ["routerLink", "/accounts", 1, "logo"], ["id", "logo", "src", "../../../assets/img/kukai-logo.svg", 4, "ngIf"], ["id", "logo", "src", "../../../assets/img/kukai-logo2.svg", 4, "ngIf"], [1, "middle"], [4, "ngIf"], [1, "dropdown", "right"], ["id", "menu", 1, "dropbtn"], ["src", "../../../assets/img/user.svg"], [1, "dropdown-content", "right"], ["routerLink", "/settings"], [3, "click"], ["id", "header-list"], ["id", "logo", "src", "../../../assets/img/kukai-logo.svg"], ["id", "logo", "src", "../../../assets/img/kukai-logo2.svg"], ["routerLink", "/accounts", 1, "accounts", "light"], ["src", "../../../assets/img/slash2.svg"], ["routerLink", "/accounts", 1, "accounts", "solo"], ["routerLink", "/accounts", 1, "accounts"], ["src", "../../../assets/img/slash.svg"], [1, "dropdown"], [1, "dropbtn"], ["src", "../../../assets/img/chevron-down.svg"], [1, "dropdown-content"], [4, "ngFor", "ngForOf"], [3, "routerLink"], [1, "verifier-logo", 3, "src"]], template: function HeaderComponent_Template(rf, ctx) { if (rf & 1) {
+HeaderComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: HeaderComponent, selectors: [["app-header"]], inputs: { activeAccount: "activeAccount", settings: "settings" }, decls: 21, vars: 9, consts: [["id", "top-container"], ["routerLink", "/accounts", 1, "logo"], ["id", "logo", "src", "../../../assets/img/kukai-logo.svg", 4, "ngIf"], ["id", "logo", "src", "../../../assets/img/kukai-logo2.svg", 4, "ngIf"], [1, "middle"], [4, "ngIf"], [1, "dropdown", "right"], ["id", "menu", 1, "dropbtn"], ["src", "../../../assets/img/user.svg"], [1, "dropdown-content", "right"], ["routerLink", "/settings"], [3, "click"], ["id", "header-list"], [1, "left"], [1, "main"], ["id", "logo", "src", "../../../assets/img/kukai-logo.svg"], ["id", "logo", "src", "../../../assets/img/kukai-logo2.svg"], ["routerLink", "/accounts", 1, "accounts", "light"], ["src", "../../../assets/img/slash2.svg"], ["routerLink", "/accounts", 1, "accounts", "solo"], ["routerLink", "/accounts", 1, "accounts"], ["src", "../../../assets/img/slash.svg"], [1, "dropdown"], [1, "dropbtn"], ["src", "../../../assets/img/chevron-down.svg"], [1, "dropdown-content"], [4, "ngFor", "ngForOf"], [3, "routerLink"], [1, "verifier-logo", 3, "src"]], template: function HeaderComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "a", 1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](2, HeaderComponent_img_2_Template, 1, 0, "img", 2);
@@ -10209,8 +3180,13 @@ HeaderComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineCo
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](15, "div", 12);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](16, HeaderComponent_ng_container_16_Template, 3, 1, "ng-container", 5);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](17);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](16, "div", 13);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](17, HeaderComponent_ng_container_17_Template, 2, 0, "ng-container", 5);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](18, "div", 14);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](19, HeaderComponent_ng_container_19_Template, 3, 1, "ng-container", 5);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](20);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     } if (rf & 2) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
@@ -10223,11 +3199,13 @@ HeaderComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineCo
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx.activeAccount);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](9);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassProp"]("invert", ctx.settings);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", !ctx.CONSTANTS.MAINNET);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx.getVerifier());
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"]("", ctx.getUsername(), "\n");
-    } }, directives: [_angular_router__WEBPACK_IMPORTED_MODULE_1__["RouterLinkWithHref"], _angular_common__WEBPACK_IMPORTED_MODULE_7__["NgIf"], _angular_common__WEBPACK_IMPORTED_MODULE_7__["NgForOf"]], styles: ["[_nghost-%COMP%] {\n  height: 6rem;\n  margin-bottom: 1.5rem;\n  width: 100%;\n  display: flex;\n  flex-direction: column;\n}\n\ndiv.middle[_ngcontent-%COMP%] {\n  margin-top: 1rem;\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n}\n\ndiv.middle[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: white;\n  font-style: normal;\n  font-weight: 500;\n  font-size: 0.75rem;\n  line-height: 1rem;\n}\n\ndiv.middle[_ngcontent-%COMP%]   .accounts[_ngcontent-%COMP%] {\n  font-weight: normal;\n  font-style: normal;\n  font-size: 0.75rem;\n  line-height: 1rem;\n  color: rgba(255, 255, 255, 0.8);\n}\n\ndiv.middle[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%] {\n  color: black;\n}\n\ndiv.middle[_ngcontent-%COMP%]   .accounts.light[_ngcontent-%COMP%] {\n  color: rgba(0, 0, 0, 0.4);\n}\n\ndiv.middle[_ngcontent-%COMP%]    > .accounts.solo[_ngcontent-%COMP%] {\n  color: white;\n  font-weight: 500;\n}\n\ndiv.middle[_ngcontent-%COMP%]   img[_ngcontent-%COMP%] {\n  padding-top: 0rem;\n  margin-left: 0.25rem;\n  margin-right: 0.25rem;\n}\n\n#top-container[_ngcontent-%COMP%] {\n  height: 5rem;\n  width: 100%;\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n}\n\na.logo[_ngcontent-%COMP%] {\n  margin: 2.25rem 2rem 1rem;\n  width: 5.6875rem;\n  height: 1.75rem;\n}\n\n#menu[_ngcontent-%COMP%] {\n  cursor: pointer;\n  width: 3rem;\n  height: 3rem;\n  background-color: #fcfcfc;\n  border: 0.0625rem solid #ffffff;\n  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.14), 0px 16px 24px rgba(0, 0, 0, 0.16);\n  border-radius: 0.75rem;\n  margin: 1rem 2rem 1.5rem 2rem;\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n}\n\n#menu[_ngcontent-%COMP%]:hover {\n  background-color: #eaebf9 !important;\n  border: 0.0625rem solid #eaebf9 !important;\n}\n\n[_nghost-%COMP%]   .verifier-logo[_ngcontent-%COMP%] {\n  height: 0.75rem;\n  margin-bottom: 0.125rem;\n}\n\n#header-list[_ngcontent-%COMP%] {\n  width: 100%;\n  font-size: 0.875rem;\n  color: rgba(255, 255, 255, 0.8);\n  vertical-align: bottom;\n  text-align: right;\n  line-height: 1rem;\n  padding-right: 2rem;\n}\n\n#header-list.invert[_ngcontent-%COMP%] {\n  color: rgba(0, 0, 0, 0.8);\n}\n\n#menu[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: 500;\n  font-size: 1rem;\n  line-height: 1rem;\n  color: #2c323a;\n  display: flex;\n  align-items: center;\n}\n\n.dropbtn[_ngcontent-%COMP%] {\n  height: 2rem;\n  cursor: pointer;\n  display: flex;\n}\n\n.dropdown[_ngcontent-%COMP%] {\n  position: relative;\n  display: inline-block;\n  padding-bottom: 0.5rem;\n  padding-top: 0.5rem;\n}\n\n.dropbtn[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: 500;\n  font-size: 1rem;\n  line-height: 1rem;\n  color: white;\n  display: flex;\n  align-items: center;\n}\n\n.dropdown-content[_ngcontent-%COMP%] {\n  background: #fcfcfc;\n  border: 1px solid #ffffff;\n  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.06);\n  border-radius: 12px;\n  display: none;\n  position: absolute;\n  margin-left: -1rem;\n  z-index: 1;\n  \n}\n\n.dropdown-content.right[_ngcontent-%COMP%] {\n  margin-top: -1rem;\n}\n\n.dropdown-content[_ngcontent-%COMP%]   .sep[_ngcontent-%COMP%] {\n  margin-top: 0.5rem;\n  margin-bottom: 0.5rem;\n  border-top: 1px solid rgba(0, 0, 0, 0.04);\n  border-bottom: 1px solid rgba(0, 0, 0, 0.04);\n}\n\n.dropdown-content[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\n  color: #2c323a;\n  padding: 0.75rem 1rem;\n  text-decoration: none;\n  display: block;\n  cursor: pointer;\n}\n\n.dropdown-content[_ngcontent-%COMP%]   a.selected[_ngcontent-%COMP%] {\n  text-decoration: underline;\n}\n\n.dropdown-content[_ngcontent-%COMP%]   a[_ngcontent-%COMP%]:hover {\n  background: #eaebf9;\n}\n\n.dropdown-content[_ngcontent-%COMP%]   a[_ngcontent-%COMP%]:first-child:hover {\n  border-top-left-radius: 0.75rem;\n  border-top-right-radius: 0.75rem;\n}\n\n.dropdown-content[_ngcontent-%COMP%]   a[_ngcontent-%COMP%]:last-child:hover {\n  border-bottom-left-radius: 0.75rem;\n  border-bottom-right-radius: 0.75rem;\n}\n\n.dropdown[_ngcontent-%COMP%]:hover   .dropdown-content[_ngcontent-%COMP%] {\n  display: block;\n}\n\n@media screen and (max-width: 28rem) {\n  div.dropdown[_ngcontent-%COMP%] {\n    display: none;\n  }\n\n  div.dropdown.right[_ngcontent-%COMP%] {\n    display: block;\n  }\n\n  .middle[_ngcontent-%COMP%]    > img[_ngcontent-%COMP%], .middle[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%] {\n    display: none;\n  }\n\n  a.logo[_ngcontent-%COMP%] {\n    margin: 2.25rem 0 2.25rem 1.25rem;\n  }\n\n  div#menu[_ngcontent-%COMP%] {\n    margin-right: 1.25rem;\n  }\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY29tcG9uZW50cy9oZWFkZXIvQzpcXFVzZXJzXFxrbGFzX1xcR2l0XFxrdWthaS9zcmNcXGFwcFxcY29tcG9uZW50c1xcaGVhZGVyXFxoZWFkZXIuY29tcG9uZW50LnNjc3MiLCJzcmMvYXBwL2NvbXBvbmVudHMvaGVhZGVyL2hlYWRlci5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLFlBQUE7RUFDQSxxQkFBQTtFQUNBLFdBQUE7RUFDQSxhQUFBO0VBQ0Esc0JBQUE7QUNDSjs7QURDQTtFQUNFLGdCQUFBO0VBQ0UsYUFBQTtFQUNBLG1CQUFBO0VBQ0EsdUJBQUE7RUFDQSxtQkFBQTtBQ0VKOztBREFBO0VBQ0UsWUFBQTtFQUNBLGtCQUFBO0VBQ0EsZ0JBQUE7RUFDQSxrQkFBQTtFQUNBLGlCQUFBO0FDR0Y7O0FEREE7RUFDRSxtQkFBQTtFQUNBLGtCQUFBO0VBQ0Esa0JBQUE7RUFDQSxpQkFBQTtFQUNBLCtCQUFBO0FDSUY7O0FERkE7RUFDRSxZQUFBO0FDS0Y7O0FESEE7RUFDRSx5QkFBQTtBQ01GOztBREpBO0VBQ0UsWUFBQTtFQUNBLGdCQUFBO0FDT0Y7O0FETEE7RUFDRSxpQkFBQTtFQUNBLG9CQUFBO0VBQ0EscUJBQUE7QUNRRjs7QUROQTtFQUNJLFlBQUE7RUFDQSxXQUFBO0VBQ0EsYUFBQTtFQUNBLG1CQUFBO0VBQ0EsOEJBQUE7QUNTSjs7QURQQTtFQUNJLHlCQUFBO0VBQ0EsZ0JBQUE7RUFDQSxlQUFBO0FDVUo7O0FEUkE7RUFDRSxlQUFBO0VBQ0EsV0FBQTtFQUNBLFlBQUE7RUFDQSx5QkFBQTtFQUNBLCtCQUFBO0VBQ0EsK0dBQUE7RUFFQSxzQkFBQTtFQUNBLDZCQUFBO0VBQ0EsYUFBQTtFQUNBLG1CQUFBO0VBQ0EsdUJBQUE7RUFDQSxtQkFBQTtBQ1VGOztBRFJBO0VBQ0Usb0NBQUE7RUFDQSwwQ0FBQTtBQ1dGOztBRFRBO0VBQ0UsZUFBQTtFQUNBLHVCQUFBO0FDWUY7O0FEVkE7RUFDRSxXQUFBO0VBQ0EsbUJBQUE7RUFDQSwrQkFBQTtFQUNBLHNCQUFBO0VBQ0EsaUJBQUE7RUFDQSxpQkFBQTtFQUNBLG1CQUFBO0FDYUY7O0FEWEE7RUFDRSx5QkFBQTtBQ2NGOztBRFpBO0VBQ0Usa0JBQUE7RUFDQSxnQkFBQTtFQUNBLGVBQUE7RUFDQSxpQkFBQTtFQUNBLGNBQUE7RUFDQSxhQUFBO0VBQ0EsbUJBQUE7QUNlRjs7QURYQTtFQUNFLFlBQUE7RUFDQSxlQUFBO0VBQ0EsYUFBQTtBQ2NGOztBRFhBO0VBQ0Usa0JBQUE7RUFDQSxxQkFBQTtFQUNBLHNCQUFBO0VBQ0EsbUJBQUE7QUNjRjs7QURaQTtFQUNFLGtCQUFBO0VBQ0EsZ0JBQUE7RUFDQSxlQUFBO0VBQ0EsaUJBQUE7RUFDQSxZQUFBO0VBQ0EsYUFBQTtFQUNBLG1CQUFBO0FDZUY7O0FEYkE7RUFDRSxtQkFBQTtFQUNBLHlCQUFBO0VBQ0EsK0dBQUE7RUFFQSxtQkFBQTtFQUNBLGFBQUE7RUFDQSxrQkFBQTtFQUNBLGtCQUFBO0VBQ0EsVUFBQTtFQUNBOzs7OztnQkFBQTtBQ29CRjs7QURiQTtFQUVFLGlCQUFBO0FDZUY7O0FEYkE7RUFDRSxrQkFBQTtFQUNBLHFCQUFBO0VBQ0EseUNBQUE7RUFDQSw0Q0FBQTtBQ2dCRjs7QURkQTtFQUNFLGNBQUE7RUFDQSxxQkFBQTtFQUNBLHFCQUFBO0VBQ0EsY0FBQTtFQUNBLGVBQUE7QUNpQkY7O0FEZkE7RUFDRSwwQkFBQTtBQ2tCRjs7QURmQTtFQUNFLG1CQUFBO0FDa0JGOztBRGhCQTtFQUNFLCtCQUFBO0VBQ0EsZ0NBQUE7QUNtQkY7O0FEakJBO0VBQ0Usa0NBQUE7RUFDQSxtQ0FBQTtBQ29CRjs7QURsQkE7RUFDRSxjQUFBO0FDcUJGOztBRG5CQTtFQUNFO0lBQ0UsYUFBQTtFQ3NCRjs7RURwQkE7SUFDRSxjQUFBO0VDdUJGOztFRHJCQTs7SUFFRSxhQUFBO0VDd0JGOztFRHRCQTtJQUNFLGlDQUFBO0VDeUJGOztFRHZCQTtJQUNFLHFCQUFBO0VDMEJGO0FBQ0YiLCJmaWxlIjoic3JjL2FwcC9jb21wb25lbnRzL2hlYWRlci9oZWFkZXIuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyI6aG9zdCB7XHJcbiAgICBoZWlnaHQ6IDZyZW07XHJcbiAgICBtYXJnaW4tYm90dG9tOiAxLjVyZW07XHJcbiAgICB3aWR0aDogMTAwJTtcclxuICAgIGRpc3BsYXk6IGZsZXg7XHJcbiAgICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xyXG59XHJcbmRpdi5taWRkbGUge1xyXG4gIG1hcmdpbi10b3A6IDFyZW07XHJcbiAgICBkaXNwbGF5OiBmbGV4O1xyXG4gICAgZmxleC1kaXJlY3Rpb246IHJvdztcclxuICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xyXG4gICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxufVxyXG5kaXYubWlkZGxlIHNwYW4ge1xyXG4gIGNvbG9yOiB3aGl0ZTtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IDUwMDtcclxuICBmb250LXNpemU6IDAuNzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbn1cclxuZGl2Lm1pZGRsZSAuYWNjb3VudHMge1xyXG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtc2l6ZTogMC43NXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBjb2xvcjogcmdiYSgyNTUsIDI1NSwgMjU1LCAwLjgpO1xyXG59XHJcbmRpdi5taWRkbGUgPiBzcGFuIHtcclxuICBjb2xvcjogYmxhY2s7XHJcbn1cclxuZGl2Lm1pZGRsZSAuYWNjb3VudHMubGlnaHQge1xyXG4gIGNvbG9yOiByZ2JhKDAsIDAsIDAsIDAuNCk7XHJcbn1cclxuZGl2Lm1pZGRsZSA+IC5hY2NvdW50cy5zb2xvIHtcclxuICBjb2xvcjogd2hpdGU7XHJcbiAgZm9udC13ZWlnaHQ6IDUwMDtcclxufVxyXG5kaXYubWlkZGxlIGltZyB7XHJcbiAgcGFkZGluZy10b3A6IDByZW07XHJcbiAgbWFyZ2luLWxlZnQ6IDAuMjVyZW07XHJcbiAgbWFyZ2luLXJpZ2h0OiAwLjI1cmVtO1xyXG59XHJcbiN0b3AtY29udGFpbmVyIHtcclxuICAgIGhlaWdodDogNXJlbTtcclxuICAgIHdpZHRoOiAxMDAlO1xyXG4gICAgZGlzcGxheTogZmxleDtcclxuICAgIGZsZXgtZGlyZWN0aW9uOiByb3c7XHJcbiAgICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XHJcbn1cclxuYS5sb2dvIHtcclxuICAgIG1hcmdpbjogMi4yNXJlbSAycmVtIDFyZW07XHJcbiAgICB3aWR0aDogNS42ODc1cmVtO1xyXG4gICAgaGVpZ2h0OiAxLjc1cmVtO1xyXG59XHJcbiNtZW51IHtcclxuICBjdXJzb3I6IHBvaW50ZXI7XHJcbiAgd2lkdGg6IDNyZW07XHJcbiAgaGVpZ2h0OiAzcmVtO1xyXG4gIGJhY2tncm91bmQtY29sb3I6ICNmY2ZjZmM7XHJcbiAgYm9yZGVyOiAwLjA2MjVyZW0gc29saWQgI2ZmZmZmZjtcclxuICBib3gtc2hhZG93OiAwcHggMHB4IDFweCByZ2JhKDAsIDAsIDAsIDAuMDQpLCAwcHggMnB4IDZweCByZ2JhKDAsIDAsIDAsIDAuMTQpLFxyXG4gICAgMHB4IDE2cHggMjRweCByZ2JhKDAsIDAsIDAsIDAuMTYpO1xyXG4gIGJvcmRlci1yYWRpdXM6IDAuNzVyZW07XHJcbiAgbWFyZ2luOiAxcmVtIDJyZW0gMS41cmVtIDJyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBmbGV4LWRpcmVjdGlvbjogcm93O1xyXG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xyXG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XHJcbn1cclxuI21lbnU6aG92ZXIge1xyXG4gIGJhY2tncm91bmQtY29sb3I6ICNlYWViZjkgIWltcG9ydGFudDtcclxuICBib3JkZXI6IDAuMDYyNXJlbSBzb2xpZCAjZWFlYmY5ICFpbXBvcnRhbnQ7XHJcbn1cclxuOmhvc3QgLnZlcmlmaWVyLWxvZ28ge1xyXG4gIGhlaWdodDogMC43NXJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAwLjEyNXJlbTtcclxufVxyXG4jaGVhZGVyLWxpc3Qge1xyXG4gIHdpZHRoOiAxMDAlO1xyXG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XHJcbiAgY29sb3I6IHJnYmEoMjU1LCAyNTUsIDI1NSwgMC44KTtcclxuICB2ZXJ0aWNhbC1hbGlnbjogYm90dG9tO1xyXG4gIHRleHQtYWxpZ246IHJpZ2h0O1xyXG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xyXG4gIHBhZGRpbmctcmlnaHQ6IDJyZW07XHJcbn1cclxuI2hlYWRlci1saXN0LmludmVydCB7XHJcbiAgY29sb3I6IHJnYmEoMCwgMCwgMCwgMC44KTtcclxufVxyXG4jbWVudSA+IHNwYW4ge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogNTAwO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBjb2xvcjogIzJjMzIzYTtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XHJcbn1cclxuXHJcbi8vIERyb3Bkb3duXHJcbi5kcm9wYnRuIHtcclxuICBoZWlnaHQ6IDJyZW07XHJcbiAgY3Vyc29yOiBwb2ludGVyO1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbn1cclxuXHJcbi5kcm9wZG93biB7XHJcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG4gIGRpc3BsYXk6IGlubGluZS1ibG9jaztcclxuICBwYWRkaW5nLWJvdHRvbTogMC41cmVtO1xyXG4gIHBhZGRpbmctdG9wOiAwLjVyZW07XHJcbn1cclxuLmRyb3BidG4gPiBzcGFuIHtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IDUwMDtcclxuICBmb250LXNpemU6IDFyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgY29sb3I6IHdoaXRlO1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxufVxyXG4uZHJvcGRvd24tY29udGVudCB7XHJcbiAgYmFja2dyb3VuZDogI2ZjZmNmYztcclxuICBib3JkZXI6IDFweCBzb2xpZCAjZmZmZmZmO1xyXG4gIGJveC1zaGFkb3c6IDBweCAwcHggMXB4IHJnYmEoMCwgMCwgMCwgMC4wNCksIDBweCAycHggNnB4IHJnYmEoMCwgMCwgMCwgMC4wNCksXHJcbiAgICAwcHggMTZweCAyNHB4IHJnYmEoMCwgMCwgMCwgMC4wNik7XHJcbiAgYm9yZGVyLXJhZGl1czogMTJweDtcclxuICBkaXNwbGF5OiBub25lO1xyXG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxuICBtYXJnaW4tbGVmdDogLTFyZW07XHJcbiAgei1pbmRleDogMTtcclxuICAvKlxyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogI2Y5ZjlmOTtcclxuICAgIG1pbi13aWR0aDogMTYwcHg7XHJcbiAgICBib3gtc2hhZG93OiAwcHggOHB4IDE2cHggMHB4IHJnYmEoMCwwLDAsMC4yKTtcclxuICAgIHotaW5kZXg6IDE7Ki9cclxufVxyXG4uZHJvcGRvd24tY29udGVudC5yaWdodCB7XHJcbiAgLy9tYXJnaW4tbGVmdDogLTIuNzVyZW07XHJcbiAgbWFyZ2luLXRvcDogLTFyZW07XHJcbn1cclxuLmRyb3Bkb3duLWNvbnRlbnQgLnNlcCB7XHJcbiAgbWFyZ2luLXRvcDogMC41cmVtO1xyXG4gIG1hcmdpbi1ib3R0b206IDAuNXJlbTtcclxuICBib3JkZXItdG9wOiAxcHggc29saWQgcmdiYSgwLCAwLCAwLCAwLjA0KTtcclxuICBib3JkZXItYm90dG9tOiAxcHggc29saWQgcmdiYSgwLCAwLCAwLCAwLjA0KTtcclxufVxyXG4uZHJvcGRvd24tY29udGVudCBhIHtcclxuICBjb2xvcjogIzJjMzIzYTtcclxuICBwYWRkaW5nOiAwLjc1cmVtIDFyZW07XHJcbiAgdGV4dC1kZWNvcmF0aW9uOiBub25lO1xyXG4gIGRpc3BsYXk6IGJsb2NrO1xyXG4gIGN1cnNvcjogcG9pbnRlcjtcclxufVxyXG4uZHJvcGRvd24tY29udGVudCBhLnNlbGVjdGVkIHtcclxuICB0ZXh0LWRlY29yYXRpb246IHVuZGVybGluZTtcclxufVxyXG5cclxuLmRyb3Bkb3duLWNvbnRlbnQgYTpob3ZlciB7XHJcbiAgYmFja2dyb3VuZDogI2VhZWJmOTtcclxufVxyXG4uZHJvcGRvd24tY29udGVudCBhOmZpcnN0LWNoaWxkOmhvdmVyIHtcclxuICBib3JkZXItdG9wLWxlZnQtcmFkaXVzOiAwLjc1cmVtO1xyXG4gIGJvcmRlci10b3AtcmlnaHQtcmFkaXVzOiAwLjc1cmVtO1xyXG59XHJcbi5kcm9wZG93bi1jb250ZW50IGE6bGFzdC1jaGlsZDpob3ZlciB7XHJcbiAgYm9yZGVyLWJvdHRvbS1sZWZ0LXJhZGl1czogMC43NXJlbTtcclxuICBib3JkZXItYm90dG9tLXJpZ2h0LXJhZGl1czogMC43NXJlbTtcclxufVxyXG4uZHJvcGRvd246aG92ZXIgLmRyb3Bkb3duLWNvbnRlbnQge1xyXG4gIGRpc3BsYXk6IGJsb2NrO1xyXG59XHJcbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDI4cmVtKSB7XHJcbiAgZGl2LmRyb3Bkb3duIHtcclxuICAgIGRpc3BsYXk6IG5vbmU7XHJcbiAgfVxyXG4gIGRpdi5kcm9wZG93bi5yaWdodCB7XHJcbiAgICBkaXNwbGF5OiBibG9jaztcclxuICB9XHJcbiAgLm1pZGRsZSA+IGltZyxcclxuICAubWlkZGxlID4gc3BhbiB7XHJcbiAgICBkaXNwbGF5OiBub25lO1xyXG4gIH1cclxuICBhLmxvZ28ge1xyXG4gICAgbWFyZ2luOiAyLjI1cmVtIDAgMi4yNXJlbSAxLjI1cmVtO1xyXG4gIH1cclxuICBkaXYjbWVudSB7XHJcbiAgICBtYXJnaW4tcmlnaHQ6IDEuMjVyZW07XHJcbiAgfVxyXG59XHJcbiIsIjpob3N0IHtcbiAgaGVpZ2h0OiA2cmVtO1xuICBtYXJnaW4tYm90dG9tOiAxLjVyZW07XG4gIHdpZHRoOiAxMDAlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xufVxuXG5kaXYubWlkZGxlIHtcbiAgbWFyZ2luLXRvcDogMXJlbTtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG59XG5cbmRpdi5taWRkbGUgc3BhbiB7XG4gIGNvbG9yOiB3aGl0ZTtcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xuICBmb250LXdlaWdodDogNTAwO1xuICBmb250LXNpemU6IDAuNzVyZW07XG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xufVxuXG5kaXYubWlkZGxlIC5hY2NvdW50cyB7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC1zaXplOiAwLjc1cmVtO1xuICBsaW5lLWhlaWdodDogMXJlbTtcbiAgY29sb3I6IHJnYmEoMjU1LCAyNTUsIDI1NSwgMC44KTtcbn1cblxuZGl2Lm1pZGRsZSA+IHNwYW4ge1xuICBjb2xvcjogYmxhY2s7XG59XG5cbmRpdi5taWRkbGUgLmFjY291bnRzLmxpZ2h0IHtcbiAgY29sb3I6IHJnYmEoMCwgMCwgMCwgMC40KTtcbn1cblxuZGl2Lm1pZGRsZSA+IC5hY2NvdW50cy5zb2xvIHtcbiAgY29sb3I6IHdoaXRlO1xuICBmb250LXdlaWdodDogNTAwO1xufVxuXG5kaXYubWlkZGxlIGltZyB7XG4gIHBhZGRpbmctdG9wOiAwcmVtO1xuICBtYXJnaW4tbGVmdDogMC4yNXJlbTtcbiAgbWFyZ2luLXJpZ2h0OiAwLjI1cmVtO1xufVxuXG4jdG9wLWNvbnRhaW5lciB7XG4gIGhlaWdodDogNXJlbTtcbiAgd2lkdGg6IDEwMCU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2Vlbjtcbn1cblxuYS5sb2dvIHtcbiAgbWFyZ2luOiAyLjI1cmVtIDJyZW0gMXJlbTtcbiAgd2lkdGg6IDUuNjg3NXJlbTtcbiAgaGVpZ2h0OiAxLjc1cmVtO1xufVxuXG4jbWVudSB7XG4gIGN1cnNvcjogcG9pbnRlcjtcbiAgd2lkdGg6IDNyZW07XG4gIGhlaWdodDogM3JlbTtcbiAgYmFja2dyb3VuZC1jb2xvcjogI2ZjZmNmYztcbiAgYm9yZGVyOiAwLjA2MjVyZW0gc29saWQgI2ZmZmZmZjtcbiAgYm94LXNoYWRvdzogMHB4IDBweCAxcHggcmdiYSgwLCAwLCAwLCAwLjA0KSwgMHB4IDJweCA2cHggcmdiYSgwLCAwLCAwLCAwLjE0KSwgMHB4IDE2cHggMjRweCByZ2JhKDAsIDAsIDAsIDAuMTYpO1xuICBib3JkZXItcmFkaXVzOiAwLjc1cmVtO1xuICBtYXJnaW46IDFyZW0gMnJlbSAxLjVyZW0gMnJlbTtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG59XG5cbiNtZW51OmhvdmVyIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogI2VhZWJmOSAhaW1wb3J0YW50O1xuICBib3JkZXI6IDAuMDYyNXJlbSBzb2xpZCAjZWFlYmY5ICFpbXBvcnRhbnQ7XG59XG5cbjpob3N0IC52ZXJpZmllci1sb2dvIHtcbiAgaGVpZ2h0OiAwLjc1cmVtO1xuICBtYXJnaW4tYm90dG9tOiAwLjEyNXJlbTtcbn1cblxuI2hlYWRlci1saXN0IHtcbiAgd2lkdGg6IDEwMCU7XG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XG4gIGNvbG9yOiByZ2JhKDI1NSwgMjU1LCAyNTUsIDAuOCk7XG4gIHZlcnRpY2FsLWFsaWduOiBib3R0b207XG4gIHRleHQtYWxpZ246IHJpZ2h0O1xuICBsaW5lLWhlaWdodDogMXJlbTtcbiAgcGFkZGluZy1yaWdodDogMnJlbTtcbn1cblxuI2hlYWRlci1saXN0LmludmVydCB7XG4gIGNvbG9yOiByZ2JhKDAsIDAsIDAsIDAuOCk7XG59XG5cbiNtZW51ID4gc3BhbiB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IDUwMDtcbiAgZm9udC1zaXplOiAxcmVtO1xuICBsaW5lLWhlaWdodDogMXJlbTtcbiAgY29sb3I6ICMyYzMyM2E7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG59XG5cbi5kcm9wYnRuIHtcbiAgaGVpZ2h0OiAycmVtO1xuICBjdXJzb3I6IHBvaW50ZXI7XG4gIGRpc3BsYXk6IGZsZXg7XG59XG5cbi5kcm9wZG93biB7XG4gIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICBwYWRkaW5nLWJvdHRvbTogMC41cmVtO1xuICBwYWRkaW5nLXRvcDogMC41cmVtO1xufVxuXG4uZHJvcGJ0biA+IHNwYW4ge1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiA1MDA7XG4gIGZvbnQtc2l6ZTogMXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGNvbG9yOiB3aGl0ZTtcbiAgZGlzcGxheTogZmxleDtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbn1cblxuLmRyb3Bkb3duLWNvbnRlbnQge1xuICBiYWNrZ3JvdW5kOiAjZmNmY2ZjO1xuICBib3JkZXI6IDFweCBzb2xpZCAjZmZmZmZmO1xuICBib3gtc2hhZG93OiAwcHggMHB4IDFweCByZ2JhKDAsIDAsIDAsIDAuMDQpLCAwcHggMnB4IDZweCByZ2JhKDAsIDAsIDAsIDAuMDQpLCAwcHggMTZweCAyNHB4IHJnYmEoMCwgMCwgMCwgMC4wNik7XG4gIGJvcmRlci1yYWRpdXM6IDEycHg7XG4gIGRpc3BsYXk6IG5vbmU7XG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgbWFyZ2luLWxlZnQ6IC0xcmVtO1xuICB6LWluZGV4OiAxO1xuICAvKlxuICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjZjlmOWY5O1xuICAgIG1pbi13aWR0aDogMTYwcHg7XG4gICAgYm94LXNoYWRvdzogMHB4IDhweCAxNnB4IDBweCByZ2JhKDAsMCwwLDAuMik7XG4gICAgei1pbmRleDogMTsqL1xufVxuXG4uZHJvcGRvd24tY29udGVudC5yaWdodCB7XG4gIG1hcmdpbi10b3A6IC0xcmVtO1xufVxuXG4uZHJvcGRvd24tY29udGVudCAuc2VwIHtcbiAgbWFyZ2luLXRvcDogMC41cmVtO1xuICBtYXJnaW4tYm90dG9tOiAwLjVyZW07XG4gIGJvcmRlci10b3A6IDFweCBzb2xpZCByZ2JhKDAsIDAsIDAsIDAuMDQpO1xuICBib3JkZXItYm90dG9tOiAxcHggc29saWQgcmdiYSgwLCAwLCAwLCAwLjA0KTtcbn1cblxuLmRyb3Bkb3duLWNvbnRlbnQgYSB7XG4gIGNvbG9yOiAjMmMzMjNhO1xuICBwYWRkaW5nOiAwLjc1cmVtIDFyZW07XG4gIHRleHQtZGVjb3JhdGlvbjogbm9uZTtcbiAgZGlzcGxheTogYmxvY2s7XG4gIGN1cnNvcjogcG9pbnRlcjtcbn1cblxuLmRyb3Bkb3duLWNvbnRlbnQgYS5zZWxlY3RlZCB7XG4gIHRleHQtZGVjb3JhdGlvbjogdW5kZXJsaW5lO1xufVxuXG4uZHJvcGRvd24tY29udGVudCBhOmhvdmVyIHtcbiAgYmFja2dyb3VuZDogI2VhZWJmOTtcbn1cblxuLmRyb3Bkb3duLWNvbnRlbnQgYTpmaXJzdC1jaGlsZDpob3ZlciB7XG4gIGJvcmRlci10b3AtbGVmdC1yYWRpdXM6IDAuNzVyZW07XG4gIGJvcmRlci10b3AtcmlnaHQtcmFkaXVzOiAwLjc1cmVtO1xufVxuXG4uZHJvcGRvd24tY29udGVudCBhOmxhc3QtY2hpbGQ6aG92ZXIge1xuICBib3JkZXItYm90dG9tLWxlZnQtcmFkaXVzOiAwLjc1cmVtO1xuICBib3JkZXItYm90dG9tLXJpZ2h0LXJhZGl1czogMC43NXJlbTtcbn1cblxuLmRyb3Bkb3duOmhvdmVyIC5kcm9wZG93bi1jb250ZW50IHtcbiAgZGlzcGxheTogYmxvY2s7XG59XG5cbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDI4cmVtKSB7XG4gIGRpdi5kcm9wZG93biB7XG4gICAgZGlzcGxheTogbm9uZTtcbiAgfVxuXG4gIGRpdi5kcm9wZG93bi5yaWdodCB7XG4gICAgZGlzcGxheTogYmxvY2s7XG4gIH1cblxuICAubWlkZGxlID4gaW1nLFxuLm1pZGRsZSA+IHNwYW4ge1xuICAgIGRpc3BsYXk6IG5vbmU7XG4gIH1cblxuICBhLmxvZ28ge1xuICAgIG1hcmdpbjogMi4yNXJlbSAwIDIuMjVyZW0gMS4yNXJlbTtcbiAgfVxuXG4gIGRpdiNtZW51IHtcbiAgICBtYXJnaW4tcmlnaHQ6IDEuMjVyZW07XG4gIH1cbn0iXX0= */"] });
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"]("", ctx.getUsername(), " ");
+    } }, directives: [_angular_router__WEBPACK_IMPORTED_MODULE_1__["RouterLinkWithHref"], _angular_common__WEBPACK_IMPORTED_MODULE_8__["NgIf"], _angular_common__WEBPACK_IMPORTED_MODULE_8__["NgForOf"]], styles: ["[_nghost-%COMP%] {\n  height: 6rem;\n  margin-bottom: 1.5rem;\n  width: 100%;\n  display: flex;\n  flex-direction: column;\n}\n\ndiv.middle[_ngcontent-%COMP%] {\n  margin-top: 1rem;\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n}\n\ndiv.middle[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: white;\n  font-style: normal;\n  font-weight: 500;\n  font-size: 0.75rem;\n  line-height: 1rem;\n}\n\ndiv.middle[_ngcontent-%COMP%]   .accounts[_ngcontent-%COMP%] {\n  font-weight: normal;\n  font-style: normal;\n  font-size: 0.75rem;\n  line-height: 1rem;\n  color: rgba(255, 255, 255, 0.8);\n}\n\ndiv.middle[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%] {\n  color: black;\n}\n\ndiv.middle[_ngcontent-%COMP%]   .accounts.light[_ngcontent-%COMP%] {\n  color: rgba(0, 0, 0, 0.4);\n}\n\ndiv.middle[_ngcontent-%COMP%]    > .accounts.solo[_ngcontent-%COMP%] {\n  color: white;\n  font-weight: 500;\n}\n\ndiv.middle[_ngcontent-%COMP%]   img[_ngcontent-%COMP%] {\n  padding-top: 0rem;\n  margin-left: 0.25rem;\n  margin-right: 0.25rem;\n}\n\n#top-container[_ngcontent-%COMP%] {\n  height: 5rem;\n  width: 100%;\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n}\n\na.logo[_ngcontent-%COMP%] {\n  margin: 2.25rem 2rem 1rem;\n  width: 5.6875rem;\n  height: 1.75rem;\n}\n\n#menu[_ngcontent-%COMP%] {\n  cursor: pointer;\n  width: 3rem;\n  height: 3rem;\n  background-color: #fcfcfc;\n  border: 0.0625rem solid #ffffff;\n  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.14), 0px 16px 24px rgba(0, 0, 0, 0.16);\n  border-radius: 0.75rem;\n  margin: 1rem 2rem 1.5rem 2rem;\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n}\n\n#menu[_ngcontent-%COMP%]:hover {\n  background-color: #eaebf9 !important;\n  border: 0.0625rem solid #eaebf9 !important;\n}\n\n[_nghost-%COMP%]   .verifier-logo[_ngcontent-%COMP%] {\n  height: 0.75rem;\n  margin-bottom: 0.125rem;\n}\n\n#header-list[_ngcontent-%COMP%] {\n  display: flex;\n  font-size: 0.875rem;\n  color: rgba(255, 255, 255, 0.8);\n  vertical-align: bottom;\n  text-align: right;\n  line-height: 1rem;\n  padding: 0 2rem;\n}\n\n#header-list[_ngcontent-%COMP%]    > .left[_ngcontent-%COMP%] {\n  padding: 0 0.125rem;\n  text-align: left;\n  color: white;\n  background-color: #CC0000;\n  font-weight: 600;\n}\n\n#header-list[_ngcontent-%COMP%]    > .main[_ngcontent-%COMP%] {\n  flex-grow: 1;\n}\n\n#header-list.invert[_ngcontent-%COMP%] {\n  color: rgba(0, 0, 0, 0.8);\n}\n\n#menu[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: 500;\n  font-size: 1rem;\n  line-height: 1rem;\n  color: #2c323a;\n  display: flex;\n  align-items: center;\n}\n\n.dropbtn[_ngcontent-%COMP%] {\n  height: 2rem;\n  cursor: pointer;\n  display: flex;\n}\n\n.dropdown[_ngcontent-%COMP%] {\n  position: relative;\n  display: inline-block;\n  padding-bottom: 0.5rem;\n  padding-top: 0.5rem;\n}\n\n.dropbtn[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: 500;\n  font-size: 1rem;\n  line-height: 1rem;\n  color: white;\n  display: flex;\n  align-items: center;\n}\n\n.dropdown-content[_ngcontent-%COMP%] {\n  background: #fcfcfc;\n  border: 1px solid #ffffff;\n  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.06);\n  border-radius: 12px;\n  display: none;\n  position: absolute;\n  margin-left: -1rem;\n  z-index: 1;\n  \n}\n\n.dropdown-content.right[_ngcontent-%COMP%] {\n  margin-top: -1rem;\n}\n\n.dropdown-content[_ngcontent-%COMP%]   .sep[_ngcontent-%COMP%] {\n  margin-top: 0.5rem;\n  margin-bottom: 0.5rem;\n  border-top: 1px solid rgba(0, 0, 0, 0.04);\n  border-bottom: 1px solid rgba(0, 0, 0, 0.04);\n}\n\n.dropdown-content[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\n  color: #2c323a;\n  padding: 0.75rem 1rem;\n  text-decoration: none;\n  display: block;\n  cursor: pointer;\n}\n\n.dropdown-content[_ngcontent-%COMP%]   a.selected[_ngcontent-%COMP%] {\n  text-decoration: underline;\n}\n\n.dropdown-content[_ngcontent-%COMP%]   a[_ngcontent-%COMP%]:hover {\n  background: #eaebf9;\n}\n\n.dropdown-content[_ngcontent-%COMP%]   a[_ngcontent-%COMP%]:first-child:hover {\n  border-top-left-radius: 0.75rem;\n  border-top-right-radius: 0.75rem;\n}\n\n.dropdown-content[_ngcontent-%COMP%]   a[_ngcontent-%COMP%]:last-child:hover {\n  border-bottom-left-radius: 0.75rem;\n  border-bottom-right-radius: 0.75rem;\n}\n\n.dropdown[_ngcontent-%COMP%]:hover   .dropdown-content[_ngcontent-%COMP%] {\n  display: block;\n}\n\n@media screen and (max-width: 28rem) {\n  div.dropdown[_ngcontent-%COMP%] {\n    display: none;\n  }\n\n  div.dropdown.right[_ngcontent-%COMP%] {\n    display: block;\n  }\n\n  .middle[_ngcontent-%COMP%]    > img[_ngcontent-%COMP%], .middle[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%] {\n    display: none;\n  }\n\n  a.logo[_ngcontent-%COMP%] {\n    margin: 2.25rem 0 2.25rem 1.25rem;\n  }\n\n  div#menu[_ngcontent-%COMP%] {\n    margin-right: 1.25rem;\n  }\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY29tcG9uZW50cy9oZWFkZXIvQzpcXFVzZXJzXFxrbGFzX1xcR2l0XFxrdWthaS9zcmNcXGFwcFxcY29tcG9uZW50c1xcaGVhZGVyXFxoZWFkZXIuY29tcG9uZW50LnNjc3MiLCJzcmMvYXBwL2NvbXBvbmVudHMvaGVhZGVyL2hlYWRlci5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLFlBQUE7RUFDQSxxQkFBQTtFQUNBLFdBQUE7RUFDQSxhQUFBO0VBQ0Esc0JBQUE7QUNDSjs7QURDQTtFQUNFLGdCQUFBO0VBQ0UsYUFBQTtFQUNBLG1CQUFBO0VBQ0EsdUJBQUE7RUFDQSxtQkFBQTtBQ0VKOztBREFBO0VBQ0UsWUFBQTtFQUNBLGtCQUFBO0VBQ0EsZ0JBQUE7RUFDQSxrQkFBQTtFQUNBLGlCQUFBO0FDR0Y7O0FEREE7RUFDRSxtQkFBQTtFQUNBLGtCQUFBO0VBQ0Esa0JBQUE7RUFDQSxpQkFBQTtFQUNBLCtCQUFBO0FDSUY7O0FERkE7RUFDRSxZQUFBO0FDS0Y7O0FESEE7RUFDRSx5QkFBQTtBQ01GOztBREpBO0VBQ0UsWUFBQTtFQUNBLGdCQUFBO0FDT0Y7O0FETEE7RUFDRSxpQkFBQTtFQUNBLG9CQUFBO0VBQ0EscUJBQUE7QUNRRjs7QUROQTtFQUNJLFlBQUE7RUFDQSxXQUFBO0VBQ0EsYUFBQTtFQUNBLG1CQUFBO0VBQ0EsOEJBQUE7QUNTSjs7QURQQTtFQUNJLHlCQUFBO0VBQ0EsZ0JBQUE7RUFDQSxlQUFBO0FDVUo7O0FEUkE7RUFDRSxlQUFBO0VBQ0EsV0FBQTtFQUNBLFlBQUE7RUFDQSx5QkFBQTtFQUNBLCtCQUFBO0VBQ0EsK0dBQUE7RUFFQSxzQkFBQTtFQUNBLDZCQUFBO0VBQ0EsYUFBQTtFQUNBLG1CQUFBO0VBQ0EsdUJBQUE7RUFDQSxtQkFBQTtBQ1VGOztBRFJBO0VBQ0Usb0NBQUE7RUFDQSwwQ0FBQTtBQ1dGOztBRFRBO0VBQ0UsZUFBQTtFQUNBLHVCQUFBO0FDWUY7O0FEVkE7RUFDRSxhQUFBO0VBQ0EsbUJBQUE7RUFDQSwrQkFBQTtFQUNBLHNCQUFBO0VBQ0EsaUJBQUE7RUFDQSxpQkFBQTtFQUNBLGVBQUE7QUNhRjs7QURYQTtFQUNFLG1CQUFBO0VBQ0EsZ0JBQUE7RUFDQSxZQUFBO0VBQ0EseUJBQUE7RUFDQSxnQkFBQTtBQ2NGOztBRFpBO0VBQ0UsWUFBQTtBQ2VGOztBRGJBO0VBQ0UseUJBQUE7QUNnQkY7O0FEZEE7RUFDRSxrQkFBQTtFQUNBLGdCQUFBO0VBQ0EsZUFBQTtFQUNBLGlCQUFBO0VBQ0EsY0FBQTtFQUNBLGFBQUE7RUFDQSxtQkFBQTtBQ2lCRjs7QURiQTtFQUNFLFlBQUE7RUFDQSxlQUFBO0VBQ0EsYUFBQTtBQ2dCRjs7QURiQTtFQUNFLGtCQUFBO0VBQ0EscUJBQUE7RUFDQSxzQkFBQTtFQUNBLG1CQUFBO0FDZ0JGOztBRGRBO0VBQ0Usa0JBQUE7RUFDQSxnQkFBQTtFQUNBLGVBQUE7RUFDQSxpQkFBQTtFQUNBLFlBQUE7RUFDQSxhQUFBO0VBQ0EsbUJBQUE7QUNpQkY7O0FEZkE7RUFDRSxtQkFBQTtFQUNBLHlCQUFBO0VBQ0EsK0dBQUE7RUFFQSxtQkFBQTtFQUNBLGFBQUE7RUFDQSxrQkFBQTtFQUNBLGtCQUFBO0VBQ0EsVUFBQTtFQUNBOzs7OztnQkFBQTtBQ3NCRjs7QURmQTtFQUVFLGlCQUFBO0FDaUJGOztBRGZBO0VBQ0Usa0JBQUE7RUFDQSxxQkFBQTtFQUNBLHlDQUFBO0VBQ0EsNENBQUE7QUNrQkY7O0FEaEJBO0VBQ0UsY0FBQTtFQUNBLHFCQUFBO0VBQ0EscUJBQUE7RUFDQSxjQUFBO0VBQ0EsZUFBQTtBQ21CRjs7QURqQkE7RUFDRSwwQkFBQTtBQ29CRjs7QURqQkE7RUFDRSxtQkFBQTtBQ29CRjs7QURsQkE7RUFDRSwrQkFBQTtFQUNBLGdDQUFBO0FDcUJGOztBRG5CQTtFQUNFLGtDQUFBO0VBQ0EsbUNBQUE7QUNzQkY7O0FEcEJBO0VBQ0UsY0FBQTtBQ3VCRjs7QURyQkE7RUFDRTtJQUNFLGFBQUE7RUN3QkY7O0VEdEJBO0lBQ0UsY0FBQTtFQ3lCRjs7RUR2QkE7O0lBRUUsYUFBQTtFQzBCRjs7RUR4QkE7SUFDRSxpQ0FBQTtFQzJCRjs7RUR6QkE7SUFDRSxxQkFBQTtFQzRCRjtBQUNGIiwiZmlsZSI6InNyYy9hcHAvY29tcG9uZW50cy9oZWFkZXIvaGVhZGVyLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiOmhvc3Qge1xyXG4gICAgaGVpZ2h0OiA2cmVtO1xyXG4gICAgbWFyZ2luLWJvdHRvbTogMS41cmVtO1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbiAgICBkaXNwbGF5OiBmbGV4O1xyXG4gICAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcclxufVxyXG5kaXYubWlkZGxlIHtcclxuICBtYXJnaW4tdG9wOiAxcmVtO1xyXG4gICAgZGlzcGxheTogZmxleDtcclxuICAgIGZsZXgtZGlyZWN0aW9uOiByb3c7XHJcbiAgICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcclxuICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XHJcbn1cclxuZGl2Lm1pZGRsZSBzcGFuIHtcclxuICBjb2xvcjogd2hpdGU7XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiA1MDA7XHJcbiAgZm9udC1zaXplOiAwLjc1cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xyXG59XHJcbmRpdi5taWRkbGUgLmFjY291bnRzIHtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXNpemU6IDAuNzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgY29sb3I6IHJnYmEoMjU1LCAyNTUsIDI1NSwgMC44KTtcclxufVxyXG5kaXYubWlkZGxlID4gc3BhbiB7XHJcbiAgY29sb3I6IGJsYWNrO1xyXG59XHJcbmRpdi5taWRkbGUgLmFjY291bnRzLmxpZ2h0IHtcclxuICBjb2xvcjogcmdiYSgwLCAwLCAwLCAwLjQpO1xyXG59XHJcbmRpdi5taWRkbGUgPiAuYWNjb3VudHMuc29sbyB7XHJcbiAgY29sb3I6IHdoaXRlO1xyXG4gIGZvbnQtd2VpZ2h0OiA1MDA7XHJcbn1cclxuZGl2Lm1pZGRsZSBpbWcge1xyXG4gIHBhZGRpbmctdG9wOiAwcmVtO1xyXG4gIG1hcmdpbi1sZWZ0OiAwLjI1cmVtO1xyXG4gIG1hcmdpbi1yaWdodDogMC4yNXJlbTtcclxufVxyXG4jdG9wLWNvbnRhaW5lciB7XHJcbiAgICBoZWlnaHQ6IDVyZW07XHJcbiAgICB3aWR0aDogMTAwJTtcclxuICAgIGRpc3BsYXk6IGZsZXg7XHJcbiAgICBmbGV4LWRpcmVjdGlvbjogcm93O1xyXG4gICAganVzdGlmeS1jb250ZW50OiBzcGFjZS1iZXR3ZWVuO1xyXG59XHJcbmEubG9nbyB7XHJcbiAgICBtYXJnaW46IDIuMjVyZW0gMnJlbSAxcmVtO1xyXG4gICAgd2lkdGg6IDUuNjg3NXJlbTtcclxuICAgIGhlaWdodDogMS43NXJlbTtcclxufVxyXG4jbWVudSB7XHJcbiAgY3Vyc29yOiBwb2ludGVyO1xyXG4gIHdpZHRoOiAzcmVtO1xyXG4gIGhlaWdodDogM3JlbTtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZmNmY2ZjO1xyXG4gIGJvcmRlcjogMC4wNjI1cmVtIHNvbGlkICNmZmZmZmY7XHJcbiAgYm94LXNoYWRvdzogMHB4IDBweCAxcHggcmdiYSgwLCAwLCAwLCAwLjA0KSwgMHB4IDJweCA2cHggcmdiYSgwLCAwLCAwLCAwLjE0KSxcclxuICAgIDBweCAxNnB4IDI0cHggcmdiYSgwLCAwLCAwLCAwLjE2KTtcclxuICBib3JkZXItcmFkaXVzOiAwLjc1cmVtO1xyXG4gIG1hcmdpbjogMXJlbSAycmVtIDEuNXJlbSAycmVtO1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcclxuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG59XHJcbiNtZW51OmhvdmVyIHtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZWFlYmY5ICFpbXBvcnRhbnQ7XHJcbiAgYm9yZGVyOiAwLjA2MjVyZW0gc29saWQgI2VhZWJmOSAhaW1wb3J0YW50O1xyXG59XHJcbjpob3N0IC52ZXJpZmllci1sb2dvIHtcclxuICBoZWlnaHQ6IDAuNzVyZW07XHJcbiAgbWFyZ2luLWJvdHRvbTogMC4xMjVyZW07XHJcbn1cclxuI2hlYWRlci1saXN0IHtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XHJcbiAgY29sb3I6IHJnYmEoMjU1LCAyNTUsIDI1NSwgMC44KTtcclxuICB2ZXJ0aWNhbC1hbGlnbjogYm90dG9tO1xyXG4gIHRleHQtYWxpZ246IHJpZ2h0O1xyXG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xyXG4gIHBhZGRpbmc6IDAgMnJlbTtcclxufVxyXG4jaGVhZGVyLWxpc3QgPiAubGVmdCB7XHJcbiAgcGFkZGluZzogMCAwLjEyNXJlbTtcclxuICB0ZXh0LWFsaWduOiBsZWZ0O1xyXG4gIGNvbG9yOiB3aGl0ZTtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiAjQ0MwMDAwO1xyXG4gIGZvbnQtd2VpZ2h0OiA2MDA7XHJcbn1cclxuI2hlYWRlci1saXN0ID4gLm1haW4ge1xyXG4gIGZsZXgtZ3JvdzogMTtcclxufVxyXG4jaGVhZGVyLWxpc3QuaW52ZXJ0IHtcclxuICBjb2xvcjogcmdiYSgwLCAwLCAwLCAwLjgpO1xyXG59XHJcbiNtZW51ID4gc3BhbiB7XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiA1MDA7XHJcbiAgZm9udC1zaXplOiAxcmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xyXG4gIGNvbG9yOiAjMmMzMjNhO1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxufVxyXG5cclxuLy8gRHJvcGRvd25cclxuLmRyb3BidG4ge1xyXG4gIGhlaWdodDogMnJlbTtcclxuICBjdXJzb3I6IHBvaW50ZXI7XHJcbiAgZGlzcGxheTogZmxleDtcclxufVxyXG5cclxuLmRyb3Bkb3duIHtcclxuICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xyXG4gIHBhZGRpbmctYm90dG9tOiAwLjVyZW07XHJcbiAgcGFkZGluZy10b3A6IDAuNXJlbTtcclxufVxyXG4uZHJvcGJ0biA+IHNwYW4ge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogNTAwO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBjb2xvcjogd2hpdGU7XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG59XHJcbi5kcm9wZG93bi1jb250ZW50IHtcclxuICBiYWNrZ3JvdW5kOiAjZmNmY2ZjO1xyXG4gIGJvcmRlcjogMXB4IHNvbGlkICNmZmZmZmY7XHJcbiAgYm94LXNoYWRvdzogMHB4IDBweCAxcHggcmdiYSgwLCAwLCAwLCAwLjA0KSwgMHB4IDJweCA2cHggcmdiYSgwLCAwLCAwLCAwLjA0KSxcclxuICAgIDBweCAxNnB4IDI0cHggcmdiYSgwLCAwLCAwLCAwLjA2KTtcclxuICBib3JkZXItcmFkaXVzOiAxMnB4O1xyXG4gIGRpc3BsYXk6IG5vbmU7XHJcbiAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gIG1hcmdpbi1sZWZ0OiAtMXJlbTtcclxuICB6LWluZGV4OiAxO1xyXG4gIC8qXHJcbiAgICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjZjlmOWY5O1xyXG4gICAgbWluLXdpZHRoOiAxNjBweDtcclxuICAgIGJveC1zaGFkb3c6IDBweCA4cHggMTZweCAwcHggcmdiYSgwLDAsMCwwLjIpO1xyXG4gICAgei1pbmRleDogMTsqL1xyXG59XHJcbi5kcm9wZG93bi1jb250ZW50LnJpZ2h0IHtcclxuICAvL21hcmdpbi1sZWZ0OiAtMi43NXJlbTtcclxuICBtYXJnaW4tdG9wOiAtMXJlbTtcclxufVxyXG4uZHJvcGRvd24tY29udGVudCAuc2VwIHtcclxuICBtYXJnaW4tdG9wOiAwLjVyZW07XHJcbiAgbWFyZ2luLWJvdHRvbTogMC41cmVtO1xyXG4gIGJvcmRlci10b3A6IDFweCBzb2xpZCByZ2JhKDAsIDAsIDAsIDAuMDQpO1xyXG4gIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCByZ2JhKDAsIDAsIDAsIDAuMDQpO1xyXG59XHJcbi5kcm9wZG93bi1jb250ZW50IGEge1xyXG4gIGNvbG9yOiAjMmMzMjNhO1xyXG4gIHBhZGRpbmc6IDAuNzVyZW0gMXJlbTtcclxuICB0ZXh0LWRlY29yYXRpb246IG5vbmU7XHJcbiAgZGlzcGxheTogYmxvY2s7XHJcbiAgY3Vyc29yOiBwb2ludGVyO1xyXG59XHJcbi5kcm9wZG93bi1jb250ZW50IGEuc2VsZWN0ZWQge1xyXG4gIHRleHQtZGVjb3JhdGlvbjogdW5kZXJsaW5lO1xyXG59XHJcblxyXG4uZHJvcGRvd24tY29udGVudCBhOmhvdmVyIHtcclxuICBiYWNrZ3JvdW5kOiAjZWFlYmY5O1xyXG59XHJcbi5kcm9wZG93bi1jb250ZW50IGE6Zmlyc3QtY2hpbGQ6aG92ZXIge1xyXG4gIGJvcmRlci10b3AtbGVmdC1yYWRpdXM6IDAuNzVyZW07XHJcbiAgYm9yZGVyLXRvcC1yaWdodC1yYWRpdXM6IDAuNzVyZW07XHJcbn1cclxuLmRyb3Bkb3duLWNvbnRlbnQgYTpsYXN0LWNoaWxkOmhvdmVyIHtcclxuICBib3JkZXItYm90dG9tLWxlZnQtcmFkaXVzOiAwLjc1cmVtO1xyXG4gIGJvcmRlci1ib3R0b20tcmlnaHQtcmFkaXVzOiAwLjc1cmVtO1xyXG59XHJcbi5kcm9wZG93bjpob3ZlciAuZHJvcGRvd24tY29udGVudCB7XHJcbiAgZGlzcGxheTogYmxvY2s7XHJcbn1cclxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDogMjhyZW0pIHtcclxuICBkaXYuZHJvcGRvd24ge1xyXG4gICAgZGlzcGxheTogbm9uZTtcclxuICB9XHJcbiAgZGl2LmRyb3Bkb3duLnJpZ2h0IHtcclxuICAgIGRpc3BsYXk6IGJsb2NrO1xyXG4gIH1cclxuICAubWlkZGxlID4gaW1nLFxyXG4gIC5taWRkbGUgPiBzcGFuIHtcclxuICAgIGRpc3BsYXk6IG5vbmU7XHJcbiAgfVxyXG4gIGEubG9nbyB7XHJcbiAgICBtYXJnaW46IDIuMjVyZW0gMCAyLjI1cmVtIDEuMjVyZW07XHJcbiAgfVxyXG4gIGRpdiNtZW51IHtcclxuICAgIG1hcmdpbi1yaWdodDogMS4yNXJlbTtcclxuICB9XHJcbn1cclxuIiwiOmhvc3Qge1xuICBoZWlnaHQ6IDZyZW07XG4gIG1hcmdpbi1ib3R0b206IDEuNXJlbTtcbiAgd2lkdGg6IDEwMCU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG59XG5cbmRpdi5taWRkbGUge1xuICBtYXJnaW4tdG9wOiAxcmVtO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogcm93O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbn1cblxuZGl2Lm1pZGRsZSBzcGFuIHtcbiAgY29sb3I6IHdoaXRlO1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiA1MDA7XG4gIGZvbnQtc2l6ZTogMC43NXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG59XG5cbmRpdi5taWRkbGUgLmFjY291bnRzIHtcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xuICBmb250LXNpemU6IDAuNzVyZW07XG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xuICBjb2xvcjogcmdiYSgyNTUsIDI1NSwgMjU1LCAwLjgpO1xufVxuXG5kaXYubWlkZGxlID4gc3BhbiB7XG4gIGNvbG9yOiBibGFjaztcbn1cblxuZGl2Lm1pZGRsZSAuYWNjb3VudHMubGlnaHQge1xuICBjb2xvcjogcmdiYSgwLCAwLCAwLCAwLjQpO1xufVxuXG5kaXYubWlkZGxlID4gLmFjY291bnRzLnNvbG8ge1xuICBjb2xvcjogd2hpdGU7XG4gIGZvbnQtd2VpZ2h0OiA1MDA7XG59XG5cbmRpdi5taWRkbGUgaW1nIHtcbiAgcGFkZGluZy10b3A6IDByZW07XG4gIG1hcmdpbi1sZWZ0OiAwLjI1cmVtO1xuICBtYXJnaW4tcmlnaHQ6IDAuMjVyZW07XG59XG5cbiN0b3AtY29udGFpbmVyIHtcbiAgaGVpZ2h0OiA1cmVtO1xuICB3aWR0aDogMTAwJTtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcbiAganVzdGlmeS1jb250ZW50OiBzcGFjZS1iZXR3ZWVuO1xufVxuXG5hLmxvZ28ge1xuICBtYXJnaW46IDIuMjVyZW0gMnJlbSAxcmVtO1xuICB3aWR0aDogNS42ODc1cmVtO1xuICBoZWlnaHQ6IDEuNzVyZW07XG59XG5cbiNtZW51IHtcbiAgY3Vyc29yOiBwb2ludGVyO1xuICB3aWR0aDogM3JlbTtcbiAgaGVpZ2h0OiAzcmVtO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZmNmY2ZjO1xuICBib3JkZXI6IDAuMDYyNXJlbSBzb2xpZCAjZmZmZmZmO1xuICBib3gtc2hhZG93OiAwcHggMHB4IDFweCByZ2JhKDAsIDAsIDAsIDAuMDQpLCAwcHggMnB4IDZweCByZ2JhKDAsIDAsIDAsIDAuMTQpLCAwcHggMTZweCAyNHB4IHJnYmEoMCwgMCwgMCwgMC4xNik7XG4gIGJvcmRlci1yYWRpdXM6IDAuNzVyZW07XG4gIG1hcmdpbjogMXJlbSAycmVtIDEuNXJlbSAycmVtO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogcm93O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbn1cblxuI21lbnU6aG92ZXIge1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZWFlYmY5ICFpbXBvcnRhbnQ7XG4gIGJvcmRlcjogMC4wNjI1cmVtIHNvbGlkICNlYWViZjkgIWltcG9ydGFudDtcbn1cblxuOmhvc3QgLnZlcmlmaWVyLWxvZ28ge1xuICBoZWlnaHQ6IDAuNzVyZW07XG4gIG1hcmdpbi1ib3R0b206IDAuMTI1cmVtO1xufVxuXG4jaGVhZGVyLWxpc3Qge1xuICBkaXNwbGF5OiBmbGV4O1xuICBmb250LXNpemU6IDAuODc1cmVtO1xuICBjb2xvcjogcmdiYSgyNTUsIDI1NSwgMjU1LCAwLjgpO1xuICB2ZXJ0aWNhbC1hbGlnbjogYm90dG9tO1xuICB0ZXh0LWFsaWduOiByaWdodDtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIHBhZGRpbmc6IDAgMnJlbTtcbn1cblxuI2hlYWRlci1saXN0ID4gLmxlZnQge1xuICBwYWRkaW5nOiAwIDAuMTI1cmVtO1xuICB0ZXh0LWFsaWduOiBsZWZ0O1xuICBjb2xvcjogd2hpdGU7XG4gIGJhY2tncm91bmQtY29sb3I6ICNDQzAwMDA7XG4gIGZvbnQtd2VpZ2h0OiA2MDA7XG59XG5cbiNoZWFkZXItbGlzdCA+IC5tYWluIHtcbiAgZmxleC1ncm93OiAxO1xufVxuXG4jaGVhZGVyLWxpc3QuaW52ZXJ0IHtcbiAgY29sb3I6IHJnYmEoMCwgMCwgMCwgMC44KTtcbn1cblxuI21lbnUgPiBzcGFuIHtcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xuICBmb250LXdlaWdodDogNTAwO1xuICBmb250LXNpemU6IDFyZW07XG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xuICBjb2xvcjogIzJjMzIzYTtcbiAgZGlzcGxheTogZmxleDtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbn1cblxuLmRyb3BidG4ge1xuICBoZWlnaHQ6IDJyZW07XG4gIGN1cnNvcjogcG9pbnRlcjtcbiAgZGlzcGxheTogZmxleDtcbn1cblxuLmRyb3Bkb3duIHtcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xuICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XG4gIHBhZGRpbmctYm90dG9tOiAwLjVyZW07XG4gIHBhZGRpbmctdG9wOiAwLjVyZW07XG59XG5cbi5kcm9wYnRuID4gc3BhbiB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IDUwMDtcbiAgZm9udC1zaXplOiAxcmVtO1xuICBsaW5lLWhlaWdodDogMXJlbTtcbiAgY29sb3I6IHdoaXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xufVxuXG4uZHJvcGRvd24tY29udGVudCB7XG4gIGJhY2tncm91bmQ6ICNmY2ZjZmM7XG4gIGJvcmRlcjogMXB4IHNvbGlkICNmZmZmZmY7XG4gIGJveC1zaGFkb3c6IDBweCAwcHggMXB4IHJnYmEoMCwgMCwgMCwgMC4wNCksIDBweCAycHggNnB4IHJnYmEoMCwgMCwgMCwgMC4wNCksIDBweCAxNnB4IDI0cHggcmdiYSgwLCAwLCAwLCAwLjA2KTtcbiAgYm9yZGVyLXJhZGl1czogMTJweDtcbiAgZGlzcGxheTogbm9uZTtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBtYXJnaW4tbGVmdDogLTFyZW07XG4gIHotaW5kZXg6IDE7XG4gIC8qXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgIGJhY2tncm91bmQtY29sb3I6ICNmOWY5Zjk7XG4gICAgbWluLXdpZHRoOiAxNjBweDtcbiAgICBib3gtc2hhZG93OiAwcHggOHB4IDE2cHggMHB4IHJnYmEoMCwwLDAsMC4yKTtcbiAgICB6LWluZGV4OiAxOyovXG59XG5cbi5kcm9wZG93bi1jb250ZW50LnJpZ2h0IHtcbiAgbWFyZ2luLXRvcDogLTFyZW07XG59XG5cbi5kcm9wZG93bi1jb250ZW50IC5zZXAge1xuICBtYXJnaW4tdG9wOiAwLjVyZW07XG4gIG1hcmdpbi1ib3R0b206IDAuNXJlbTtcbiAgYm9yZGVyLXRvcDogMXB4IHNvbGlkIHJnYmEoMCwgMCwgMCwgMC4wNCk7XG4gIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCByZ2JhKDAsIDAsIDAsIDAuMDQpO1xufVxuXG4uZHJvcGRvd24tY29udGVudCBhIHtcbiAgY29sb3I6ICMyYzMyM2E7XG4gIHBhZGRpbmc6IDAuNzVyZW0gMXJlbTtcbiAgdGV4dC1kZWNvcmF0aW9uOiBub25lO1xuICBkaXNwbGF5OiBibG9jaztcbiAgY3Vyc29yOiBwb2ludGVyO1xufVxuXG4uZHJvcGRvd24tY29udGVudCBhLnNlbGVjdGVkIHtcbiAgdGV4dC1kZWNvcmF0aW9uOiB1bmRlcmxpbmU7XG59XG5cbi5kcm9wZG93bi1jb250ZW50IGE6aG92ZXIge1xuICBiYWNrZ3JvdW5kOiAjZWFlYmY5O1xufVxuXG4uZHJvcGRvd24tY29udGVudCBhOmZpcnN0LWNoaWxkOmhvdmVyIHtcbiAgYm9yZGVyLXRvcC1sZWZ0LXJhZGl1czogMC43NXJlbTtcbiAgYm9yZGVyLXRvcC1yaWdodC1yYWRpdXM6IDAuNzVyZW07XG59XG5cbi5kcm9wZG93bi1jb250ZW50IGE6bGFzdC1jaGlsZDpob3ZlciB7XG4gIGJvcmRlci1ib3R0b20tbGVmdC1yYWRpdXM6IDAuNzVyZW07XG4gIGJvcmRlci1ib3R0b20tcmlnaHQtcmFkaXVzOiAwLjc1cmVtO1xufVxuXG4uZHJvcGRvd246aG92ZXIgLmRyb3Bkb3duLWNvbnRlbnQge1xuICBkaXNwbGF5OiBibG9jaztcbn1cblxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDogMjhyZW0pIHtcbiAgZGl2LmRyb3Bkb3duIHtcbiAgICBkaXNwbGF5OiBub25lO1xuICB9XG5cbiAgZGl2LmRyb3Bkb3duLnJpZ2h0IHtcbiAgICBkaXNwbGF5OiBibG9jaztcbiAgfVxuXG4gIC5taWRkbGUgPiBpbWcsXG4ubWlkZGxlID4gc3BhbiB7XG4gICAgZGlzcGxheTogbm9uZTtcbiAgfVxuXG4gIGEubG9nbyB7XG4gICAgbWFyZ2luOiAyLjI1cmVtIDAgMi4yNXJlbSAxLjI1cmVtO1xuICB9XG5cbiAgZGl2I21lbnUge1xuICAgIG1hcmdpbi1yaWdodDogMS4yNXJlbTtcbiAgfVxufSJdfQ== */"] });
 /*@__PURE__*/ (function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](HeaderComponent, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"],
         args: [{
@@ -10483,18 +3461,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/__ivy_ngcc__/fesm2015/router.js");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../constants */ "./src/app/constants.ts");
-/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/__ivy_ngcc__/fesm2015/ngx-translate-core.js");
-/* harmony import */ var _services_import_import_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../services/import/import.service */ "./src/app/services/import/import.service.ts");
-/* harmony import */ var _services_message_message_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../services/message/message.service */ "./src/app/services/message/message.service.ts");
-/* harmony import */ var _services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../services/wallet/wallet.service */ "./src/app/services/wallet/wallet.service.ts");
-/* harmony import */ var _services_export_export_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../services/export/export.service */ "./src/app/services/export/export.service.ts");
-/* harmony import */ var _services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../services/input-validation/input-validation.service */ "./src/app/services/input-validation/input-validation.service.ts");
-/* harmony import */ var _tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @tezos-core-tools/crypto-utils */ "./node_modules/@tezos-core-tools/crypto-utils/dist/main.js");
-/* harmony import */ var _tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/__ivy_ngcc__/fesm2015/forms.js");
-
+/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/__ivy_ngcc__/fesm2015/ngx-translate-core.js");
+/* harmony import */ var _services_import_import_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../services/import/import.service */ "./src/app/services/import/import.service.ts");
+/* harmony import */ var _services_message_message_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../services/message/message.service */ "./src/app/services/message/message.service.ts");
+/* harmony import */ var _services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../services/wallet/wallet.service */ "./src/app/services/wallet/wallet.service.ts");
+/* harmony import */ var _services_export_export_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../services/export/export.service */ "./src/app/services/export/export.service.ts");
+/* harmony import */ var _services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../services/input-validation/input-validation.service */ "./src/app/services/input-validation/input-validation.service.ts");
+/* harmony import */ var _tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @tezos-core-tools/crypto-utils */ "./node_modules/@tezos-core-tools/crypto-utils/dist/main.js");
+/* harmony import */ var _tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/__ivy_ngcc__/fesm2015/forms.js");
 
 
 
@@ -10851,7 +3827,6 @@ class MnemonicImportComponent {
         this.walletService = walletService;
         this.exportService = exportService;
         this.inputValidationService = inputValidationService;
-        this.CONSTANTS = new _constants__WEBPACK_IMPORTED_MODULE_3__["Constants"]();
         this.showTacos = false;
         this.MIN_PWD_LENGTH = 9;
         this.importOption = 0;
@@ -10897,10 +3872,10 @@ class MnemonicImportComponent {
             let pkh = '';
             if (this.pkh) {
                 if (this.importOption === 1 && this.hdImport) {
-                    pkh = _tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_10__["hd"].keyPairFromAccountIndex(_tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_10__["utils"].mnemonicToSeed(this.mnemonic, this.passphrase, true), 0).pkh;
+                    pkh = _tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_9__["hd"].keyPairFromAccountIndex(_tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_9__["utils"].mnemonicToSeed(this.mnemonic, this.passphrase, true), 0).pkh;
                 }
                 else {
-                    pkh = _tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_10__["utils"].seedToKeyPair(_tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_10__["utils"].mnemonicToSeed(this.mnemonic, this.passphrase, false)).pkh;
+                    pkh = _tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_9__["utils"].seedToKeyPair(_tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_9__["utils"].mnemonicToSeed(this.mnemonic, this.passphrase, false)).pkh;
                 }
             }
             if (this.pkh && pkh !== this.pkh) {
@@ -11127,7 +4102,7 @@ class MnemonicImportComponent {
         }
     }
 }
-MnemonicImportComponent.ɵfac = function MnemonicImportComponent_Factory(t) { return new (t || MnemonicImportComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_ngx_translate_core__WEBPACK_IMPORTED_MODULE_4__["TranslateService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_import_import_service__WEBPACK_IMPORTED_MODULE_5__["ImportService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_message_message_service__WEBPACK_IMPORTED_MODULE_6__["MessageService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_7__["WalletService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_export_export_service__WEBPACK_IMPORTED_MODULE_8__["ExportService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_9__["InputValidationService"])); };
+MnemonicImportComponent.ɵfac = function MnemonicImportComponent_Factory(t) { return new (t || MnemonicImportComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_ngx_translate_core__WEBPACK_IMPORTED_MODULE_3__["TranslateService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_import_import_service__WEBPACK_IMPORTED_MODULE_4__["ImportService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_message_message_service__WEBPACK_IMPORTED_MODULE_5__["MessageService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_6__["WalletService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_export_export_service__WEBPACK_IMPORTED_MODULE_7__["ExportService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_8__["InputValidationService"])); };
 MnemonicImportComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({ type: MnemonicImportComponent, selectors: [["app-mnemonic-import-wallet"]], hostVars: 2, hostBindings: function MnemonicImportComponent_HostBindings(rf, ctx) { if (rf & 2) {
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵclassProp"]("tacos", ctx.showTacos);
     } }, decls: 4, vars: 3, consts: [[1, "kukai-card"], [4, "ngIf"], [1, "import-options"], [3, "click"], [1, "grey-card", "menu"], [1, "description", "bold", 2, "font-size", "1rem"], ["type", "file", "accept", ".tez", "id", "file", "name", "file", 1, "input-file", 3, "change"], ["for", "file", 1, "input-file"], ["class", "authenticate", 4, "ngIf"], [1, "buttons"], ["routerLink", "/"], [1, "button", "back"], [1, "button", "next", 3, "click"], [1, "authenticate"], ["type", "password", "autocomplete", "current-password", "id", "pwd", "placeholder", "Password", 1, "text", 3, "ngModel", "keydown.enter", "ngModelChange"], ["class", "description faucet", 4, "ngIf"], ["autocomplete", "off", 1, "text", 3, "ngModel", "placeholder", "ngModelChange"], ["type", "text", 1, "text", 3, "ngModel", "placeholder", "ngModelChange"], ["class", "radios", 4, "ngIf"], [1, "description", "faucet"], ["routerLink", "/activate"], ["type", "password", "name", "passphrase", "autocomplete", "one-time-code", 1, "text", 3, "ngModel", "placeholder", "ngModelChange"], ["type", "password", "name", "tge-password", "autocomplete", "one-time-code", 1, "text", 3, "ngModel", "placeholder", "ngModelChange"], [1, "radios"], ["type", "radio", "name", "walletType", "value", "legacy", "checked", "", 3, "change"], ["type", "radio", "name", "walletType", "value", "hd", 3, "change"], [1, "grey-card"], [1, "description", "bold", "blue"], [1, "description", 2, "margin-top", "1.25rem"], ["type", "password", "autocomplete", "new-password", 1, "text", 2, "margin-top", "2.5rem", 3, "placeholder", "ngModel", "ngModelChange", "keyup"], [1, "grey", 2, "margin-top", "0.5rem"], ["type", "password", "autocomplete", "new-password", 1, "text", 2, "margin-top", "1.5rem", 3, "placeholder", "ngModel", "ngModelChange"], [1, "buttons", 2, "margin-top", "3rem"], [2, "background-color", "#5963FF"], [1, "description", "bold"], [1, "description"], [1, "whitebox", "final"], [1, "description", "bold", "pkh"]], template: function MnemonicImportComponent_Template(rf, ctx) { if (rf & 1) {
@@ -11143,7 +4118,7 @@ MnemonicImportComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵ
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx.activePanel == 1);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx.activePanel == 2);
-    } }, directives: [_angular_common__WEBPACK_IMPORTED_MODULE_11__["NgIf"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterLinkWithHref"], _angular_forms__WEBPACK_IMPORTED_MODULE_12__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_12__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_12__["NgModel"]], pipes: [_ngx_translate_core__WEBPACK_IMPORTED_MODULE_4__["TranslatePipe"]], styles: [".kukai-card[_ngcontent-%COMP%]   H1[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   span[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   p[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   div.whitebox[_ngcontent-%COMP%] {\r\n  font-style: normal;\r\n  display: flex;\r\n  align-items: center;\r\n  text-align: center;\r\n  color: white;\r\n  margin-bottom: 0;\r\n  max-width: 34rem;\r\n  padding: 0 0.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   p.description[_ngcontent-%COMP%] {\r\n  margin-top: 1.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   p.description.bold[_ngcontent-%COMP%] {\r\n  font-weight: bold;\r\n  font-size: 1rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   p.description.blue[_ngcontent-%COMP%] {\r\n  color: #5963FF;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   p.description.red[_ngcontent-%COMP%] {\r\n  font-size: 0.875rem;\r\n  line-height: 1.25rem;\r\n  color: #C83532;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   H1[_ngcontent-%COMP%] {\r\n  -webkit-margin-after: 0;\r\n          margin-block-end: 0;\r\n  font-weight: 500;\r\n  font-size: 2.25rem;\r\n  line-height: 2.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   span[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\r\n  font-weight: normal;\r\n  justify-content: center;\r\n  font-size: 1.25rem;\r\n  line-height: 2rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   .grey-card[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\r\n  font-size: 1.125rem;\r\n  line-height: 1.5rem;\r\n  margin-top: 2.5rem 1.5rem 0;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   p[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\r\n  color: #303030;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.whitebox[_ngcontent-%COMP%] {\r\n  font-size: 1rem;\r\n  line-height: 1.5rem;\r\n  width: 100%;\r\n  height: 8.5rem;\r\n  z-index: 1;\r\n  color: black;\r\n  padding: 1.25rem;\r\n  border: 0;\r\n  border-top-left-radius: 0.75rem;\r\n  border-top-right-radius: 0.75rem;\r\n  font-weight: bold;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.seed-blur[_ngcontent-%COMP%] {\r\n  margin-top: -8.5rem;\r\n  margin-bottom: 0.0625rem;\r\n  height: 8.5rem;\r\n  width: 100%;\r\n  z-index: 2;\r\n  -webkit-backdrop-filter: blur(8px);\r\n          backdrop-filter: blur(8px);\r\n  border-radius: 0.75rem;\r\n  background-color: rgb(238, 238, 238);\r\n  background-color: rgba(238, 238, 238, 0.4);\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  flex-direction: column;\r\n  border-radius: 0;\r\n  border-top-left-radius: 0.75rem;\r\n  border-top-right-radius: 0.75rem;\r\n}\r\n@-moz-document url-prefix() {\r\n  .kukai-card div.seed-blur {\r\n    position: relative;\r\n    background-color: rgb(238, 238, 238) !important;\r\n  }\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   span.black[_ngcontent-%COMP%] {\r\n  color: black;\r\n  font-size: 1rem;\r\n  line-height: 1.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   span.step-counter[_ngcontent-%COMP%] {\r\n  font-size: 1rem;\r\n  line-height: 1.5rem;\r\n  display: block;\r\n  margin-top: 2.5rem;\r\n  width: 100%;\r\n  text-align: center;\r\n  max-width: 100%;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.buttons[_ngcontent-%COMP%] {\r\n  margin: 3rem 2rem 1.5rem;\r\n  width: auto;\r\n  display: flex;\r\n  justify-content: space-between;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.whitebox[_ngcontent-%COMP%]   div.buttons.single[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   div.buttons.single[_ngcontent-%COMP%] {\r\n  margin-top: 2rem;\r\n  justify-content: center;\r\n  width: auto;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.buttons.single.finish[_ngcontent-%COMP%] {\r\n  margin-top: 2.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\r\n  border-radius: 0.75rem;\r\n  width: 8rem;\r\n  height: 3rem;\r\n  font-style: normal;\r\n  font-weight: bold;\r\n  font-size: 1rem;\r\n  line-height: 1rem;\r\n  border: none;\r\n  padding: 0;\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  justify-content: center;\r\n  cursor: pointer;\r\n  transition: margin-top 0.1s ease-in, margin-bottom 0.1s ease-in;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:hover {\r\n  margin-top: -0.125rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.buttons.single[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:hover {\r\n  margin-bottom: 0.125rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   button.next[_ngcontent-%COMP%] {\r\n  color: white;\r\n  background: #5963FF;\r\n  box-shadow: 0px 0px 1px rgba(89, 99, 255, 0.04), 0px 2px 6px rgba(89, 99, 255, 0.04), 0px 16px 24px rgba(89, 99, 255, 0.24);\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   button.back[_ngcontent-%COMP%] {\r\n  color: #727AFD;\r\n  background: rgba(114, 122, 253, 0.16)\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   button.disabled-button[_ngcontent-%COMP%] {\r\n  pointer-events: none;\r\n  opacity: 0.4;\r\n  -webkit-opacity: 0.4;\r\n  -khtml-opacity: 0.4;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\r\n  color: inherit;\r\n  text-decoration: inherit;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, .kukai-card[_ngcontent-%COMP%]   textarea[_ngcontent-%COMP%]:focus {\r\n  outline: none;\r\n}\r\n\r\n\r\n.kukai-card[_ngcontent-%COMP%]   div.word-verify[_ngcontent-%COMP%] {\r\n  margin-top: 2.75rem;\r\n  display: flex;\r\n  justify-content: space-evenly;\r\n  align-items: flex-start;\r\n  flex-direction: row;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.word-input[_ngcontent-%COMP%]    > input[_ngcontent-%COMP%] {\r\n  margin-top: 0.5rem;\r\n  height: 2.5rem;\r\n  width: 17.5rem;\r\n  border-radius: 0.75rem;\r\n  text-align: center;\r\n  border-width: 0;\r\n  background: rgba(0, 0, 0, 0.08);\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   span.word-index[_ngcontent-%COMP%] {\r\n  display: block;\r\n  font-style: normal;\r\n  font-weight: normal;\r\n  font-size: 0.75rem;\r\n  line-height: 1rem;\r\n  text-align: center;\r\n  letter-spacing: 0.32px;\r\n  color: black;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.word-hint[_ngcontent-%COMP%] {\r\n  width: 9.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.word-hint[_ngcontent-%COMP%]    > span.word-value[_ngcontent-%COMP%] {\r\n  display: block;\r\n  margin-top: 1.25rem;\r\n  font-style: normal;\r\n  font-weight: normal;\r\n  font-size: 1rem;\r\n  line-height: 1.125rem;\r\n  text-align: center;\r\n  letter-spacing: 0.16px;\r\n  color: black;\r\n  opacity: 0.6;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   progress[value][_ngcontent-%COMP%] {\r\n  -webkit-appearance: none;\r\n  -moz-appearance: none;\r\n       appearance: none;\r\n  border: none;\r\n  width: 28rem;\r\n  height: 0.5rem;\r\n  margin-top: 2.5rem;\r\n  margin-left: 2rem;\r\n  border-radius: 4px;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   progress[_ngcontent-%COMP%]::-webkit-progress-bar, .kukai-card[_ngcontent-%COMP%]   progress[_ngcontent-%COMP%] {\r\n  background-color: #e1e1e1;\r\n  border-radius: 4px;\r\n  width: 100%;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   progress[_ngcontent-%COMP%]::-webkit-progress-value {\r\n  background-color: #5963FF !important;\r\n  border-radius: 20px;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   progress[_ngcontent-%COMP%]::-moz-progress-bar {\r\n  background-color: #5963FF !important;\r\n  border-radius: 20px;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   progress[_ngcontent-%COMP%] {\r\n  color: #5963FF;\r\n  border-radius: 20px;\r\n}\r\n\r\n\r\n.kukai-card[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\r\n  display: inline-block;\r\n  font-style: normal;\r\n  font-weight: normal;\r\n  font-size: 0.875rem;\r\n  line-height: 1rem;\r\n  letter-spacing: 0.32px;\r\n  color: #393939;\r\n  margin-top: 1.5rem;\r\n  margin-left: 2rem;\r\n  margin-bottom: 0.5rem;\r\n  width: 28rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   small.grey[_ngcontent-%COMP%] {\r\n  margin-top: 0.25rem;\r\n  margin-bottom: -1.25rem;\r\n  color: #393939;\r\n  opacity: 0.4;\r\n  -webkit-opacity: 0.4;\r\n  -khtml-opacity: 0.4;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%] {\r\n  width: 28rem;\r\n  background: #d9d9d9;\r\n  border-radius: 0.75rem;\r\n  border: 0px solid;\r\n  height: 3rem;\r\n  padding-left: 1rem;\r\n  padding-right: 1rem;\r\n  margin-left: 2rem;\r\n  margin-right: 2rem;\r\n  font-style: normal;\r\n  font-weight: normal;\r\n  font-size: 1rem;\r\n  line-height: 1.125rem;\r\n  letter-spacing: 0.16px;\r\n  color: #393939;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   input.text[disabled][_ngcontent-%COMP%] {\r\n  color: #808080;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%] {\r\n  height: 7rem;\r\n  padding-top: 0.5rem;\r\n  padding-bottom: 0.5rem;\r\n  resize: none;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   [_ngcontent-%COMP%]::-webkit-input-placeholder, .kukai-card[_ngcontent-%COMP%]   [_ngcontent-%COMP%]::-moz-input-placeholder, .kukai-card[_ngcontent-%COMP%]   [_ngcontent-%COMP%]:-ms-input-placeholder {\r\n  color: rgba(0, 0, 0, 0.6);\r\n}\r\n\r\n.kukai-card[_ngcontent-%COMP%]   p.description.bold.pkh[_ngcontent-%COMP%] {\r\n  margin-top: 2rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.whitebox.final[_ngcontent-%COMP%] {\r\n  padding-bottom: 0;\r\n  justify-content: center;\r\n  align-items: center;\r\n  flex-direction: column;\r\n  height: auto;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.whitebox[_ngcontent-%COMP%]   .buttons[_ngcontent-%COMP%] {\r\n  margin-top: 1rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   div.switch-container[_ngcontent-%COMP%] {\r\n  margin-left: 2rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%] {\r\n  margin-top: 3rem;\r\n  width: 32rem;\r\n  background: white;\r\n  background: #F4F4F4;\r\n  border: 1px solid rgba(255, 255, 255, 0.8);\r\n  box-sizing: border-box;\r\n  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.14), 0px 16px 24px rgba(0, 0, 0, 0.16);\r\n  border-radius: 0.75rem;\r\n}\r\n@media screen and (max-width: 32.5rem) {\r\n  .kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]{\r\n    width: 21.875rem;\r\n    \r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   progress[value][_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   small[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%] {\r\n    width: 19.875rem;\r\n    margin-left: 1rem;\r\n    margin-right: 1rem;\r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   div.seed-blur[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   div.whitebox[_ngcontent-%COMP%] {\r\n    height: 9.5rem;\r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   div.seed-blur[_ngcontent-%COMP%] {\r\n    margin-top: -9.5rem;\r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   p.description.bold.pkh[_ngcontent-%COMP%] {\r\n    margin-top: 0.75rem;\r\n    font-size: 0.9375rem;\r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   div.switch-container[_ngcontent-%COMP%] {\r\n    margin-left: 1rem;\r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   div.buttons[_ngcontent-%COMP%] {\r\n    margin-left: 1rem;\r\n    margin-right: 1rem;\r\n    margin-bottom: 1rem;\r\n  }\r\n}\r\n[_nghost-%COMP%] {\n  width: 100%;\n  min-height: calc(100vh);\n  padding-bottom: 8rem;\n  display: flex;\n  justify-content: center;\n  flex-direction: row;\n  background: #5963FF;\n}\r\n.tacos[_nghost-%COMP%] {\n  background-image: url('tacos.svg');\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]    > div[_ngcontent-%COMP%] {\n  margin-top: 5rem;\n  display: flex;\n  justify-content: flex-start;\n  align-items: center;\n  flex-direction: column;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.import-options[_ngcontent-%COMP%] {\n  margin-top: 2.75rem;\n  display: flex;\n  justify-content: space-between;\n  flex-direction: row;\n  width: 25rem;\n  margin-bottom: 1rem;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.import-options[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  padding: 0;\n  font-size: 1rem;\n  line-height: 1.5rem;\n  cursor: pointer;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]    > div[_ngcontent-%COMP%]    > div.grey-card.menu[_ngcontent-%COMP%] {\n  margin-top: 0.5rem;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.import-options[_ngcontent-%COMP%]   span.selected[_ngcontent-%COMP%] {\n  line-height: 1.5rem;\n  margin-bottom: -1px;\n  border-bottom: 1px solid;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   p.faucet[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%] {\n  display: inline;\n  font-size: 1rem;\n  line-height: 1.5rem;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   p.faucet[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\n  color: #5963ff !important;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   p.faucet[_ngcontent-%COMP%]    > a[_ngcontent-%COMP%]:hover {\n  border-bottom: 1px solid;\n  margin-bottom: -1px;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\n  margin-top: 1.25rem;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.radios[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: center;\n  align-items: flex-start;\n  flex-direction: column;\n  width: 28rem;\n  margin-left: 2rem;\n  margin-top: 1.5rem;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   input[type=radio][_ngcontent-%COMP%]:checked {\n  background-color: #161616;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   input[type=radio][_ngcontent-%COMP%] {\n  \n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  \n  display: inline-block;\n  width: 1.25rem;\n  height: 1.25rem;\n  padding: 0.25rem;\n  \n  background-clip: content-box;\n  border: 0.125rem solid #161616;\n  border-radius: 50%;\n  outline-style: none;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.buttons[_ngcontent-%COMP%] {\n  margin-top: 2.5rem;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.radios[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\n  font-size: 0.875rem;\n  line-height: 1.125rem;\n  margin-left: 0.5rem;\n  margin-top: 0;\n  margin-bottom: 0;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.radios[_ngcontent-%COMP%]    > div[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: flex-start;\n  align-items: center;\n  flex-direction: row;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.radios[_ngcontent-%COMP%]    > div[_ngcontent-%COMP%]:last-child {\n  margin-top: 0.5rem;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   input.input-file[_ngcontent-%COMP%] {\n  width: 0.1px;\n  height: 0.1px;\n  opacity: 0;\n  -webkit-opacity: 0;\n  -khtml-opacity: 0;\n  overflow: hidden;\n  position: absolute;\n  z-index: -1;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   label.input-file[_ngcontent-%COMP%] {\n  margin-top: 2rem;\n  margin-left: 2rem;\n  margin-bottom: 0;\n  width: 28rem;\n  height: 3.125rem;\n  border: 1px dashed #5963ff;\n  border-radius: 12px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-direction: row;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   label.input-file.loaded[_ngcontent-%COMP%] {\n  justify-content: space-between;\n  padding-left: 1.5rem;\n  padding-right: 1.5rem;\n  background: rgba(89, 99, 255, 0.2);\n  border: none;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   label.input-file[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%] {\n  color: #5963ff;\n  font-style: normal;\n  font-weight: bold;\n  line-height: 1.5rem;\n  font-size: 0.75rem;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   label.input-file[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%]:last-child {\n  -webkit-text-decoration-line: underline;\n          text-decoration-line: underline;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   label.input-file[_ngcontent-%COMP%]:hover {\n  cursor: pointer;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.authenticate[_ngcontent-%COMP%]    > input[_ngcontent-%COMP%] {\n  margin-top: 1.5rem;\n}\r\n@media screen and (max-width: 32.5rem) {\n  [_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   label.input-file[_ngcontent-%COMP%] {\n    width: 19.875rem;\n    margin-left: 1rem;\n  }\n\n  [_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.authenticate[_ngcontent-%COMP%]    > input#pwd[_ngcontent-%COMP%] {\n    width: 19.875rem;\n    margin-left: 1rem;\n  }\n\n  [_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.radios[_ngcontent-%COMP%] {\n    margin-left: 1rem;\n    width: 20rem;\n  }\n\n  [_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.radios[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\n    width: 17rem;\n  }\n\n  [_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.import-options[_ngcontent-%COMP%] {\n    width: 21.875rem;\n    justify-content: space-around;\n  }\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9zY3NzL2NhcmQuY3NzIiwic3JjL2FwcC9jb21wb25lbnRzL21uZW1vbmljLWltcG9ydC9DOlxcVXNlcnNcXGtsYXNfXFxHaXRcXGt1a2FpL3NyY1xcYXBwXFxjb21wb25lbnRzXFxtbmVtb25pYy1pbXBvcnRcXG1uZW1vbmljLWltcG9ydC5jb21wb25lbnQuc2NzcyIsInNyYy9hcHAvY29tcG9uZW50cy9tbmVtb25pYy1pbXBvcnQvbW5lbW9uaWMtaW1wb3J0LmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOzs7O0VBSUUsa0JBQWtCO0VBQ2xCLGFBQWE7RUFDYixtQkFBbUI7RUFDbkIsa0JBQWtCO0VBQ2xCLFlBQVk7RUFDWixnQkFBZ0I7RUFDaEIsZ0JBQWdCO0VBQ2hCLGlCQUFpQjtBQUNuQjtBQUNBO0VBQ0Usa0JBQWtCO0FBQ3BCO0FBQ0E7RUFDRSxpQkFBaUI7RUFDakIsZUFBZTtBQUNqQjtBQUNBO0VBQ0UsY0FBYztBQUNoQjtBQUNBO0VBQ0UsbUJBQW1CO0VBQ25CLG9CQUFvQjtFQUNwQixjQUFjO0FBQ2hCO0FBQ0E7RUFDRSx1QkFBbUI7VUFBbkIsbUJBQW1CO0VBQ25CLGdCQUFnQjtFQUNoQixrQkFBa0I7RUFDbEIsbUJBQW1CO0FBQ3JCO0FBQ0E7O0VBRUUsbUJBQW1CO0VBQ25CLHVCQUF1QjtFQUN2QixrQkFBa0I7RUFDbEIsaUJBQWlCO0FBQ25CO0FBQ0E7RUFDRSxtQkFBbUI7RUFDbkIsbUJBQW1CO0VBQ25CLDJCQUEyQjtBQUM3QjtBQUNBOztFQUVFLGNBQWM7QUFDaEI7QUFDQTtFQUNFLGVBQWU7RUFDZixtQkFBbUI7RUFDbkIsV0FBVztFQUNYLGNBQWM7RUFDZCxVQUFVO0VBQ1YsWUFBWTtFQUNaLGdCQUFnQjtFQUNoQixTQUFTO0VBQ1QsK0JBQStCO0VBQy9CLGdDQUFnQztFQUNoQyxpQkFBaUI7QUFDbkI7QUFDQTtFQUNFLG1CQUFtQjtFQUNuQix3QkFBd0I7RUFDeEIsY0FBYztFQUNkLFdB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QUNFLFlBQUE7RUFDQSxhQUFBO0VBQ0EsVUFBQTtFQUNBLGtCQUFBO0VBQ0EsaUJBQUE7RUFDQSxnQkFBQTtFQUNBLGtCQUFBO0VBQ0EsV0FBQTtBQ21CRjtBRGpCQTtFQUNFLGdCQUFBO0VBQ0EsaUJBQUE7RUFDQSxnQkFBQTtFQUNBLFlBQUE7RUFDQSxnQkFBQTtFQUNBLDBCQUFBO0VBQ0EsbUJBQUE7RUFDQSxhQUFBO0VBQ0EsbUJBQUE7RUFDQSx1QkFBQTtFQUNBLG1CQUFBO0FDb0JGO0FEbEJBO0VBQ0UsOEJBQUE7RUFDQSxvQkFBQTtFQUNBLHFCQUFBO0VBQ0Esa0NBQUE7RUFDQSxZQUFBO0FDcUJGO0FEbkJBO0VBQ0UsY0FBQTtFQUNBLGtCQUFBO0VBQ0EsaUJBQUE7RUFDQSxtQkFBQTtFQUNBLGtCQUFBO0FDc0JGO0FEcEJBO0VBQ0UsdUNBQUE7VUFBQSwrQkFBQTtBQ3VCRjtBRHJCQTtFQUNFLGVBQUE7QUN3QkY7QUR0QkE7RUFDRSxrQkFBQTtBQ3lCRjtBRHZCQTtFQUNFO0lBQ0UsZ0JBQUE7SUFDQSxpQkFBQTtFQzBCRjs7RUR4QkE7SUFDRSxnQkFBQTtJQUNBLGlCQUFBO0VDMkJGOztFRHpCQTtJQUNFLGlCQUFBO0lBQ0EsWUFBQTtFQzRCRjs7RUQxQkE7SUFDRSxZQUFBO0VDNkJGOztFRDNCQTtJQUNFLGdCQUFBO0lBQ0EsNkJBQUE7RUM4QkY7QUFDRiIsImZpbGUiOiJzcmMvYXBwL2NvbXBvbmVudHMvbW5lbW9uaWMtaW1wb3J0L21uZW1vbmljLWltcG9ydC5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5rdWthaS1jYXJkIEgxLFxyXG4ua3VrYWktY2FyZCBzcGFuLFxyXG4ua3VrYWktY2FyZCBwLFxyXG4ua3VrYWktY2FyZCBkaXYud2hpdGVib3gge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XHJcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xyXG4gIGNvbG9yOiB3aGl0ZTtcclxuICBtYXJnaW4tYm90dG9tOiAwO1xyXG4gIG1heC13aWR0aDogMzRyZW07XHJcbiAgcGFkZGluZzogMCAwLjVyZW07XHJcbn1cclxuLmt1a2FpLWNhcmQgcC5kZXNjcmlwdGlvbiB7XHJcbiAgbWFyZ2luLXRvcDogMS41cmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIHAuZGVzY3JpcHRpb24uYm9sZCB7XHJcbiAgZm9udC13ZWlnaHQ6IGJvbGQ7XHJcbiAgZm9udC1zaXplOiAxcmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIGRpdi5ncmV5LWNhcmQgcC5kZXNjcmlwdGlvbi5ibHVlIHtcclxuICBjb2xvcjogIzU5NjNGRjtcclxufVxyXG4ua3VrYWktY2FyZCBkaXYuZ3JleS1jYXJkIHAuZGVzY3JpcHRpb24ucmVkIHtcclxuICBmb250LXNpemU6IDAuODc1cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxLjI1cmVtO1xyXG4gIGNvbG9yOiAjQzgzNTMyO1xyXG59XHJcbi5rdWthaS1jYXJkIEgxIHtcclxuICBtYXJnaW4tYmxvY2stZW5kOiAwO1xyXG4gIGZvbnQtd2VpZ2h0OiA1MDA7XHJcbiAgZm9udC1zaXplOiAyLjI1cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAyLjVyZW07XHJcbn1cclxuLmt1a2FpLWNhcmQgc3BhbixcclxuLmt1a2FpLWNhcmQgcCB7XHJcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcclxuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcclxuICBmb250LXNpemU6IDEuMjVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDJyZW07XHJcbn1cclxuLmt1a2FpLWNhcmQgLmdyZXktY2FyZCBwIHtcclxuICBmb250LXNpemU6IDEuMTI1cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxLjVyZW07XHJcbiAgbWFyZ2luLXRvcDogMi41cmVtIDEuNXJlbSAwO1xyXG59XHJcbi5rdWthaS1jYXJkIGRpdi5ncmV5LWNhcmQgcCxcclxuLmt1a2FpLWNhcmQgZGl2LmdyZXktY2FyZCBzcGFuIHtcclxuICBjb2xvcjogIzMwMzAzMDtcclxufVxyXG4ua3VrYWktY2FyZCBkaXYud2hpdGVib3gge1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMS41cmVtO1xyXG4gIHdpZHRoOiAxMDAlO1xyXG4gIGhlaWdodDogOC41cmVtO1xyXG4gIHotaW5kZXg6IDE7XHJcbiAgY29sb3I6IGJsYWNrO1xyXG4gIHBhZGRpbmc6IDEuMjVyZW07XHJcbiAgYm9yZGVyOiAwO1xyXG4gIGJvcmRlci10b3AtbGVmdC1yYWRpdXM6IDAuNzVyZW07XHJcbiAgYm9yZGVyLXRvcC1yaWdodC1yYWRpdXM6IDAuNzVyZW07XHJcbiAgZm9udC13ZWlnaHQ6IGJvbGQ7XHJcbn1cclxuLmt1a2FpLWNhcmQgZGl2LnNlZWQtYmx1ciB7XHJcbiAgbWFyZ2luLXRvcDogLTguNXJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAwLjA2MjVyZW07XHJcbiAgaGVpZ2h0OiA4LjVyZW07XHJcbiAgd2lkdGg6IDEwMCU7XHJcbiAgei1pbmRleDogMjtcclxuICBiYWNrZHJvcC1maWx0ZXI6IGJsdXIoOHB4KTtcclxuICBib3JkZXItcmFkaXVzOiAwLjc1cmVtO1xyXG4gIGJhY2tncm91bmQtY29sb3I6IHJnYigyMzgsIDIzOCwgMjM4KTtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDIzOCwgMjM4LCAyMzgsIDAuNCk7XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XHJcbiAgYm9yZGVyLXJhZGl1czogMDtcclxuICBib3JkZXItdG9wLWxlZnQtcmFkaXVzOiAwLjc1cmVtO1xyXG4gIGJvcmRlci10b3AtcmlnaHQtcmFkaXVzOiAwLjc1cmVtO1xyXG59XHJcbkAtbW96LWRvY3VtZW50IHVybC1wcmVmaXgoKSB7XHJcbiAgLmt1a2FpLWNhcmQgZGl2LnNlZWQtYmx1ciB7XHJcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjM4LCAyMzgsIDIzOCkgIWltcG9ydGFudDtcclxuICB9XHJcbn1cclxuLmt1a2FpLWNhcmQgc3Bhbi5ibGFjayB7XHJcbiAgY29sb3I6IGJsYWNrO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMS41cmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIHNwYW4uc3RlcC1jb3VudGVyIHtcclxuICBmb250LXNpemU6IDFyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDEuNXJlbTtcclxuICBkaXNwbGF5OiBibG9jaztcclxuICBtYXJnaW4tdG9wOiAyLjVyZW07XHJcbiAgd2lkdGg6IDEwMCU7XHJcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xyXG4gIG1heC13aWR0aDogMTAwJTtcclxufVxyXG4ua3VrYWktY2FyZCBkaXYuYnV0dG9ucyB7XHJcbiAgbWFyZ2luOiAzcmVtIDJyZW0gMS41cmVtO1xyXG4gIHdpZHRoOiBhdXRvO1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAganVzdGlmeS1jb250ZW50OiBzcGFjZS1iZXR3ZWVuO1xyXG59XHJcbi5rdWthaS1jYXJkIGRpdi53aGl0ZWJveCBkaXYuYnV0dG9ucy5zaW5nbGUsXHJcbi5rdWthaS1jYXJkIGRpdi5idXR0b25zLnNpbmdsZSB7XHJcbiAgbWFyZ2luLXRvcDogMnJlbTtcclxuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcclxuICB3aWR0aDogYXV0bztcclxufVxyXG4ua3VrYWktY2FyZCBkaXYuYnV0dG9ucy5zaW5nbGUuZmluaXNoIHtcclxuICBtYXJnaW4tdG9wOiAyLjVyZW07XHJcbn1cclxuLmt1a2FpLWNhcmQgYnV0dG9uIHtcclxuICBib3JkZXItcmFkaXVzOiAwLjc1cmVtO1xyXG4gIHdpZHRoOiA4cmVtO1xyXG4gIGhlaWdodDogM3JlbTtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IGJvbGQ7XHJcbiAgZm9udC1zaXplOiAxcmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xyXG4gIGJvcmRlcjogbm9uZTtcclxuICBwYWRkaW5nOiAwO1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xyXG4gIGN1cnNvcjogcG9pbnRlcjtcclxuICB0cmFuc2l0aW9uOiBtYXJnaW4tdG9wIDAuMXMgZWFzZS1pbiwgbWFyZ2luLWJvdHRvbSAwLjFzIGVhc2UtaW47XHJcbn1cclxuLmt1a2FpLWNhcmQgYnV0dG9uOmhvdmVyIHtcclxuICBtYXJnaW4tdG9wOiAtMC4xMjVyZW07XHJcbn1cclxuLmt1a2FpLWNhcmQgZGl2LmJ1dHRvbnMuc2luZ2xlIGJ1dHRvbjpob3ZlciB7XHJcbiAgbWFyZ2luLWJvdHRvbTogMC4xMjVyZW07XHJcbn1cclxuLmt1a2FpLWNhcmQgYnV0dG9uLm5leHQge1xyXG4gIGNvbG9yOiB3aGl0ZTtcclxuICBiYWNrZ3JvdW5kOiAjNTk2M0ZGO1xyXG4gIGJveC1zaGFkb3c6IDBweCAwcHggMXB4IHJnYmEoODksIDk5LCAyNTUsIDAuMDQpLCAwcHggMnB4IDZweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjA0KSwgMHB4IDE2cHggMjRweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjI0KTtcclxufVxyXG4ua3VrYWktY2FyZCBidXR0b24uYmFjayB7XHJcbiAgY29sb3I6ICM3MjdBRkQ7XHJcbiAgYmFja2dyb3VuZDogcmdiYSgxMTQsIDEyMiwgMjUzLCAwLjE2KVxyXG59XHJcbi5rdWthaS1jYXJkIGJ1dHRvbi5kaXNhYmxlZC1idXR0b24ge1xyXG4gIHBvaW50ZXItZXZlbnRzOiBub25lO1xyXG4gIG9wYWNpdHk6IDAuNDtcclxuICAtd2Via2l0LW9wYWNpdHk6IDAuNDtcclxuICAta2h0bWwtb3BhY2l0eTogMC40O1xyXG59XHJcbi5rdWthaS1jYXJkIGEge1xyXG4gIGNvbG9yOiBpbmhlcml0O1xyXG4gIHRleHQtZGVjb3JhdGlvbjogaW5oZXJpdDtcclxufVxyXG4ua3VrYWktY2FyZCBpbnB1dDpmb2N1cyxcclxuLmt1a2FpLWNhcmQgdGV4dGFyZWE6Zm9jdXMge1xyXG4gIG91dGxpbmU6IG5vbmU7XHJcbn1cclxuLypcclxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDogMzByZW0pIHtcclxuICAua3VrYWktY2FyZCBkaXYud2hpdGVib3gge1xyXG4gICAgbWFyZ2luLXRvcDogNHJlbTtcclxuICAgIHdpZHRoOiAyMnJlbTtcclxuICAgIGhlaWdodDogMTEuNXJlbTtcclxuICB9XHJcbiAgLmt1a2FpLWNhcmQgZGl2LnNlZWQtYmx1ciB7XHJcbiAgICB3aWR0aDogMjJyZW07XHJcbiAgICBoZWlnaHQ6IDExLjVyZW07XHJcbiAgICBtYXJnaW4tdG9wOiAtMTEuNTYyNXJlbTtcclxuICB9XHJcbn0qL1xyXG4vKiBTdGVwIDIgKi9cclxuLmt1a2FpLWNhcmQgZGl2LndvcmQtdmVyaWZ5IHtcclxuICBtYXJnaW4tdG9wOiAyLjc1cmVtO1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAganVzdGlmeS1jb250ZW50OiBzcGFjZS1ldmVubHk7XHJcbiAgYWxpZ24taXRlbXM6IGZsZXgtc3RhcnQ7XHJcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcclxufVxyXG4ua3VrYWktY2FyZCBkaXYud29yZC1pbnB1dCA+IGlucHV0IHtcclxuICBtYXJnaW4tdG9wOiAwLjVyZW07XHJcbiAgaGVpZ2h0OiAyLjVyZW07XHJcbiAgd2lkdGg6IDE3LjVyZW07XHJcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcclxuICB0ZXh0LWFsaWduOiBjZW50ZXI7XHJcbiAgYm9yZGVyLXdpZHRoOiAwO1xyXG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC4wOCk7XHJcbn1cclxuLmt1a2FpLWNhcmQgc3Bhbi53b3JkLWluZGV4IHtcclxuICBkaXNwbGF5OiBibG9jaztcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcclxuICBmb250LXNpemU6IDAuNzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xyXG4gIGxldHRlci1zcGFjaW5nOiAwLjMycHg7XHJcbiAgY29sb3I6IGJsYWNrO1xyXG59XHJcbi5rdWthaS1jYXJkIGRpdi53b3JkLWhpbnQge1xyXG4gIHdpZHRoOiA5LjVyZW07XHJcbn1cclxuLmt1a2FpLWNhcmQgZGl2LndvcmQtaGludCA+IHNwYW4ud29yZC12YWx1ZSB7XHJcbiAgZGlzcGxheTogYmxvY2s7XHJcbiAgbWFyZ2luLXRvcDogMS4yNXJlbTtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcclxuICBmb250LXNpemU6IDFyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDEuMTI1cmVtO1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICBsZXR0ZXItc3BhY2luZzogMC4xNnB4O1xyXG4gIGNvbG9yOiBibGFjaztcclxuICBvcGFjaXR5OiAwLjY7XHJcbn1cclxuLmt1a2FpLWNhcmQgcHJvZ3Jlc3NbdmFsdWVdIHtcclxuICAtd2Via2l0LWFwcGVhcmFuY2U6IG5vbmU7XHJcbiAgYXBwZWFyYW5jZTogbm9uZTtcclxuICBib3JkZXI6IG5vbmU7XHJcbiAgd2lkdGg6IDI4cmVtO1xyXG4gIGhlaWdodDogMC41cmVtO1xyXG4gIG1hcmdpbi10b3A6IDIuNXJlbTtcclxuICBtYXJnaW4tbGVmdDogMnJlbTtcclxuICBib3JkZXItcmFkaXVzOiA0cHg7XHJcbn1cclxuLmt1a2FpLWNhcmQgcHJvZ3Jlc3M6Oi13ZWJraXQtcHJvZ3Jlc3MtYmFyLFxyXG4ua3VrYWktY2FyZCBwcm9ncmVzcyB7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogI2UxZTFlMTtcclxuICBib3JkZXItcmFkaXVzOiA0cHg7XHJcbiAgd2lkdGg6IDEwMCU7XHJcbn1cclxuLmt1a2FpLWNhcmQgcHJvZ3Jlc3M6Oi13ZWJraXQtcHJvZ3Jlc3MtdmFsdWUge1xyXG4gIGJhY2tncm91bmQtY29sb3I6ICM1OTYzRkYgIWltcG9ydGFudDtcclxuICBib3JkZXItcmFkaXVzOiAyMHB4O1xyXG59XHJcbi5rdWthaS1jYXJkIHByb2dyZXNzOjotbW96LXByb2dyZXNzLWJhciB7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogIzU5NjNGRiAhaW1wb3J0YW50O1xyXG4gIGJvcmRlci1yYWRpdXM6IDIwcHg7XHJcbn1cclxuXHJcbi5rdWthaS1jYXJkIHByb2dyZXNzIHtcclxuICBjb2xvcjogIzU5NjNGRjtcclxuICBib3JkZXItcmFkaXVzOiAyMHB4O1xyXG59XHJcbi8qXHJcbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDM2cmVtKSB7XHJcbiAgLmt1a2FpLWNhcmQgZGl2LndvcmQtaW5wdXQge1xyXG4gICAgbWFyZ2luLWxlZnQ6IDFyZW07XHJcbiAgICBtYXJnaW4tcmlnaHQ6IDFyZW07XHJcbiAgfVxyXG59XHJcbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDMycmVtKSB7XHJcbiAgLmt1a2FpLWNhcmQgZGl2LndvcmQtaW5wdXQge1xyXG4gICAgbWFyZ2luLWxlZnQ6IDAuNXJlbTtcclxuICAgIG1hcmdpbi1yaWdodDogMC41cmVtO1xyXG4gIH1cclxuICAua3VrYWktY2FyZCBkaXYud29yZC1pbnB1dCA+IGlucHV0IHtcclxuICAgIHdpZHRoOiAxMHJlbTtcclxuICB9XHJcbiAgLmt1a2FpLWNhcmQgcHJvZ3Jlc3NbdmFsdWVdIHtcclxuICAgIHdpZHRoOiAyMHJlbTtcclxuICB9XHJcbn0qL1xyXG4vKiBTdGVwIDMgKi9cclxuLmt1a2FpLWNhcmQgc21hbGwge1xyXG4gIGRpc3BsYXk6IGlubGluZS1ibG9jaztcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcclxuICBmb250LXNpemU6IDAuODc1cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xyXG4gIGxldHRlci1zcGFjaW5nOiAwLjMycHg7XHJcbiAgY29sb3I6ICMzOTM5Mzk7XHJcbiAgbWFyZ2luLXRvcDogMS41cmVtO1xyXG4gIG1hcmdpbi1sZWZ0OiAycmVtO1xyXG4gIG1hcmdpbi1ib3R0b206IDAuNXJlbTtcclxuICB3aWR0aDogMjhyZW07XHJcbn1cclxuLmt1a2FpLWNhcmQgc21hbGwuZ3JleSB7XHJcbiAgbWFyZ2luLXRvcDogMC4yNXJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAtMS4yNXJlbTtcclxuICBjb2xvcjogIzM5MzkzOTtcclxuICBvcGFjaXR5OiAwLjQ7XHJcbiAgLXdlYmtpdC1vcGFjaXR5OiAwLjQ7XHJcbiAgLWtodG1sLW9wYWNpdHk6IDAuNDtcclxufVxyXG4ua3VrYWktY2FyZCBpbnB1dC50ZXh0LFxyXG4ua3VrYWktY2FyZCB0ZXh0YXJlYS50ZXh0IHtcclxuICB3aWR0aDogMjhyZW07XHJcbiAgYmFja2dyb3VuZDogI2Q5ZDlkOTtcclxuICBib3JkZXItcmFkaXVzOiAwLjc1cmVtO1xyXG4gIGJvcmRlcjogMHB4IHNvbGlkO1xyXG4gIGhlaWdodDogM3JlbTtcclxuICBwYWRkaW5nLWxlZnQ6IDFyZW07XHJcbiAgcGFkZGluZy1yaWdodDogMXJlbTtcclxuICBtYXJnaW4tbGVmdDogMnJlbTtcclxuICBtYXJnaW4tcmlnaHQ6IDJyZW07XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XHJcbiAgZm9udC1zaXplOiAxcmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxLjEyNXJlbTtcclxuICBsZXR0ZXItc3BhY2luZzogMC4xNnB4O1xyXG4gIGNvbG9yOiAjMzkzOTM5O1xyXG59XHJcbi5rdWthaS1jYXJkIGlucHV0LnRleHRbZGlzYWJsZWRdIHtcclxuICBjb2xvcjogIzgwODA4MDtcclxufVxyXG4ua3VrYWktY2FyZCB0ZXh0YXJlYS50ZXh0IHtcclxuICBoZWlnaHQ6IDdyZW07XHJcbiAgcGFkZGluZy10b3A6IDAuNXJlbTtcclxuICBwYWRkaW5nLWJvdHRvbTogMC41cmVtO1xyXG4gIHJlc2l6ZTogbm9uZTtcclxufVxyXG4ua3VrYWktY2FyZCA6Oi13ZWJraXQtaW5wdXQtcGxhY2Vob2xkZXIsXHJcbi5rdWthaS1jYXJkIDo6LW1vei1pbnB1dC1wbGFjZWhvbGRlcixcclxuLmt1a2FpLWNhcmQgOi1tcy1pbnB1dC1wbGFjZWhvbGRlciB7XHJcbiAgY29sb3I6IHJnYmEoMCwgMCwgMCwgMC42KTtcclxufVxyXG5cclxuLyogU3RlcCA0ICovXHJcbi5rdWthaS1jYXJkIHAuZGVzY3JpcHRpb24uYm9sZC5wa2gge1xyXG4gIG1hcmdpbi10b3A6IDJyZW07XHJcbn1cclxuLmt1a2FpLWNhcmQgZGl2LndoaXRlYm94LmZpbmFsIHtcclxuICBwYWRkaW5nLWJvdHRvbTogMDtcclxuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XHJcbiAgaGVpZ2h0OiBhdXRvO1xyXG59XHJcbi5rdWthaS1jYXJkIGRpdi53aGl0ZWJveCAuYnV0dG9ucyB7XHJcbiAgbWFyZ2luLXRvcDogMXJlbTtcclxufVxyXG4ua3VrYWktY2FyZCBkaXYuZ3JleS1jYXJkIGRpdi5zd2l0Y2gtY29udGFpbmVyIHtcclxuICBtYXJnaW4tbGVmdDogMnJlbTtcclxufVxyXG5cclxuLmt1a2FpLWNhcmQgZGl2LmdyZXktY2FyZCB7XHJcbiAgbWFyZ2luLXRvcDogM3JlbTtcclxuICB3aWR0aDogMzJyZW07XHJcbiAgYmFja2dyb3VuZDogd2hpdGU7XHJcbiAgYmFja2dyb3VuZDogI0Y0RjRGNDtcclxuICBib3JkZXI6IDFweCBzb2xpZCByZ2JhKDI1NSwgMjU1LCAyNTUsIDAuOCk7XHJcbiAgYm94LXNpemluZzogYm9yZGVyLWJveDtcclxuICBib3gtc2hhZG93OiAwcHggMHB4IDFweCByZ2JhKDAsIDAsIDAsIDAuMDQpLCAwcHggMnB4IDZweCByZ2JhKDAsIDAsIDAsIDAuMTQpLCAwcHggMTZweCAyNHB4IHJnYmEoMCwgMCwgMCwgMC4xNik7XHJcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcclxufVxyXG5cclxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDogMzIuNXJlbSkge1xyXG4gIC5rdWthaS1jYXJkIGRpdi5ncmV5LWNhcmR7XHJcbiAgICB3aWR0aDogMjEuODc1cmVtO1xyXG4gICAgLyp3aWR0aDogMjIuNXJlbTsqL1xyXG4gIH1cclxuICAua3VrYWktY2FyZCBwcm9ncmVzc1t2YWx1ZV0sXHJcbiAgLmt1a2FpLWNhcmQgc21hbGwsXHJcbiAgLmt1a2FpLWNhcmQgaW5wdXQudGV4dCxcclxuICAua3VrYWktY2FyZCB0ZXh0YXJlYS50ZXh0IHtcclxuICAgIHdpZHRoOiAxOS44NzVyZW07XHJcbiAgICBtYXJnaW4tbGVmdDogMXJlbTtcclxuICAgIG1hcmdpbi1yaWdodDogMXJlbTtcclxuICB9XHJcbiAgLmt1a2FpLWNhcmQgZGl2LnNlZWQtYmx1cixcclxuICAua3VrYWktY2FyZCBkaXYud2hpdGVib3gge1xyXG4gICAgaGVpZ2h0OiA5LjVyZW07XHJcbiAgfVxyXG4gIC5rdWthaS1jYXJkIGRpdi5zZWVkLWJsdXIge1xyXG4gICAgbWFyZ2luLXRvcDogLTkuNXJlbTtcclxuICB9XHJcbiAgLmt1a2FpLWNhcmQgcC5kZXNjcmlwdGlvbi5ib2xkLnBraCB7XHJcbiAgICBtYXJnaW4tdG9wOiAwLjc1cmVtO1xyXG4gICAgZm9udC1zaXplOiAwLjkzNzVyZW07XHJcbiAgfVxyXG4gIC5rdWthaS1jYXJkIGRpdi5ncmV5LWNhcmQgZGl2LnN3aXRjaC1jb250YWluZXIge1xyXG4gICAgbWFyZ2luLWxlZnQ6IDFyZW07XHJcbiAgfVxyXG4gIC5rdWthaS1jYXJkIGRpdi5idXR0b25zIHtcclxuICAgIG1hcmdpbi1sZWZ0OiAxcmVtO1xyXG4gICAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xyXG4gICAgbWFyZ2luLWJvdHRvbTogMXJlbTtcclxuICB9XHJcbn0iLCJAaW1wb3J0IFwiLi4vLi4vLi4vc2Nzcy9jYXJkLmNzc1wiO1xyXG46aG9zdCB7XHJcbiAgd2lkdGg6IDEwMCU7XHJcbiAgbWluLWhlaWdodDogY2FsYygxMDB2aCk7XHJcbiAgcGFkZGluZy1ib3R0b206IDhyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcclxuICBmbGV4LWRpcmVjdGlvbjogcm93O1xyXG4gIGJhY2tncm91bmQ6ICM1OTYzRkY7XHJcbn1cclxuOmhvc3QudGFjb3Mge1xyXG4gIGJhY2tncm91bmQtaW1hZ2U6IHVybCguLi8uLi8uLi9hc3NldHMvaW1nL3RhY29zLnN2Zyk7XHJcbn1cclxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCA+IGRpdiB7XHJcbiAgbWFyZ2luLXRvcDogNXJlbTtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGp1c3RpZnktY29udGVudDogZmxleC1zdGFydDtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XHJcbn1cclxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCBkaXYuaW1wb3J0LW9wdGlvbnMge1xyXG4gIG1hcmdpbi10b3A6IDIuNzVyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XHJcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcclxuICB3aWR0aDogMjVyZW07XHJcbiAgbWFyZ2luLWJvdHRvbTogMXJlbTtcclxufVxyXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIGRpdi5pbXBvcnQtb3B0aW9ucyBzcGFuIHtcclxuICBwYWRkaW5nOiAwO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMS41cmVtO1xyXG4gIGN1cnNvcjogcG9pbnRlcjtcclxufVxyXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkID4gZGl2ID4gZGl2LmdyZXktY2FyZC5tZW51IHtcclxuICBtYXJnaW4tdG9wOiAwLjVyZW07XHJcbn1cclxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCBkaXYuaW1wb3J0LW9wdGlvbnMgc3Bhbi5zZWxlY3RlZCB7XHJcbiAgbGluZS1oZWlnaHQ6IDEuNXJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAtMXB4O1xyXG4gIGJvcmRlci1ib3R0b206IDFweCBzb2xpZDtcclxufVxyXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIHAuZmF1Y2V0ID4gc3BhbiB7XHJcbiAgZGlzcGxheTogaW5saW5lO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMS41cmVtO1xyXG59XHJcbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgcC5mYXVjZXQgYSB7XHJcbiAgY29sb3I6ICM1OTYzZmYgIWltcG9ydGFudDtcclxufVxyXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIHAuZmF1Y2V0ID4gYTpob3ZlciB7XHJcbiAgYm9yZGVyLWJvdHRvbTogMXB4IHNvbGlkO1xyXG4gIG1hcmdpbi1ib3R0b206IC0xcHg7XHJcbn1cclxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCBzbWFsbCB7XHJcbiAgbWFyZ2luLXRvcDogMS4yNXJlbTtcclxufVxyXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIGRpdi5yYWRpb3Mge1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XHJcbiAgYWxpZ24taXRlbXM6IGZsZXgtc3RhcnQ7XHJcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcclxuICB3aWR0aDogMjhyZW07XHJcbiAgbWFyZ2luLWxlZnQ6IDJyZW07XHJcbiAgbWFyZ2luLXRvcDogMS41cmVtO1xyXG59XHJcbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgaW5wdXRbdHlwZT1cInJhZGlvXCJdOmNoZWNrZWQge1xyXG4gIGJhY2tncm91bmQtY29sb3I6ICMxNjE2MTY7XHJcbn1cclxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCBpbnB1dFt0eXBlPVwicmFkaW9cIl0ge1xyXG4gIC8qIHJlbW92ZSBzdGFuZGFyZCBiYWNrZ3JvdW5kIGFwcGVhcmFuY2UgKi9cclxuICAtd2Via2l0LWFwcGVhcmFuY2U6IG5vbmU7XHJcbiAgLW1vei1hcHBlYXJhbmNlOiBub25lO1xyXG4gIGFwcGVhcmFuY2U6IG5vbmU7XHJcbiAgLyogY3JlYXRlIGN1c3RvbSByYWRpb2J1dHRvbiBhcHBlYXJhbmNlICovXHJcbiAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xyXG4gIHdpZHRoOiAxLjI1cmVtO1xyXG4gIGhlaWdodDogMS4yNXJlbTtcclxuICBwYWRkaW5nOiAwLjI1cmVtO1xyXG4gIC8qIGJhY2tncm91bmQtY29sb3Igb25seSBmb3IgY29udGVudCAqL1xyXG4gIGJhY2tncm91bmQtY2xpcDogY29udGVudC1ib3g7XHJcbiAgYm9yZGVyOiAwLjEyNXJlbSBzb2xpZCAjMTYxNjE2O1xyXG4gIGJvcmRlci1yYWRpdXM6IDUwJTtcclxuICBvdXRsaW5lLXN0eWxlOiBub25lO1xyXG59XHJcbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgZGl2LmJ1dHRvbnMge1xyXG4gIG1hcmdpbi10b3A6IDIuNXJlbTtcclxufVxyXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIGRpdi5yYWRpb3Mgc21hbGwge1xyXG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDEuMTI1cmVtO1xyXG4gIG1hcmdpbi1sZWZ0OiAwLjVyZW07XHJcbiAgbWFyZ2luLXRvcDogMDtcclxuICBtYXJnaW4tYm90dG9tOiAwO1xyXG59XHJcbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgZGl2LnJhZGlvcyA+IGRpdiB7XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBqdXN0aWZ5LWNvbnRlbnQ6IGZsZXgtc3RhcnQ7XHJcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxuICBmbGV4LWRpcmVjdGlvbjogcm93O1xyXG59XHJcbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgZGl2LnJhZGlvcyA+IGRpdjpsYXN0LWNoaWxkIHtcclxuICBtYXJnaW4tdG9wOiAwLjVyZW07XHJcbn1cclxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCBpbnB1dC5pbnB1dC1maWxlIHtcclxuICB3aWR0aDogMC4xcHg7XHJcbiAgaGVpZ2h0OiAwLjFweDtcclxuICBvcGFjaXR5OiAwO1xyXG4gIC13ZWJraXQtb3BhY2l0eTogMDtcclxuICAta2h0bWwtb3BhY2l0eTogMDtcclxuICBvdmVyZmxvdzogaGlkZGVuO1xyXG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxuICB6LWluZGV4OiAtMTtcclxufVxyXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIGxhYmVsLmlucHV0LWZpbGUge1xyXG4gIG1hcmdpbi10b3A6IDJyZW07XHJcbiAgbWFyZ2luLWxlZnQ6IDJyZW07XHJcbiAgbWFyZ2luLWJvdHRvbTogMDtcclxuICB3aWR0aDogMjhyZW07XHJcbiAgaGVpZ2h0OiAzLjEyNXJlbTtcclxuICBib3JkZXI6IDFweCBkYXNoZWQgIzU5NjNmZjtcclxuICBib3JkZXItcmFkaXVzOiAxMnB4O1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcclxuICBmbGV4LWRpcmVjdGlvbjogcm93O1xyXG59XHJcbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgbGFiZWwuaW5wdXQtZmlsZS5sb2FkZWQge1xyXG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcclxuICBwYWRkaW5nLWxlZnQ6IDEuNXJlbTtcclxuICBwYWRkaW5nLXJpZ2h0OiAxLjVyZW07XHJcbiAgYmFja2dyb3VuZDogcmdiYSg4OSwgOTksIDI1NSwgMC4yKTtcclxuICBib3JkZXI6IG5vbmU7XHJcbn1cclxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCBsYWJlbC5pbnB1dC1maWxlID4gc3BhbiB7XHJcbiAgY29sb3I6ICM1OTYzZmY7XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG4gIGxpbmUtaGVpZ2h0OiAxLjVyZW07XHJcbiAgZm9udC1zaXplOiAwLjc1cmVtO1xyXG59XHJcbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgbGFiZWwuaW5wdXQtZmlsZSA+IHNwYW46bGFzdC1jaGlsZCB7XHJcbiAgdGV4dC1kZWNvcmF0aW9uLWxpbmU6IHVuZGVybGluZTtcclxufVxyXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIGxhYmVsLmlucHV0LWZpbGU6aG92ZXIge1xyXG4gIGN1cnNvcjogcG9pbnRlcjtcclxufVxyXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIGRpdi5hdXRoZW50aWNhdGUgPiBpbnB1dCB7XHJcbiAgbWFyZ2luLXRvcDogMS41cmVtO1xyXG59XHJcbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDMyLjVyZW0pIHtcclxuICA6aG9zdCA+IGRpdi5rdWthaS1jYXJkIGxhYmVsLmlucHV0LWZpbGUge1xyXG4gICAgd2lkdGg6IDE5Ljg3NXJlbTtcclxuICAgIG1hcmdpbi1sZWZ0OiAxcmVtO1xyXG4gIH1cclxuICA6aG9zdCA+IGRpdi5rdWthaS1jYXJkIGRpdi5hdXRoZW50aWNhdGUgPiBpbnB1dCNwd2Qge1xyXG4gICAgd2lkdGg6IDE5Ljg3NXJlbTtcclxuICAgIG1hcmdpbi1sZWZ0OiAxcmVtO1xyXG4gIH1cclxuICA6aG9zdCA+IGRpdi5rdWthaS1jYXJkIGRpdi5yYWRpb3Mge1xyXG4gICAgbWFyZ2luLWxlZnQ6IDFyZW07XHJcbiAgICB3aWR0aDogMjByZW07XHJcbiAgfVxyXG4gIDpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgZGl2LnJhZGlvcyBzbWFsbCB7XHJcbiAgICB3aWR0aDogMTdyZW07XHJcbiAgfVxyXG4gIDpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgZGl2LmltcG9ydC1vcHRpb25zIHtcclxuICAgIHdpZHRoOiAyMS44NzVyZW07XHJcbiAgICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWFyb3VuZDtcclxuICB9XHJcbn0iLCJAaW1wb3J0IFwiLi4vLi4vLi4vc2Nzcy9jYXJkLmNzc1wiO1xuOmhvc3Qge1xuICB3aWR0aDogMTAwJTtcbiAgbWluLWhlaWdodDogY2FsYygxMDB2aCk7XG4gIHBhZGRpbmctYm90dG9tOiA4cmVtO1xuICBkaXNwbGF5OiBmbGV4O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcbiAgYmFja2dyb3VuZDogIzU5NjNGRjtcbn1cblxuOmhvc3QudGFjb3Mge1xuICBiYWNrZ3JvdW5kLWltYWdlOiB1cmwoLi4vLi4vLi4vYXNzZXRzL2ltZy90YWNvcy5zdmcpO1xufVxuXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkID4gZGl2IHtcbiAgbWFyZ2luLXRvcDogNXJlbTtcbiAgZGlzcGxheTogZmxleDtcbiAganVzdGlmeS1jb250ZW50OiBmbGV4LXN0YXJ0O1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xufVxuXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIGRpdi5pbXBvcnQtb3B0aW9ucyB7XG4gIG1hcmdpbi10b3A6IDIuNzVyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcbiAgd2lkdGg6IDI1cmVtO1xuICBtYXJnaW4tYm90dG9tOiAxcmVtO1xufVxuXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIGRpdi5pbXBvcnQtb3B0aW9ucyBzcGFuIHtcbiAgcGFkZGluZzogMDtcbiAgZm9udC1zaXplOiAxcmVtO1xuICBsaW5lLWhlaWdodDogMS41cmVtO1xuICBjdXJzb3I6IHBvaW50ZXI7XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgPiBkaXYgPiBkaXYuZ3JleS1jYXJkLm1lbnUge1xuICBtYXJnaW4tdG9wOiAwLjVyZW07XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgZGl2LmltcG9ydC1vcHRpb25zIHNwYW4uc2VsZWN0ZWQge1xuICBsaW5lLWhlaWdodDogMS41cmVtO1xuICBtYXJnaW4tYm90dG9tOiAtMXB4O1xuICBib3JkZXItYm90dG9tOiAxcHggc29saWQ7XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgcC5mYXVjZXQgPiBzcGFuIHtcbiAgZGlzcGxheTogaW5saW5lO1xuICBmb250LXNpemU6IDFyZW07XG4gIGxpbmUtaGVpZ2h0OiAxLjVyZW07XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgcC5mYXVjZXQgYSB7XG4gIGNvbG9yOiAjNTk2M2ZmICFpbXBvcnRhbnQ7XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgcC5mYXVjZXQgPiBhOmhvdmVyIHtcbiAgYm9yZGVyLWJvdHRvbTogMXB4IHNvbGlkO1xuICBtYXJnaW4tYm90dG9tOiAtMXB4O1xufVxuXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIHNtYWxsIHtcbiAgbWFyZ2luLXRvcDogMS4yNXJlbTtcbn1cblxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCBkaXYucmFkaW9zIHtcbiAgZGlzcGxheTogZmxleDtcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gIGFsaWduLWl0ZW1zOiBmbGV4LXN0YXJ0O1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xuICB3aWR0aDogMjhyZW07XG4gIG1hcmdpbi1sZWZ0OiAycmVtO1xuICBtYXJnaW4tdG9wOiAxLjVyZW07XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgaW5wdXRbdHlwZT1yYWRpb106Y2hlY2tlZCB7XG4gIGJhY2tncm91bmQtY29sb3I6ICMxNjE2MTY7XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgaW5wdXRbdHlwZT1yYWRpb10ge1xuICAvKiByZW1vdmUgc3RhbmRhcmQgYmFja2dyb3VuZCBhcHBlYXJhbmNlICovXG4gIC13ZWJraXQtYXBwZWFyYW5jZTogbm9uZTtcbiAgLW1vei1hcHBlYXJhbmNlOiBub25lO1xuICBhcHBlYXJhbmNlOiBub25lO1xuICAvKiBjcmVhdGUgY3VzdG9tIHJhZGlvYnV0dG9uIGFwcGVhcmFuY2UgKi9cbiAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB3aWR0aDogMS4yNXJlbTtcbiAgaGVpZ2h0OiAxLjI1cmVtO1xuICBwYWRkaW5nOiAwLjI1cmVtO1xuICAvKiBiYWNrZ3JvdW5kLWNvbG9yIG9ubHkgZm9yIGNvbnRlbnQgKi9cbiAgYmFja2dyb3VuZC1jbGlwOiBjb250ZW50LWJveDtcbiAgYm9yZGVyOiAwLjEyNXJlbSBzb2xpZCAjMTYxNjE2O1xuICBib3JkZXItcmFkaXVzOiA1MCU7XG4gIG91dGxpbmUtc3R5bGU6IG5vbmU7XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgZGl2LmJ1dHRvbnMge1xuICBtYXJnaW4tdG9wOiAyLjVyZW07XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgZGl2LnJhZGlvcyBzbWFsbCB7XG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XG4gIGxpbmUtaGVpZ2h0OiAxLjEyNXJlbTtcbiAgbWFyZ2luLWxlZnQ6IDAuNXJlbTtcbiAgbWFyZ2luLXRvcDogMDtcbiAgbWFyZ2luLWJvdHRvbTogMDtcbn1cblxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCBkaXYucmFkaW9zID4gZGl2IHtcbiAgZGlzcGxheTogZmxleDtcbiAganVzdGlmeS1jb250ZW50OiBmbGV4LXN0YXJ0O1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xuICBmbGV4LWRpcmVjdGlvbjogcm93O1xufVxuXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIGRpdi5yYWRpb3MgPiBkaXY6bGFzdC1jaGlsZCB7XG4gIG1hcmdpbi10b3A6IDAuNXJlbTtcbn1cblxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCBpbnB1dC5pbnB1dC1maWxlIHtcbiAgd2lkdGg6IDAuMXB4O1xuICBoZWlnaHQ6IDAuMXB4O1xuICBvcGFjaXR5OiAwO1xuICAtd2Via2l0LW9wYWNpdHk6IDA7XG4gIC1raHRtbC1vcGFjaXR5OiAwO1xuICBvdmVyZmxvdzogaGlkZGVuO1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIHotaW5kZXg6IC0xO1xufVxuXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIGxhYmVsLmlucHV0LWZpbGUge1xuICBtYXJnaW4tdG9wOiAycmVtO1xuICBtYXJnaW4tbGVmdDogMnJlbTtcbiAgbWFyZ2luLWJvdHRvbTogMDtcbiAgd2lkdGg6IDI4cmVtO1xuICBoZWlnaHQ6IDMuMTI1cmVtO1xuICBib3JkZXI6IDFweCBkYXNoZWQgIzU5NjNmZjtcbiAgYm9yZGVyLXJhZGl1czogMTJweDtcbiAgZGlzcGxheTogZmxleDtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgbGFiZWwuaW5wdXQtZmlsZS5sb2FkZWQge1xuICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XG4gIHBhZGRpbmctbGVmdDogMS41cmVtO1xuICBwYWRkaW5nLXJpZ2h0OiAxLjVyZW07XG4gIGJhY2tncm91bmQ6IHJnYmEoODksIDk5LCAyNTUsIDAuMik7XG4gIGJvcmRlcjogbm9uZTtcbn1cblxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCBsYWJlbC5pbnB1dC1maWxlID4gc3BhbiB7XG4gIGNvbG9yOiAjNTk2M2ZmO1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xuICBsaW5lLWhlaWdodDogMS41cmVtO1xuICBmb250LXNpemU6IDAuNzVyZW07XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgbGFiZWwuaW5wdXQtZmlsZSA+IHNwYW46bGFzdC1jaGlsZCB7XG4gIHRleHQtZGVjb3JhdGlvbi1saW5lOiB1bmRlcmxpbmU7XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgbGFiZWwuaW5wdXQtZmlsZTpob3ZlciB7XG4gIGN1cnNvcjogcG9pbnRlcjtcbn1cblxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCBkaXYuYXV0aGVudGljYXRlID4gaW5wdXQge1xuICBtYXJnaW4tdG9wOiAxLjVyZW07XG59XG5cbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDMyLjVyZW0pIHtcbiAgOmhvc3QgPiBkaXYua3VrYWktY2FyZCBsYWJlbC5pbnB1dC1maWxlIHtcbiAgICB3aWR0aDogMTkuODc1cmVtO1xuICAgIG1hcmdpbi1sZWZ0OiAxcmVtO1xuICB9XG5cbiAgOmhvc3QgPiBkaXYua3VrYWktY2FyZCBkaXYuYXV0aGVudGljYXRlID4gaW5wdXQjcHdkIHtcbiAgICB3aWR0aDogMTkuODc1cmVtO1xuICAgIG1hcmdpbi1sZWZ0OiAxcmVtO1xuICB9XG5cbiAgOmhvc3QgPiBkaXYua3VrYWktY2FyZCBkaXYucmFkaW9zIHtcbiAgICBtYXJnaW4tbGVmdDogMXJlbTtcbiAgICB3aWR0aDogMjByZW07XG4gIH1cblxuICA6aG9zdCA+IGRpdi5rdWthaS1jYXJkIGRpdi5yYWRpb3Mgc21hbGwge1xuICAgIHdpZHRoOiAxN3JlbTtcbiAgfVxuXG4gIDpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgZGl2LmltcG9ydC1vcHRpb25zIHtcbiAgICB3aWR0aDogMjEuODc1cmVtO1xuICAgIGp1c3RpZnktY29udGVudDogc3BhY2UtYXJvdW5kO1xuICB9XG59Il19 */"] });
+    } }, directives: [_angular_common__WEBPACK_IMPORTED_MODULE_10__["NgIf"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterLinkWithHref"], _angular_forms__WEBPACK_IMPORTED_MODULE_11__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_11__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_11__["NgModel"]], pipes: [_ngx_translate_core__WEBPACK_IMPORTED_MODULE_3__["TranslatePipe"]], styles: [".kukai-card[_ngcontent-%COMP%]   H1[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   span[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   p[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   div.whitebox[_ngcontent-%COMP%] {\r\n  font-style: normal;\r\n  display: flex;\r\n  align-items: center;\r\n  text-align: center;\r\n  color: white;\r\n  margin-bottom: 0;\r\n  max-width: 34rem;\r\n  padding: 0 0.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   p.description[_ngcontent-%COMP%] {\r\n  margin-top: 1.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   p.description.bold[_ngcontent-%COMP%] {\r\n  font-weight: bold;\r\n  font-size: 1rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   p.description.blue[_ngcontent-%COMP%] {\r\n  color: #5963FF;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   p.description.red[_ngcontent-%COMP%] {\r\n  font-size: 0.875rem;\r\n  line-height: 1.25rem;\r\n  color: #C83532;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   H1[_ngcontent-%COMP%] {\r\n  -webkit-margin-after: 0;\r\n          margin-block-end: 0;\r\n  font-weight: 500;\r\n  font-size: 2.25rem;\r\n  line-height: 2.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   span[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\r\n  font-weight: normal;\r\n  justify-content: center;\r\n  font-size: 1.25rem;\r\n  line-height: 2rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   .grey-card[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\r\n  font-size: 1.125rem;\r\n  line-height: 1.5rem;\r\n  margin-top: 2.5rem 1.5rem 0;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   p[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\r\n  color: #303030;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.whitebox[_ngcontent-%COMP%] {\r\n  font-size: 1rem;\r\n  line-height: 1.5rem;\r\n  width: 100%;\r\n  height: 8.5rem;\r\n  z-index: 1;\r\n  color: black;\r\n  padding: 1.25rem;\r\n  border: 0;\r\n  border-top-left-radius: 0.75rem;\r\n  border-top-right-radius: 0.75rem;\r\n  font-weight: bold;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.seed-blur[_ngcontent-%COMP%] {\r\n  margin-top: -8.5rem;\r\n  margin-bottom: 0.0625rem;\r\n  height: 8.5rem;\r\n  width: 100%;\r\n  z-index: 2;\r\n  -webkit-backdrop-filter: blur(8px);\r\n          backdrop-filter: blur(8px);\r\n  border-radius: 0.75rem;\r\n  background-color: rgb(238, 238, 238);\r\n  background-color: rgba(238, 238, 238, 0.4);\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  flex-direction: column;\r\n  border-radius: 0;\r\n  border-top-left-radius: 0.75rem;\r\n  border-top-right-radius: 0.75rem;\r\n}\r\n@-moz-document url-prefix() {\r\n  .kukai-card div.seed-blur {\r\n    position: relative;\r\n    background-color: rgb(238, 238, 238) !important;\r\n  }\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   span.black[_ngcontent-%COMP%] {\r\n  color: black;\r\n  font-size: 1rem;\r\n  line-height: 1.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   span.step-counter[_ngcontent-%COMP%] {\r\n  font-size: 1rem;\r\n  line-height: 1.5rem;\r\n  display: block;\r\n  margin-top: 2.5rem;\r\n  width: 100%;\r\n  text-align: center;\r\n  max-width: 100%;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.buttons[_ngcontent-%COMP%] {\r\n  margin: 3rem 2rem 1.5rem;\r\n  width: auto;\r\n  display: flex;\r\n  justify-content: space-between;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.whitebox[_ngcontent-%COMP%]   div.buttons.single[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   div.buttons.single[_ngcontent-%COMP%] {\r\n  margin-top: 2rem;\r\n  justify-content: center;\r\n  width: auto;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.buttons.single.finish[_ngcontent-%COMP%] {\r\n  margin-top: 2.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\r\n  border-radius: 0.75rem;\r\n  width: 8rem;\r\n  height: 3rem;\r\n  font-style: normal;\r\n  font-weight: bold;\r\n  font-size: 1rem;\r\n  line-height: 1rem;\r\n  border: none;\r\n  padding: 0;\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  justify-content: center;\r\n  cursor: pointer;\r\n  transition: margin-top 0.1s ease-in, margin-bottom 0.1s ease-in;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:hover {\r\n  margin-top: -0.125rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.buttons.single[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:hover {\r\n  margin-bottom: 0.125rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   button.next[_ngcontent-%COMP%] {\r\n  color: white;\r\n  background: #5963FF;\r\n  box-shadow: 0px 0px 1px rgba(89, 99, 255, 0.04), 0px 2px 6px rgba(89, 99, 255, 0.04), 0px 16px 24px rgba(89, 99, 255, 0.24);\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   button.back[_ngcontent-%COMP%] {\r\n  color: #727AFD;\r\n  background: rgba(114, 122, 253, 0.16)\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   button.disabled-button[_ngcontent-%COMP%] {\r\n  pointer-events: none;\r\n  opacity: 0.4;\r\n  -webkit-opacity: 0.4;\r\n  -khtml-opacity: 0.4;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\r\n  color: inherit;\r\n  text-decoration: inherit;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, .kukai-card[_ngcontent-%COMP%]   textarea[_ngcontent-%COMP%]:focus {\r\n  outline: none;\r\n}\r\n\r\n\r\n.kukai-card[_ngcontent-%COMP%]   div.word-verify[_ngcontent-%COMP%] {\r\n  margin-top: 2.75rem;\r\n  display: flex;\r\n  justify-content: space-evenly;\r\n  align-items: flex-start;\r\n  flex-direction: row;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.word-input[_ngcontent-%COMP%]    > input[_ngcontent-%COMP%] {\r\n  margin-top: 0.5rem;\r\n  height: 2.5rem;\r\n  width: 17.5rem;\r\n  border-radius: 0.75rem;\r\n  text-align: center;\r\n  border-width: 0;\r\n  background: rgba(0, 0, 0, 0.08);\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   span.word-index[_ngcontent-%COMP%] {\r\n  display: block;\r\n  font-style: normal;\r\n  font-weight: normal;\r\n  font-size: 0.75rem;\r\n  line-height: 1rem;\r\n  text-align: center;\r\n  letter-spacing: 0.32px;\r\n  color: black;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.word-hint[_ngcontent-%COMP%] {\r\n  width: 9.5rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.word-hint[_ngcontent-%COMP%]    > span.word-value[_ngcontent-%COMP%] {\r\n  display: block;\r\n  margin-top: 1.25rem;\r\n  font-style: normal;\r\n  font-weight: normal;\r\n  font-size: 1rem;\r\n  line-height: 1.125rem;\r\n  text-align: center;\r\n  letter-spacing: 0.16px;\r\n  color: black;\r\n  opacity: 0.6;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   progress[value][_ngcontent-%COMP%] {\r\n  -webkit-appearance: none;\r\n  -moz-appearance: none;\r\n       appearance: none;\r\n  border: none;\r\n  width: 28rem;\r\n  height: 0.5rem;\r\n  margin-top: 2.5rem;\r\n  margin-left: 2rem;\r\n  border-radius: 4px;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   progress[_ngcontent-%COMP%]::-webkit-progress-bar, .kukai-card[_ngcontent-%COMP%]   progress[_ngcontent-%COMP%] {\r\n  background-color: #e1e1e1;\r\n  border-radius: 4px;\r\n  width: 100%;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   progress[_ngcontent-%COMP%]::-webkit-progress-value {\r\n  background-color: #5963FF !important;\r\n  border-radius: 20px;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   progress[_ngcontent-%COMP%]::-moz-progress-bar {\r\n  background-color: #5963FF !important;\r\n  border-radius: 20px;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   progress[_ngcontent-%COMP%] {\r\n  color: #5963FF;\r\n  border-radius: 20px;\r\n}\r\n\r\n\r\n.kukai-card[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\r\n  display: inline-block;\r\n  font-style: normal;\r\n  font-weight: normal;\r\n  font-size: 0.875rem;\r\n  line-height: 1rem;\r\n  letter-spacing: 0.32px;\r\n  color: #393939;\r\n  margin-top: 1.5rem;\r\n  margin-left: 2rem;\r\n  margin-bottom: 0.5rem;\r\n  width: 28rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   small.grey[_ngcontent-%COMP%] {\r\n  margin-top: 0.25rem;\r\n  margin-bottom: -1.25rem;\r\n  color: #393939;\r\n  opacity: 0.4;\r\n  -webkit-opacity: 0.4;\r\n  -khtml-opacity: 0.4;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%] {\r\n  width: 28rem;\r\n  background: #d9d9d9;\r\n  border-radius: 0.75rem;\r\n  border: 0px solid;\r\n  height: 3rem;\r\n  padding-left: 1rem;\r\n  padding-right: 1rem;\r\n  margin-left: 2rem;\r\n  margin-right: 2rem;\r\n  font-style: normal;\r\n  font-weight: normal;\r\n  font-size: 1rem;\r\n  line-height: 1.125rem;\r\n  letter-spacing: 0.16px;\r\n  color: #393939;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   input.text[disabled][_ngcontent-%COMP%] {\r\n  color: #808080;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%] {\r\n  height: 7rem;\r\n  padding-top: 0.5rem;\r\n  padding-bottom: 0.5rem;\r\n  resize: none;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   [_ngcontent-%COMP%]::-webkit-input-placeholder, .kukai-card[_ngcontent-%COMP%]   [_ngcontent-%COMP%]::-moz-input-placeholder, .kukai-card[_ngcontent-%COMP%]   [_ngcontent-%COMP%]:-ms-input-placeholder {\r\n  color: rgba(0, 0, 0, 0.6);\r\n}\r\n\r\n.kukai-card[_ngcontent-%COMP%]   p.description.bold.pkh[_ngcontent-%COMP%] {\r\n  margin-top: 2rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.whitebox.final[_ngcontent-%COMP%] {\r\n  padding-bottom: 0;\r\n  justify-content: center;\r\n  align-items: center;\r\n  flex-direction: column;\r\n  height: auto;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.whitebox[_ngcontent-%COMP%]   .buttons[_ngcontent-%COMP%] {\r\n  margin-top: 1rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   div.switch-container[_ngcontent-%COMP%] {\r\n  margin-left: 2rem;\r\n}\r\n.kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%] {\r\n  margin-top: 3rem;\r\n  width: 32rem;\r\n  background: white;\r\n  background: #F4F4F4;\r\n  border: 1px solid rgba(255, 255, 255, 0.8);\r\n  box-sizing: border-box;\r\n  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.14), 0px 16px 24px rgba(0, 0, 0, 0.16);\r\n  border-radius: 0.75rem;\r\n}\r\n@media screen and (max-width: 32.5rem) {\r\n  .kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]{\r\n    width: 21.875rem;\r\n    \r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   progress[value][_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   small[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%] {\r\n    width: 19.875rem;\r\n    margin-left: 1rem;\r\n    margin-right: 1rem;\r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   div.seed-blur[_ngcontent-%COMP%], .kukai-card[_ngcontent-%COMP%]   div.whitebox[_ngcontent-%COMP%] {\r\n    height: 9.5rem;\r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   div.seed-blur[_ngcontent-%COMP%] {\r\n    margin-top: -9.5rem;\r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   p.description.bold.pkh[_ngcontent-%COMP%] {\r\n    margin-top: 0.75rem;\r\n    font-size: 0.9375rem;\r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   div.grey-card[_ngcontent-%COMP%]   div.switch-container[_ngcontent-%COMP%] {\r\n    margin-left: 1rem;\r\n  }\r\n  .kukai-card[_ngcontent-%COMP%]   div.buttons[_ngcontent-%COMP%] {\r\n    margin-left: 1rem;\r\n    margin-right: 1rem;\r\n    margin-bottom: 1rem;\r\n  }\r\n}\r\n[_nghost-%COMP%] {\n  width: 100%;\n  min-height: calc(100vh);\n  padding-bottom: 8rem;\n  display: flex;\n  justify-content: center;\n  flex-direction: row;\n  background: #5963FF;\n}\r\n.tacos[_nghost-%COMP%] {\n  background-image: url('tacos.svg');\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]    > div[_ngcontent-%COMP%] {\n  margin-top: 5rem;\n  display: flex;\n  justify-content: flex-start;\n  align-items: center;\n  flex-direction: column;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.import-options[_ngcontent-%COMP%] {\n  margin-top: 2.75rem;\n  display: flex;\n  justify-content: space-between;\n  flex-direction: row;\n  width: 25rem;\n  margin-bottom: 1rem;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.import-options[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  padding: 0;\n  font-size: 1rem;\n  line-height: 1.5rem;\n  cursor: pointer;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]    > div[_ngcontent-%COMP%]    > div.grey-card.menu[_ngcontent-%COMP%] {\n  margin-top: 0.5rem;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.import-options[_ngcontent-%COMP%]   span.selected[_ngcontent-%COMP%] {\n  line-height: 1.5rem;\n  margin-bottom: -1px;\n  border-bottom: 1px solid;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   p.faucet[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%] {\n  display: inline;\n  font-size: 1rem;\n  line-height: 1.5rem;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   p.faucet[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\n  color: #5963ff !important;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   p.faucet[_ngcontent-%COMP%]    > a[_ngcontent-%COMP%]:hover {\n  border-bottom: 1px solid;\n  margin-bottom: -1px;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\n  margin-top: 1.25rem;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.radios[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: center;\n  align-items: flex-start;\n  flex-direction: column;\n  width: 28rem;\n  margin-left: 2rem;\n  margin-top: 1.5rem;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   input[type=radio][_ngcontent-%COMP%]:checked {\n  background-color: #161616;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   input[type=radio][_ngcontent-%COMP%] {\n  \n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  \n  display: inline-block;\n  width: 1.25rem;\n  height: 1.25rem;\n  padding: 0.25rem;\n  \n  background-clip: content-box;\n  border: 0.125rem solid #161616;\n  border-radius: 50%;\n  outline-style: none;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.buttons[_ngcontent-%COMP%] {\n  margin-top: 2.5rem;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.radios[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\n  font-size: 0.875rem;\n  line-height: 1.125rem;\n  margin-left: 0.5rem;\n  margin-top: 0;\n  margin-bottom: 0;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.radios[_ngcontent-%COMP%]    > div[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: flex-start;\n  align-items: center;\n  flex-direction: row;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.radios[_ngcontent-%COMP%]    > div[_ngcontent-%COMP%]:last-child {\n  margin-top: 0.5rem;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   input.input-file[_ngcontent-%COMP%] {\n  width: 0.1px;\n  height: 0.1px;\n  opacity: 0;\n  -webkit-opacity: 0;\n  -khtml-opacity: 0;\n  overflow: hidden;\n  position: absolute;\n  z-index: -1;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   label.input-file[_ngcontent-%COMP%] {\n  margin-top: 2rem;\n  margin-left: 2rem;\n  margin-bottom: 0;\n  width: 28rem;\n  height: 3.125rem;\n  border: 1px dashed #5963ff;\n  border-radius: 12px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-direction: row;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   label.input-file.loaded[_ngcontent-%COMP%] {\n  justify-content: space-between;\n  padding-left: 1.5rem;\n  padding-right: 1.5rem;\n  background: rgba(89, 99, 255, 0.2);\n  border: none;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   label.input-file[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%] {\n  color: #5963ff;\n  font-style: normal;\n  font-weight: bold;\n  line-height: 1.5rem;\n  font-size: 0.75rem;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   label.input-file[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%]:last-child {\n  -webkit-text-decoration-line: underline;\n          text-decoration-line: underline;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   label.input-file[_ngcontent-%COMP%]:hover {\n  cursor: pointer;\n}\r\n[_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.authenticate[_ngcontent-%COMP%]    > input[_ngcontent-%COMP%] {\n  margin-top: 1.5rem;\n}\r\n@media screen and (max-width: 32.5rem) {\n  [_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   label.input-file[_ngcontent-%COMP%] {\n    width: 19.875rem;\n    margin-left: 1rem;\n  }\n\n  [_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.authenticate[_ngcontent-%COMP%]    > input#pwd[_ngcontent-%COMP%] {\n    width: 19.875rem;\n    margin-left: 1rem;\n  }\n\n  [_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.radios[_ngcontent-%COMP%] {\n    margin-left: 1rem;\n    width: 20rem;\n  }\n\n  [_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.radios[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\n    width: 17rem;\n  }\n\n  [_nghost-%COMP%]    > div.kukai-card[_ngcontent-%COMP%]   div.import-options[_ngcontent-%COMP%] {\n    width: 21.875rem;\n    justify-content: space-around;\n  }\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9zY3NzL2NhcmQuY3NzIiwic3JjL2FwcC9jb21wb25lbnRzL21uZW1vbmljLWltcG9ydC9DOlxcVXNlcnNcXGtsYXNfXFxHaXRcXGt1a2FpL3NyY1xcYXBwXFxjb21wb25lbnRzXFxtbmVtb25pYy1pbXBvcnRcXG1uZW1vbmljLWltcG9ydC5jb21wb25lbnQuc2NzcyIsInNyYy9hcHAvY29tcG9uZW50cy9tbmVtb25pYy1pbXBvcnQvbW5lbW9uaWMtaW1wb3J0LmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOzs7O0VBSUUsa0JBQWtCO0VBQ2xCLGFBQWE7RUFDYixtQkFBbUI7RUFDbkIsa0JBQWtCO0VBQ2xCLFlBQVk7RUFDWixnQkFBZ0I7RUFDaEIsZ0JBQWdCO0VBQ2hCLGlCQUFpQjtBQUNuQjtBQUNBO0VBQ0Usa0JBQWtCO0FBQ3BCO0FBQ0E7RUFDRSxpQkFBaUI7RUFDakIsZUFBZTtBQUNqQjtBQUNBO0VBQ0UsY0FBYztBQUNoQjtBQUNBO0VBQ0UsbUJBQW1CO0VBQ25CLG9CQUFvQjtFQUNwQixjQUFjO0FBQ2hCO0FBQ0E7RUFDRSx1QkFBbUI7VUFBbkIsbUJBQW1CO0VBQ25CLGdCQUFnQjtFQUNoQixrQkFBa0I7RUFDbEIsbUJBQW1CO0FBQ3JCO0FBQ0E7O0VBRUUsbUJBQW1CO0VBQ25CLHVCQUF1QjtFQUN2QixrQkFBa0I7RUFDbEIsaUJBQWlCO0FBQ25CO0FBQ0E7RUFDRSxtQkFBbUI7RUFDbkIsbUJBQW1CO0VBQ25CLDJCQUEyQjtBQUM3QjtBQUNBOztFQUVFLGNBQWM7QUFDaEI7QUFDQTtFQUNFLGVBQWU7RUFDZixtQkFBbUI7RUFDbkIsV0FBVztFQUNYLGNBQWM7RUFDZCxVQUFVO0VBQ1YsWUFBWTtFQUNaLGdCQUFnQjtFQUNoQixTQUFTO0VBQ1QsK0JBQStCO0VBQy9CLGdDQUFnQztFQUNoQyxpQkFBaUI7QUFDbkI7QUFDQTtFQUNFLG1CQUFtQjtFQUNuQix3QkFBd0I7RUFDeEIsY0FBYztFQUNkLFdB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QUNFLFlBQUE7RUFDQSxhQUFBO0VBQ0EsVUFBQTtFQUNBLGtCQUFBO0VBQ0EsaUJBQUE7RUFDQSxnQkFBQTtFQUNBLGtCQUFBO0VBQ0EsV0FBQTtBQ21CRjtBRGpCQTtFQUNFLGdCQUFBO0VBQ0EsaUJBQUE7RUFDQSxnQkFBQTtFQUNBLFlBQUE7RUFDQSxnQkFBQTtFQUNBLDBCQUFBO0VBQ0EsbUJBQUE7RUFDQSxhQUFBO0VBQ0EsbUJBQUE7RUFDQSx1QkFBQTtFQUNBLG1CQUFBO0FDb0JGO0FEbEJBO0VBQ0UsOEJBQUE7RUFDQSxvQkFBQTtFQUNBLHFCQUFBO0VBQ0Esa0NBQUE7RUFDQSxZQUFBO0FDcUJGO0FEbkJBO0VBQ0UsY0FBQTtFQUNBLGtCQUFBO0VBQ0EsaUJBQUE7RUFDQSxtQkFBQTtFQUNBLGtCQUFBO0FDc0JGO0FEcEJBO0VBQ0UsdUNBQUE7VUFBQSwrQkFBQTtBQ3VCRjtBRHJCQTtFQUNFLGVBQUE7QUN3QkY7QUR0QkE7RUFDRSxrQkFBQTtBQ3lCRjtBRHZCQTtFQUNFO0lBQ0UsZ0JBQUE7SUFDQSxpQkFBQTtFQzBCRjs7RUR4QkE7SUFDRSxnQkFBQTtJQUNBLGlCQUFBO0VDMkJGOztFRHpCQTtJQUNFLGlCQUFBO0lBQ0EsWUFBQTtFQzRCRjs7RUQxQkE7SUFDRSxZQUFBO0VDNkJGOztFRDNCQTtJQUNFLGdCQUFBO0lBQ0EsNkJBQUE7RUM4QkY7QUFDRiIsImZpbGUiOiJzcmMvYXBwL2NvbXBvbmVudHMvbW5lbW9uaWMtaW1wb3J0L21uZW1vbmljLWltcG9ydC5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5rdWthaS1jYXJkIEgxLFxyXG4ua3VrYWktY2FyZCBzcGFuLFxyXG4ua3VrYWktY2FyZCBwLFxyXG4ua3VrYWktY2FyZCBkaXYud2hpdGVib3gge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XHJcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xyXG4gIGNvbG9yOiB3aGl0ZTtcclxuICBtYXJnaW4tYm90dG9tOiAwO1xyXG4gIG1heC13aWR0aDogMzRyZW07XHJcbiAgcGFkZGluZzogMCAwLjVyZW07XHJcbn1cclxuLmt1a2FpLWNhcmQgcC5kZXNjcmlwdGlvbiB7XHJcbiAgbWFyZ2luLXRvcDogMS41cmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIHAuZGVzY3JpcHRpb24uYm9sZCB7XHJcbiAgZm9udC13ZWlnaHQ6IGJvbGQ7XHJcbiAgZm9udC1zaXplOiAxcmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIGRpdi5ncmV5LWNhcmQgcC5kZXNjcmlwdGlvbi5ibHVlIHtcclxuICBjb2xvcjogIzU5NjNGRjtcclxufVxyXG4ua3VrYWktY2FyZCBkaXYuZ3JleS1jYXJkIHAuZGVzY3JpcHRpb24ucmVkIHtcclxuICBmb250LXNpemU6IDAuODc1cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxLjI1cmVtO1xyXG4gIGNvbG9yOiAjQzgzNTMyO1xyXG59XHJcbi5rdWthaS1jYXJkIEgxIHtcclxuICBtYXJnaW4tYmxvY2stZW5kOiAwO1xyXG4gIGZvbnQtd2VpZ2h0OiA1MDA7XHJcbiAgZm9udC1zaXplOiAyLjI1cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAyLjVyZW07XHJcbn1cclxuLmt1a2FpLWNhcmQgc3BhbixcclxuLmt1a2FpLWNhcmQgcCB7XHJcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcclxuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcclxuICBmb250LXNpemU6IDEuMjVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDJyZW07XHJcbn1cclxuLmt1a2FpLWNhcmQgLmdyZXktY2FyZCBwIHtcclxuICBmb250LXNpemU6IDEuMTI1cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxLjVyZW07XHJcbiAgbWFyZ2luLXRvcDogMi41cmVtIDEuNXJlbSAwO1xyXG59XHJcbi5rdWthaS1jYXJkIGRpdi5ncmV5LWNhcmQgcCxcclxuLmt1a2FpLWNhcmQgZGl2LmdyZXktY2FyZCBzcGFuIHtcclxuICBjb2xvcjogIzMwMzAzMDtcclxufVxyXG4ua3VrYWktY2FyZCBkaXYud2hpdGVib3gge1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMS41cmVtO1xyXG4gIHdpZHRoOiAxMDAlO1xyXG4gIGhlaWdodDogOC41cmVtO1xyXG4gIHotaW5kZXg6IDE7XHJcbiAgY29sb3I6IGJsYWNrO1xyXG4gIHBhZGRpbmc6IDEuMjVyZW07XHJcbiAgYm9yZGVyOiAwO1xyXG4gIGJvcmRlci10b3AtbGVmdC1yYWRpdXM6IDAuNzVyZW07XHJcbiAgYm9yZGVyLXRvcC1yaWdodC1yYWRpdXM6IDAuNzVyZW07XHJcbiAgZm9udC13ZWlnaHQ6IGJvbGQ7XHJcbn1cclxuLmt1a2FpLWNhcmQgZGl2LnNlZWQtYmx1ciB7XHJcbiAgbWFyZ2luLXRvcDogLTguNXJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAwLjA2MjVyZW07XHJcbiAgaGVpZ2h0OiA4LjVyZW07XHJcbiAgd2lkdGg6IDEwMCU7XHJcbiAgei1pbmRleDogMjtcclxuICBiYWNrZHJvcC1maWx0ZXI6IGJsdXIoOHB4KTtcclxuICBib3JkZXItcmFkaXVzOiAwLjc1cmVtO1xyXG4gIGJhY2tncm91bmQtY29sb3I6IHJnYigyMzgsIDIzOCwgMjM4KTtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDIzOCwgMjM4LCAyMzgsIDAuNCk7XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XHJcbiAgYm9yZGVyLXJhZGl1czogMDtcclxuICBib3JkZXItdG9wLWxlZnQtcmFkaXVzOiAwLjc1cmVtO1xyXG4gIGJvcmRlci10b3AtcmlnaHQtcmFkaXVzOiAwLjc1cmVtO1xyXG59XHJcbkAtbW96LWRvY3VtZW50IHVybC1wcmVmaXgoKSB7XHJcbiAgLmt1a2FpLWNhcmQgZGl2LnNlZWQtYmx1ciB7XHJcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjM4LCAyMzgsIDIzOCkgIWltcG9ydGFudDtcclxuICB9XHJcbn1cclxuLmt1a2FpLWNhcmQgc3Bhbi5ibGFjayB7XHJcbiAgY29sb3I6IGJsYWNrO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMS41cmVtO1xyXG59XHJcbi5rdWthaS1jYXJkIHNwYW4uc3RlcC1jb3VudGVyIHtcclxuICBmb250LXNpemU6IDFyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDEuNXJlbTtcclxuICBkaXNwbGF5OiBibG9jaztcclxuICBtYXJnaW4tdG9wOiAyLjVyZW07XHJcbiAgd2lkdGg6IDEwMCU7XHJcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xyXG4gIG1heC13aWR0aDogMTAwJTtcclxufVxyXG4ua3VrYWktY2FyZCBkaXYuYnV0dG9ucyB7XHJcbiAgbWFyZ2luOiAzcmVtIDJyZW0gMS41cmVtO1xyXG4gIHdpZHRoOiBhdXRvO1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAganVzdGlmeS1jb250ZW50OiBzcGFjZS1iZXR3ZWVuO1xyXG59XHJcbi5rdWthaS1jYXJkIGRpdi53aGl0ZWJveCBkaXYuYnV0dG9ucy5zaW5nbGUsXHJcbi5rdWthaS1jYXJkIGRpdi5idXR0b25zLnNpbmdsZSB7XHJcbiAgbWFyZ2luLXRvcDogMnJlbTtcclxuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcclxuICB3aWR0aDogYXV0bztcclxufVxyXG4ua3VrYWktY2FyZCBkaXYuYnV0dG9ucy5zaW5nbGUuZmluaXNoIHtcclxuICBtYXJnaW4tdG9wOiAyLjVyZW07XHJcbn1cclxuLmt1a2FpLWNhcmQgYnV0dG9uIHtcclxuICBib3JkZXItcmFkaXVzOiAwLjc1cmVtO1xyXG4gIHdpZHRoOiA4cmVtO1xyXG4gIGhlaWdodDogM3JlbTtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IGJvbGQ7XHJcbiAgZm9udC1zaXplOiAxcmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xyXG4gIGJvcmRlcjogbm9uZTtcclxuICBwYWRkaW5nOiAwO1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xyXG4gIGN1cnNvcjogcG9pbnRlcjtcclxuICB0cmFuc2l0aW9uOiBtYXJnaW4tdG9wIDAuMXMgZWFzZS1pbiwgbWFyZ2luLWJvdHRvbSAwLjFzIGVhc2UtaW47XHJcbn1cclxuLmt1a2FpLWNhcmQgYnV0dG9uOmhvdmVyIHtcclxuICBtYXJnaW4tdG9wOiAtMC4xMjVyZW07XHJcbn1cclxuLmt1a2FpLWNhcmQgZGl2LmJ1dHRvbnMuc2luZ2xlIGJ1dHRvbjpob3ZlciB7XHJcbiAgbWFyZ2luLWJvdHRvbTogMC4xMjVyZW07XHJcbn1cclxuLmt1a2FpLWNhcmQgYnV0dG9uLm5leHQge1xyXG4gIGNvbG9yOiB3aGl0ZTtcclxuICBiYWNrZ3JvdW5kOiAjNTk2M0ZGO1xyXG4gIGJveC1zaGFkb3c6IDBweCAwcHggMXB4IHJnYmEoODksIDk5LCAyNTUsIDAuMDQpLCAwcHggMnB4IDZweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjA0KSwgMHB4IDE2cHggMjRweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjI0KTtcclxufVxyXG4ua3VrYWktY2FyZCBidXR0b24uYmFjayB7XHJcbiAgY29sb3I6ICM3MjdBRkQ7XHJcbiAgYmFja2dyb3VuZDogcmdiYSgxMTQsIDEyMiwgMjUzLCAwLjE2KVxyXG59XHJcbi5rdWthaS1jYXJkIGJ1dHRvbi5kaXNhYmxlZC1idXR0b24ge1xyXG4gIHBvaW50ZXItZXZlbnRzOiBub25lO1xyXG4gIG9wYWNpdHk6IDAuNDtcclxuICAtd2Via2l0LW9wYWNpdHk6IDAuNDtcclxuICAta2h0bWwtb3BhY2l0eTogMC40O1xyXG59XHJcbi5rdWthaS1jYXJkIGEge1xyXG4gIGNvbG9yOiBpbmhlcml0O1xyXG4gIHRleHQtZGVjb3JhdGlvbjogaW5oZXJpdDtcclxufVxyXG4ua3VrYWktY2FyZCBpbnB1dDpmb2N1cyxcclxuLmt1a2FpLWNhcmQgdGV4dGFyZWE6Zm9jdXMge1xyXG4gIG91dGxpbmU6IG5vbmU7XHJcbn1cclxuLypcclxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDogMzByZW0pIHtcclxuICAua3VrYWktY2FyZCBkaXYud2hpdGVib3gge1xyXG4gICAgbWFyZ2luLXRvcDogNHJlbTtcclxuICAgIHdpZHRoOiAyMnJlbTtcclxuICAgIGhlaWdodDogMTEuNXJlbTtcclxuICB9XHJcbiAgLmt1a2FpLWNhcmQgZGl2LnNlZWQtYmx1ciB7XHJcbiAgICB3aWR0aDogMjJyZW07XHJcbiAgICBoZWlnaHQ6IDExLjVyZW07XHJcbiAgICBtYXJnaW4tdG9wOiAtMTEuNTYyNXJlbTtcclxuICB9XHJcbn0qL1xyXG4vKiBTdGVwIDIgKi9cclxuLmt1a2FpLWNhcmQgZGl2LndvcmQtdmVyaWZ5IHtcclxuICBtYXJnaW4tdG9wOiAyLjc1cmVtO1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAganVzdGlmeS1jb250ZW50OiBzcGFjZS1ldmVubHk7XHJcbiAgYWxpZ24taXRlbXM6IGZsZXgtc3RhcnQ7XHJcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcclxufVxyXG4ua3VrYWktY2FyZCBkaXYud29yZC1pbnB1dCA+IGlucHV0IHtcclxuICBtYXJnaW4tdG9wOiAwLjVyZW07XHJcbiAgaGVpZ2h0OiAyLjVyZW07XHJcbiAgd2lkdGg6IDE3LjVyZW07XHJcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcclxuICB0ZXh0LWFsaWduOiBjZW50ZXI7XHJcbiAgYm9yZGVyLXdpZHRoOiAwO1xyXG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC4wOCk7XHJcbn1cclxuLmt1a2FpLWNhcmQgc3Bhbi53b3JkLWluZGV4IHtcclxuICBkaXNwbGF5OiBibG9jaztcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcclxuICBmb250LXNpemU6IDAuNzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xyXG4gIGxldHRlci1zcGFjaW5nOiAwLjMycHg7XHJcbiAgY29sb3I6IGJsYWNrO1xyXG59XHJcbi5rdWthaS1jYXJkIGRpdi53b3JkLWhpbnQge1xyXG4gIHdpZHRoOiA5LjVyZW07XHJcbn1cclxuLmt1a2FpLWNhcmQgZGl2LndvcmQtaGludCA+IHNwYW4ud29yZC12YWx1ZSB7XHJcbiAgZGlzcGxheTogYmxvY2s7XHJcbiAgbWFyZ2luLXRvcDogMS4yNXJlbTtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcclxuICBmb250LXNpemU6IDFyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDEuMTI1cmVtO1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICBsZXR0ZXItc3BhY2luZzogMC4xNnB4O1xyXG4gIGNvbG9yOiBibGFjaztcclxuICBvcGFjaXR5OiAwLjY7XHJcbn1cclxuLmt1a2FpLWNhcmQgcHJvZ3Jlc3NbdmFsdWVdIHtcclxuICAtd2Via2l0LWFwcGVhcmFuY2U6IG5vbmU7XHJcbiAgYXBwZWFyYW5jZTogbm9uZTtcclxuICBib3JkZXI6IG5vbmU7XHJcbiAgd2lkdGg6IDI4cmVtO1xyXG4gIGhlaWdodDogMC41cmVtO1xyXG4gIG1hcmdpbi10b3A6IDIuNXJlbTtcclxuICBtYXJnaW4tbGVmdDogMnJlbTtcclxuICBib3JkZXItcmFkaXVzOiA0cHg7XHJcbn1cclxuLmt1a2FpLWNhcmQgcHJvZ3Jlc3M6Oi13ZWJraXQtcHJvZ3Jlc3MtYmFyLFxyXG4ua3VrYWktY2FyZCBwcm9ncmVzcyB7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogI2UxZTFlMTtcclxuICBib3JkZXItcmFkaXVzOiA0cHg7XHJcbiAgd2lkdGg6IDEwMCU7XHJcbn1cclxuLmt1a2FpLWNhcmQgcHJvZ3Jlc3M6Oi13ZWJraXQtcHJvZ3Jlc3MtdmFsdWUge1xyXG4gIGJhY2tncm91bmQtY29sb3I6ICM1OTYzRkYgIWltcG9ydGFudDtcclxuICBib3JkZXItcmFkaXVzOiAyMHB4O1xyXG59XHJcbi5rdWthaS1jYXJkIHByb2dyZXNzOjotbW96LXByb2dyZXNzLWJhciB7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogIzU5NjNGRiAhaW1wb3J0YW50O1xyXG4gIGJvcmRlci1yYWRpdXM6IDIwcHg7XHJcbn1cclxuXHJcbi5rdWthaS1jYXJkIHByb2dyZXNzIHtcclxuICBjb2xvcjogIzU5NjNGRjtcclxuICBib3JkZXItcmFkaXVzOiAyMHB4O1xyXG59XHJcbi8qXHJcbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDM2cmVtKSB7XHJcbiAgLmt1a2FpLWNhcmQgZGl2LndvcmQtaW5wdXQge1xyXG4gICAgbWFyZ2luLWxlZnQ6IDFyZW07XHJcbiAgICBtYXJnaW4tcmlnaHQ6IDFyZW07XHJcbiAgfVxyXG59XHJcbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDMycmVtKSB7XHJcbiAgLmt1a2FpLWNhcmQgZGl2LndvcmQtaW5wdXQge1xyXG4gICAgbWFyZ2luLWxlZnQ6IDAuNXJlbTtcclxuICAgIG1hcmdpbi1yaWdodDogMC41cmVtO1xyXG4gIH1cclxuICAua3VrYWktY2FyZCBkaXYud29yZC1pbnB1dCA+IGlucHV0IHtcclxuICAgIHdpZHRoOiAxMHJlbTtcclxuICB9XHJcbiAgLmt1a2FpLWNhcmQgcHJvZ3Jlc3NbdmFsdWVdIHtcclxuICAgIHdpZHRoOiAyMHJlbTtcclxuICB9XHJcbn0qL1xyXG4vKiBTdGVwIDMgKi9cclxuLmt1a2FpLWNhcmQgc21hbGwge1xyXG4gIGRpc3BsYXk6IGlubGluZS1ibG9jaztcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcclxuICBmb250LXNpemU6IDAuODc1cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xyXG4gIGxldHRlci1zcGFjaW5nOiAwLjMycHg7XHJcbiAgY29sb3I6ICMzOTM5Mzk7XHJcbiAgbWFyZ2luLXRvcDogMS41cmVtO1xyXG4gIG1hcmdpbi1sZWZ0OiAycmVtO1xyXG4gIG1hcmdpbi1ib3R0b206IDAuNXJlbTtcclxuICB3aWR0aDogMjhyZW07XHJcbn1cclxuLmt1a2FpLWNhcmQgc21hbGwuZ3JleSB7XHJcbiAgbWFyZ2luLXRvcDogMC4yNXJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAtMS4yNXJlbTtcclxuICBjb2xvcjogIzM5MzkzOTtcclxuICBvcGFjaXR5OiAwLjQ7XHJcbiAgLXdlYmtpdC1vcGFjaXR5OiAwLjQ7XHJcbiAgLWtodG1sLW9wYWNpdHk6IDAuNDtcclxufVxyXG4ua3VrYWktY2FyZCBpbnB1dC50ZXh0LFxyXG4ua3VrYWktY2FyZCB0ZXh0YXJlYS50ZXh0IHtcclxuICB3aWR0aDogMjhyZW07XHJcbiAgYmFja2dyb3VuZDogI2Q5ZDlkOTtcclxuICBib3JkZXItcmFkaXVzOiAwLjc1cmVtO1xyXG4gIGJvcmRlcjogMHB4IHNvbGlkO1xyXG4gIGhlaWdodDogM3JlbTtcclxuICBwYWRkaW5nLWxlZnQ6IDFyZW07XHJcbiAgcGFkZGluZy1yaWdodDogMXJlbTtcclxuICBtYXJnaW4tbGVmdDogMnJlbTtcclxuICBtYXJnaW4tcmlnaHQ6IDJyZW07XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XHJcbiAgZm9udC1zaXplOiAxcmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxLjEyNXJlbTtcclxuICBsZXR0ZXItc3BhY2luZzogMC4xNnB4O1xyXG4gIGNvbG9yOiAjMzkzOTM5O1xyXG59XHJcbi5rdWthaS1jYXJkIGlucHV0LnRleHRbZGlzYWJsZWRdIHtcclxuICBjb2xvcjogIzgwODA4MDtcclxufVxyXG4ua3VrYWktY2FyZCB0ZXh0YXJlYS50ZXh0IHtcclxuICBoZWlnaHQ6IDdyZW07XHJcbiAgcGFkZGluZy10b3A6IDAuNXJlbTtcclxuICBwYWRkaW5nLWJvdHRvbTogMC41cmVtO1xyXG4gIHJlc2l6ZTogbm9uZTtcclxufVxyXG4ua3VrYWktY2FyZCA6Oi13ZWJraXQtaW5wdXQtcGxhY2Vob2xkZXIsXHJcbi5rdWthaS1jYXJkIDo6LW1vei1pbnB1dC1wbGFjZWhvbGRlcixcclxuLmt1a2FpLWNhcmQgOi1tcy1pbnB1dC1wbGFjZWhvbGRlciB7XHJcbiAgY29sb3I6IHJnYmEoMCwgMCwgMCwgMC42KTtcclxufVxyXG5cclxuLyogU3RlcCA0ICovXHJcbi5rdWthaS1jYXJkIHAuZGVzY3JpcHRpb24uYm9sZC5wa2gge1xyXG4gIG1hcmdpbi10b3A6IDJyZW07XHJcbn1cclxuLmt1a2FpLWNhcmQgZGl2LndoaXRlYm94LmZpbmFsIHtcclxuICBwYWRkaW5nLWJvdHRvbTogMDtcclxuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XHJcbiAgaGVpZ2h0OiBhdXRvO1xyXG59XHJcbi5rdWthaS1jYXJkIGRpdi53aGl0ZWJveCAuYnV0dG9ucyB7XHJcbiAgbWFyZ2luLXRvcDogMXJlbTtcclxufVxyXG4ua3VrYWktY2FyZCBkaXYuZ3JleS1jYXJkIGRpdi5zd2l0Y2gtY29udGFpbmVyIHtcclxuICBtYXJnaW4tbGVmdDogMnJlbTtcclxufVxyXG5cclxuLmt1a2FpLWNhcmQgZGl2LmdyZXktY2FyZCB7XHJcbiAgbWFyZ2luLXRvcDogM3JlbTtcclxuICB3aWR0aDogMzJyZW07XHJcbiAgYmFja2dyb3VuZDogd2hpdGU7XHJcbiAgYmFja2dyb3VuZDogI0Y0RjRGNDtcclxuICBib3JkZXI6IDFweCBzb2xpZCByZ2JhKDI1NSwgMjU1LCAyNTUsIDAuOCk7XHJcbiAgYm94LXNpemluZzogYm9yZGVyLWJveDtcclxuICBib3gtc2hhZG93OiAwcHggMHB4IDFweCByZ2JhKDAsIDAsIDAsIDAuMDQpLCAwcHggMnB4IDZweCByZ2JhKDAsIDAsIDAsIDAuMTQpLCAwcHggMTZweCAyNHB4IHJnYmEoMCwgMCwgMCwgMC4xNik7XHJcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcclxufVxyXG5cclxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDogMzIuNXJlbSkge1xyXG4gIC5rdWthaS1jYXJkIGRpdi5ncmV5LWNhcmR7XHJcbiAgICB3aWR0aDogMjEuODc1cmVtO1xyXG4gICAgLyp3aWR0aDogMjIuNXJlbTsqL1xyXG4gIH1cclxuICAua3VrYWktY2FyZCBwcm9ncmVzc1t2YWx1ZV0sXHJcbiAgLmt1a2FpLWNhcmQgc21hbGwsXHJcbiAgLmt1a2FpLWNhcmQgaW5wdXQudGV4dCxcclxuICAua3VrYWktY2FyZCB0ZXh0YXJlYS50ZXh0IHtcclxuICAgIHdpZHRoOiAxOS44NzVyZW07XHJcbiAgICBtYXJnaW4tbGVmdDogMXJlbTtcclxuICAgIG1hcmdpbi1yaWdodDogMXJlbTtcclxuICB9XHJcbiAgLmt1a2FpLWNhcmQgZGl2LnNlZWQtYmx1cixcclxuICAua3VrYWktY2FyZCBkaXYud2hpdGVib3gge1xyXG4gICAgaGVpZ2h0OiA5LjVyZW07XHJcbiAgfVxyXG4gIC5rdWthaS1jYXJkIGRpdi5zZWVkLWJsdXIge1xyXG4gICAgbWFyZ2luLXRvcDogLTkuNXJlbTtcclxuICB9XHJcbiAgLmt1a2FpLWNhcmQgcC5kZXNjcmlwdGlvbi5ib2xkLnBraCB7XHJcbiAgICBtYXJnaW4tdG9wOiAwLjc1cmVtO1xyXG4gICAgZm9udC1zaXplOiAwLjkzNzVyZW07XHJcbiAgfVxyXG4gIC5rdWthaS1jYXJkIGRpdi5ncmV5LWNhcmQgZGl2LnN3aXRjaC1jb250YWluZXIge1xyXG4gICAgbWFyZ2luLWxlZnQ6IDFyZW07XHJcbiAgfVxyXG4gIC5rdWthaS1jYXJkIGRpdi5idXR0b25zIHtcclxuICAgIG1hcmdpbi1sZWZ0OiAxcmVtO1xyXG4gICAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xyXG4gICAgbWFyZ2luLWJvdHRvbTogMXJlbTtcclxuICB9XHJcbn0iLCJAaW1wb3J0IFwiLi4vLi4vLi4vc2Nzcy9jYXJkLmNzc1wiO1xyXG46aG9zdCB7XHJcbiAgd2lkdGg6IDEwMCU7XHJcbiAgbWluLWhlaWdodDogY2FsYygxMDB2aCk7XHJcbiAgcGFkZGluZy1ib3R0b206IDhyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcclxuICBmbGV4LWRpcmVjdGlvbjogcm93O1xyXG4gIGJhY2tncm91bmQ6ICM1OTYzRkY7XHJcbn1cclxuOmhvc3QudGFjb3Mge1xyXG4gIGJhY2tncm91bmQtaW1hZ2U6IHVybCguLi8uLi8uLi9hc3NldHMvaW1nL3RhY29zLnN2Zyk7XHJcbn1cclxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCA+IGRpdiB7XHJcbiAgbWFyZ2luLXRvcDogNXJlbTtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGp1c3RpZnktY29udGVudDogZmxleC1zdGFydDtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XHJcbn1cclxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCBkaXYuaW1wb3J0LW9wdGlvbnMge1xyXG4gIG1hcmdpbi10b3A6IDIuNzVyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XHJcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcclxuICB3aWR0aDogMjVyZW07XHJcbiAgbWFyZ2luLWJvdHRvbTogMXJlbTtcclxufVxyXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIGRpdi5pbXBvcnQtb3B0aW9ucyBzcGFuIHtcclxuICBwYWRkaW5nOiAwO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMS41cmVtO1xyXG4gIGN1cnNvcjogcG9pbnRlcjtcclxufVxyXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkID4gZGl2ID4gZGl2LmdyZXktY2FyZC5tZW51IHtcclxuICBtYXJnaW4tdG9wOiAwLjVyZW07XHJcbn1cclxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCBkaXYuaW1wb3J0LW9wdGlvbnMgc3Bhbi5zZWxlY3RlZCB7XHJcbiAgbGluZS1oZWlnaHQ6IDEuNXJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAtMXB4O1xyXG4gIGJvcmRlci1ib3R0b206IDFweCBzb2xpZDtcclxufVxyXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIHAuZmF1Y2V0ID4gc3BhbiB7XHJcbiAgZGlzcGxheTogaW5saW5lO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMS41cmVtO1xyXG59XHJcbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgcC5mYXVjZXQgYSB7XHJcbiAgY29sb3I6ICM1OTYzZmYgIWltcG9ydGFudDtcclxufVxyXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIHAuZmF1Y2V0ID4gYTpob3ZlciB7XHJcbiAgYm9yZGVyLWJvdHRvbTogMXB4IHNvbGlkO1xyXG4gIG1hcmdpbi1ib3R0b206IC0xcHg7XHJcbn1cclxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCBzbWFsbCB7XHJcbiAgbWFyZ2luLXRvcDogMS4yNXJlbTtcclxufVxyXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIGRpdi5yYWRpb3Mge1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XHJcbiAgYWxpZ24taXRlbXM6IGZsZXgtc3RhcnQ7XHJcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcclxuICB3aWR0aDogMjhyZW07XHJcbiAgbWFyZ2luLWxlZnQ6IDJyZW07XHJcbiAgbWFyZ2luLXRvcDogMS41cmVtO1xyXG59XHJcbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgaW5wdXRbdHlwZT1cInJhZGlvXCJdOmNoZWNrZWQge1xyXG4gIGJhY2tncm91bmQtY29sb3I6ICMxNjE2MTY7XHJcbn1cclxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCBpbnB1dFt0eXBlPVwicmFkaW9cIl0ge1xyXG4gIC8qIHJlbW92ZSBzdGFuZGFyZCBiYWNrZ3JvdW5kIGFwcGVhcmFuY2UgKi9cclxuICAtd2Via2l0LWFwcGVhcmFuY2U6IG5vbmU7XHJcbiAgLW1vei1hcHBlYXJhbmNlOiBub25lO1xyXG4gIGFwcGVhcmFuY2U6IG5vbmU7XHJcbiAgLyogY3JlYXRlIGN1c3RvbSByYWRpb2J1dHRvbiBhcHBlYXJhbmNlICovXHJcbiAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xyXG4gIHdpZHRoOiAxLjI1cmVtO1xyXG4gIGhlaWdodDogMS4yNXJlbTtcclxuICBwYWRkaW5nOiAwLjI1cmVtO1xyXG4gIC8qIGJhY2tncm91bmQtY29sb3Igb25seSBmb3IgY29udGVudCAqL1xyXG4gIGJhY2tncm91bmQtY2xpcDogY29udGVudC1ib3g7XHJcbiAgYm9yZGVyOiAwLjEyNXJlbSBzb2xpZCAjMTYxNjE2O1xyXG4gIGJvcmRlci1yYWRpdXM6IDUwJTtcclxuICBvdXRsaW5lLXN0eWxlOiBub25lO1xyXG59XHJcbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgZGl2LmJ1dHRvbnMge1xyXG4gIG1hcmdpbi10b3A6IDIuNXJlbTtcclxufVxyXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIGRpdi5yYWRpb3Mgc21hbGwge1xyXG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDEuMTI1cmVtO1xyXG4gIG1hcmdpbi1sZWZ0OiAwLjVyZW07XHJcbiAgbWFyZ2luLXRvcDogMDtcclxuICBtYXJnaW4tYm90dG9tOiAwO1xyXG59XHJcbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgZGl2LnJhZGlvcyA+IGRpdiB7XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBqdXN0aWZ5LWNvbnRlbnQ6IGZsZXgtc3RhcnQ7XHJcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxuICBmbGV4LWRpcmVjdGlvbjogcm93O1xyXG59XHJcbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgZGl2LnJhZGlvcyA+IGRpdjpsYXN0LWNoaWxkIHtcclxuICBtYXJnaW4tdG9wOiAwLjVyZW07XHJcbn1cclxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCBpbnB1dC5pbnB1dC1maWxlIHtcclxuICB3aWR0aDogMC4xcHg7XHJcbiAgaGVpZ2h0OiAwLjFweDtcclxuICBvcGFjaXR5OiAwO1xyXG4gIC13ZWJraXQtb3BhY2l0eTogMDtcclxuICAta2h0bWwtb3BhY2l0eTogMDtcclxuICBvdmVyZmxvdzogaGlkZGVuO1xyXG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxuICB6LWluZGV4OiAtMTtcclxufVxyXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIGxhYmVsLmlucHV0LWZpbGUge1xyXG4gIG1hcmdpbi10b3A6IDJyZW07XHJcbiAgbWFyZ2luLWxlZnQ6IDJyZW07XHJcbiAgbWFyZ2luLWJvdHRvbTogMDtcclxuICB3aWR0aDogMjhyZW07XHJcbiAgaGVpZ2h0OiAzLjEyNXJlbTtcclxuICBib3JkZXI6IDFweCBkYXNoZWQgIzU5NjNmZjtcclxuICBib3JkZXItcmFkaXVzOiAxMnB4O1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcclxuICBmbGV4LWRpcmVjdGlvbjogcm93O1xyXG59XHJcbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgbGFiZWwuaW5wdXQtZmlsZS5sb2FkZWQge1xyXG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcclxuICBwYWRkaW5nLWxlZnQ6IDEuNXJlbTtcclxuICBwYWRkaW5nLXJpZ2h0OiAxLjVyZW07XHJcbiAgYmFja2dyb3VuZDogcmdiYSg4OSwgOTksIDI1NSwgMC4yKTtcclxuICBib3JkZXI6IG5vbmU7XHJcbn1cclxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCBsYWJlbC5pbnB1dC1maWxlID4gc3BhbiB7XHJcbiAgY29sb3I6ICM1OTYzZmY7XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG4gIGxpbmUtaGVpZ2h0OiAxLjVyZW07XHJcbiAgZm9udC1zaXplOiAwLjc1cmVtO1xyXG59XHJcbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgbGFiZWwuaW5wdXQtZmlsZSA+IHNwYW46bGFzdC1jaGlsZCB7XHJcbiAgdGV4dC1kZWNvcmF0aW9uLWxpbmU6IHVuZGVybGluZTtcclxufVxyXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIGxhYmVsLmlucHV0LWZpbGU6aG92ZXIge1xyXG4gIGN1cnNvcjogcG9pbnRlcjtcclxufVxyXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIGRpdi5hdXRoZW50aWNhdGUgPiBpbnB1dCB7XHJcbiAgbWFyZ2luLXRvcDogMS41cmVtO1xyXG59XHJcbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDMyLjVyZW0pIHtcclxuICA6aG9zdCA+IGRpdi5rdWthaS1jYXJkIGxhYmVsLmlucHV0LWZpbGUge1xyXG4gICAgd2lkdGg6IDE5Ljg3NXJlbTtcclxuICAgIG1hcmdpbi1sZWZ0OiAxcmVtO1xyXG4gIH1cclxuICA6aG9zdCA+IGRpdi5rdWthaS1jYXJkIGRpdi5hdXRoZW50aWNhdGUgPiBpbnB1dCNwd2Qge1xyXG4gICAgd2lkdGg6IDE5Ljg3NXJlbTtcclxuICAgIG1hcmdpbi1sZWZ0OiAxcmVtO1xyXG4gIH1cclxuICA6aG9zdCA+IGRpdi5rdWthaS1jYXJkIGRpdi5yYWRpb3Mge1xyXG4gICAgbWFyZ2luLWxlZnQ6IDFyZW07XHJcbiAgICB3aWR0aDogMjByZW07XHJcbiAgfVxyXG4gIDpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgZGl2LnJhZGlvcyBzbWFsbCB7XHJcbiAgICB3aWR0aDogMTdyZW07XHJcbiAgfVxyXG4gIDpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgZGl2LmltcG9ydC1vcHRpb25zIHtcclxuICAgIHdpZHRoOiAyMS44NzVyZW07XHJcbiAgICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWFyb3VuZDtcclxuICB9XHJcbn0iLCJAaW1wb3J0IFwiLi4vLi4vLi4vc2Nzcy9jYXJkLmNzc1wiO1xuOmhvc3Qge1xuICB3aWR0aDogMTAwJTtcbiAgbWluLWhlaWdodDogY2FsYygxMDB2aCk7XG4gIHBhZGRpbmctYm90dG9tOiA4cmVtO1xuICBkaXNwbGF5OiBmbGV4O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcbiAgYmFja2dyb3VuZDogIzU5NjNGRjtcbn1cblxuOmhvc3QudGFjb3Mge1xuICBiYWNrZ3JvdW5kLWltYWdlOiB1cmwoLi4vLi4vLi4vYXNzZXRzL2ltZy90YWNvcy5zdmcpO1xufVxuXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkID4gZGl2IHtcbiAgbWFyZ2luLXRvcDogNXJlbTtcbiAgZGlzcGxheTogZmxleDtcbiAganVzdGlmeS1jb250ZW50OiBmbGV4LXN0YXJ0O1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xufVxuXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIGRpdi5pbXBvcnQtb3B0aW9ucyB7XG4gIG1hcmdpbi10b3A6IDIuNzVyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcbiAgd2lkdGg6IDI1cmVtO1xuICBtYXJnaW4tYm90dG9tOiAxcmVtO1xufVxuXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIGRpdi5pbXBvcnQtb3B0aW9ucyBzcGFuIHtcbiAgcGFkZGluZzogMDtcbiAgZm9udC1zaXplOiAxcmVtO1xuICBsaW5lLWhlaWdodDogMS41cmVtO1xuICBjdXJzb3I6IHBvaW50ZXI7XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgPiBkaXYgPiBkaXYuZ3JleS1jYXJkLm1lbnUge1xuICBtYXJnaW4tdG9wOiAwLjVyZW07XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgZGl2LmltcG9ydC1vcHRpb25zIHNwYW4uc2VsZWN0ZWQge1xuICBsaW5lLWhlaWdodDogMS41cmVtO1xuICBtYXJnaW4tYm90dG9tOiAtMXB4O1xuICBib3JkZXItYm90dG9tOiAxcHggc29saWQ7XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgcC5mYXVjZXQgPiBzcGFuIHtcbiAgZGlzcGxheTogaW5saW5lO1xuICBmb250LXNpemU6IDFyZW07XG4gIGxpbmUtaGVpZ2h0OiAxLjVyZW07XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgcC5mYXVjZXQgYSB7XG4gIGNvbG9yOiAjNTk2M2ZmICFpbXBvcnRhbnQ7XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgcC5mYXVjZXQgPiBhOmhvdmVyIHtcbiAgYm9yZGVyLWJvdHRvbTogMXB4IHNvbGlkO1xuICBtYXJnaW4tYm90dG9tOiAtMXB4O1xufVxuXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIHNtYWxsIHtcbiAgbWFyZ2luLXRvcDogMS4yNXJlbTtcbn1cblxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCBkaXYucmFkaW9zIHtcbiAgZGlzcGxheTogZmxleDtcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gIGFsaWduLWl0ZW1zOiBmbGV4LXN0YXJ0O1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xuICB3aWR0aDogMjhyZW07XG4gIG1hcmdpbi1sZWZ0OiAycmVtO1xuICBtYXJnaW4tdG9wOiAxLjVyZW07XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgaW5wdXRbdHlwZT1yYWRpb106Y2hlY2tlZCB7XG4gIGJhY2tncm91bmQtY29sb3I6ICMxNjE2MTY7XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgaW5wdXRbdHlwZT1yYWRpb10ge1xuICAvKiByZW1vdmUgc3RhbmRhcmQgYmFja2dyb3VuZCBhcHBlYXJhbmNlICovXG4gIC13ZWJraXQtYXBwZWFyYW5jZTogbm9uZTtcbiAgLW1vei1hcHBlYXJhbmNlOiBub25lO1xuICBhcHBlYXJhbmNlOiBub25lO1xuICAvKiBjcmVhdGUgY3VzdG9tIHJhZGlvYnV0dG9uIGFwcGVhcmFuY2UgKi9cbiAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB3aWR0aDogMS4yNXJlbTtcbiAgaGVpZ2h0OiAxLjI1cmVtO1xuICBwYWRkaW5nOiAwLjI1cmVtO1xuICAvKiBiYWNrZ3JvdW5kLWNvbG9yIG9ubHkgZm9yIGNvbnRlbnQgKi9cbiAgYmFja2dyb3VuZC1jbGlwOiBjb250ZW50LWJveDtcbiAgYm9yZGVyOiAwLjEyNXJlbSBzb2xpZCAjMTYxNjE2O1xuICBib3JkZXItcmFkaXVzOiA1MCU7XG4gIG91dGxpbmUtc3R5bGU6IG5vbmU7XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgZGl2LmJ1dHRvbnMge1xuICBtYXJnaW4tdG9wOiAyLjVyZW07XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgZGl2LnJhZGlvcyBzbWFsbCB7XG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XG4gIGxpbmUtaGVpZ2h0OiAxLjEyNXJlbTtcbiAgbWFyZ2luLWxlZnQ6IDAuNXJlbTtcbiAgbWFyZ2luLXRvcDogMDtcbiAgbWFyZ2luLWJvdHRvbTogMDtcbn1cblxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCBkaXYucmFkaW9zID4gZGl2IHtcbiAgZGlzcGxheTogZmxleDtcbiAganVzdGlmeS1jb250ZW50OiBmbGV4LXN0YXJ0O1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xuICBmbGV4LWRpcmVjdGlvbjogcm93O1xufVxuXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIGRpdi5yYWRpb3MgPiBkaXY6bGFzdC1jaGlsZCB7XG4gIG1hcmdpbi10b3A6IDAuNXJlbTtcbn1cblxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCBpbnB1dC5pbnB1dC1maWxlIHtcbiAgd2lkdGg6IDAuMXB4O1xuICBoZWlnaHQ6IDAuMXB4O1xuICBvcGFjaXR5OiAwO1xuICAtd2Via2l0LW9wYWNpdHk6IDA7XG4gIC1raHRtbC1vcGFjaXR5OiAwO1xuICBvdmVyZmxvdzogaGlkZGVuO1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIHotaW5kZXg6IC0xO1xufVxuXG46aG9zdCA+IGRpdi5rdWthaS1jYXJkIGxhYmVsLmlucHV0LWZpbGUge1xuICBtYXJnaW4tdG9wOiAycmVtO1xuICBtYXJnaW4tbGVmdDogMnJlbTtcbiAgbWFyZ2luLWJvdHRvbTogMDtcbiAgd2lkdGg6IDI4cmVtO1xuICBoZWlnaHQ6IDMuMTI1cmVtO1xuICBib3JkZXI6IDFweCBkYXNoZWQgIzU5NjNmZjtcbiAgYm9yZGVyLXJhZGl1czogMTJweDtcbiAgZGlzcGxheTogZmxleDtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgbGFiZWwuaW5wdXQtZmlsZS5sb2FkZWQge1xuICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XG4gIHBhZGRpbmctbGVmdDogMS41cmVtO1xuICBwYWRkaW5nLXJpZ2h0OiAxLjVyZW07XG4gIGJhY2tncm91bmQ6IHJnYmEoODksIDk5LCAyNTUsIDAuMik7XG4gIGJvcmRlcjogbm9uZTtcbn1cblxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCBsYWJlbC5pbnB1dC1maWxlID4gc3BhbiB7XG4gIGNvbG9yOiAjNTk2M2ZmO1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xuICBsaW5lLWhlaWdodDogMS41cmVtO1xuICBmb250LXNpemU6IDAuNzVyZW07XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgbGFiZWwuaW5wdXQtZmlsZSA+IHNwYW46bGFzdC1jaGlsZCB7XG4gIHRleHQtZGVjb3JhdGlvbi1saW5lOiB1bmRlcmxpbmU7XG59XG5cbjpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgbGFiZWwuaW5wdXQtZmlsZTpob3ZlciB7XG4gIGN1cnNvcjogcG9pbnRlcjtcbn1cblxuOmhvc3QgPiBkaXYua3VrYWktY2FyZCBkaXYuYXV0aGVudGljYXRlID4gaW5wdXQge1xuICBtYXJnaW4tdG9wOiAxLjVyZW07XG59XG5cbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDMyLjVyZW0pIHtcbiAgOmhvc3QgPiBkaXYua3VrYWktY2FyZCBsYWJlbC5pbnB1dC1maWxlIHtcbiAgICB3aWR0aDogMTkuODc1cmVtO1xuICAgIG1hcmdpbi1sZWZ0OiAxcmVtO1xuICB9XG5cbiAgOmhvc3QgPiBkaXYua3VrYWktY2FyZCBkaXYuYXV0aGVudGljYXRlID4gaW5wdXQjcHdkIHtcbiAgICB3aWR0aDogMTkuODc1cmVtO1xuICAgIG1hcmdpbi1sZWZ0OiAxcmVtO1xuICB9XG5cbiAgOmhvc3QgPiBkaXYua3VrYWktY2FyZCBkaXYucmFkaW9zIHtcbiAgICBtYXJnaW4tbGVmdDogMXJlbTtcbiAgICB3aWR0aDogMjByZW07XG4gIH1cblxuICA6aG9zdCA+IGRpdi5rdWthaS1jYXJkIGRpdi5yYWRpb3Mgc21hbGwge1xuICAgIHdpZHRoOiAxN3JlbTtcbiAgfVxuXG4gIDpob3N0ID4gZGl2Lmt1a2FpLWNhcmQgZGl2LmltcG9ydC1vcHRpb25zIHtcbiAgICB3aWR0aDogMjEuODc1cmVtO1xuICAgIGp1c3RpZnktY29udGVudDogc3BhY2UtYXJvdW5kO1xuICB9XG59Il19 */"] });
 /*@__PURE__*/ (function () { _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵsetClassMetadata"](MnemonicImportComponent, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"],
         args: [{
@@ -11151,7 +4126,7 @@ MnemonicImportComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵ
                 templateUrl: './mnemonic-import.component.html',
                 styleUrls: ['./mnemonic-import.component.scss']
             }]
-    }], function () { return [{ type: _ngx_translate_core__WEBPACK_IMPORTED_MODULE_4__["TranslateService"] }, { type: _services_import_import_service__WEBPACK_IMPORTED_MODULE_5__["ImportService"] }, { type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"] }, { type: _services_message_message_service__WEBPACK_IMPORTED_MODULE_6__["MessageService"] }, { type: _services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_7__["WalletService"] }, { type: _services_export_export_service__WEBPACK_IMPORTED_MODULE_8__["ExportService"] }, { type: _services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_9__["InputValidationService"] }]; }, { showTacos: [{
+    }], function () { return [{ type: _ngx_translate_core__WEBPACK_IMPORTED_MODULE_3__["TranslateService"] }, { type: _services_import_import_service__WEBPACK_IMPORTED_MODULE_4__["ImportService"] }, { type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"] }, { type: _services_message_message_service__WEBPACK_IMPORTED_MODULE_5__["MessageService"] }, { type: _services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_6__["WalletService"] }, { type: _services_export_export_service__WEBPACK_IMPORTED_MODULE_7__["ExportService"] }, { type: _services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_8__["InputValidationService"] }]; }, { showTacos: [{
             type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["HostBinding"],
             args: ['class.tacos']
         }] }); })();
@@ -11194,9 +4169,9 @@ __webpack_require__.r(__webpack_exports__);
 
 const _c0 = ["pwdInput"];
 function NewImplicitComponent_img_0_Template(rf, ctx) { if (rf & 1) {
-    const _r325 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+    const _r326 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "img", 2);
-    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function NewImplicitComponent_img_0_Template_img_click_0_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r325); const ctx_r324 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](); return ctx_r324.openModal(); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function NewImplicitComponent_img_0_Template_img_click_0_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r326); const ctx_r325 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](); return ctx_r325.openModal(); });
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
 } }
 function NewImplicitComponent_div_1_span_15_Template(rf, ctx) { if (rf & 1) {
@@ -11204,16 +4179,16 @@ function NewImplicitComponent_div_1_span_15_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](1);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
 } if (rf & 2) {
-    const ctx_r327 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
+    const ctx_r328 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r327.errorMsg);
+    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r328.errorMsg);
 } }
 function NewImplicitComponent_div_1_Template(rf, ctx) { if (rf & 1) {
-    const _r329 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+    const _r330 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "div", 3);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](1, "div", 4);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](2, "div", 5);
-    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function NewImplicitComponent_div_1_Template_div_click_2_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r329); const ctx_r328 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](); return ctx_r328.closeModal(); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function NewImplicitComponent_div_1_Template_div_click_2_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r330); const ctx_r329 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](); return ctx_r329.closeModal(); });
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelement"](3, "img", 6);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](4, "div", 7);
@@ -11227,10 +4202,10 @@ function NewImplicitComponent_div_1_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](10, "div", 9);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](11, "input", 10, 11);
-    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("ngModelChange", function NewImplicitComponent_div_1_Template_input_ngModelChange_11_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r329); const ctx_r330 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](); return ctx_r330.password = $event; })("input", function NewImplicitComponent_div_1_Template_input_input_11_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r329); const ctx_r331 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](); return ctx_r331.errorMsg = ""; })("change", function NewImplicitComponent_div_1_Template_input_change_11_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r329); const ctx_r332 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](); return ctx_r332.errorMsg = ""; });
+    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("ngModelChange", function NewImplicitComponent_div_1_Template_input_ngModelChange_11_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r330); const ctx_r331 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](); return ctx_r331.password = $event; })("input", function NewImplicitComponent_div_1_Template_input_input_11_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r330); const ctx_r332 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](); return ctx_r332.errorMsg = ""; })("change", function NewImplicitComponent_div_1_Template_input_change_11_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r330); const ctx_r333 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](); return ctx_r333.errorMsg = ""; });
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](13, "button", 12);
-    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function NewImplicitComponent_div_1_Template_button_click_13_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r329); const ctx_r333 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](); return ctx_r333.addPkh(); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function NewImplicitComponent_div_1_Template_button_click_13_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r330); const ctx_r334 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](); return ctx_r334.addPkh(); });
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](14, "Confirm");
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
@@ -11239,11 +4214,11 @@ function NewImplicitComponent_div_1_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
 } if (rf & 2) {
-    const ctx_r323 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
+    const ctx_r324 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](11);
-    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r323.password);
+    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx_r324.password);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](4);
-    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r323.errorMsg);
+    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r324.errorMsg);
 } }
 class NewImplicitComponent {
     constructor(walletService, coordinatorService, modalService, messageService, cdRef) {
@@ -11844,10 +4819,10 @@ function PermissionRequestComponent_div_0_li_11_Template(rf, ctx) { if (rf & 1) 
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](1);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 } if (rf & 2) {
-    const scope_r341 = ctx.$implicit;
-    const ctx_r339 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2);
+    const scope_r342 = ctx.$implicit;
+    const ctx_r340 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx_r339.scopeToText(scope_r341));
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx_r340.scopeToText(scope_r342));
 } }
 function PermissionRequestComponent_div_0_ng_container_15_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerStart"](0);
@@ -11856,18 +4831,18 @@ function PermissionRequestComponent_div_0_ng_container_15_Template(rf, ctx) { if
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerEnd"]();
 } if (rf & 2) {
-    const acc_r342 = ctx.$implicit;
+    const acc_r343 = ctx.$implicit;
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpropertyInterpolate"]("value", acc_r342.address);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpropertyInterpolate"]("value", acc_r343.address);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](acc_r342.pkh);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](acc_r343.pkh);
 } }
 function PermissionRequestComponent_div_0_Template(rf, ctx) { if (rf & 1) {
-    const _r344 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
+    const _r345 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 1);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "div", 2);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "div", 3);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function PermissionRequestComponent_div_0_Template_div_click_2_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r344); const ctx_r343 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r343.rejectPermissions(); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function PermissionRequestComponent_div_0_Template_div_click_2_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r345); const ctx_r344 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r344.rejectPermissions(); });
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](3, "img", 4);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](4, "div", 5);
@@ -11886,12 +4861,12 @@ function PermissionRequestComponent_div_0_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](13, "Select an account the permissions should be applied to:");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](14, "select", 8);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("ngModelChange", function PermissionRequestComponent_div_0_Template_select_ngModelChange_14_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r344); const ctx_r345 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r345.selectedAccount = $event; });
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("ngModelChange", function PermissionRequestComponent_div_0_Template_select_ngModelChange_14_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r345); const ctx_r346 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r346.selectedAccount = $event; });
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](15, PermissionRequestComponent_div_0_ng_container_15_Template, 3, 2, "ng-container", 7);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](16, "div", 9);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](17, "button", 10);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function PermissionRequestComponent_div_0_Template_button_click_17_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r344); const ctx_r346 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r346.grantPermissions(); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function PermissionRequestComponent_div_0_Template_button_click_17_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r345); const ctx_r347 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r347.grantPermissions(); });
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](18, "Approve");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
@@ -11899,15 +4874,15 @@ function PermissionRequestComponent_div_0_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 } if (rf & 2) {
-    const ctx_r338 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+    const ctx_r339 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](9);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"]("", ctx_r338.permissionRequest.appMetadata.name, " wants the following permissions:");
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"]("", ctx_r339.permissionRequest.appMetadata.name, " wants the following permissions:");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx_r338.permissionRequest.scopes);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx_r339.permissionRequest.scopes);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngModel", ctx_r338.selectedAccount);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngModel", ctx_r339.selectedAccount);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx_r338.walletService.wallet.implicitAccounts);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx_r339.walletService.wallet.implicitAccounts);
 } }
 class PermissionRequestComponent {
     constructor(walletService) {
@@ -12003,11 +4978,11 @@ function QrScannerComponent_div_2_p_12_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
 } }
 function QrScannerComponent_div_2_Template(rf, ctx) { if (rf & 1) {
-    const _r351 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
+    const _r352 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetCurrentView"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "div", 2);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](1, "div", 3);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](2, "div", 4);
-    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function QrScannerComponent_div_2_Template_div_click_2_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r351); const ctx_r350 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](); return ctx_r350.closeModal(); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("click", function QrScannerComponent_div_2_Template_div_click_2_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r352); const ctx_r351 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](); return ctx_r351.closeModal(); });
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelement"](3, "img", 5);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelement"](4, "div", 6);
@@ -12025,9 +5000,9 @@ function QrScannerComponent_div_2_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
 } if (rf & 2) {
-    const ctx_r347 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
+    const ctx_r348 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](12);
-    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r347.qrScanner);
+    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx_r348.qrScanner);
 } }
 class QrScannerComponent {
     constructor(beaconService) {
@@ -12266,15 +5241,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_estimate_estimate_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../services/estimate/estimate.service */ "./src/app/services/estimate/estimate.service.ts");
 /* harmony import */ var big_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! big.js */ "./node_modules/big.js/big.js");
 /* harmony import */ var big_js__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(big_js__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../constants */ "./src/app/constants.ts");
-/* harmony import */ var _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../services/wallet/wallet */ "./src/app/services/wallet/wallet.ts");
-/* harmony import */ var _services_message_message_service__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../services/message/message.service */ "./src/app/services/message/message.service.ts");
-/* harmony import */ var _services_torus_torus_service__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../services/torus/torus.service */ "./src/app/services/torus/torus.service.ts");
-/* harmony import */ var _services_lookup_lookup_service__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../services/lookup/lookup.service */ "./src/app/services/lookup/lookup.service.ts");
-/* harmony import */ var _taquito_michel_codec__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @taquito/michel-codec */ "./node_modules/@taquito/michel-codec/dist/taquito-michel-codec.es5.js");
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/__ivy_ngcc__/fesm2015/forms.js");
-
+/* harmony import */ var _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../services/wallet/wallet */ "./src/app/services/wallet/wallet.ts");
+/* harmony import */ var _services_message_message_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../services/message/message.service */ "./src/app/services/message/message.service.ts");
+/* harmony import */ var _services_torus_torus_service__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../services/torus/torus.service */ "./src/app/services/torus/torus.service.ts");
+/* harmony import */ var _services_lookup_lookup_service__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../services/lookup/lookup.service */ "./src/app/services/lookup/lookup.service.ts");
+/* harmony import */ var _taquito_michel_codec__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @taquito/michel-codec */ "./node_modules/@taquito/michel-codec/dist/taquito-michel-codec.es5.js");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/__ivy_ngcc__/fesm2015/forms.js");
 
 
 
@@ -13017,7 +5990,6 @@ class SendComponent {
         /* old variables */
         this.beaconMode = false;
         this.operationResponse = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
-        this.CONSTANTS = new _constants__WEBPACK_IMPORTED_MODULE_10__["Constants"]();
         this.defaultTransactionParams = zeroTxParams;
         this.amount = '';
         this.parametersFormat = 0;
@@ -13174,7 +6146,7 @@ class SendComponent {
                 }
                 else {
                     this.messageService.stopSpinner();
-                    if (this.walletService.wallet instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_11__["TorusWallet"]) {
+                    if (this.walletService.wallet instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_10__["TorusWallet"]) {
                         this.pwdValid = `Authorization failed`;
                     }
                     else {
@@ -13234,7 +6206,7 @@ class SendComponent {
         }
     }
     maxToSend(account) {
-        if (account && (account instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_11__["ImplicitAccount"])) {
+        if (account && (account instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_10__["ImplicitAccount"])) {
             let accountBalance = big_js__WEBPACK_IMPORTED_MODULE_9___default()(account.balanceXTZ).div(1000000);
             accountBalance = accountBalance.minus(this.fee && Number(this.fee) ? Number(this.fee) : this.defaultTransactionParams.fee);
             if (!this.isMultipleDestinations) {
@@ -13317,7 +6289,7 @@ class SendComponent {
                             }
                         }
                     }
-                    else if (this.walletService.wallet instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_11__["LedgerWallet"]) {
+                    else if (this.walletService.wallet instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_10__["LedgerWallet"]) {
                         yield this.requestLedgerSignature();
                     }
                 }
@@ -13337,7 +6309,7 @@ class SendComponent {
     }
     requestLedgerSignature() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            if (this.walletService.wallet instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_11__["LedgerWallet"]) {
+            if (this.walletService.wallet instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_10__["LedgerWallet"]) {
                 yield this.messageService.startSpinner('Waiting for Ledger signature...');
                 try {
                     const op = this.sendResponse.payload.unsignedOperation;
@@ -13441,7 +6413,7 @@ class SendComponent {
     }
     checkBalance() {
         if (this.transactions.length > 0) {
-            if (this.activeAccount && (this.activeAccount instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_11__["ImplicitAccount"])) {
+            if (this.activeAccount && (this.activeAccount instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_10__["ImplicitAccount"])) {
                 const max = big_js__WEBPACK_IMPORTED_MODULE_9___default()(this.maxToSend(this.activeAccount)).plus(0.000001);
                 let amount = big_js__WEBPACK_IMPORTED_MODULE_9___default()(0);
                 for (const tx of this.transactions) {
@@ -13451,7 +6423,7 @@ class SendComponent {
                     return this.translate.instant('SENDCOMPONENT.TOOHIGHFEEORAMOUNT');
                 }
             }
-            else if (this.activeAccount && (this.activeAccount instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_11__["OriginatedAccount"])) {
+            else if (this.activeAccount && (this.activeAccount instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_10__["OriginatedAccount"])) {
                 const maxKt = big_js__WEBPACK_IMPORTED_MODULE_9___default()(this.maxToSend(this.activeAccount));
                 const maxTz = big_js__WEBPACK_IMPORTED_MODULE_9___default()(this.maxToSend(this.walletService.wallet.getImplicitAccount(this.activeAccount.pkh))).plus(0.000001);
                 let amount = big_js__WEBPACK_IMPORTED_MODULE_9___default()(0);
@@ -13551,7 +6523,7 @@ class SendComponent {
         return (this.inputValidationService.address(this.toPkh) && this.toPkh.slice(0, 2) === 'KT');
     }
     senderIsKT() {
-        return (this.activeAccount && (this.activeAccount instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_11__["OriginatedAccount"]));
+        return (this.activeAccount && (this.activeAccount instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_10__["OriginatedAccount"]));
     }
     validateReceiverAddress() {
         if (!this.torusVerifier) {
@@ -13613,8 +6585,8 @@ class SendComponent {
                     !this.parameters.entrypoint) {
                     throw new Error('entrypoint and value expected');
                 }
-                Object(_taquito_michel_codec__WEBPACK_IMPORTED_MODULE_15__["assertMichelsonData"])(this.parameters.value);
-                const res = Object(_taquito_michel_codec__WEBPACK_IMPORTED_MODULE_15__["emitMicheline"])(this.parameters.value, { indent: '  ', newline: '\n' });
+                Object(_taquito_michel_codec__WEBPACK_IMPORTED_MODULE_14__["assertMichelsonData"])(this.parameters.value);
+                const res = Object(_taquito_michel_codec__WEBPACK_IMPORTED_MODULE_14__["emitMicheline"])(this.parameters.value, { indent: '  ', newline: '\n' });
                 this.micheline = { entrypoint: this.parameters.entrypoint, value: res };
             }
             catch (e) {
@@ -13840,7 +6812,7 @@ class SendComponent {
         this.parametersFormat = id;
     }
 }
-SendComponent.ɵfac = function SendComponent_Factory(t) { return new (t || SendComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_ngx_translate_core__WEBPACK_IMPORTED_MODULE_2__["TranslateService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_3__["WalletService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_operation_operation_service__WEBPACK_IMPORTED_MODULE_5__["OperationService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_coordinator_coordinator_service__WEBPACK_IMPORTED_MODULE_4__["CoordinatorService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_6__["InputValidationService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_ledger_ledger_service__WEBPACK_IMPORTED_MODULE_7__["LedgerService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_estimate_estimate_service__WEBPACK_IMPORTED_MODULE_8__["EstimateService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_message_message_service__WEBPACK_IMPORTED_MODULE_12__["MessageService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_torus_torus_service__WEBPACK_IMPORTED_MODULE_13__["TorusService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_lookup_lookup_service__WEBPACK_IMPORTED_MODULE_14__["LookupService"])); };
+SendComponent.ɵfac = function SendComponent_Factory(t) { return new (t || SendComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_ngx_translate_core__WEBPACK_IMPORTED_MODULE_2__["TranslateService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_3__["WalletService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_operation_operation_service__WEBPACK_IMPORTED_MODULE_5__["OperationService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_coordinator_coordinator_service__WEBPACK_IMPORTED_MODULE_4__["CoordinatorService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_6__["InputValidationService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_ledger_ledger_service__WEBPACK_IMPORTED_MODULE_7__["LedgerService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_estimate_estimate_service__WEBPACK_IMPORTED_MODULE_8__["EstimateService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_message_message_service__WEBPACK_IMPORTED_MODULE_11__["MessageService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_torus_torus_service__WEBPACK_IMPORTED_MODULE_12__["TorusService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_lookup_lookup_service__WEBPACK_IMPORTED_MODULE_13__["LookupService"])); };
 SendComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({ type: SendComponent, selectors: [["app-send"]], viewQuery: function SendComponent_Query(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵviewQuery"](_c0, true);
     } if (rf & 2) {
@@ -13853,7 +6825,7 @@ SendComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComp
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx.beaconMode);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx.modalOpen);
-    } }, directives: [_angular_common__WEBPACK_IMPORTED_MODULE_16__["NgIf"], _angular_forms__WEBPACK_IMPORTED_MODULE_17__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_17__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_17__["NgModel"], _angular_forms__WEBPACK_IMPORTED_MODULE_17__["CheckboxControlValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_17__["SelectControlValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_17__["NgSelectOption"], _angular_forms__WEBPACK_IMPORTED_MODULE_17__["ɵangular_packages_forms_forms_x"], _angular_common__WEBPACK_IMPORTED_MODULE_16__["NgForOf"]], pipes: [_angular_common__WEBPACK_IMPORTED_MODULE_16__["DecimalPipe"], _ngx_translate_core__WEBPACK_IMPORTED_MODULE_2__["TranslatePipe"]], styles: ["div.kukai-modal[_ngcontent-%COMP%] {\n  position: fixed;\n  z-index: 100;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%;\n  overflow: auto;\n  background-color: black;\n  background-color: rgba(0, 0, 0, 0.4);\n}\ndiv.kukai-modal.top[_ngcontent-%COMP%] {\n  z-index: 101;\n}\n\ndiv.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%] {\n  position: relative;\n  background-color: #fcfcfc;\n  margin: 5rem auto;\n  border: 1px solid #ffffff;\n  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.06);\n  border-radius: 0.75rem;\n  width: 25rem;\n  -webkit-animation-name: animatetop;\n  -webkit-animation-duration: 0.5s;\n  animation-name: animatetop;\n  animation-duration: 0.5s;\n}\n\n@-webkit-keyframes animatetop {\n  from {\n    top: 20rem;\n    opacity: 0;\n  }\n  to {\n    top: 0;\n    opacity: 1;\n  }\n}\n@keyframes animatetop {\n  from {\n    top: -300px;\n    opacity: 0;\n  }\n  to {\n    top: 0;\n    opacity: 1;\n  }\n}\ndiv.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%]    > div.km-header[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: space-between;\n  flex-direction: row;\n  border-bottom: 1px solid black;\n  border-bottom: 1px solid rgba(0, 0, 0, 0.04);\n}\ndiv.km-header[_ngcontent-%COMP%]    > H1[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: bold;\n  font-size: 1.25rem;\n  line-height: 1.5rem;\n  display: flex;\n  align-items: center;\n  color: #2c323a;\n  margin: 1rem;\n}\ndiv.km-header[_ngcontent-%COMP%]    > span.close[_ngcontent-%COMP%] {\n  margin: 0.25rem 0.5rem;\n  color: #aaa;\n  font-size: 28px;\n  font-weight: bold;\n}\ndiv.km-header[_ngcontent-%COMP%]    > span.close[_ngcontent-%COMP%]:hover, div.km-header[_ngcontent-%COMP%]    > span.close[_ngcontent-%COMP%]:focus {\n  color: #2c323a;\n  text-decoration: none;\n  cursor: pointer;\n}\ndiv.km-body[_ngcontent-%COMP%] {\n  margin: 1rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.amount[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: center;\n  flex-direction: row;\n  height: 5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.custom-large[_ngcontent-%COMP%] {\n  width: auto;\n  font-style: normal;\n  font-weight: normal;\n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 5rem;\n  line-height: 5rem;\n  color: #2C323A;\n  background: #fcfcfc;\n  opacity: 0.4;\n  padding: 0;\n  text-align: center;\n  border: 0;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.custom-large[_ngcontent-%COMP%]:disabled {\n  background-color: rgba(0, 0, 0, 0);\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, div.kukai-modal[_ngcontent-%COMP%]   textarea[_ngcontent-%COMP%]:focus {\n  outline: none;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   span.tez[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: 500;\n  font-size: 1rem;\n  line-height: 1rem;\n  color: #2C323A;\n  opacity: 0.4;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   p.fee[_ngcontent-%COMP%] {\n  margin-top: 0.375rem;\n  font-style: normal;\n  font-weight: 500;\n  font-size: 0.75rem;\n  line-height: 1rem;\n  color: #2C323A;\n  opacity: 0.4;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   p.preview[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.875rem;\n  line-height: 1rem;\n  display: flex;\n  align-items: flex-end;\n  color: #000000;\n  opacity: 0.6;\n  margin-bottom: 0.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   td[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   th[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.75rem;\n  line-height: 1rem;\n  color: #000000;\n  opacity: 0.6;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   th[_ngcontent-%COMP%] {\n  font-weight: bold;\n}\ndiv.km-content[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]:not(.switch) {\n  margin-bottom: 0.5rem;\n  font-style: normal;\n  font-weight: 500;\n  font-size: 1rem;\n  line-height: 1.125rem;\n  display: flex;\n  align-items: center;\n  color: #2C323A;\n  opacity: 0.4;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   p[_ngcontent-%COMP%], span.danger[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.875rem;\n  line-height: 1rem;\n  display: flex;\n  align-items: flex-end;\n  color: #000000;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   span.no-margin[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   span.margin[_ngcontent-%COMP%] {\n  color: #FF0000;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   span.no-margin[_ngcontent-%COMP%] {\n  margin-top: 0.75rem;\n  margin-bottom: -1.75rem;\n  color: #FF0000;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.group[_ngcontent-%COMP%] {\n  margin-top: 1.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%] {\n  width: 100%;\n  background: #E1E1E1;\n  border-radius: 0.75rem;\n  height: 3rem;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 1rem;\n  line-height: 3rem;\n  letter-spacing: 0.16px;\n  color: #000000;\n  padding-left: 1rem;\n  padding-right: 1rem;\n  border: 0;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.text.password[_ngcontent-%COMP%] {\n  width: 200%;\n  margin-right: 1rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%] {\n  padding-top: 0.5rem;\n  height: 7rem;\n  line-height: 1.25rem;\n  resize: none;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%]::-moz-placeholder, div.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%]::-moz-placeholder {\n  color: #808080;\n  opacity: 1;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%]::placeholder, div.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%]::placeholder {\n  color: #808080;\n  opacity: 1;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%]::placeholder, div.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%]::-webkit-input-placeholder, div.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%]:-ms-input-placeholder {\n  padding-top: 0.5rem;\n  line-height: 1.25rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.row-group[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: space-between;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.row-group[_ngcontent-%COMP%]    > div.group[_ngcontent-%COMP%]:first-child {\n  margin-right: 1rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.advanced[_ngcontent-%COMP%] {\n  margin-top: 1.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.blue[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: bold;\n  font-size: 1rem;\n  line-height: 1rem;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  text-align: center;\n  color: white;\n  background: #5963FF;\n  box-shadow: 0px 0px 1px rgba(89, 99, 255, 0.04), 0px 2px 6px rgba(89, 99, 255, 0.04), 0px 16px 24px rgba(89, 99, 255, 0.24);\n  width: 100%;\n  height: 3rem;\n  border-radius: 0.75rem;\n  border: 0;\n  margin-top: 2.5rem;\n  margin-bottom: 1.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.blue.confirm[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   button.retry[_ngcontent-%COMP%] {\n  height: 3rem;\n  margin: 0;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.retry[_ngcontent-%COMP%] {\n  width: 100%;\n  font-size: 1rem;\n  background-color: #d3d3d3;\n  color: #212529;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:focus {\n  outline: none;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.switch-container[_ngcontent-%COMP%] {\n  width: auto !important;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.small[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: 500;\n  font-size: 0.75rem;\n  line-height: 1rem;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  text-align: center;\n  width: auto;\n  height: 1.5rem;\n  color: #000000;\n  opacity: 0.6;\n  background: rgba(214, 214, 214, 0.4);\n  border-radius: 0.3125rem;\n  border: 0;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.small.max[_ngcontent-%COMP%] {\n  background: #d5f2dc;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.small.multiple-destinations[_ngcontent-%COMP%] {\n  color: #5963FF;\n  opacity: 1;\n  margin: 1rem 1.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.advanced[_ngcontent-%COMP%]    > div.row-group[_ngcontent-%COMP%] {\n  height: 1.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.x[_ngcontent-%COMP%] {\n  position: absolute;\n  top: -1rem;\n  right: -1rem;\n  width: 2rem;\n  height: 2rem;\n  z-index: 120;\n  background: #FCFCFC;\n  border: 1px solid #FFFFFF;\n  border-radius: 1rem;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n@media screen and (max-width: 27rem) {\n  div.kukai-modal[_ngcontent-%COMP%]   div.x[_ngcontent-%COMP%] {\n    right: -1px;\n    border-bottom-right-radius: 0;\n  }\n\n  div.kukai-modal[_ngcontent-%COMP%]   button.small.multiple-destinations[_ngcontent-%COMP%] {\n    margin-right: 2.5rem;\n  }\n}\n@media screen and (max-width: 25rem) {\n  div.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%] {\n    width: 23rem;\n  }\n\n  div.kukai-modal[_ngcontent-%COMP%]   input.text.password[_ngcontent-%COMP%] {\n    width: 11rem;\n  }\n}\n.switch[_ngcontent-%COMP%] {\n  position: relative;\n  display: inline-block;\n  width: 3rem;\n  height: 1.5rem;\n  margin-bottom: 0;\n}\n.switch[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  opacity: 0;\n  -webkit-opacity: 0;\n  -khtml-opacity: 0;\n  width: 0;\n  height: 0;\n}\n.slider[_ngcontent-%COMP%] {\n  position: absolute;\n  cursor: pointer;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background-color: #d9d9d9;\n  transition: 0.4s;\n}\n.slider[_ngcontent-%COMP%]:before {\n  position: absolute;\n  content: \"\";\n  height: 1.125rem;\n  width: 1.125rem;\n  left: 0.1875rem;\n  bottom: 0.1875rem;\n  background-color: #7B7B7B;\n  transition: 0.4s;\n}\ninput[_ngcontent-%COMP%]:checked    + .slider[_ngcontent-%COMP%] {\n  box-shadow: 0px 0px 1px rgba(89, 99, 255, 0.04), 0px 2px 6px rgba(89, 99, 255, 0.04), 0px 16px 24px rgba(89, 99, 255, 0.24);\n}\ninput[_ngcontent-%COMP%]:checked    + .slider[_ngcontent-%COMP%]:before {\n  background-color: #5963FF;\n  transform: translateX(1.5rem);\n}\n.slider.round[_ngcontent-%COMP%] {\n  border-radius: 2.125rem;\n}\n.slider.round[_ngcontent-%COMP%]:before {\n  border-radius: 50%;\n}\ninput[_ngcontent-%COMP%]:checked    + .slider[_ngcontent-%COMP%] {\n  background-color: rgba(89, 99, 255, 0.4);\n}\ndiv.kukai-card[_ngcontent-%COMP%]    > div.grey-card[_ngcontent-%COMP%]    > div.switch-container[_ngcontent-%COMP%]    > span.switch-desc[_ngcontent-%COMP%], span.switch-desc[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 14px;\n  line-height: 18px;\n  letter-spacing: 0.16px;\n  color: #161616;\n  margin-left: 0.5rem;\n}\ndiv.switch-container[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: flex-start;\n  align-items: center;\n  flex-direction: row;\n  width: 28rem;\n}\nsmall[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.75rem;\n  line-height: 1rem;\n  letter-spacing: 0.32px;\n  color: #393939;\n  margin-top: 2.5rem;\n  margin-bottom: 0.5rem;\n}\n@media screen and (max-width: 29rem) {\n  div.switch-container[_ngcontent-%COMP%] {\n    width: 20rem;\n  }\n}\n\n\n.select-css[_ngcontent-%COMP%] {\n  border-radius: 0.75rem;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.875rem;\n  letter-spacing: 0.16px;\n  color: #000000;\n  padding-left: 1rem;\n  padding-right: 1rem;\n  border: 0;\n  width: 100%;\n  max-width: 100%;\n  \n  height: 3rem;\n  line-height: 3rem;\n  box-sizing: border-box;\n  margin: 0;\n  -moz-appearance: none;\n  -webkit-appearance: none;\n  appearance: none;\n  opacity: 1;\n  background-color: #e1e1e1;\n  \n  background-image: url(\"data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E\");\n  background-repeat: no-repeat, repeat;\n  \n  background-position: right 0.7em top 50%, 0 0;\n  \n  background-size: 0.65em auto, 100%;\n}\n\n.select-css[_ngcontent-%COMP%]::-ms-expand {\n  display: none;\n}\n\n.select-css[_ngcontent-%COMP%]:hover {\n  border-color: #888;\n}\n\n.select-css[_ngcontent-%COMP%]:focus {\n  outline: none;\n}\n\n.select-css[_ngcontent-%COMP%]   option[_ngcontent-%COMP%] {\n  font-weight: normal;\n}\n\n*[dir=rtl][_ngcontent-%COMP%]   .select-css[_ngcontent-%COMP%], [_ngcontent-%COMP%]:root:lang(ar)   .select-css[_ngcontent-%COMP%], [_ngcontent-%COMP%]:root:lang(iw)   .select-css[_ngcontent-%COMP%] {\n  background-position: left 0.7em top 50%, 0 0;\n  padding: 0.6em 0.8em 0.5em 1.4em;\n}\n\n.select-css[_ngcontent-%COMP%]:disabled, .select-css[aria-disabled=true][_ngcontent-%COMP%] {\n  color: graytext;\n  background-image: url(\"data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22graytext%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E\");\n}\n.select-css[_ngcontent-%COMP%]:disabled:hover, .select-css[aria-disabled=true][_ngcontent-%COMP%] {\n  border-color: #aaa;\n}\nbutton.purple[_ngcontent-%COMP%]:hover {\n  margin-top: -0.125rem;\n  margin-bottom: 0.125rem;\n}\nbutton[_ngcontent-%COMP%]:focus {\n  outline: none;\n}\nbutton.purple[_ngcontent-%COMP%] {\n  border-radius: 0.75rem;\n  height: 3rem;\n  width: 100%;\n  font-style: normal;\n  font-weight: bold;\n  font-size: 1rem;\n  line-height: 1rem;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n  -webkit-appearance: none !important;\n  border-width: 0;\n}\n[_nghost-%COMP%]   button.purple[_ngcontent-%COMP%]:hover {\n  margin-top: -0.125rem;\n  margin-bottom: 0.125rem;\n}\n[_nghost-%COMP%]   button[_ngcontent-%COMP%]:focus {\n  outline: none;\n}\n[_nghost-%COMP%]   p.torus-details[_ngcontent-%COMP%] {\n  margin-top: 0.5rem;\n  margin-bottom: 0;\n}\n[_nghost-%COMP%]   button.purple[_ngcontent-%COMP%] {\n  color: white;\n  background: #5963FF;\n  box-shadow: 0px 0px 1px rgba(89, 99, 255, 0.04), 0px 2px 6px rgba(89, 99, 255, 0.04), 0px 16px 24px rgba(89, 99, 255, 0.24);\n  transition: margin-top 0.1s ease-in, margin-bottom 0.1s ease-in;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   table[_ngcontent-%COMP%] {\n  display: block;\n  margin-top: 1rem;\n  width: 100%;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.km-body[_ngcontent-%COMP%]    > div.group[_ngcontent-%COMP%]   select.select-css[_ngcontent-%COMP%] {\n  width: 9.5rem;\n  height: 2rem;\n  line-height: 2rem;\n  opacity: 0.6;\n  border-radius: 0.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   table[_ngcontent-%COMP%]    > thead[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   table[_ngcontent-%COMP%]    > thead[_ngcontent-%COMP%] {\n  width: 100%;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   table[_ngcontent-%COMP%]    > thead[_ngcontent-%COMP%]    > tr[_ngcontent-%COMP%]    > th[_ngcontent-%COMP%] {\n  padding-bottom: 0.25rem;\n  font-style: normal;\n  font-weight: 500;\n  font-size: 0.875rem;\n  line-height: 1rem;\n  color: #A8A8A8;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   table[_ngcontent-%COMP%]    > tbody[_ngcontent-%COMP%]    > tr[_ngcontent-%COMP%]    > td.txAmount[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   table[_ngcontent-%COMP%]    > thead[_ngcontent-%COMP%]    > tr[_ngcontent-%COMP%]    > th[_ngcontent-%COMP%]:last-child {\n  text-align: right;\n  width: 100%;\n}\nsmall[_ngcontent-%COMP%] {\n  margin-bottom: 0;\n}\ndiv.switch-container[_ngcontent-%COMP%] {\n  margin-top: 0.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.text.read-only[_ngcontent-%COMP%] {\n  background: #f2f2f2;\n}\ninput.custom-textbox[_ngcontent-%COMP%] {\n  padding-left: 0.75rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.advanced-form[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%]::-moz-placeholder {\n  color: black;\n  opacity: 1;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.advanced-form[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%]::placeholder {\n  color: black;\n  opacity: 1;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.advanced-form[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%]::-webkit-input-placeholder, div.kukai-modal[_ngcontent-%COMP%]   div.advanced-form[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%]:-ms-input-placeholder {\n  color: black;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.advanced-form[_ngcontent-%COMP%]   input.text.read-only[_ngcontent-%COMP%] {\n  color: #808080;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%]    > div.km-body[_ngcontent-%COMP%]    > div.group[_ngcontent-%COMP%]    > input.text[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%]    > div.km-body[_ngcontent-%COMP%]    > div.group[_ngcontent-%COMP%]    > textarea[_ngcontent-%COMP%] {\n  font-size: 0.8125rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%] {\n  width: 30rem;\n}\n@supports (-webkit-touch-callout: none) {\n  div.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%]    > div.km-body[_ngcontent-%COMP%]    > div.group[_ngcontent-%COMP%]    > input.text[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%]    > div.km-body[_ngcontent-%COMP%]    > div.group[_ngcontent-%COMP%]    > textarea[_ngcontent-%COMP%] {\n    font-size: 1rem;\n  }\n}\n@media screen and (max-width: 32.25rem) {\n  div.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%] {\n    width: 25rem;\n  }\n}\n@media screen and (max-width: 25rem) {\n  input#toAddress[_ngcontent-%COMP%], input.custom-textbox[_ngcontent-%COMP%] {\n    font-size: 0.8125rem;\n  }\n\n  div.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%] {\n    width: 22rem;\n  }\n}\n@media screen and (max-width: 22rem) {\n  input#toAddress[_ngcontent-%COMP%], input.custom-textbox[_ngcontent-%COMP%] {\n    font-size: 0.75rem;\n  }\n}\nspan.batchInfo[_ngcontent-%COMP%] {\n  margin-left: auto;\n  font-size: 0.75rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.preview-amount[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  margin-bottom: 0.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.preview-top[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.preview-amount[_ngcontent-%COMP%]    > span.amount-tez[_ngcontent-%COMP%] {\n  margin: 0.5rem 0 0.25rem;\n  font-style: normal;\n  font-weight: 500;\n  font-size: 1.5rem;\n  line-height: 1.5rem;\n  color: #161616;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.preview-amount[_ngcontent-%COMP%]    > span.amount-usd[_ngcontent-%COMP%] {\n  margin-bottom: 0.75rem;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.875rem;\n  line-height: 1rem;\n  color: #525252;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.km-body[_ngcontent-%COMP%]   span.single-to[_ngcontent-%COMP%] {\n  display: flex;\n  margin: 0rem 0 0.5rem;\n  word-break: break-all;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 1rem;\n  line-height: 1rem;\n  color: #161616;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.km-body[_ngcontent-%COMP%]   span.torus-to[_ngcontent-%COMP%] {\n  display: block;\n  margin-bottom: 0.25rem;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.875rem;\n  line-height: 1rem;\n  color: #161616;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.seperator[_ngcontent-%COMP%] {\n  border-bottom: 1px solid rgba(0, 0, 0, 0.08);\n  margin: 0.5rem 0;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.preview-row[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.preview-row[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%] {\n  margin: 0.25rem 0;\n  font-weight: normal;\n  font-size: 0.875rem;\n  line-height: 1rem;\n  color: #525252;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.km-body[_ngcontent-%COMP%]   span.section[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   div.preview-row[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%]:first-child {\n  font-weight: 500;\n  font-weight: normal;\n  font-size: 0.875rem;\n  line-height: 1rem;\n  color: #A8A8A8;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.preview-row[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%]:last-child {\n  word-break: break-all;\n  padding-left: 0.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.preview-row[_ngcontent-%COMP%]   img[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   div.km-body[_ngcontent-%COMP%]   span.torus-to[_ngcontent-%COMP%]   img[_ngcontent-%COMP%] {\n  height: 0.75rem;\n  margin-bottom: 0.0625rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   p#previewAttention[_ngcontent-%COMP%] {\n  color: #CD0000;\n  font-size: 0.875rem;\n  line-height: 1rem;\n}\ndiv.tabs-container[_ngcontent-%COMP%]    > ul.tabs[_ngcontent-%COMP%] {\n  display: flex;\n  list-style-type: none;\n  margin: 0;\n  padding: 0;\n}\ndiv.tabs-container[_ngcontent-%COMP%]    > ul.tabs[_ngcontent-%COMP%]    > li.tab[_ngcontent-%COMP%] {\n  width: 100%;\n  color: #787878;\n  text-align: center;\n  cursor: pointer;\n  padding: 1rem auto;\n  background-color: #f6f6f6;\n}\ndiv.tabs-container[_ngcontent-%COMP%]    > ul.tabs[_ngcontent-%COMP%]    > li.tab[_ngcontent-%COMP%]:first-child {\n  border-top-left-radius: 0.75rem;\n}\ndiv.tabs-container[_ngcontent-%COMP%]    > ul.tabs[_ngcontent-%COMP%]    > li.tab[_ngcontent-%COMP%]:last-child {\n  border-top-right-radius: 0.75rem;\n}\ndiv.tabs-container[_ngcontent-%COMP%]    > ul.tabs[_ngcontent-%COMP%]    > li.tab.active[_ngcontent-%COMP%] {\n  background-color: #d9d9d9;\n  color: #484848;\n}\ndiv.tabs-container[_ngcontent-%COMP%]    > ul.tabs[_ngcontent-%COMP%]    > li.tab[_ngcontent-%COMP%]:hover {\n  background-color: #C0C0C0;\n  color: #484848;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY29tcG9uZW50cy9zZW5kL0M6XFxVc2Vyc1xca2xhc19cXEdpdFxca3VrYWkvc3JjXFxzY3NzXFxtb2RhbC5zY3NzIiwic3JjL2FwcC9jb21wb25lbnRzL3NlbmQvc2VuZC5jb21wb25lbnQuc2NzcyIsInNyYy9hcHAvY29tcG9uZW50cy9zZW5kL0M6XFxVc2Vyc1xca2xhc19cXEdpdFxca3VrYWkvc3JjXFxzY3NzXFxzd2l0Y2guc2NzcyIsInNyYy9hcHAvY29tcG9uZW50cy9zZW5kL0M6XFxVc2Vyc1xca2xhc19cXEdpdFxca3VrYWkvc3JjXFxzY3NzXFxkcm9wZG93bi5zY3NzIiwic3JjL2FwcC9jb21wb25lbnRzL3NlbmQvQzpcXFVzZXJzXFxrbGFzX1xcR2l0XFxrdWthaS9zcmNcXGFwcFxcY29tcG9uZW50c1xcc2VuZFxcc2VuZC5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxVQUFBO0FBQ0E7RUFDRSxlQUFBO0VBQ0EsWUFBQTtFQUNBLE9BQUE7RUFDQSxNQUFBO0VBQ0EsV0FBQTtFQUNBLFlBQUE7RUFDQSxjQUFBO0VBQ0EsdUJBQUE7RUFDQSxvQ0FBQTtBQ0NGO0FEQ0E7RUFDRSxZQUFBO0FDRUY7QURBQSxzQkFBQTtBQUNBO0VBQ0Usa0JBQUE7RUFDQSx5QkFBQTtFQUNBLGlCQUFBO0VBQ0EseUJBQUE7RUFDQSwrR0FBQTtFQUVBLHNCQUFBO0VBQ0EsWUFBQTtFQUNBLGtDQUFBO0VBQ0EsZ0NBQUE7RUFDQSwwQkFBQTtFQUNBLHdCQUFBO0FDRUY7QURBQSxrQkFBQTtBQUNBO0VBQ0U7SUFDRSxVQUFBO0lBQ0EsVUFBQTtFQ0dGO0VEREE7SUFDRSxNQUFBO0lBQ0EsVUFBQTtFQ0dGO0FBQ0Y7QUREQTtFQUNFO0lBQ0UsV0FBQTtJQUNBLFVBQUE7RUNHRjtFRERBO0lBQ0UsTUFBQTtJQUNBLFVBQUE7RUNHRjtBQUNGO0FEREE7RUFDRSxhQUFBO0VBQ0EsOEJBQUE7RUFDQSxtQkFBQTtFQUNBLDhC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Q0EsbUJBQUE7RUFDQSxpQkFBQTtFQUNBLGNBQUE7QUgwakJGO0FHeGpCQTtFQUNFLHFCQUFBO0VBQ0Esb0JBQUE7QUgyakJGO0FHempCQTs7RUFFRSxlQUFBO0VBQ0Esd0JBQUE7QUg0akJGO0FHMWpCQTtFQUNFLGNBQUE7RUFDQSxtQkFBQTtFQUNBLGlCQUFBO0FINmpCRjtBRzNqQkE7RUFDRSxhQUFBO0VBQ0EscUJBQUE7RUFDQSxTQUFBO0VBQ0EsVUFBQTtBSDhqQkY7QUc1akJBO0VBQ0UsV0FBQTtFQUNBLGNBQUE7RUFDQSxrQkFBQTtFQUNBLGVBQUE7RUFDQSxrQkFBQTtFQUNBLHlCQUFBO0FIK2pCRjtBRzdqQkE7RUFDRSwrQkFBQTtBSGdrQkY7QUc5akJBO0VBQ0UsZ0NBQUE7QUhpa0JGO0FHL2pCQTtFQUNFLHlCQUFBO0VBQ0EsY0FBQTtBSGtrQkY7QUdoa0JBO0VBQ0UseUJBQUE7RUFDQSxjQUFBO0FIbWtCRiIsImZpbGUiOiJzcmMvYXBwL2NvbXBvbmVudHMvc2VuZC9zZW5kLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLyogTW9kYWwgKi9cclxuZGl2Lmt1a2FpLW1vZGFsIHtcclxuICBwb3NpdGlvbjogZml4ZWQ7XHJcbiAgei1pbmRleDogMTAwO1xyXG4gIGxlZnQ6IDA7XHJcbiAgdG9wOiAwO1xyXG4gIHdpZHRoOiAxMDAlO1xyXG4gIGhlaWdodDogMTAwJTtcclxuICBvdmVyZmxvdzogYXV0bztcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMCwgMCwgMCk7IC8vZmFsbGJhY2tcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDAsIDAsIDAsIDAuNCk7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsLnRvcCB7XHJcbiAgei1pbmRleDogMTAxO1xyXG59XHJcbi8qIE1vZGFsIENvbnRlbnQvQm94ICovXHJcbmRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50IHtcclxuICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogI2ZjZmNmYztcclxuICBtYXJnaW46IDVyZW0gYXV0bztcclxuICBib3JkZXI6IDFweCBzb2xpZCAjZmZmZmZmO1xyXG4gIGJveC1zaGFkb3c6IDBweCAwcHggMXB4IHJnYmEoMCwgMCwgMCwgMC4wNCksIDBweCAycHggNnB4IHJnYmEoMCwgMCwgMCwgMC4wNCksXHJcbiAgICAwcHggMTZweCAyNHB4IHJnYmEoMCwgMCwgMCwgMC4wNik7XHJcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcclxuICB3aWR0aDogMjVyZW07XHJcbiAgLXdlYmtpdC1hbmltYXRpb24tbmFtZTogYW5pbWF0ZXRvcDtcclxuICAtd2Via2l0LWFuaW1hdGlvbi1kdXJhdGlvbjogMC41cztcclxuICBhbmltYXRpb24tbmFtZTogYW5pbWF0ZXRvcDtcclxuICBhbmltYXRpb24tZHVyYXRpb246IDAuNXM7XHJcbn1cclxuLyogQWRkIEFuaW1hdGlvbiAqL1xyXG5ALXdlYmtpdC1rZXlmcmFtZXMgYW5pbWF0ZXRvcCB7XHJcbiAgZnJvbSB7XHJcbiAgICB0b3A6IDIwcmVtO1xyXG4gICAgb3BhY2l0eTogMDtcclxuICB9XHJcbiAgdG8ge1xyXG4gICAgdG9wOiAwO1xyXG4gICAgb3BhY2l0eTogMTtcclxuICB9XHJcbn1cclxuQGtleWZyYW1lcyBhbmltYXRldG9wIHtcclxuICBmcm9tIHtcclxuICAgIHRvcDogLTMwMHB4O1xyXG4gICAgb3BhY2l0eTogMDtcclxuICB9XHJcbiAgdG8ge1xyXG4gICAgdG9wOiAwO1xyXG4gICAgb3BhY2l0eTogMTtcclxuICB9XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsID4gZGl2LmttLWNvbnRlbnQgPiBkaXYua20taGVhZGVyIHtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcclxuICBmbGV4LWRpcmVjdGlvbjogcm93O1xyXG4gIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCByZ2JhKDAsIDAsIDApO1xyXG4gIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCByZ2JhKDAsIDAsIDAsIDAuMDQpO1xyXG59XHJcbmRpdi5rbS1oZWFkZXIgPiBIMSB7XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG4gIGZvbnQtc2l6ZTogMS4yNXJlbTtcclxuICBsaW5lLWhlaWdodDogMS41cmVtO1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxuICBjb2xvcjogIzJjMzIzYTtcclxuICBtYXJnaW46IDFyZW07XHJcbn1cclxuZGl2LmttLWhlYWRlciA+IHNwYW4uY2xvc2Uge1xyXG4gIG1hcmdpbjogMC4yNXJlbSAwLjVyZW07XHJcbiAgY29sb3I6ICNhYWE7XHJcbiAgZm9udC1zaXplOiAyOHB4O1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG59XHJcbmRpdi5rbS1oZWFkZXIgPiBzcGFuLmNsb3NlOmhvdmVyLFxyXG5kaXYua20taGVhZGVyID4gc3Bhbi5jbG9zZTpmb2N1cyB7XHJcbiAgY29sb3I6ICMyYzMyM2E7XHJcbiAgdGV4dC1kZWNvcmF0aW9uOiBub25lO1xyXG4gIGN1cnNvcjogcG9pbnRlcjtcclxufVxyXG5kaXYua20tYm9keSB7XHJcbiAgbWFyZ2luOiAxcmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYuYW1vdW50IHtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xyXG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XHJcbiAgaGVpZ2h0OiA1cmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBpbnB1dC5jdXN0b20tbGFyZ2Uge1xyXG4gIHdpZHRoOiBhdXRvO1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtZmFtaWx5OiBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmO1xyXG4gIGZvbnQtc2l6ZTogNXJlbTtcclxuICBsaW5lLWhlaWdodDogNXJlbTtcclxuICBjb2xvcjogIzJDMzIzQTtcclxuICBiYWNrZ3JvdW5kOiAjZmNmY2ZjO1xyXG4gIG9wYWNpdHk6IDAuNDtcclxuICBwYWRkaW5nOiAwO1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICBib3JkZXI6IDA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LmN1c3RvbS1sYXJnZTpkaXNhYmxlZCB7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogcmdiYSgwLCAwLCAwLCAwKTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgaW5wdXQ6Zm9jdXMsXHJcbmRpdi5rdWthaS1tb2RhbCB0ZXh0YXJlYTpmb2N1cyB7XHJcbiAgb3V0bGluZTogbm9uZTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgc3Bhbi50ZXoge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogNTAwO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBjb2xvcjogIzJDMzIzQTtcclxuICBvcGFjaXR5OiAwLjQ7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIHAuZmVlIHtcclxuICBtYXJnaW4tdG9wOiAwLjM3NXJlbTtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IDUwMDtcclxuICBmb250LXNpemU6IDAuNzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgY29sb3I6ICMyQzMyM0E7XHJcbiAgb3BhY2l0eTogMC40O1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBwLnByZXZpZXcge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogZmxleC1lbmQ7XHJcbiAgY29sb3I6ICMwMDAwMDA7XHJcbiAgb3BhY2l0eTogMC42O1xyXG4gIG1hcmdpbi1ib3R0b206IDAuNXJlbTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgdGQsXHJcbmRpdi5rdWthaS1tb2RhbCB0aCB7XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XHJcbiAgZm9udC1zaXplOiAwLjc1cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xyXG4gIGNvbG9yOiAjMDAwMDAwO1xyXG4gIG9wYWNpdHk6IDAuNjtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgdGgge1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG59XHJcbmRpdi5rbS1jb250ZW50IGxhYmVsOm5vdCguc3dpdGNoKSB7XHJcbiAgbWFyZ2luLWJvdHRvbTogMC41cmVtO1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogNTAwO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMS4xMjVyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGNvbG9yOiAjMkMzMjNBO1xyXG4gIG9wYWNpdHk6IDAuNDtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgcCwgc3Bhbi5kYW5nZXIge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogZmxleC1lbmQ7XHJcbiAgY29sb3I6ICMwMDAwMDA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIHNwYW4ubm8tbWFyZ2luLFxyXG5kaXYua3VrYWktbW9kYWwgc3Bhbi5tYXJnaW4ge1xyXG4gIGNvbG9yOiAjRkYwMDAwO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBzcGFuLm5vLW1hcmdpbiB7XHJcbiAgbWFyZ2luLXRvcDogMC43NXJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAtMS43NXJlbTtcclxuICBjb2xvcjogI0ZGMDAwMDtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgZGl2Lmdyb3VwIHtcclxuICBtYXJnaW4tdG9wOiAxLjVyZW07XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQsXHJcbmRpdi5rdWthaS1tb2RhbCB0ZXh0YXJlYS50ZXh0IHtcclxuICB3aWR0aDogMTAwJTtcclxuICBiYWNrZ3JvdW5kOiAjRTFFMUUxO1xyXG4gIGJvcmRlci1yYWRpdXM6IDAuNzVyZW07XHJcbiAgaGVpZ2h0OiAzcmVtO1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogM3JlbTtcclxuICBsZXR0ZXItc3BhY2luZzogMC4xNnB4O1xyXG4gIGNvbG9yOiAjMDAwMDAwO1xyXG4gIHBhZGRpbmctbGVmdDogMXJlbTtcclxuICBwYWRkaW5nLXJpZ2h0OiAxcmVtO1xyXG4gIGJvcmRlcjogMDtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgaW5wdXQudGV4dC5wYXNzd29yZCB7XHJcbiAgd2lkdGg6IDIwMCU7XHJcbiAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCB0ZXh0YXJlYS50ZXh0IHtcclxuICBwYWRkaW5nLXRvcDogMC41cmVtO1xyXG4gIGhlaWdodDogN3JlbTtcclxuICBsaW5lLWhlaWdodDogMS4yNXJlbTtcclxuICByZXNpemU6IG5vbmU7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQ6OnBsYWNlaG9sZGVyLFxyXG5kaXYua3VrYWktbW9kYWwgdGV4dGFyZWEudGV4dDo6cGxhY2Vob2xkZXIge1xyXG4gIGNvbG9yOiAjODA4MDgwO1xyXG4gIG9wYWNpdHk6IDE7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQ6Oi13ZWJraXQtaW5wdXQtcGxhY2Vob2xkZXIsXHJcbmRpdi5rdWthaS1tb2RhbCBpbnB1dC50ZXh0Oi1tcy1pbnB1dC1wbGFjZWhvbGRlcixcclxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6Oi13ZWJraXQtaW5wdXQtcGxhY2Vob2xkZXIsXHJcbmRpdi5rdWthaS1tb2RhbCB0ZXh0YXJlYS50ZXh0Oi1tcy1pbnB1dC1wbGFjZWhvbGRlciB7XHJcbiAgY29sb3I6ICM4MDgwODA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6OnBsYWNlaG9sZGVyLFxyXG5kaXYua3VrYWktbW9kYWwgdGV4dGFyZWEudGV4dDo6LXdlYmtpdC1pbnB1dC1wbGFjZWhvbGRlcixcclxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6LW1zLWlucHV0LXBsYWNlaG9sZGVyIHtcclxuICBwYWRkaW5nLXRvcDogMC41cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxLjI1cmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYucm93LWdyb3VwIHtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgZGl2LnJvdy1ncm91cCA+IGRpdi5ncm91cDpmaXJzdC1jaGlsZCB7XHJcbiAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYuYWR2YW5jZWQge1xyXG4gIG1hcmdpbi10b3A6IDEuNXJlbTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uLmJsdWUge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogYm9sZDtcclxuICBmb250LXNpemU6IDFyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICBjb2xvcjogd2hpdGU7XHJcbiAgYmFja2dyb3VuZDogIzU5NjNGRjtcclxuICBib3gtc2hhZG93OiAwcHggMHB4IDFweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjA0KSwgMHB4IDJweCA2cHggcmdiYSg4OSwgOTksIDI1NSwgMC4wNCksIDBweCAxNnB4IDI0cHggcmdiYSg4OSwgOTksIDI1NSwgMC4yNCk7XHJcbiAgd2lkdGg6IDEwMCU7XHJcbiAgaGVpZ2h0OiAzcmVtO1xyXG4gIGJvcmRlci1yYWRpdXM6IDAuNzVyZW07XHJcbiAgYm9yZGVyOiAwO1xyXG4gIG1hcmdpbi10b3A6IDIuNXJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAxLjVyZW07XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5ibHVlLmNvbmZpcm0sXHJcbmRpdi5rdWthaS1tb2RhbCBidXR0b24ucmV0cnkge1xyXG4gIGhlaWdodDogM3JlbTtcclxuICBtYXJnaW46IDA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5yZXRyeSB7XHJcbiAgd2lkdGg6IDEwMCU7XHJcbiAgZm9udC1zaXplOiAxcmVtO1xyXG4gIGJhY2tncm91bmQtY29sb3I6ICNkM2QzZDM7XHJcbiAgY29sb3I6IHJnYigzMywgMzcsIDQxKTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uOmZvY3VzIHtcclxuICBvdXRsaW5lOiBub25lO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYuc3dpdGNoLWNvbnRhaW5lciB7XHJcbiAgd2lkdGg6IGF1dG8gIWltcG9ydGFudDtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uLnNtYWxsIHtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IDUwMDtcclxuICBmb250LXNpemU6IDAuNzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICB3aWR0aDogYXV0bztcclxuICBoZWlnaHQ6IDEuNXJlbTtcclxuICBjb2xvcjogIzAwMDAwMDtcclxuICBvcGFjaXR5OiAwLjY7XHJcbiAgYmFja2dyb3VuZDogcmdiYSgyMTQsIDIxNCwgMjE0LCAwLjQpO1xyXG4gIGJvcmRlci1yYWRpdXM6IDAuMzEyNXJlbTtcclxuICBib3JkZXI6IDA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5zbWFsbC5tYXgge1xyXG4gIGJhY2tncm91bmQ6ICNkNWYyZGM7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5zbWFsbC5tdWx0aXBsZS1kZXN0aW5hdGlvbnMge1xyXG4gIGNvbG9yOiAjNTk2M0ZGO1xyXG4gIG9wYWNpdHk6IDE7XHJcbiAgbWFyZ2luOiAxcmVtIDEuNXJlbTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgZGl2LmFkdmFuY2VkID4gZGl2LnJvdy1ncm91cCB7XHJcbiAgaGVpZ2h0OiAxLjVyZW07XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGRpdi54IHtcclxuICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcbiAgdG9wOiAtMXJlbTtcclxuICByaWdodDogLTFyZW07XHJcbiAgd2lkdGg6IDJyZW07XHJcbiAgaGVpZ2h0OiAycmVtO1xyXG4gIHotaW5kZXg6IDEyMDtcclxuICBiYWNrZ3JvdW5kOiAjRkNGQ0ZDO1xyXG4gIGJvcmRlcjogMXB4IHNvbGlkICNGRkZGRkY7XHJcbiAgYm9yZGVyLXJhZGl1czogMXJlbTtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XHJcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XHJcbiAgY3Vyc29yOiBwb2ludGVyO1xyXG59XHJcbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDI3cmVtKSB7XHJcbiAgZGl2Lmt1a2FpLW1vZGFsIGRpdi54IHtcclxuICAgIHJpZ2h0OiAtMXB4O1xyXG4gICAgYm9yZGVyLWJvdHRvbS1yaWdodC1yYWRpdXM6IDA7XHJcbiAgfVxyXG4gIGRpdi5rdWthaS1tb2RhbCBidXR0b24uc21hbGwubXVsdGlwbGUtZGVzdGluYXRpb25zIHtcclxuICAgIG1hcmdpbi1yaWdodDogMi41cmVtO1xyXG4gIH1cclxufVxyXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAyNXJlbSkge1xyXG4gIGRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50IHtcclxuICAgIHdpZHRoOiAyM3JlbTtcclxuICB9XHJcbiAgZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQucGFzc3dvcmQge1xyXG4gICAgd2lkdGg6IDExcmVtO1xyXG4gIH1cclxufSIsIi8qIE1vZGFsICovXG5kaXYua3VrYWktbW9kYWwge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIHotaW5kZXg6IDEwMDtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwJTtcbiAgaGVpZ2h0OiAxMDAlO1xuICBvdmVyZmxvdzogYXV0bztcbiAgYmFja2dyb3VuZC1jb2xvcjogYmxhY2s7XG4gIGJhY2tncm91bmQtY29sb3I6IHJnYmEoMCwgMCwgMCwgMC40KTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsLnRvcCB7XG4gIHotaW5kZXg6IDEwMTtcbn1cblxuLyogTW9kYWwgQ29udGVudC9Cb3ggKi9cbmRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50IHtcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZmNmY2ZjO1xuICBtYXJnaW46IDVyZW0gYXV0bztcbiAgYm9yZGVyOiAxcHggc29saWQgI2ZmZmZmZjtcbiAgYm94LXNoYWRvdzogMHB4IDBweCAxcHggcmdiYSgwLCAwLCAwLCAwLjA0KSwgMHB4IDJweCA2cHggcmdiYSgwLCAwLCAwLCAwLjA0KSwgMHB4IDE2cHggMjRweCByZ2JhKDAsIDAsIDAsIDAuMDYpO1xuICBib3JkZXItcmFkaXVzOiAwLjc1cmVtO1xuICB3aWR0aDogMjVyZW07XG4gIC13ZWJraXQtYW5pbWF0aW9uLW5hbWU6IGFuaW1hdGV0b3A7XG4gIC13ZWJraXQtYW5pbWF0aW9uLWR1cmF0aW9uOiAwLjVzO1xuICBhbmltYXRpb24tbmFtZTogYW5pbWF0ZXRvcDtcbiAgYW5pbWF0aW9uLWR1cmF0aW9uOiAwLjVzO1xufVxuXG4vKiBBZGQgQW5pbWF0aW9uICovXG5ALXdlYmtpdC1rZXlmcmFtZXMgYW5pbWF0ZXRvcCB7XG4gIGZyb20ge1xuICAgIHRvcDogMjByZW07XG4gICAgb3BhY2l0eTogMDtcbiAgfVxuICB0byB7XG4gICAgdG9wOiAwO1xuICAgIG9wYWNpdHk6IDE7XG4gIH1cbn1cbkBrZXlmcmFtZXMgYW5pbWF0ZXRvcCB7XG4gIGZyb20ge1xuICAgIHRvcDogLTMwMHB4O1xuICAgIG9wYWNpdHk6IDA7XG4gIH1cbiAgdG8ge1xuICAgIHRvcDogMDtcbiAgICBvcGFjaXR5OiAxO1xuICB9XG59XG5kaXYua3VrYWktbW9kYWwgPiBkaXYua20tY29udGVudCA+IGRpdi5rbS1oZWFkZXIge1xuICBkaXNwbGF5OiBmbGV4O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XG4gIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCBibGFjaztcbiAgYm9yZGVyLWJvdHRvbTogMXB4IHNvbGlkIHJnYmEoMCwgMCwgMCwgMC4wNCk7XG59XG5cbmRpdi5rbS1oZWFkZXIgPiBIMSB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IGJvbGQ7XG4gIGZvbnQtc2l6ZTogMS4yNXJlbTtcbiAgbGluZS1oZWlnaHQ6IDEuNXJlbTtcbiAgZGlzcGxheTogZmxleDtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgY29sb3I6ICMyYzMyM2E7XG4gIG1hcmdpbjogMXJlbTtcbn1cblxuZGl2LmttLWhlYWRlciA+IHNwYW4uY2xvc2Uge1xuICBtYXJnaW46IDAuMjVyZW0gMC41cmVtO1xuICBjb2xvcjogI2FhYTtcbiAgZm9udC1zaXplOiAyOHB4O1xuICBmb250LXdlaWdodDogYm9sZDtcbn1cblxuZGl2LmttLWhlYWRlciA+IHNwYW4uY2xvc2U6aG92ZXIsXG5kaXYua20taGVhZGVyID4gc3Bhbi5jbG9zZTpmb2N1cyB7XG4gIGNvbG9yOiAjMmMzMjNhO1xuICB0ZXh0LWRlY29yYXRpb246IG5vbmU7XG4gIGN1cnNvcjogcG9pbnRlcjtcbn1cblxuZGl2LmttLWJvZHkge1xuICBtYXJnaW46IDFyZW07XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYuYW1vdW50IHtcbiAgZGlzcGxheTogZmxleDtcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XG4gIGhlaWdodDogNXJlbTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LmN1c3RvbS1sYXJnZSB7XG4gIHdpZHRoOiBhdXRvO1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG4gIGZvbnQtZmFtaWx5OiBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmO1xuICBmb250LXNpemU6IDVyZW07XG4gIGxpbmUtaGVpZ2h0OiA1cmVtO1xuICBjb2xvcjogIzJDMzIzQTtcbiAgYmFja2dyb3VuZDogI2ZjZmNmYztcbiAgb3BhY2l0eTogMC40O1xuICBwYWRkaW5nOiAwO1xuICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gIGJvcmRlcjogMDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LmN1c3RvbS1sYXJnZTpkaXNhYmxlZCB7XG4gIGJhY2tncm91bmQtY29sb3I6IHJnYmEoMCwgMCwgMCwgMCk7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBpbnB1dDpmb2N1cyxcbmRpdi5rdWthaS1tb2RhbCB0ZXh0YXJlYTpmb2N1cyB7XG4gIG91dGxpbmU6IG5vbmU7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBzcGFuLnRleiB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IDUwMDtcbiAgZm9udC1zaXplOiAxcmVtO1xuICBsaW5lLWhlaWdodDogMXJlbTtcbiAgY29sb3I6ICMyQzMyM0E7XG4gIG9wYWNpdHk6IDAuNDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIHAuZmVlIHtcbiAgbWFyZ2luLXRvcDogMC4zNzVyZW07XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IDUwMDtcbiAgZm9udC1zaXplOiAwLjc1cmVtO1xuICBsaW5lLWhlaWdodDogMXJlbTtcbiAgY29sb3I6ICMyQzMyM0E7XG4gIG9wYWNpdHk6IDAuNDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIHAucHJldmlldyB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcbiAgZm9udC1zaXplOiAwLjg3NXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBmbGV4LWVuZDtcbiAgY29sb3I6ICMwMDAwMDA7XG4gIG9wYWNpdHk6IDAuNjtcbiAgbWFyZ2luLWJvdHRvbTogMC41cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgdGQsXG5kaXYua3VrYWktbW9kYWwgdGgge1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG4gIGZvbnQtc2l6ZTogMC43NXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGNvbG9yOiAjMDAwMDAwO1xuICBvcGFjaXR5OiAwLjY7XG59XG5cbmRpdi5rdWthaS1tb2RhbCB0aCB7XG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xufVxuXG5kaXYua20tY29udGVudCBsYWJlbDpub3QoLnN3aXRjaCkge1xuICBtYXJnaW4tYm90dG9tOiAwLjVyZW07XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IDUwMDtcbiAgZm9udC1zaXplOiAxcmVtO1xuICBsaW5lLWhlaWdodDogMS4xMjVyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGNvbG9yOiAjMkMzMjNBO1xuICBvcGFjaXR5OiAwLjQ7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBwLCBzcGFuLmRhbmdlciB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcbiAgZm9udC1zaXplOiAwLjg3NXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBmbGV4LWVuZDtcbiAgY29sb3I6ICMwMDAwMDA7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBzcGFuLm5vLW1hcmdpbixcbmRpdi5rdWthaS1tb2RhbCBzcGFuLm1hcmdpbiB7XG4gIGNvbG9yOiAjRkYwMDAwO1xufVxuXG5kaXYua3VrYWktbW9kYWwgc3Bhbi5uby1tYXJnaW4ge1xuICBtYXJnaW4tdG9wOiAwLjc1cmVtO1xuICBtYXJnaW4tYm90dG9tOiAtMS43NXJlbTtcbiAgY29sb3I6ICNGRjAwMDA7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYuZ3JvdXAge1xuICBtYXJnaW4tdG9wOiAxLjVyZW07XG59XG5cbmRpdi5rdWthaS1tb2RhbCBpbnB1dC50ZXh0LFxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQge1xuICB3aWR0aDogMTAwJTtcbiAgYmFja2dyb3VuZDogI0UxRTFFMTtcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcbiAgaGVpZ2h0OiAzcmVtO1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG4gIGZvbnQtc2l6ZTogMXJlbTtcbiAgbGluZS1oZWlnaHQ6IDNyZW07XG4gIGxldHRlci1zcGFjaW5nOiAwLjE2cHg7XG4gIGNvbG9yOiAjMDAwMDAwO1xuICBwYWRkaW5nLWxlZnQ6IDFyZW07XG4gIHBhZGRpbmctcmlnaHQ6IDFyZW07XG4gIGJvcmRlcjogMDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQucGFzc3dvcmQge1xuICB3aWR0aDogMjAwJTtcbiAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgdGV4dGFyZWEudGV4dCB7XG4gIHBhZGRpbmctdG9wOiAwLjVyZW07XG4gIGhlaWdodDogN3JlbTtcbiAgbGluZS1oZWlnaHQ6IDEuMjVyZW07XG4gIHJlc2l6ZTogbm9uZTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQ6OnBsYWNlaG9sZGVyLFxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6OnBsYWNlaG9sZGVyIHtcbiAgY29sb3I6ICM4MDgwODA7XG4gIG9wYWNpdHk6IDE7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBpbnB1dC50ZXh0Ojotd2Via2l0LWlucHV0LXBsYWNlaG9sZGVyLFxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQ6LW1zLWlucHV0LXBsYWNlaG9sZGVyLFxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6Oi13ZWJraXQtaW5wdXQtcGxhY2Vob2xkZXIsXG5kaXYua3VrYWktbW9kYWwgdGV4dGFyZWEudGV4dDotbXMtaW5wdXQtcGxhY2Vob2xkZXIge1xuICBjb2xvcjogIzgwODA4MDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6OnBsYWNlaG9sZGVyLFxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6Oi13ZWJraXQtaW5wdXQtcGxhY2Vob2xkZXIsXG5kaXYua3VrYWktbW9kYWwgdGV4dGFyZWEudGV4dDotbXMtaW5wdXQtcGxhY2Vob2xkZXIge1xuICBwYWRkaW5nLXRvcDogMC41cmVtO1xuICBsaW5lLWhlaWdodDogMS4yNXJlbTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5yb3ctZ3JvdXAge1xuICBkaXNwbGF5OiBmbGV4O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYucm93LWdyb3VwID4gZGl2Lmdyb3VwOmZpcnN0LWNoaWxkIHtcbiAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2LmFkdmFuY2VkIHtcbiAgbWFyZ2luLXRvcDogMS41cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uLmJsdWUge1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xuICBmb250LXNpemU6IDFyZW07XG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xuICBkaXNwbGF5OiBmbGV4O1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xuICBjb2xvcjogd2hpdGU7XG4gIGJhY2tncm91bmQ6ICM1OTYzRkY7XG4gIGJveC1zaGFkb3c6IDBweCAwcHggMXB4IHJnYmEoODksIDk5LCAyNTUsIDAuMDQpLCAwcHggMnB4IDZweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjA0KSwgMHB4IDE2cHggMjRweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjI0KTtcbiAgd2lkdGg6IDEwMCU7XG4gIGhlaWdodDogM3JlbTtcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcbiAgYm9yZGVyOiAwO1xuICBtYXJnaW4tdG9wOiAyLjVyZW07XG4gIG1hcmdpbi1ib3R0b206IDEuNXJlbTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5ibHVlLmNvbmZpcm0sXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uLnJldHJ5IHtcbiAgaGVpZ2h0OiAzcmVtO1xuICBtYXJnaW46IDA7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBidXR0b24ucmV0cnkge1xuICB3aWR0aDogMTAwJTtcbiAgZm9udC1zaXplOiAxcmVtO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZDNkM2QzO1xuICBjb2xvcjogIzIxMjUyOTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbjpmb2N1cyB7XG4gIG91dGxpbmU6IG5vbmU7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYuc3dpdGNoLWNvbnRhaW5lciB7XG4gIHdpZHRoOiBhdXRvICFpbXBvcnRhbnQ7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBidXR0b24uc21hbGwge1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiA1MDA7XG4gIGZvbnQtc2l6ZTogMC43NXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gIHdpZHRoOiBhdXRvO1xuICBoZWlnaHQ6IDEuNXJlbTtcbiAgY29sb3I6ICMwMDAwMDA7XG4gIG9wYWNpdHk6IDAuNjtcbiAgYmFja2dyb3VuZDogcmdiYSgyMTQsIDIxNCwgMjE0LCAwLjQpO1xuICBib3JkZXItcmFkaXVzOiAwLjMxMjVyZW07XG4gIGJvcmRlcjogMDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5zbWFsbC5tYXgge1xuICBiYWNrZ3JvdW5kOiAjZDVmMmRjO1xufVxuXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uLnNtYWxsLm11bHRpcGxlLWRlc3RpbmF0aW9ucyB7XG4gIGNvbG9yOiAjNTk2M0ZGO1xuICBvcGFjaXR5OiAxO1xuICBtYXJnaW46IDFyZW0gMS41cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2LmFkdmFuY2VkID4gZGl2LnJvdy1ncm91cCB7XG4gIGhlaWdodDogMS41cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2Lngge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIHRvcDogLTFyZW07XG4gIHJpZ2h0OiAtMXJlbTtcbiAgd2lkdGg6IDJyZW07XG4gIGhlaWdodDogMnJlbTtcbiAgei1pbmRleDogMTIwO1xuICBiYWNrZ3JvdW5kOiAjRkNGQ0ZDO1xuICBib3JkZXI6IDFweCBzb2xpZCAjRkZGRkZGO1xuICBib3JkZXItcmFkaXVzOiAxcmVtO1xuICBkaXNwbGF5OiBmbGV4O1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgY3Vyc29yOiBwb2ludGVyO1xufVxuXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAyN3JlbSkge1xuICBkaXYua3VrYWktbW9kYWwgZGl2Lngge1xuICAgIHJpZ2h0OiAtMXB4O1xuICAgIGJvcmRlci1ib3R0b20tcmlnaHQtcmFkaXVzOiAwO1xuICB9XG5cbiAgZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5zbWFsbC5tdWx0aXBsZS1kZXN0aW5hdGlvbnMge1xuICAgIG1hcmdpbi1yaWdodDogMi41cmVtO1xuICB9XG59XG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAyNXJlbSkge1xuICBkaXYua3VrYWktbW9kYWwgPiBkaXYua20tY29udGVudCB7XG4gICAgd2lkdGg6IDIzcmVtO1xuICB9XG5cbiAgZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQucGFzc3dvcmQge1xuICAgIHdpZHRoOiAxMXJlbTtcbiAgfVxufVxuLnN3aXRjaCB7XG4gIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB3aWR0aDogM3JlbTtcbiAgaGVpZ2h0OiAxLjVyZW07XG4gIG1hcmdpbi1ib3R0b206IDA7XG59XG5cbi5zd2l0Y2ggaW5wdXQge1xuICBvcGFjaXR5OiAwO1xuICAtd2Via2l0LW9wYWNpdHk6IDA7XG4gIC1raHRtbC1vcGFjaXR5OiAwO1xuICB3aWR0aDogMDtcbiAgaGVpZ2h0OiAwO1xufVxuXG4uc2xpZGVyIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBjdXJzb3I6IHBvaW50ZXI7XG4gIHRvcDogMDtcbiAgbGVmdDogMDtcbiAgcmlnaHQ6IDA7XG4gIGJvdHRvbTogMDtcbiAgYmFja2dyb3VuZC1jb2xvcjogI2Q5ZDlkOTtcbiAgLXdlYmtpdC10cmFuc2l0aW9uOiAwLjRzO1xuICB0cmFuc2l0aW9uOiAwLjRzO1xufVxuXG4uc2xpZGVyOmJlZm9yZSB7XG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgY29udGVudDogXCJcIjtcbiAgaGVpZ2h0OiAxLjEyNXJlbTtcbiAgd2lkdGg6IDEuMTI1cmVtO1xuICBsZWZ0OiAwLjE4NzVyZW07XG4gIGJvdHRvbTogMC4xODc1cmVtO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjN0I3QjdCO1xuICAtd2Via2l0LXRyYW5zaXRpb246IDAuNHM7XG4gIHRyYW5zaXRpb246IDAuNHM7XG59XG5cbmlucHV0OmNoZWNrZWQgKyAuc2xpZGVyIHtcbiAgYm94LXNoYWRvdzogMHB4IDBweCAxcHggcmdiYSg4OSwgOTksIDI1NSwgMC4wNCksIDBweCAycHggNnB4IHJnYmEoODksIDk5LCAyNTUsIDAuMDQpLCAwcHggMTZweCAyNHB4IHJnYmEoODksIDk5LCAyNTUsIDAuMjQpO1xufVxuXG5pbnB1dDpjaGVja2VkICsgLnNsaWRlcjpiZWZvcmUge1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjNTk2M0ZGO1xuICAtd2Via2l0LXRyYW5zZm9ybTogdHJhbnNsYXRlWCgxLjVyZW0pO1xuICAtbXMtdHJhbnNmb3JtOiB0cmFuc2xhdGVYKDEuNXJlbSk7XG4gIHRyYW5zZm9ybTogdHJhbnNsYXRlWCgxLjVyZW0pO1xufVxuXG4uc2xpZGVyLnJvdW5kIHtcbiAgYm9yZGVyLXJhZGl1czogMi4xMjVyZW07XG59XG5cbi5zbGlkZXIucm91bmQ6YmVmb3JlIHtcbiAgYm9yZGVyLXJhZGl1czogNTAlO1xufVxuXG5pbnB1dDpjaGVja2VkICsgLnNsaWRlciB7XG4gIGJhY2tncm91bmQtY29sb3I6IHJnYmEoODksIDk5LCAyNTUsIDAuNCk7XG59XG5cbmRpdi5rdWthaS1jYXJkID4gZGl2LmdyZXktY2FyZCA+IGRpdi5zd2l0Y2gtY29udGFpbmVyID4gc3Bhbi5zd2l0Y2gtZGVzYyxcbnNwYW4uc3dpdGNoLWRlc2Mge1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG4gIGZvbnQtc2l6ZTogMTRweDtcbiAgbGluZS1oZWlnaHQ6IDE4cHg7XG4gIGxldHRlci1zcGFjaW5nOiAwLjE2cHg7XG4gIGNvbG9yOiAjMTYxNjE2O1xuICBtYXJnaW4tbGVmdDogMC41cmVtO1xufVxuXG5kaXYuc3dpdGNoLWNvbnRhaW5lciB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGp1c3RpZnktY29udGVudDogZmxleC1zdGFydDtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcbiAgd2lkdGg6IDI4cmVtO1xufVxuXG5zbWFsbCB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcbiAgZm9udC1zaXplOiAwLjc1cmVtO1xuICBsaW5lLWhlaWdodDogMXJlbTtcbiAgbGV0dGVyLXNwYWNpbmc6IDAuMzJweDtcbiAgY29sb3I6ICMzOTM5Mzk7XG4gIG1hcmdpbi10b3A6IDIuNXJlbTtcbiAgbWFyZ2luLWJvdHRvbTogMC41cmVtO1xufVxuXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAyOXJlbSkge1xuICBkaXYuc3dpdGNoLWNvbnRhaW5lciB7XG4gICAgd2lkdGg6IDIwcmVtO1xuICB9XG59XG4vKiBkcm9wLWRvd24gKi9cbi8qIGNsYXNzIGFwcGxpZXMgdG8gc2VsZWN0IGVsZW1lbnQgaXRzZWxmLCBub3QgYSB3cmFwcGVyIGVsZW1lbnQgKi9cbi5zZWxlY3QtY3NzIHtcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xuICBmb250LXdlaWdodDogbm9ybWFsO1xuICBmb250LXNpemU6IDAuODc1cmVtO1xuICBsZXR0ZXItc3BhY2luZzogMC4xNnB4O1xuICBjb2xvcjogIzAwMDAwMDtcbiAgcGFkZGluZy1sZWZ0OiAxcmVtO1xuICBwYWRkaW5nLXJpZ2h0OiAxcmVtO1xuICBib3JkZXI6IDA7XG4gIHdpZHRoOiAxMDAlO1xuICBtYXgtd2lkdGg6IDEwMCU7XG4gIC8qIHVzZWZ1bCB3aGVuIHdpZHRoIGlzIHNldCB0byBhbnl0aGluZyBvdGhlciB0aGFuIDEwMCUgKi9cbiAgaGVpZ2h0OiAzcmVtO1xuICBsaW5lLWhlaWdodDogM3JlbTtcbiAgYm94LXNpemluZzogYm9yZGVyLWJveDtcbiAgbWFyZ2luOiAwO1xuICAtbW96LWFwcGVhcmFuY2U6IG5vbmU7XG4gIC13ZWJraXQtYXBwZWFyYW5jZTogbm9uZTtcbiAgYXBwZWFyYW5jZTogbm9uZTtcbiAgb3BhY2l0eTogMTtcbiAgYmFja2dyb3VuZC1jb2xvcjogI2UxZTFlMTtcbiAgLyogbm90ZTogYmcgaW1hZ2UgYmVsb3cgdXNlcyAyIHVybHMuIFRoZSBmaXJzdCBpcyBhbiBzdmcgZGF0YSB1cmkgZm9yIHRoZSBhcnJvdyBpY29uLCBhbmQgdGhlIHNlY29uZCBpcyB0aGUgZ3JhZGllbnQuIFxuICBcdGZvciB0aGUgaWNvbiwgaWYgeW91IHdhbnQgdG8gY2hhbmdlIHRoZSBjb2xvciwgYmUgc3VyZSB0byB1c2UgYCUyM2AgaW5zdGVhZCBvZiBgI2AsIHNpbmNlIGl0J3MgYSB1cmwuIFlvdSBjYW4gYWxzbyBzd2FwIGluIGEgZGlmZmVyZW50IHN2ZyBpY29uIG9yIGFuIGV4dGVybmFsIGltYWdlIHJlZmVyZW5jZVxuXG4gICovXG4gIGJhY2tncm91bmQtaW1hZ2U6IHVybChcImRhdGE6aW1hZ2Uvc3ZnK3htbDtjaGFyc2V0PVVTLUFTQ0lJLCUzQ3N2ZyUyMHhtbG5zJTNEJTIyaHR0cCUzQSUyRiUyRnd3dy53My5vcmclMkYyMDAwJTJGc3ZnJTIyJTIwd2lkdGglM0QlMjIyOTIuNCUyMiUyMGhlaWdodCUzRCUyMjI5Mi40JTIyJTNFJTNDcGF0aCUyMGZpbGwlM0QlMjIlMjMwMDdDQjIlMjIlMjBkJTNEJTIyTTI4NyUyMDY5LjRhMTcuNiUyMDE3LjYlMjAwJTIwMCUyMDAtMTMtNS40SDE4LjRjLTUlMjAwLTkuMyUyMDEuOC0xMi45JTIwNS40QTE3LjYlMjAxNy42JTIwMCUyMDAlMjAwJTIwMCUyMDgyLjJjMCUyMDUlMjAxLjglMjA5LjMlMjA1LjQlMjAxMi45bDEyOCUyMDEyNy45YzMuNiUyMDMuNiUyMDcuOCUyMDUuNCUyMDEyLjglMjA1LjRzOS4yLTEuOCUyMDEyLjgtNS40TDI4NyUyMDk1YzMuNS0zLjUlMjA1LjQtNy44JTIwNS40LTEyLjglMjAwLTUtMS45LTkuMi01LjUtMTIuOHolMjIlMkYlM0UlM0MlMkZzdmclM0VcIik7XG4gIGJhY2tncm91bmQtcmVwZWF0OiBuby1yZXBlYXQsIHJlcGVhdDtcbiAgLyogYXJyb3cgaWNvbiBwb3NpdGlvbiAoMWVtIGZyb20gdGhlIHJpZ2h0LCA1MCUgdmVydGljYWwpICwgdGhlbiBncmFkaWVudCBwb3NpdGlvbiovXG4gIGJhY2tncm91bmQtcG9zaXRpb246IHJpZ2h0IDAuN2VtIHRvcCA1MCUsIDAgMDtcbiAgLyogaWNvbiBzaXplLCB0aGVuIGdyYWRpZW50ICovXG4gIGJhY2tncm91bmQtc2l6ZTogMC42NWVtIGF1dG8sIDEwMCU7XG59XG5cbi8qIEhpZGUgYXJyb3cgaWNvbiBpbiBJRSBicm93c2VycyAqL1xuLnNlbGVjdC1jc3M6Oi1tcy1leHBhbmQge1xuICBkaXNwbGF5OiBub25lO1xufVxuXG4vKiBIb3ZlciBzdHlsZSAqL1xuLnNlbGVjdC1jc3M6aG92ZXIge1xuICBib3JkZXItY29sb3I6ICM4ODg7XG59XG5cbi8qIEZvY3VzIHN0eWxlICovXG4uc2VsZWN0LWNzczpmb2N1cyB7XG4gIG91dGxpbmU6IG5vbmU7XG59XG5cbi8qIFNldCBvcHRpb25zIHRvIG5vcm1hbCB3ZWlnaHQgKi9cbi5zZWxlY3QtY3NzIG9wdGlvbiB7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG59XG5cbi8qIFN1cHBvcnQgZm9yIHJ0bCB0ZXh0LCBleHBsaWNpdCBzdXBwb3J0IGZvciBBcmFiaWMgYW5kIEhlYnJldyAqL1xuKltkaXI9cnRsXSAuc2VsZWN0LWNzcywgOnJvb3Q6bGFuZyhhcikgLnNlbGVjdC1jc3MsIDpyb290OmxhbmcoaXcpIC5zZWxlY3QtY3NzIHtcbiAgYmFja2dyb3VuZC1wb3NpdGlvbjogbGVmdCAwLjdlbSB0b3AgNTAlLCAwIDA7XG4gIHBhZGRpbmc6IDAuNmVtIDAuOGVtIDAuNWVtIDEuNGVtO1xufVxuXG4vKiBEaXNhYmxlZCBzdHlsZXMgKi9cbi5zZWxlY3QtY3NzOmRpc2FibGVkLCAuc2VsZWN0LWNzc1thcmlhLWRpc2FibGVkPXRydWVdIHtcbiAgY29sb3I6IGdyYXl0ZXh0O1xuICBiYWNrZ3JvdW5kLWltYWdlOiB1cmwoXCJkYXRhOmltYWdlL3N2Zyt4bWw7Y2hhcnNldD1VUy1BU0NJSSwlM0NzdmclMjB4bWxucyUzRCUyMmh0dHAlM0ElMkYlMkZ3d3cudzMub3JnJTJGMjAwMCUyRnN2ZyUyMiUyMHdpZHRoJTNEJTIyMjkyLjQlMjIlMjBoZWlnaHQlM0QlMjIyOTIuNCUyMiUzRSUzQ3BhdGglMjBmaWxsJTNEJTIyZ3JheXRleHQlMjIlMjBkJTNEJTIyTTI4NyUyMDY5LjRhMTcuNiUyMDE3LjYlMjAwJTIwMCUyMDAtMTMtNS40SDE4LjRjLTUlMjAwLTkuMyUyMDEuOC0xMi45JTIwNS40QTE3LjYlMjAxNy42JTIwMCUyMDAlMjAwJTIwMCUyMDgyLjJjMCUyMDUlMjAxLjglMjA5LjMlMjA1LjQlMjAxMi45bDEyOCUyMDEyNy45YzMuNiUyMDMuNiUyMDcuOCUyMDUuNCUyMDEyLjglMjA1LjRzOS4yLTEuOCUyMDEyLjgtNS40TDI4NyUyMDk1YzMuNS0zLjUlMjA1LjQtNy44JTIwNS40LTEyLjglMjAwLTUtMS45LTkuMi01LjUtMTIuOHolMjIlMkYlM0UlM0MlMkZzdmclM0VcIik7XG59XG5cbi5zZWxlY3QtY3NzOmRpc2FibGVkOmhvdmVyLCAuc2VsZWN0LWNzc1thcmlhLWRpc2FibGVkPXRydWVdIHtcbiAgYm9yZGVyLWNvbG9yOiAjYWFhO1xufVxuXG5idXR0b24ucHVycGxlOmhvdmVyIHtcbiAgbWFyZ2luLXRvcDogLTAuMTI1cmVtO1xuICBtYXJnaW4tYm90dG9tOiAwLjEyNXJlbTtcbn1cblxuYnV0dG9uOmZvY3VzIHtcbiAgb3V0bGluZTogbm9uZTtcbn1cblxuYnV0dG9uLnB1cnBsZSB7XG4gIGJvcmRlci1yYWRpdXM6IDAuNzVyZW07XG4gIGhlaWdodDogM3JlbTtcbiAgd2lkdGg6IDEwMCU7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IGJvbGQ7XG4gIGZvbnQtc2l6ZTogMXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICBjdXJzb3I6IHBvaW50ZXI7XG4gIC13ZWJraXQtYXBwZWFyYW5jZTogbm9uZSAhaW1wb3J0YW50O1xuICBib3JkZXItd2lkdGg6IDA7XG59XG5cbjpob3N0IGJ1dHRvbi5wdXJwbGU6aG92ZXIge1xuICBtYXJnaW4tdG9wOiAtMC4xMjVyZW07XG4gIG1hcmdpbi1ib3R0b206IDAuMTI1cmVtO1xufVxuXG46aG9zdCBidXR0b246Zm9jdXMge1xuICBvdXRsaW5lOiBub25lO1xufVxuXG46aG9zdCBwLnRvcnVzLWRldGFpbHMge1xuICBtYXJnaW4tdG9wOiAwLjVyZW07XG4gIG1hcmdpbi1ib3R0b206IDA7XG59XG5cbjpob3N0IGJ1dHRvbi5wdXJwbGUge1xuICBjb2xvcjogd2hpdGU7XG4gIGJhY2tncm91bmQ6ICM1OTYzRkY7XG4gIGJveC1zaGFkb3c6IDBweCAwcHggMXB4IHJnYmEoODksIDk5LCAyNTUsIDAuMDQpLCAwcHggMnB4IDZweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjA0KSwgMHB4IDE2cHggMjRweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjI0KTtcbiAgdHJhbnNpdGlvbjogbWFyZ2luLXRvcCAwLjFzIGVhc2UtaW4sIG1hcmdpbi1ib3R0b20gMC4xcyBlYXNlLWluO1xufVxuXG5kaXYua3VrYWktbW9kYWwgdGFibGUge1xuICBkaXNwbGF5OiBibG9jaztcbiAgbWFyZ2luLXRvcDogMXJlbTtcbiAgd2lkdGg6IDEwMCU7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYua20tYm9keSA+IGRpdi5ncm91cCBzZWxlY3Quc2VsZWN0LWNzcyB7XG4gIHdpZHRoOiA5LjVyZW07XG4gIGhlaWdodDogMnJlbTtcbiAgbGluZS1oZWlnaHQ6IDJyZW07XG4gIG9wYWNpdHk6IDAuNjtcbiAgYm9yZGVyLXJhZGl1czogMC41cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgdGFibGUgPiB0aGVhZCxcbmRpdi5rdWthaS1tb2RhbCB0YWJsZSA+IHRoZWFkIHtcbiAgd2lkdGg6IDEwMCU7XG59XG5cbmRpdi5rdWthaS1tb2RhbCB0YWJsZSA+IHRoZWFkID4gdHIgPiB0aCB7XG4gIHBhZGRpbmctYm90dG9tOiAwLjI1cmVtO1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiA1MDA7XG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xuICBjb2xvcjogI0E4QThBODtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIHRhYmxlID4gdGJvZHkgPiB0ciA+IHRkLnR4QW1vdW50LFxuZGl2Lmt1a2FpLW1vZGFsIHRhYmxlID4gdGhlYWQgPiB0ciA+IHRoOmxhc3QtY2hpbGQge1xuICB0ZXh0LWFsaWduOiByaWdodDtcbiAgd2lkdGg6IDEwMCU7XG59XG5cbnNtYWxsIHtcbiAgbWFyZ2luLWJvdHRvbTogMDtcbn1cblxuZGl2LnN3aXRjaC1jb250YWluZXIge1xuICBtYXJnaW4tdG9wOiAwLjVyZW07XG59XG5cbmRpdi5rdWthaS1tb2RhbCBpbnB1dC50ZXh0LnJlYWQtb25seSB7XG4gIGJhY2tncm91bmQ6ICNmMmYyZjI7XG59XG5cbmlucHV0LmN1c3RvbS10ZXh0Ym94IHtcbiAgcGFkZGluZy1sZWZ0OiAwLjc1cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2LmFkdmFuY2VkLWZvcm0gaW5wdXQudGV4dDo6cGxhY2Vob2xkZXIge1xuICBjb2xvcjogYmxhY2s7XG4gIG9wYWNpdHk6IDE7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYuYWR2YW5jZWQtZm9ybSBpbnB1dC50ZXh0Ojotd2Via2l0LWlucHV0LXBsYWNlaG9sZGVyLFxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5hZHZhbmNlZC1mb3JtIGlucHV0LnRleHQ6LW1zLWlucHV0LXBsYWNlaG9sZGVyIHtcbiAgY29sb3I6IGJsYWNrO1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2LmFkdmFuY2VkLWZvcm0gaW5wdXQudGV4dC5yZWFkLW9ubHkge1xuICBjb2xvcjogIzgwODA4MDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsID4gZGl2LmttLWNvbnRlbnQgPiBkaXYua20tYm9keSA+IGRpdi5ncm91cCA+IGlucHV0LnRleHQsXG5kaXYua3VrYWktbW9kYWwgPiBkaXYua20tY29udGVudCA+IGRpdi5rbS1ib2R5ID4gZGl2Lmdyb3VwID4gdGV4dGFyZWEge1xuICBmb250LXNpemU6IDAuODEyNXJlbTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsID4gZGl2LmttLWNvbnRlbnQge1xuICB3aWR0aDogMzByZW07XG59XG5cbkBzdXBwb3J0cyAoLXdlYmtpdC10b3VjaC1jYWxsb3V0OiBub25lKSB7XG4gIGRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50ID4gZGl2LmttLWJvZHkgPiBkaXYuZ3JvdXAgPiBpbnB1dC50ZXh0LFxuZGl2Lmt1a2FpLW1vZGFsID4gZGl2LmttLWNvbnRlbnQgPiBkaXYua20tYm9keSA+IGRpdi5ncm91cCA+IHRleHRhcmVhIHtcbiAgICBmb250LXNpemU6IDFyZW07XG4gIH1cbn1cbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDMyLjI1cmVtKSB7XG4gIGRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50IHtcbiAgICB3aWR0aDogMjVyZW07XG4gIH1cbn1cbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDI1cmVtKSB7XG4gIGlucHV0I3RvQWRkcmVzcywgaW5wdXQuY3VzdG9tLXRleHRib3gge1xuICAgIGZvbnQtc2l6ZTogMC44MTI1cmVtO1xuICB9XG5cbiAgZGl2Lmt1a2FpLW1vZGFsID4gZGl2LmttLWNvbnRlbnQge1xuICAgIHdpZHRoOiAyMnJlbTtcbiAgfVxufVxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDogMjJyZW0pIHtcbiAgaW5wdXQjdG9BZGRyZXNzLCBpbnB1dC5jdXN0b20tdGV4dGJveCB7XG4gICAgZm9udC1zaXplOiAwLjc1cmVtO1xuICB9XG59XG5zcGFuLmJhdGNoSW5mbyB7XG4gIG1hcmdpbi1sZWZ0OiBhdXRvO1xuICBmb250LXNpemU6IDAuNzVyZW07XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYucHJldmlldy1hbW91bnQge1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xuICBtYXJnaW4tYm90dG9tOiAwLjVyZW07XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYucHJldmlldy10b3Age1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogcm93O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYucHJldmlldy1hbW91bnQgPiBzcGFuLmFtb3VudC10ZXoge1xuICBtYXJnaW46IDAuNXJlbSAwIDAuMjVyZW07XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IDUwMDtcbiAgZm9udC1zaXplOiAxLjVyZW07XG4gIGxpbmUtaGVpZ2h0OiAxLjVyZW07XG4gIGNvbG9yOiAjMTYxNjE2O1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2LnByZXZpZXctYW1vdW50ID4gc3Bhbi5hbW91bnQtdXNkIHtcbiAgbWFyZ2luLWJvdHRvbTogMC43NXJlbTtcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xuICBmb250LXdlaWdodDogbm9ybWFsO1xuICBmb250LXNpemU6IDAuODc1cmVtO1xuICBsaW5lLWhlaWdodDogMXJlbTtcbiAgY29sb3I6ICM1MjUyNTI7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYua20tYm9keSBzcGFuLnNpbmdsZS10byB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIG1hcmdpbjogMHJlbSAwIDAuNXJlbTtcbiAgd29yZC1icmVhazogYnJlYWstYWxsO1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG4gIGZvbnQtc2l6ZTogMXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGNvbG9yOiAjMTYxNjE2O1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2LmttLWJvZHkgc3Bhbi50b3J1cy10byB7XG4gIGRpc3BsYXk6IGJsb2NrO1xuICBtYXJnaW4tYm90dG9tOiAwLjI1cmVtO1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xuICBjb2xvcjogIzE2MTYxNjtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5zZXBlcmF0b3Ige1xuICBib3JkZXItYm90dG9tOiAxcHggc29saWQgcmdiYSgwLCAwLCAwLCAwLjA4KTtcbiAgbWFyZ2luOiAwLjVyZW0gMDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5wcmV2aWV3LXJvdyB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2Vlbjtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5wcmV2aWV3LXJvdyA+IHNwYW4ge1xuICBtYXJnaW46IDAuMjVyZW0gMDtcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcbiAgZm9udC1zaXplOiAwLjg3NXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGNvbG9yOiAjNTI1MjUyO1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2LmttLWJvZHkgc3Bhbi5zZWN0aW9uLFxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5wcmV2aWV3LXJvdyA+IHNwYW46Zmlyc3QtY2hpbGQge1xuICBmb250LXdlaWdodDogNTAwO1xuICBmb250LXdlaWdodDogbm9ybWFsO1xuICBmb250LXNpemU6IDAuODc1cmVtO1xuICBsaW5lLWhlaWdodDogMXJlbTtcbiAgY29sb3I6ICNBOEE4QTg7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYucHJldmlldy1yb3cgPiBzcGFuOmxhc3QtY2hpbGQge1xuICB3b3JkLWJyZWFrOiBicmVhay1hbGw7XG4gIHBhZGRpbmctbGVmdDogMC41cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2LnByZXZpZXctcm93IGltZyxcbmRpdi5rdWthaS1tb2RhbCBkaXYua20tYm9keSBzcGFuLnRvcnVzLXRvIGltZyB7XG4gIGhlaWdodDogMC43NXJlbTtcbiAgbWFyZ2luLWJvdHRvbTogMC4wNjI1cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgcCNwcmV2aWV3QXR0ZW50aW9uIHtcbiAgY29sb3I6ICNDRDAwMDA7XG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xufVxuXG5kaXYudGFicy1jb250YWluZXIgPiB1bC50YWJzIHtcbiAgZGlzcGxheTogZmxleDtcbiAgbGlzdC1zdHlsZS10eXBlOiBub25lO1xuICBtYXJnaW46IDA7XG4gIHBhZGRpbmc6IDA7XG59XG5cbmRpdi50YWJzLWNvbnRhaW5lciA+IHVsLnRhYnMgPiBsaS50YWIge1xuICB3aWR0aDogMTAwJTtcbiAgY29sb3I6ICM3ODc4Nzg7XG4gIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgY3Vyc29yOiBwb2ludGVyO1xuICBwYWRkaW5nOiAxcmVtIGF1dG87XG4gIGJhY2tncm91bmQtY29sb3I6ICNmNmY2ZjY7XG59XG5cbmRpdi50YWJzLWNvbnRhaW5lciA+IHVsLnRhYnMgPiBsaS50YWI6Zmlyc3QtY2hpbGQge1xuICBib3JkZXItdG9wLWxlZnQtcmFkaXVzOiAwLjc1cmVtO1xufVxuXG5kaXYudGFicy1jb250YWluZXIgPiB1bC50YWJzID4gbGkudGFiOmxhc3QtY2hpbGQge1xuICBib3JkZXItdG9wLXJpZ2h0LXJhZGl1czogMC43NXJlbTtcbn1cblxuZGl2LnRhYnMtY29udGFpbmVyID4gdWwudGFicyA+IGxpLnRhYi5hY3RpdmUge1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZDlkOWQ5O1xuICBjb2xvcjogIzQ4NDg0ODtcbn1cblxuZGl2LnRhYnMtY29udGFpbmVyID4gdWwudGFicyA+IGxpLnRhYjpob3ZlciB7XG4gIGJhY2tncm91bmQtY29sb3I6ICNDMEMwQzA7XG4gIGNvbG9yOiAjNDg0ODQ4O1xufSIsIi5zd2l0Y2gge1xyXG4gIHBvc2l0aW9uOiByZWxhdGl2ZTtcclxuICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XHJcbiAgd2lkdGg6IDNyZW07XHJcbiAgaGVpZ2h0OiAxLjVyZW07XHJcbiAgbWFyZ2luLWJvdHRvbTogMDtcclxufVxyXG5cclxuLnN3aXRjaCBpbnB1dCB7IFxyXG4gIG9wYWNpdHk6IDA7XHJcbiAgLXdlYmtpdC1vcGFjaXR5OiAwO1xyXG4gIC1raHRtbC1vcGFjaXR5OiAwO1xyXG4gIHdpZHRoOiAwO1xyXG4gIGhlaWdodDogMDtcclxufVxyXG5cclxuLnNsaWRlciB7XHJcbiAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gIGN1cnNvcjogcG9pbnRlcjtcclxuICB0b3A6IDA7XHJcbiAgbGVmdDogMDtcclxuICByaWdodDogMDtcclxuICBib3R0b206IDA7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogI2Q5ZDlkOTtcclxuICAtd2Via2l0LXRyYW5zaXRpb246IC40cztcclxuICB0cmFuc2l0aW9uOiAuNHM7XHJcbn1cclxuXHJcbi5zbGlkZXI6YmVmb3JlIHtcclxuICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcbiAgY29udGVudDogXCJcIjtcclxuICBoZWlnaHQ6IDEuMTI1cmVtO1xyXG4gIHdpZHRoOiAxLjEyNXJlbTtcclxuICBsZWZ0OiAwLjE4NzVyZW07XHJcbiAgYm90dG9tOiAwLjE4NzVyZW07XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogIzdCN0I3QjtcclxuICAtd2Via2l0LXRyYW5zaXRpb246IC40cztcclxuICB0cmFuc2l0aW9uOiAuNHM7XHJcbn1cclxuXHJcbmlucHV0OmNoZWNrZWQgKyAuc2xpZGVyIHtcclxuICBib3gtc2hhZG93OiAwcHggMHB4IDFweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjA0KSwgMHB4IDJweCA2cHggcmdiYSg4OSwgOTksIDI1NSwgMC4wNCksIDBweCAxNnB4IDI0cHggcmdiYSg4OSwgOTksIDI1NSwgMC4yNCk7XHJcbn1cclxuXHJcbmlucHV0OmNoZWNrZWQgKyAuc2xpZGVyOmJlZm9yZSB7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogIzU5NjNGRjtcclxuICAtd2Via2l0LXRyYW5zZm9ybTogdHJhbnNsYXRlWCgxLjVyZW0pO1xyXG4gIC1tcy10cmFuc2Zvcm06IHRyYW5zbGF0ZVgoMS41cmVtKTtcclxuICB0cmFuc2Zvcm06IHRyYW5zbGF0ZVgoMS41cmVtKTtcclxufVxyXG5cclxuLnNsaWRlci5yb3VuZCB7XHJcbiAgYm9yZGVyLXJhZGl1czogMi4xMjVyZW07XHJcbn1cclxuLnNsaWRlci5yb3VuZDpiZWZvcmUge1xyXG4gIGJvcmRlci1yYWRpdXM6IDUwJTtcclxufVxyXG5pbnB1dDpjaGVja2VkICsgLnNsaWRlciB7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogcmdiYSg4OSwgOTksIDI1NSwgMC40KTs7XHJcbn1cclxuZGl2Lmt1a2FpLWNhcmQgPiBkaXYuZ3JleS1jYXJkID4gZGl2LnN3aXRjaC1jb250YWluZXIgPiBzcGFuLnN3aXRjaC1kZXNjLFxyXG5zcGFuLnN3aXRjaC1kZXNjIHtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcclxuICBmb250LXNpemU6IDE0cHg7XHJcbiAgbGluZS1oZWlnaHQ6IDE4cHg7XHJcbiAgbGV0dGVyLXNwYWNpbmc6IDAuMTZweDtcclxuICBjb2xvcjogIzE2MTYxNjtcclxuICBtYXJnaW4tbGVmdDogMC41cmVtO1xyXG59XHJcbmRpdi5zd2l0Y2gtY29udGFpbmVyIHtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGp1c3RpZnktY29udGVudDogZmxleC1zdGFydDtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XHJcbiAgd2lkdGg6IDI4cmVtO1xyXG59XHJcbnNtYWxsIHtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcclxuICBmb250LXNpemU6IDAuNzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgbGV0dGVyLXNwYWNpbmc6IDAuMzJweDtcclxuICBjb2xvcjogIzM5MzkzOTtcclxuICBtYXJnaW4tdG9wOiAyLjVyZW07XHJcbiAgbWFyZ2luLWJvdHRvbTogMC41cmVtO1xyXG59XHJcbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDI5cmVtKSB7XHJcbiAgZGl2LnN3aXRjaC1jb250YWluZXIge1xyXG4gICAgICB3aWR0aDogMjByZW07XHJcbiAgfVxyXG59IiwiLyogZHJvcC1kb3duICovXHJcblxyXG4vKiBjbGFzcyBhcHBsaWVzIHRvIHNlbGVjdCBlbGVtZW50IGl0c2VsZiwgbm90IGEgd3JhcHBlciBlbGVtZW50ICovXHJcbi5zZWxlY3QtY3NzIHtcclxuICBib3JkZXItcmFkaXVzOiAwLjc1cmVtO1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XHJcbiAgbGV0dGVyLXNwYWNpbmc6IDAuMTZweDtcclxuICBjb2xvcjogIzAwMDAwMDtcclxuICBwYWRkaW5nLWxlZnQ6IDFyZW07XHJcbiAgcGFkZGluZy1yaWdodDogMXJlbTtcclxuICBib3JkZXI6IDA7XHJcblx0d2lkdGg6IDEwMCU7XHJcbiAgbWF4LXdpZHRoOiAxMDAlOyAvKiB1c2VmdWwgd2hlbiB3aWR0aCBpcyBzZXQgdG8gYW55dGhpbmcgb3RoZXIgdGhhbiAxMDAlICovXHJcbiAgaGVpZ2h0OiAzcmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAzcmVtO1xyXG5cdGJveC1zaXppbmc6IGJvcmRlci1ib3g7XHJcblx0bWFyZ2luOiAwO1xyXG5cdC1tb3otYXBwZWFyYW5jZTogbm9uZTtcclxuXHQtd2Via2l0LWFwcGVhcmFuY2U6IG5vbmU7XHJcbiAgYXBwZWFyYW5jZTogbm9uZTtcclxuICBvcGFjaXR5OiAxO1xyXG5cdGJhY2tncm91bmQtY29sb3I6ICNlMWUxZTE7XHJcblx0Lyogbm90ZTogYmcgaW1hZ2UgYmVsb3cgdXNlcyAyIHVybHMuIFRoZSBmaXJzdCBpcyBhbiBzdmcgZGF0YSB1cmkgZm9yIHRoZSBhcnJvdyBpY29uLCBhbmQgdGhlIHNlY29uZCBpcyB0aGUgZ3JhZGllbnQuIFxyXG5cdFx0Zm9yIHRoZSBpY29uLCBpZiB5b3Ugd2FudCB0byBjaGFuZ2UgdGhlIGNvbG9yLCBiZSBzdXJlIHRvIHVzZSBgJTIzYCBpbnN0ZWFkIG9mIGAjYCwgc2luY2UgaXQncyBhIHVybC4gWW91IGNhbiBhbHNvIHN3YXAgaW4gYSBkaWZmZXJlbnQgc3ZnIGljb24gb3IgYW4gZXh0ZXJuYWwgaW1hZ2UgcmVmZXJlbmNlXHJcblx0XHRcclxuXHQqL1xyXG5cdGJhY2tncm91bmQtaW1hZ2U6IHVybCgnZGF0YTppbWFnZS9zdmcreG1sO2NoYXJzZXQ9VVMtQVNDSUksJTNDc3ZnJTIweG1sbnMlM0QlMjJodHRwJTNBJTJGJTJGd3d3LnczLm9yZyUyRjIwMDAlMkZzdmclMjIlMjB3aWR0aCUzRCUyMjI5Mi40JTIyJTIwaGVpZ2h0JTNEJTIyMjkyLjQlMjIlM0UlM0NwYXRoJTIwZmlsbCUzRCUyMiUyMzAwN0NCMiUyMiUyMGQlM0QlMjJNMjg3JTIwNjkuNGExNy42JTIwMTcuNiUyMDAlMjAwJTIwMC0xMy01LjRIMTguNGMtNSUyMDAtOS4zJTIwMS44LTEyLjklMjA1LjRBMTcuNiUyMDE3LjYlMjAwJTIwMCUyMDAlMjAwJTIwODIuMmMwJTIwNSUyMDEuOCUyMDkuMyUyMDUuNCUyMDEyLjlsMTI4JTIwMTI3LjljMy42JTIwMy42JTIwNy44JTIwNS40JTIwMTIuOCUyMDUuNHM5LjItMS44JTIwMTIuOC01LjRMMjg3JTIwOTVjMy41LTMuNSUyMDUuNC03LjglMjA1LjQtMTIuOCUyMDAtNS0xLjktOS4yLTUuNS0xMi44eiUyMiUyRiUzRSUzQyUyRnN2ZyUzRScpO1xyXG5cdGJhY2tncm91bmQtcmVwZWF0OiBuby1yZXBlYXQsIHJlcGVhdDtcclxuXHQvKiBhcnJvdyBpY29uIHBvc2l0aW9uICgxZW0gZnJvbSB0aGUgcmlnaHQsIDUwJSB2ZXJ0aWNhbCkgLCB0aGVuIGdyYWRpZW50IHBvc2l0aW9uKi9cclxuXHRiYWNrZ3JvdW5kLXBvc2l0aW9uOiByaWdodCAuN2VtIHRvcCA1MCUsIDAgMDtcclxuXHQvKiBpY29uIHNpemUsIHRoZW4gZ3JhZGllbnQgKi9cclxuXHRiYWNrZ3JvdW5kLXNpemU6IC42NWVtIGF1dG8sIDEwMCU7XHJcbn1cclxuLyogSGlkZSBhcnJvdyBpY29uIGluIElFIGJyb3dzZXJzICovXHJcbi5zZWxlY3QtY3NzOjotbXMtZXhwYW5kIHtcclxuXHRkaXNwbGF5OiBub25lO1xyXG59XHJcbi8qIEhvdmVyIHN0eWxlICovXHJcbi5zZWxlY3QtY3NzOmhvdmVyIHtcclxuXHRib3JkZXItY29sb3I6ICM4ODg7XHJcbn1cclxuLyogRm9jdXMgc3R5bGUgKi9cclxuLnNlbGVjdC1jc3M6Zm9jdXMge1xyXG5cdG91dGxpbmU6IG5vbmU7XHJcbn1cclxuXHJcbi8qIFNldCBvcHRpb25zIHRvIG5vcm1hbCB3ZWlnaHQgKi9cclxuLnNlbGVjdC1jc3Mgb3B0aW9uIHtcclxuXHRmb250LXdlaWdodDpub3JtYWw7XHJcbn1cclxuXHJcbi8qIFN1cHBvcnQgZm9yIHJ0bCB0ZXh0LCBleHBsaWNpdCBzdXBwb3J0IGZvciBBcmFiaWMgYW5kIEhlYnJldyAqL1xyXG4qW2Rpcj1cInJ0bFwiXSAuc2VsZWN0LWNzcywgOnJvb3Q6bGFuZyhhcikgLnNlbGVjdC1jc3MsIDpyb290OmxhbmcoaXcpIC5zZWxlY3QtY3NzIHtcclxuXHRiYWNrZ3JvdW5kLXBvc2l0aW9uOiBsZWZ0IC43ZW0gdG9wIDUwJSwgMCAwO1xyXG5cdHBhZGRpbmc6IC42ZW0gLjhlbSAuNWVtIDEuNGVtO1xyXG59XHJcblxyXG4vKiBEaXNhYmxlZCBzdHlsZXMgKi9cclxuLnNlbGVjdC1jc3M6ZGlzYWJsZWQsIC5zZWxlY3QtY3NzW2FyaWEtZGlzYWJsZWQ9dHJ1ZV0ge1xyXG5cdGNvbG9yOiBncmF5dGV4dDtcclxuXHRiYWNrZ3JvdW5kLWltYWdlOiB1cmwoJ2RhdGE6aW1hZ2Uvc3ZnK3htbDtjaGFyc2V0PVVTLUFTQ0lJLCUzQ3N2ZyUyMHhtbG5zJTNEJTIyaHR0cCUzQSUyRiUyRnd3dy53My5vcmclMkYyMDAwJTJGc3ZnJTIyJTIwd2lkdGglM0QlMjIyOTIuNCUyMiUyMGhlaWdodCUzRCUyMjI5Mi40JTIyJTNFJTNDcGF0aCUyMGZpbGwlM0QlMjJncmF5dGV4dCUyMiUyMGQlM0QlMjJNMjg3JTIwNjkuNGExNy42JTIwMTcuNiUyMDAlMjAwJTIwMC0xMy01LjRIMTguNGMtNSUyMDAtOS4zJTIwMS44LTEyLjklMjA1LjRBMTcuNiUyMDE3LjYlMjAwJTIwMCUyMDAlMjAwJTIwODIuMmMwJTIwNSUyMDEuOCUyMDkuMyUyMDUuNCUyMDEyLjlsMTI4JTIwMTI3LjljMy42JTIwMy42JTIwNy44JTIwNS40JTIwMTIuOCUyMDUuNHM5LjItMS44JTIwMTIuOC01LjRMMjg3JTIwOTVjMy41LTMuNSUyMDUuNC03LjglMjA1LjQtMTIuOCUyMDAtNS0xLjktOS4yLTUuNS0xMi44eiUyMiUyRiUzRSUzQyUyRnN2ZyUzRScpO1xyXG59XHJcblxyXG4uc2VsZWN0LWNzczpkaXNhYmxlZDpob3ZlciwgLnNlbGVjdC1jc3NbYXJpYS1kaXNhYmxlZD10cnVlXSB7XHJcblx0Ym9yZGVyLWNvbG9yOiAjYWFhO1xyXG59IiwiQGltcG9ydCAnLi4vLi4vLi4vc2Nzcy9tb2RhbC5zY3NzJztcclxuQGltcG9ydCAnLi4vLi4vLi4vc2Nzcy9zd2l0Y2guc2Nzcyc7XHJcbkBpbXBvcnQgJy4uLy4uLy4uL3Njc3MvZHJvcGRvd24uc2Nzcyc7XHJcbmJ1dHRvbi5wdXJwbGU6aG92ZXIge1xyXG4gIG1hcmdpbi10b3A6IC0wLjEyNXJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAwLjEyNXJlbTtcclxufVxyXG5idXR0b246Zm9jdXMge1xyXG4gIG91dGxpbmU6IG5vbmU7XHJcbn1cclxuYnV0dG9uLnB1cnBsZSB7XHJcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcclxuICBoZWlnaHQ6IDNyZW07XHJcbiAgd2lkdGg6IDEwMCU7XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGZsZXgtZGlyZWN0aW9uOmNvbHVtbjtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGp1c3RpZnktY29udGVudDpjZW50ZXI7XHJcbiAgY3Vyc29yOiBwb2ludGVyO1xyXG4gIC13ZWJraXQtYXBwZWFyYW5jZTogbm9uZSAhaW1wb3J0YW50O1xyXG4gIGJvcmRlci13aWR0aDogMDtcclxufVxyXG46aG9zdCBidXR0b24ucHVycGxlOmhvdmVyIHtcclxuICBtYXJnaW4tdG9wOiAtMC4xMjVyZW07XHJcbiAgbWFyZ2luLWJvdHRvbTogMC4xMjVyZW07XHJcbn1cclxuOmhvc3QgYnV0dG9uOmZvY3VzIHtcclxuICBvdXRsaW5lOiBub25lO1xyXG59XHJcbjpob3N0IHAudG9ydXMtZGV0YWlscyB7XHJcbiAgbWFyZ2luLXRvcDogMC41cmVtO1xyXG4gIG1hcmdpbi1ib3R0b206IDA7XHJcbn1cclxuOmhvc3QgYnV0dG9uLnB1cnBsZSB7XHJcbiAgY29sb3I6IHdoaXRlO1xyXG4gIGJhY2tncm91bmQ6ICM1OTYzRkY7XHJcbiAgYm94LXNoYWRvdzogMHB4IDBweCAxcHggcmdiYSg4OSwgOTksIDI1NSwgMC4wNCksIDBweCAycHggNnB4IHJnYmEoODksIDk5LCAyNTUsIDAuMDQpLCAwcHggMTZweCAyNHB4IHJnYmEoODksIDk5LCAyNTUsIDAuMjQpO1xyXG4gIHRyYW5zaXRpb246IG1hcmdpbi10b3AgMC4xcyBlYXNlLWluLCBtYXJnaW4tYm90dG9tIDAuMXMgZWFzZS1pbjtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgdGFibGUge1xyXG4gIGRpc3BsYXk6IGJsb2NrO1xyXG4gIG1hcmdpbi10b3A6IDFyZW07XHJcbiAgd2lkdGg6IDEwMCU7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5rbS1ib2R5ID4gZGl2Lmdyb3VwIHNlbGVjdC5zZWxlY3QtY3NzIHtcclxuICB3aWR0aDogOS41cmVtO1xyXG4gIGhlaWdodDogMnJlbTtcclxuICBsaW5lLWhlaWdodDogMnJlbTtcclxuICBvcGFjaXR5OiAwLjY7XHJcbiAgYm9yZGVyLXJhZGl1czogMC41cmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCB0YWJsZSA+IHRoZWFkLFxyXG5kaXYua3VrYWktbW9kYWwgdGFibGUgPiB0aGVhZCB7XHJcbiAgd2lkdGg6IDEwMCU7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIHRhYmxlID4gdGhlYWQgPiB0ciA+IHRoIHtcclxuICBwYWRkaW5nLWJvdHRvbTogMC4yNXJlbTtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IDUwMDtcclxuICBmb250LXNpemU6IDAuODc1cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xyXG4gIGNvbG9yOiAjQThBOEE4O1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCB0YWJsZSA+IHRib2R5ID4gdHIgPiB0ZC50eEFtb3VudCxcclxuZGl2Lmt1a2FpLW1vZGFsIHRhYmxlID4gdGhlYWQgPiB0ciA+IHRoOmxhc3QtY2hpbGQge1xyXG4gIHRleHQtYWxpZ246IHJpZ2h0O1xyXG4gIHdpZHRoOiAxMDAlO1xyXG59XHJcbnNtYWxsIHtcclxuICBtYXJnaW4tYm90dG9tOiAwO1xyXG59XHJcbmRpdi5zd2l0Y2gtY29udGFpbmVyIHtcclxuICBtYXJnaW4tdG9wOiAwLjVyZW07XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQucmVhZC1vbmx5IHtcclxuICBiYWNrZ3JvdW5kOiAjZjJmMmYyO1xyXG59XHJcblxyXG5pbnB1dC5jdXN0b20tdGV4dGJveCB7XHJcbiAgcGFkZGluZy1sZWZ0OiAwLjc1cmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYuYWR2YW5jZWQtZm9ybSBpbnB1dC50ZXh0OjpwbGFjZWhvbGRlciB7XHJcbiAgY29sb3I6IGJsYWNrO1xyXG4gIG9wYWNpdHk6IDE7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5hZHZhbmNlZC1mb3JtIGlucHV0LnRleHQ6Oi13ZWJraXQtaW5wdXQtcGxhY2Vob2xkZXIsXHJcbmRpdi5rdWthaS1tb2RhbCBkaXYuYWR2YW5jZWQtZm9ybSBpbnB1dC50ZXh0Oi1tcy1pbnB1dC1wbGFjZWhvbGRlciB7XHJcbiAgY29sb3I6IGJsYWNrO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYuYWR2YW5jZWQtZm9ybSBpbnB1dC50ZXh0LnJlYWQtb25seSB7XHJcbiAgY29sb3I6ICM4MDgwODA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsID4gZGl2LmttLWNvbnRlbnQgPiBkaXYua20tYm9keSA+IGRpdi5ncm91cCA+IGlucHV0LnRleHQsXHJcbmRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50ID4gZGl2LmttLWJvZHkgPiBkaXYuZ3JvdXAgPiB0ZXh0YXJlYSB7XHJcbiAgZm9udC1zaXplOiAwLjgxMjVyZW07XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsID4gZGl2LmttLWNvbnRlbnQge1xyXG4gIHdpZHRoOiAzMHJlbTtcclxufVxyXG5Ac3VwcG9ydHMgKC13ZWJraXQtdG91Y2gtY2FsbG91dDogbm9uZSkge1xyXG4gIGRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50ID4gZGl2LmttLWJvZHkgPiBkaXYuZ3JvdXAgPiBpbnB1dC50ZXh0LFxyXG4gIGRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50ID4gZGl2LmttLWJvZHkgPiBkaXYuZ3JvdXAgPiB0ZXh0YXJlYSB7XHJcbiAgICBmb250LXNpemU6IDFyZW07XHJcbiAgfVxyXG59XHJcblxyXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAzMi4yNXJlbSkge1xyXG4gIGRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50IHtcclxuICAgIHdpZHRoOiAyNXJlbTtcclxuICB9XHJcbiAgXHJcbn1cclxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDogMjVyZW0pIHtcclxuICBpbnB1dCN0b0FkZHJlc3MsIGlucHV0LmN1c3RvbS10ZXh0Ym94IHtcclxuICAgIGZvbnQtc2l6ZTogMC44MTI1cmVtO1xyXG4gIH1cclxuICBkaXYua3VrYWktbW9kYWwgPiBkaXYua20tY29udGVudCB7XHJcbiAgICB3aWR0aDogMjJyZW07XHJcbiAgfVxyXG59XHJcbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDIycmVtKSB7XHJcbiAgaW5wdXQjdG9BZGRyZXNzLCBpbnB1dC5jdXN0b20tdGV4dGJveCB7XHJcbiAgICBmb250LXNpemU6IDAuNzVyZW07XHJcbiAgfVxyXG59XHJcbnNwYW4uYmF0Y2hJbmZvIHtcclxuICBtYXJnaW4tbGVmdDogYXV0bztcclxuICBmb250LXNpemU6IDAuNzVyZW07XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5wcmV2aWV3LWFtb3VudCB7XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xyXG4gIG1hcmdpbi1ib3R0b206IDAuNXJlbTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgZGl2LnByZXZpZXctdG9wIHtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XHJcbiAganVzdGlmeS1jb250ZW50OiBzcGFjZS1iZXR3ZWVuO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYucHJldmlldy1hbW91bnQgPiBzcGFuLmFtb3VudC10ZXoge1xyXG4gIG1hcmdpbjogMC41cmVtIDAgMC4yNXJlbTtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IDUwMDtcclxuICBmb250LXNpemU6IDEuNXJlbTtcclxuICBsaW5lLWhlaWdodDogMS41cmVtO1xyXG4gIGNvbG9yOiAjMTYxNjE2O1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYucHJldmlldy1hbW91bnQgPiBzcGFuLmFtb3VudC11c2Qge1xyXG4gIG1hcmdpbi1ib3R0b206IDAuNzVyZW07XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XHJcbiAgZm9udC1zaXplOiAwLjg3NXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBjb2xvcjogIzUyNTI1MjtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgZGl2LmttLWJvZHkgc3Bhbi5zaW5nbGUtdG8ge1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAgbWFyZ2luOiAwcmVtIDAgMC41cmVtO1xyXG4gIHdvcmQtYnJlYWs6IGJyZWFrLWFsbDtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcclxuICBmb250LXNpemU6IDFyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgY29sb3I6ICMxNjE2MTY7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5rbS1ib2R5IHNwYW4udG9ydXMtdG8ge1xyXG4gIGRpc3BsYXk6IGJsb2NrO1xyXG4gIG1hcmdpbi1ib3R0b206IDAuMjVyZW07XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XHJcbiAgZm9udC1zaXplOiAwLjg3NXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBjb2xvcjogIzE2MTYxNjtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgZGl2LnNlcGVyYXRvciB7XHJcbiAgYm9yZGVyLWJvdHRvbTogMXB4IHNvbGlkIHJnYmEoJGNvbG9yOiAjMDAwMDAwLCAkYWxwaGE6IDAuMDgpO1xyXG4gIG1hcmdpbjogMC41cmVtIDA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5wcmV2aWV3LXJvdyB7XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBmbGV4LWRpcmVjdGlvbjogcm93O1xyXG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgZGl2LnByZXZpZXctcm93ID4gc3BhbiB7XHJcbiAgbWFyZ2luOiAwLjI1cmVtIDA7XHJcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcclxuICBmb250LXNpemU6IDAuODc1cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xyXG4gIGNvbG9yOiAjNTI1MjUyO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYua20tYm9keSBzcGFuLnNlY3Rpb24sXHJcbmRpdi5rdWthaS1tb2RhbCBkaXYucHJldmlldy1yb3cgPiBzcGFuOmZpcnN0LWNoaWxkIHtcclxuICBmb250LXdlaWdodDogNTAwO1xyXG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XHJcbiAgZm9udC1zaXplOiAwLjg3NXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBjb2xvcjogI0E4QThBODtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgZGl2LnByZXZpZXctcm93ID4gc3BhbjpsYXN0LWNoaWxkIHtcclxuICB3b3JkLWJyZWFrOiBicmVhay1hbGw7XHJcbiAgcGFkZGluZy1sZWZ0OiAwLjVyZW07XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5wcmV2aWV3LXJvdyBpbWcsXHJcbmRpdi5rdWthaS1tb2RhbCBkaXYua20tYm9keSBzcGFuLnRvcnVzLXRvIGltZ3tcclxuICBoZWlnaHQ6IDAuNzVyZW07XHJcbiAgbWFyZ2luLWJvdHRvbTogMC4wNjI1cmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBwI3ByZXZpZXdBdHRlbnRpb24ge1xyXG4gIGNvbG9yOiAjQ0QwMDAwO1xyXG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbn1cclxuZGl2LnRhYnMtY29udGFpbmVyID4gdWwudGFicyB7XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBsaXN0LXN0eWxlLXR5cGU6IG5vbmU7XHJcbiAgbWFyZ2luOiAwO1xyXG4gIHBhZGRpbmc6IDA7XHJcbn1cclxuZGl2LnRhYnMtY29udGFpbmVyID4gdWwudGFicyA+IGxpLnRhYiB7XHJcbiAgd2lkdGg6IDEwMCU7XHJcbiAgY29sb3I6ICM3ODc4Nzg7XHJcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xyXG4gIGN1cnNvcjogcG9pbnRlcjtcclxuICBwYWRkaW5nOiAxcmVtIGF1dG87XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogcmdiKDI0NiwgMjQ2LCAyNDYpO1xyXG59XHJcbmRpdi50YWJzLWNvbnRhaW5lciA+IHVsLnRhYnMgPiBsaS50YWI6Zmlyc3QtY2hpbGQge1xyXG4gIGJvcmRlci10b3AtbGVmdC1yYWRpdXM6IDAuNzVyZW07XHJcbn1cclxuZGl2LnRhYnMtY29udGFpbmVyID4gdWwudGFicyA+IGxpLnRhYjpsYXN0LWNoaWxkIHtcclxuICBib3JkZXItdG9wLXJpZ2h0LXJhZGl1czogMC43NXJlbTtcclxufVxyXG5kaXYudGFicy1jb250YWluZXIgPiB1bC50YWJzID4gbGkudGFiLmFjdGl2ZSB7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogI2Q5ZDlkOTtcclxuICBjb2xvcjogIzQ4NDg0ODtcclxufVxyXG5kaXYudGFicy1jb250YWluZXIgPiB1bC50YWJzID4gbGkudGFiOmhvdmVyIHtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiAjQzBDMEMwO1xyXG4gIGNvbG9yOiAjNDg0ODQ4O1xyXG59Il19 */"] });
+    } }, directives: [_angular_common__WEBPACK_IMPORTED_MODULE_15__["NgIf"], _angular_forms__WEBPACK_IMPORTED_MODULE_16__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_16__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_16__["NgModel"], _angular_forms__WEBPACK_IMPORTED_MODULE_16__["CheckboxControlValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_16__["SelectControlValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_16__["NgSelectOption"], _angular_forms__WEBPACK_IMPORTED_MODULE_16__["ɵangular_packages_forms_forms_x"], _angular_common__WEBPACK_IMPORTED_MODULE_15__["NgForOf"]], pipes: [_angular_common__WEBPACK_IMPORTED_MODULE_15__["DecimalPipe"], _ngx_translate_core__WEBPACK_IMPORTED_MODULE_2__["TranslatePipe"]], styles: ["div.kukai-modal[_ngcontent-%COMP%] {\n  position: fixed;\n  z-index: 100;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%;\n  overflow: auto;\n  background-color: black;\n  background-color: rgba(0, 0, 0, 0.4);\n}\ndiv.kukai-modal.top[_ngcontent-%COMP%] {\n  z-index: 101;\n}\n\ndiv.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%] {\n  position: relative;\n  background-color: #fcfcfc;\n  margin: 5rem auto;\n  border: 1px solid #ffffff;\n  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.06);\n  border-radius: 0.75rem;\n  width: 25rem;\n  -webkit-animation-name: animatetop;\n  -webkit-animation-duration: 0.5s;\n  animation-name: animatetop;\n  animation-duration: 0.5s;\n}\n\n@-webkit-keyframes animatetop {\n  from {\n    top: 20rem;\n    opacity: 0;\n  }\n  to {\n    top: 0;\n    opacity: 1;\n  }\n}\n@keyframes animatetop {\n  from {\n    top: -300px;\n    opacity: 0;\n  }\n  to {\n    top: 0;\n    opacity: 1;\n  }\n}\ndiv.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%]    > div.km-header[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: space-between;\n  flex-direction: row;\n  border-bottom: 1px solid black;\n  border-bottom: 1px solid rgba(0, 0, 0, 0.04);\n}\ndiv.km-header[_ngcontent-%COMP%]    > H1[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: bold;\n  font-size: 1.25rem;\n  line-height: 1.5rem;\n  display: flex;\n  align-items: center;\n  color: #2c323a;\n  margin: 1rem;\n}\ndiv.km-header[_ngcontent-%COMP%]    > span.close[_ngcontent-%COMP%] {\n  margin: 0.25rem 0.5rem;\n  color: #aaa;\n  font-size: 28px;\n  font-weight: bold;\n}\ndiv.km-header[_ngcontent-%COMP%]    > span.close[_ngcontent-%COMP%]:hover, div.km-header[_ngcontent-%COMP%]    > span.close[_ngcontent-%COMP%]:focus {\n  color: #2c323a;\n  text-decoration: none;\n  cursor: pointer;\n}\ndiv.km-body[_ngcontent-%COMP%] {\n  margin: 1rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.amount[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: center;\n  flex-direction: row;\n  height: 5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.custom-large[_ngcontent-%COMP%] {\n  width: auto;\n  font-style: normal;\n  font-weight: normal;\n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 5rem;\n  line-height: 5rem;\n  color: #2C323A;\n  background: #fcfcfc;\n  opacity: 0.4;\n  padding: 0;\n  text-align: center;\n  border: 0;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.custom-large[_ngcontent-%COMP%]:disabled {\n  background-color: rgba(0, 0, 0, 0);\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, div.kukai-modal[_ngcontent-%COMP%]   textarea[_ngcontent-%COMP%]:focus {\n  outline: none;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   span.tez[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: 500;\n  font-size: 1rem;\n  line-height: 1rem;\n  color: #2C323A;\n  opacity: 0.4;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   p.fee[_ngcontent-%COMP%] {\n  margin-top: 0.375rem;\n  font-style: normal;\n  font-weight: 500;\n  font-size: 0.75rem;\n  line-height: 1rem;\n  color: #2C323A;\n  opacity: 0.4;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   p.preview[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.875rem;\n  line-height: 1rem;\n  display: flex;\n  align-items: flex-end;\n  color: #000000;\n  opacity: 0.6;\n  margin-bottom: 0.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   td[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   th[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.75rem;\n  line-height: 1rem;\n  color: #000000;\n  opacity: 0.6;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   th[_ngcontent-%COMP%] {\n  font-weight: bold;\n}\ndiv.km-content[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]:not(.switch) {\n  margin-bottom: 0.5rem;\n  font-style: normal;\n  font-weight: 500;\n  font-size: 1rem;\n  line-height: 1.125rem;\n  display: flex;\n  align-items: center;\n  color: #2C323A;\n  opacity: 0.4;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   p[_ngcontent-%COMP%], span.danger[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.875rem;\n  line-height: 1rem;\n  display: flex;\n  align-items: flex-end;\n  color: #000000;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   span.no-margin[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   span.margin[_ngcontent-%COMP%] {\n  color: #FF0000;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   span.no-margin[_ngcontent-%COMP%] {\n  margin-top: 0.75rem;\n  margin-bottom: -1.75rem;\n  color: #FF0000;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.group[_ngcontent-%COMP%] {\n  margin-top: 1.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%] {\n  width: 100%;\n  background: #E1E1E1;\n  border-radius: 0.75rem;\n  height: 3rem;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 1rem;\n  line-height: 3rem;\n  letter-spacing: 0.16px;\n  color: #000000;\n  padding-left: 1rem;\n  padding-right: 1rem;\n  border: 0;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.text.password[_ngcontent-%COMP%] {\n  width: 200%;\n  margin-right: 1rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%] {\n  padding-top: 0.5rem;\n  height: 7rem;\n  line-height: 1.25rem;\n  resize: none;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%]::-moz-placeholder, div.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%]::-moz-placeholder {\n  color: #808080;\n  opacity: 1;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%]::placeholder, div.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%]::placeholder {\n  color: #808080;\n  opacity: 1;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%]::placeholder, div.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%]::-webkit-input-placeholder, div.kukai-modal[_ngcontent-%COMP%]   textarea.text[_ngcontent-%COMP%]:-ms-input-placeholder {\n  padding-top: 0.5rem;\n  line-height: 1.25rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.row-group[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: space-between;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.row-group[_ngcontent-%COMP%]    > div.group[_ngcontent-%COMP%]:first-child {\n  margin-right: 1rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.advanced[_ngcontent-%COMP%] {\n  margin-top: 1.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.blue[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: bold;\n  font-size: 1rem;\n  line-height: 1rem;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  text-align: center;\n  color: white;\n  background: #5963FF;\n  box-shadow: 0px 0px 1px rgba(89, 99, 255, 0.04), 0px 2px 6px rgba(89, 99, 255, 0.04), 0px 16px 24px rgba(89, 99, 255, 0.24);\n  width: 100%;\n  height: 3rem;\n  border-radius: 0.75rem;\n  border: 0;\n  margin-top: 2.5rem;\n  margin-bottom: 1.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.blue.confirm[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   button.retry[_ngcontent-%COMP%] {\n  height: 3rem;\n  margin: 0;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.retry[_ngcontent-%COMP%] {\n  width: 100%;\n  font-size: 1rem;\n  background-color: #d3d3d3;\n  color: #212529;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:focus {\n  outline: none;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.switch-container[_ngcontent-%COMP%] {\n  width: auto !important;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.small[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: 500;\n  font-size: 0.75rem;\n  line-height: 1rem;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  text-align: center;\n  width: auto;\n  height: 1.5rem;\n  color: #000000;\n  opacity: 0.6;\n  background: rgba(214, 214, 214, 0.4);\n  border-radius: 0.3125rem;\n  border: 0;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.small.max[_ngcontent-%COMP%] {\n  background: #d5f2dc;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   button.small.multiple-destinations[_ngcontent-%COMP%] {\n  color: #5963FF;\n  opacity: 1;\n  margin: 1rem 1.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.advanced[_ngcontent-%COMP%]    > div.row-group[_ngcontent-%COMP%] {\n  height: 1.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.x[_ngcontent-%COMP%] {\n  position: absolute;\n  top: -1rem;\n  right: -1rem;\n  width: 2rem;\n  height: 2rem;\n  z-index: 120;\n  background: #FCFCFC;\n  border: 1px solid #FFFFFF;\n  border-radius: 1rem;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n@media screen and (max-width: 27rem) {\n  div.kukai-modal[_ngcontent-%COMP%]   div.x[_ngcontent-%COMP%] {\n    right: -1px;\n    border-bottom-right-radius: 0;\n  }\n\n  div.kukai-modal[_ngcontent-%COMP%]   button.small.multiple-destinations[_ngcontent-%COMP%] {\n    margin-right: 2.5rem;\n  }\n}\n@media screen and (max-width: 25rem) {\n  div.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%] {\n    width: 23rem;\n  }\n\n  div.kukai-modal[_ngcontent-%COMP%]   input.text.password[_ngcontent-%COMP%] {\n    width: 11rem;\n  }\n}\n.switch[_ngcontent-%COMP%] {\n  position: relative;\n  display: inline-block;\n  width: 3rem;\n  height: 1.5rem;\n  margin-bottom: 0;\n}\n.switch[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  opacity: 0;\n  -webkit-opacity: 0;\n  -khtml-opacity: 0;\n  width: 0;\n  height: 0;\n}\n.slider[_ngcontent-%COMP%] {\n  position: absolute;\n  cursor: pointer;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background-color: #d9d9d9;\n  transition: 0.4s;\n}\n.slider[_ngcontent-%COMP%]:before {\n  position: absolute;\n  content: \"\";\n  height: 1.125rem;\n  width: 1.125rem;\n  left: 0.1875rem;\n  bottom: 0.1875rem;\n  background-color: #7B7B7B;\n  transition: 0.4s;\n}\ninput[_ngcontent-%COMP%]:checked    + .slider[_ngcontent-%COMP%] {\n  box-shadow: 0px 0px 1px rgba(89, 99, 255, 0.04), 0px 2px 6px rgba(89, 99, 255, 0.04), 0px 16px 24px rgba(89, 99, 255, 0.24);\n}\ninput[_ngcontent-%COMP%]:checked    + .slider[_ngcontent-%COMP%]:before {\n  background-color: #5963FF;\n  transform: translateX(1.5rem);\n}\n.slider.round[_ngcontent-%COMP%] {\n  border-radius: 2.125rem;\n}\n.slider.round[_ngcontent-%COMP%]:before {\n  border-radius: 50%;\n}\ninput[_ngcontent-%COMP%]:checked    + .slider[_ngcontent-%COMP%] {\n  background-color: rgba(89, 99, 255, 0.4);\n}\ndiv.kukai-card[_ngcontent-%COMP%]    > div.grey-card[_ngcontent-%COMP%]    > div.switch-container[_ngcontent-%COMP%]    > span.switch-desc[_ngcontent-%COMP%], span.switch-desc[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 14px;\n  line-height: 18px;\n  letter-spacing: 0.16px;\n  color: #161616;\n  margin-left: 0.5rem;\n}\ndiv.switch-container[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: flex-start;\n  align-items: center;\n  flex-direction: row;\n  width: 28rem;\n}\nsmall[_ngcontent-%COMP%] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.75rem;\n  line-height: 1rem;\n  letter-spacing: 0.32px;\n  color: #393939;\n  margin-top: 2.5rem;\n  margin-bottom: 0.5rem;\n}\n@media screen and (max-width: 29rem) {\n  div.switch-container[_ngcontent-%COMP%] {\n    width: 20rem;\n  }\n}\n\n\n.select-css[_ngcontent-%COMP%] {\n  border-radius: 0.75rem;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.875rem;\n  letter-spacing: 0.16px;\n  color: #000000;\n  padding-left: 1rem;\n  padding-right: 1rem;\n  border: 0;\n  width: 100%;\n  max-width: 100%;\n  \n  height: 3rem;\n  line-height: 3rem;\n  box-sizing: border-box;\n  margin: 0;\n  -moz-appearance: none;\n  -webkit-appearance: none;\n  appearance: none;\n  opacity: 1;\n  background-color: #e1e1e1;\n  \n  background-image: url(\"data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E\");\n  background-repeat: no-repeat, repeat;\n  \n  background-position: right 0.7em top 50%, 0 0;\n  \n  background-size: 0.65em auto, 100%;\n}\n\n.select-css[_ngcontent-%COMP%]::-ms-expand {\n  display: none;\n}\n\n.select-css[_ngcontent-%COMP%]:hover {\n  border-color: #888;\n}\n\n.select-css[_ngcontent-%COMP%]:focus {\n  outline: none;\n}\n\n.select-css[_ngcontent-%COMP%]   option[_ngcontent-%COMP%] {\n  font-weight: normal;\n}\n\n*[dir=rtl][_ngcontent-%COMP%]   .select-css[_ngcontent-%COMP%], [_ngcontent-%COMP%]:root:lang(ar)   .select-css[_ngcontent-%COMP%], [_ngcontent-%COMP%]:root:lang(iw)   .select-css[_ngcontent-%COMP%] {\n  background-position: left 0.7em top 50%, 0 0;\n  padding: 0.6em 0.8em 0.5em 1.4em;\n}\n\n.select-css[_ngcontent-%COMP%]:disabled, .select-css[aria-disabled=true][_ngcontent-%COMP%] {\n  color: graytext;\n  background-image: url(\"data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22graytext%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E\");\n}\n.select-css[_ngcontent-%COMP%]:disabled:hover, .select-css[aria-disabled=true][_ngcontent-%COMP%] {\n  border-color: #aaa;\n}\nbutton.purple[_ngcontent-%COMP%]:hover {\n  margin-top: -0.125rem;\n  margin-bottom: 0.125rem;\n}\nbutton[_ngcontent-%COMP%]:focus {\n  outline: none;\n}\nbutton.purple[_ngcontent-%COMP%] {\n  border-radius: 0.75rem;\n  height: 3rem;\n  width: 100%;\n  font-style: normal;\n  font-weight: bold;\n  font-size: 1rem;\n  line-height: 1rem;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n  -webkit-appearance: none !important;\n  border-width: 0;\n}\n[_nghost-%COMP%]   button.purple[_ngcontent-%COMP%]:hover {\n  margin-top: -0.125rem;\n  margin-bottom: 0.125rem;\n}\n[_nghost-%COMP%]   button[_ngcontent-%COMP%]:focus {\n  outline: none;\n}\n[_nghost-%COMP%]   p.torus-details[_ngcontent-%COMP%] {\n  margin-top: 0.5rem;\n  margin-bottom: 0;\n}\n[_nghost-%COMP%]   button.purple[_ngcontent-%COMP%] {\n  color: white;\n  background: #5963FF;\n  box-shadow: 0px 0px 1px rgba(89, 99, 255, 0.04), 0px 2px 6px rgba(89, 99, 255, 0.04), 0px 16px 24px rgba(89, 99, 255, 0.24);\n  transition: margin-top 0.1s ease-in, margin-bottom 0.1s ease-in;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   table[_ngcontent-%COMP%] {\n  display: block;\n  margin-top: 1rem;\n  width: 100%;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.km-body[_ngcontent-%COMP%]    > div.group[_ngcontent-%COMP%]   select.select-css[_ngcontent-%COMP%] {\n  width: 9.5rem;\n  height: 2rem;\n  line-height: 2rem;\n  opacity: 0.6;\n  border-radius: 0.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   table[_ngcontent-%COMP%]    > thead[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   table[_ngcontent-%COMP%]    > thead[_ngcontent-%COMP%] {\n  width: 100%;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   table[_ngcontent-%COMP%]    > thead[_ngcontent-%COMP%]    > tr[_ngcontent-%COMP%]    > th[_ngcontent-%COMP%] {\n  padding-bottom: 0.25rem;\n  font-style: normal;\n  font-weight: 500;\n  font-size: 0.875rem;\n  line-height: 1rem;\n  color: #A8A8A8;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   table[_ngcontent-%COMP%]    > tbody[_ngcontent-%COMP%]    > tr[_ngcontent-%COMP%]    > td.txAmount[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   table[_ngcontent-%COMP%]    > thead[_ngcontent-%COMP%]    > tr[_ngcontent-%COMP%]    > th[_ngcontent-%COMP%]:last-child {\n  text-align: right;\n  width: 100%;\n}\nsmall[_ngcontent-%COMP%] {\n  margin-bottom: 0;\n}\ndiv.switch-container[_ngcontent-%COMP%] {\n  margin-top: 0.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   input.text.read-only[_ngcontent-%COMP%] {\n  background: #f2f2f2;\n}\ninput.custom-textbox[_ngcontent-%COMP%] {\n  padding-left: 0.75rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.advanced-form[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%]::-moz-placeholder {\n  color: black;\n  opacity: 1;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.advanced-form[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%]::placeholder {\n  color: black;\n  opacity: 1;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.advanced-form[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%]::-webkit-input-placeholder, div.kukai-modal[_ngcontent-%COMP%]   div.advanced-form[_ngcontent-%COMP%]   input.text[_ngcontent-%COMP%]:-ms-input-placeholder {\n  color: black;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.advanced-form[_ngcontent-%COMP%]   input.text.read-only[_ngcontent-%COMP%] {\n  color: #808080;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%]    > div.km-body[_ngcontent-%COMP%]    > div.group[_ngcontent-%COMP%]    > input.text[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%]    > div.km-body[_ngcontent-%COMP%]    > div.group[_ngcontent-%COMP%]    > textarea[_ngcontent-%COMP%] {\n  font-size: 0.8125rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%] {\n  width: 30rem;\n}\n@supports (-webkit-touch-callout: none) {\n  div.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%]    > div.km-body[_ngcontent-%COMP%]    > div.group[_ngcontent-%COMP%]    > input.text[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%]    > div.km-body[_ngcontent-%COMP%]    > div.group[_ngcontent-%COMP%]    > textarea[_ngcontent-%COMP%] {\n    font-size: 1rem;\n  }\n}\n@media screen and (max-width: 32.25rem) {\n  div.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%] {\n    width: 25rem;\n  }\n}\n@media screen and (max-width: 25rem) {\n  input#toAddress[_ngcontent-%COMP%], input.custom-textbox[_ngcontent-%COMP%] {\n    font-size: 0.8125rem;\n  }\n\n  div.kukai-modal[_ngcontent-%COMP%]    > div.km-content[_ngcontent-%COMP%] {\n    width: 22rem;\n  }\n}\n@media screen and (max-width: 22rem) {\n  input#toAddress[_ngcontent-%COMP%], input.custom-textbox[_ngcontent-%COMP%] {\n    font-size: 0.75rem;\n  }\n}\nspan.batchInfo[_ngcontent-%COMP%] {\n  margin-left: auto;\n  font-size: 0.75rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.preview-amount[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  margin-bottom: 0.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.preview-top[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.preview-amount[_ngcontent-%COMP%]    > span.amount-tez[_ngcontent-%COMP%] {\n  margin: 0.5rem 0 0.25rem;\n  font-style: normal;\n  font-weight: 500;\n  font-size: 1.5rem;\n  line-height: 1.5rem;\n  color: #161616;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.preview-amount[_ngcontent-%COMP%]    > span.amount-usd[_ngcontent-%COMP%] {\n  margin-bottom: 0.75rem;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.875rem;\n  line-height: 1rem;\n  color: #525252;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.km-body[_ngcontent-%COMP%]   span.single-to[_ngcontent-%COMP%] {\n  display: flex;\n  margin: 0rem 0 0.5rem;\n  word-break: break-all;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 1rem;\n  line-height: 1rem;\n  color: #161616;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.km-body[_ngcontent-%COMP%]   span.torus-to[_ngcontent-%COMP%] {\n  display: block;\n  margin-bottom: 0.25rem;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 0.875rem;\n  line-height: 1rem;\n  color: #161616;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.seperator[_ngcontent-%COMP%] {\n  border-bottom: 1px solid rgba(0, 0, 0, 0.08);\n  margin: 0.5rem 0;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.preview-row[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.preview-row[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%] {\n  margin: 0.25rem 0;\n  font-weight: normal;\n  font-size: 0.875rem;\n  line-height: 1rem;\n  color: #525252;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.km-body[_ngcontent-%COMP%]   span.section[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   div.preview-row[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%]:first-child {\n  font-weight: 500;\n  font-weight: normal;\n  font-size: 0.875rem;\n  line-height: 1rem;\n  color: #A8A8A8;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.preview-row[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%]:last-child {\n  word-break: break-all;\n  padding-left: 0.5rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   div.preview-row[_ngcontent-%COMP%]   img[_ngcontent-%COMP%], div.kukai-modal[_ngcontent-%COMP%]   div.km-body[_ngcontent-%COMP%]   span.torus-to[_ngcontent-%COMP%]   img[_ngcontent-%COMP%] {\n  height: 0.75rem;\n  margin-bottom: 0.0625rem;\n}\ndiv.kukai-modal[_ngcontent-%COMP%]   p#previewAttention[_ngcontent-%COMP%] {\n  color: #CD0000;\n  font-size: 0.875rem;\n  line-height: 1rem;\n}\ndiv.tabs-container[_ngcontent-%COMP%]    > ul.tabs[_ngcontent-%COMP%] {\n  display: flex;\n  list-style-type: none;\n  margin: 0;\n  padding: 0;\n}\ndiv.tabs-container[_ngcontent-%COMP%]    > ul.tabs[_ngcontent-%COMP%]    > li.tab[_ngcontent-%COMP%] {\n  width: 100%;\n  color: #787878;\n  text-align: center;\n  cursor: pointer;\n  padding: 1rem auto;\n  background-color: #f6f6f6;\n}\ndiv.tabs-container[_ngcontent-%COMP%]    > ul.tabs[_ngcontent-%COMP%]    > li.tab[_ngcontent-%COMP%]:first-child {\n  border-top-left-radius: 0.75rem;\n}\ndiv.tabs-container[_ngcontent-%COMP%]    > ul.tabs[_ngcontent-%COMP%]    > li.tab[_ngcontent-%COMP%]:last-child {\n  border-top-right-radius: 0.75rem;\n}\ndiv.tabs-container[_ngcontent-%COMP%]    > ul.tabs[_ngcontent-%COMP%]    > li.tab.active[_ngcontent-%COMP%] {\n  background-color: #d9d9d9;\n  color: #484848;\n}\ndiv.tabs-container[_ngcontent-%COMP%]    > ul.tabs[_ngcontent-%COMP%]    > li.tab[_ngcontent-%COMP%]:hover {\n  background-color: #C0C0C0;\n  color: #484848;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY29tcG9uZW50cy9zZW5kL0M6XFxVc2Vyc1xca2xhc19cXEdpdFxca3VrYWkvc3JjXFxzY3NzXFxtb2RhbC5zY3NzIiwic3JjL2FwcC9jb21wb25lbnRzL3NlbmQvc2VuZC5jb21wb25lbnQuc2NzcyIsInNyYy9hcHAvY29tcG9uZW50cy9zZW5kL0M6XFxVc2Vyc1xca2xhc19cXEdpdFxca3VrYWkvc3JjXFxzY3NzXFxzd2l0Y2guc2NzcyIsInNyYy9hcHAvY29tcG9uZW50cy9zZW5kL0M6XFxVc2Vyc1xca2xhc19cXEdpdFxca3VrYWkvc3JjXFxzY3NzXFxkcm9wZG93bi5zY3NzIiwic3JjL2FwcC9jb21wb25lbnRzL3NlbmQvQzpcXFVzZXJzXFxrbGFzX1xcR2l0XFxrdWthaS9zcmNcXGFwcFxcY29tcG9uZW50c1xcc2VuZFxcc2VuZC5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxVQUFBO0FBQ0E7RUFDRSxlQUFBO0VBQ0EsWUFBQTtFQUNBLE9BQUE7RUFDQSxNQUFBO0VBQ0EsV0FBQTtFQUNBLFlBQUE7RUFDQSxjQUFBO0VBQ0EsdUJBQUE7RUFDQSxvQ0FBQTtBQ0NGO0FEQ0E7RUFDRSxZQUFBO0FDRUY7QURBQSxzQkFBQTtBQUNBO0VBQ0Usa0JBQUE7RUFDQSx5QkFBQTtFQUNBLGlCQUFBO0VBQ0EseUJBQUE7RUFDQSwrR0FBQTtFQUVBLHNCQUFBO0VBQ0EsWUFBQTtFQUNBLGtDQUFBO0VBQ0EsZ0NBQUE7RUFDQSwwQkFBQTtFQUNBLHdCQUFBO0FDRUY7QURBQSxrQkFBQTtBQUNBO0VBQ0U7SUFDRSxVQUFBO0lBQ0EsVUFBQTtFQ0dGO0VEREE7SUFDRSxNQUFBO0lBQ0EsVUFBQTtFQ0dGO0FBQ0Y7QUREQTtFQUNFO0lBQ0UsV0FBQTtJQUNBLFVBQUE7RUNHRjtFRERBO0lBQ0UsTUFBQTtJQUNBLFVBQUE7RUNHRjtBQUNGO0FEREE7RUFDRSxhQUFBO0VBQ0EsOEJBQUE7RUFDQSxtQkFBQTtFQUNBLDhC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Q0EsbUJBQUE7RUFDQSxpQkFBQTtFQUNBLGNBQUE7QUgwakJGO0FHeGpCQTtFQUNFLHFCQUFBO0VBQ0Esb0JBQUE7QUgyakJGO0FHempCQTs7RUFFRSxlQUFBO0VBQ0Esd0JBQUE7QUg0akJGO0FHMWpCQTtFQUNFLGNBQUE7RUFDQSxtQkFBQTtFQUNBLGlCQUFBO0FINmpCRjtBRzNqQkE7RUFDRSxhQUFBO0VBQ0EscUJBQUE7RUFDQSxTQUFBO0VBQ0EsVUFBQTtBSDhqQkY7QUc1akJBO0VBQ0UsV0FBQTtFQUNBLGNBQUE7RUFDQSxrQkFBQTtFQUNBLGVBQUE7RUFDQSxrQkFBQTtFQUNBLHlCQUFBO0FIK2pCRjtBRzdqQkE7RUFDRSwrQkFBQTtBSGdrQkY7QUc5akJBO0VBQ0UsZ0NBQUE7QUhpa0JGO0FHL2pCQTtFQUNFLHlCQUFBO0VBQ0EsY0FBQTtBSGtrQkY7QUdoa0JBO0VBQ0UseUJBQUE7RUFDQSxjQUFBO0FIbWtCRiIsImZpbGUiOiJzcmMvYXBwL2NvbXBvbmVudHMvc2VuZC9zZW5kLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLyogTW9kYWwgKi9cclxuZGl2Lmt1a2FpLW1vZGFsIHtcclxuICBwb3NpdGlvbjogZml4ZWQ7XHJcbiAgei1pbmRleDogMTAwO1xyXG4gIGxlZnQ6IDA7XHJcbiAgdG9wOiAwO1xyXG4gIHdpZHRoOiAxMDAlO1xyXG4gIGhlaWdodDogMTAwJTtcclxuICBvdmVyZmxvdzogYXV0bztcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMCwgMCwgMCk7IC8vZmFsbGJhY2tcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDAsIDAsIDAsIDAuNCk7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsLnRvcCB7XHJcbiAgei1pbmRleDogMTAxO1xyXG59XHJcbi8qIE1vZGFsIENvbnRlbnQvQm94ICovXHJcbmRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50IHtcclxuICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogI2ZjZmNmYztcclxuICBtYXJnaW46IDVyZW0gYXV0bztcclxuICBib3JkZXI6IDFweCBzb2xpZCAjZmZmZmZmO1xyXG4gIGJveC1zaGFkb3c6IDBweCAwcHggMXB4IHJnYmEoMCwgMCwgMCwgMC4wNCksIDBweCAycHggNnB4IHJnYmEoMCwgMCwgMCwgMC4wNCksXHJcbiAgICAwcHggMTZweCAyNHB4IHJnYmEoMCwgMCwgMCwgMC4wNik7XHJcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcclxuICB3aWR0aDogMjVyZW07XHJcbiAgLXdlYmtpdC1hbmltYXRpb24tbmFtZTogYW5pbWF0ZXRvcDtcclxuICAtd2Via2l0LWFuaW1hdGlvbi1kdXJhdGlvbjogMC41cztcclxuICBhbmltYXRpb24tbmFtZTogYW5pbWF0ZXRvcDtcclxuICBhbmltYXRpb24tZHVyYXRpb246IDAuNXM7XHJcbn1cclxuLyogQWRkIEFuaW1hdGlvbiAqL1xyXG5ALXdlYmtpdC1rZXlmcmFtZXMgYW5pbWF0ZXRvcCB7XHJcbiAgZnJvbSB7XHJcbiAgICB0b3A6IDIwcmVtO1xyXG4gICAgb3BhY2l0eTogMDtcclxuICB9XHJcbiAgdG8ge1xyXG4gICAgdG9wOiAwO1xyXG4gICAgb3BhY2l0eTogMTtcclxuICB9XHJcbn1cclxuQGtleWZyYW1lcyBhbmltYXRldG9wIHtcclxuICBmcm9tIHtcclxuICAgIHRvcDogLTMwMHB4O1xyXG4gICAgb3BhY2l0eTogMDtcclxuICB9XHJcbiAgdG8ge1xyXG4gICAgdG9wOiAwO1xyXG4gICAgb3BhY2l0eTogMTtcclxuICB9XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsID4gZGl2LmttLWNvbnRlbnQgPiBkaXYua20taGVhZGVyIHtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcclxuICBmbGV4LWRpcmVjdGlvbjogcm93O1xyXG4gIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCByZ2JhKDAsIDAsIDApO1xyXG4gIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCByZ2JhKDAsIDAsIDAsIDAuMDQpO1xyXG59XHJcbmRpdi5rbS1oZWFkZXIgPiBIMSB7XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG4gIGZvbnQtc2l6ZTogMS4yNXJlbTtcclxuICBsaW5lLWhlaWdodDogMS41cmVtO1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxuICBjb2xvcjogIzJjMzIzYTtcclxuICBtYXJnaW46IDFyZW07XHJcbn1cclxuZGl2LmttLWhlYWRlciA+IHNwYW4uY2xvc2Uge1xyXG4gIG1hcmdpbjogMC4yNXJlbSAwLjVyZW07XHJcbiAgY29sb3I6ICNhYWE7XHJcbiAgZm9udC1zaXplOiAyOHB4O1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG59XHJcbmRpdi5rbS1oZWFkZXIgPiBzcGFuLmNsb3NlOmhvdmVyLFxyXG5kaXYua20taGVhZGVyID4gc3Bhbi5jbG9zZTpmb2N1cyB7XHJcbiAgY29sb3I6ICMyYzMyM2E7XHJcbiAgdGV4dC1kZWNvcmF0aW9uOiBub25lO1xyXG4gIGN1cnNvcjogcG9pbnRlcjtcclxufVxyXG5kaXYua20tYm9keSB7XHJcbiAgbWFyZ2luOiAxcmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYuYW1vdW50IHtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xyXG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XHJcbiAgaGVpZ2h0OiA1cmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBpbnB1dC5jdXN0b20tbGFyZ2Uge1xyXG4gIHdpZHRoOiBhdXRvO1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtZmFtaWx5OiBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmO1xyXG4gIGZvbnQtc2l6ZTogNXJlbTtcclxuICBsaW5lLWhlaWdodDogNXJlbTtcclxuICBjb2xvcjogIzJDMzIzQTtcclxuICBiYWNrZ3JvdW5kOiAjZmNmY2ZjO1xyXG4gIG9wYWNpdHk6IDAuNDtcclxuICBwYWRkaW5nOiAwO1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICBib3JkZXI6IDA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LmN1c3RvbS1sYXJnZTpkaXNhYmxlZCB7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogcmdiYSgwLCAwLCAwLCAwKTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgaW5wdXQ6Zm9jdXMsXHJcbmRpdi5rdWthaS1tb2RhbCB0ZXh0YXJlYTpmb2N1cyB7XHJcbiAgb3V0bGluZTogbm9uZTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgc3Bhbi50ZXoge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogNTAwO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBjb2xvcjogIzJDMzIzQTtcclxuICBvcGFjaXR5OiAwLjQ7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIHAuZmVlIHtcclxuICBtYXJnaW4tdG9wOiAwLjM3NXJlbTtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IDUwMDtcclxuICBmb250LXNpemU6IDAuNzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgY29sb3I6ICMyQzMyM0E7XHJcbiAgb3BhY2l0eTogMC40O1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBwLnByZXZpZXcge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogZmxleC1lbmQ7XHJcbiAgY29sb3I6ICMwMDAwMDA7XHJcbiAgb3BhY2l0eTogMC42O1xyXG4gIG1hcmdpbi1ib3R0b206IDAuNXJlbTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgdGQsXHJcbmRpdi5rdWthaS1tb2RhbCB0aCB7XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XHJcbiAgZm9udC1zaXplOiAwLjc1cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xyXG4gIGNvbG9yOiAjMDAwMDAwO1xyXG4gIG9wYWNpdHk6IDAuNjtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgdGgge1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG59XHJcbmRpdi5rbS1jb250ZW50IGxhYmVsOm5vdCguc3dpdGNoKSB7XHJcbiAgbWFyZ2luLWJvdHRvbTogMC41cmVtO1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogNTAwO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMS4xMjVyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGNvbG9yOiAjMkMzMjNBO1xyXG4gIG9wYWNpdHk6IDAuNDtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgcCwgc3Bhbi5kYW5nZXIge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogZmxleC1lbmQ7XHJcbiAgY29sb3I6ICMwMDAwMDA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIHNwYW4ubm8tbWFyZ2luLFxyXG5kaXYua3VrYWktbW9kYWwgc3Bhbi5tYXJnaW4ge1xyXG4gIGNvbG9yOiAjRkYwMDAwO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBzcGFuLm5vLW1hcmdpbiB7XHJcbiAgbWFyZ2luLXRvcDogMC43NXJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAtMS43NXJlbTtcclxuICBjb2xvcjogI0ZGMDAwMDtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgZGl2Lmdyb3VwIHtcclxuICBtYXJnaW4tdG9wOiAxLjVyZW07XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQsXHJcbmRpdi5rdWthaS1tb2RhbCB0ZXh0YXJlYS50ZXh0IHtcclxuICB3aWR0aDogMTAwJTtcclxuICBiYWNrZ3JvdW5kOiAjRTFFMUUxO1xyXG4gIGJvcmRlci1yYWRpdXM6IDAuNzVyZW07XHJcbiAgaGVpZ2h0OiAzcmVtO1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogM3JlbTtcclxuICBsZXR0ZXItc3BhY2luZzogMC4xNnB4O1xyXG4gIGNvbG9yOiAjMDAwMDAwO1xyXG4gIHBhZGRpbmctbGVmdDogMXJlbTtcclxuICBwYWRkaW5nLXJpZ2h0OiAxcmVtO1xyXG4gIGJvcmRlcjogMDtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgaW5wdXQudGV4dC5wYXNzd29yZCB7XHJcbiAgd2lkdGg6IDIwMCU7XHJcbiAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCB0ZXh0YXJlYS50ZXh0IHtcclxuICBwYWRkaW5nLXRvcDogMC41cmVtO1xyXG4gIGhlaWdodDogN3JlbTtcclxuICBsaW5lLWhlaWdodDogMS4yNXJlbTtcclxuICByZXNpemU6IG5vbmU7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQ6OnBsYWNlaG9sZGVyLFxyXG5kaXYua3VrYWktbW9kYWwgdGV4dGFyZWEudGV4dDo6cGxhY2Vob2xkZXIge1xyXG4gIGNvbG9yOiAjODA4MDgwO1xyXG4gIG9wYWNpdHk6IDE7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQ6Oi13ZWJraXQtaW5wdXQtcGxhY2Vob2xkZXIsXHJcbmRpdi5rdWthaS1tb2RhbCBpbnB1dC50ZXh0Oi1tcy1pbnB1dC1wbGFjZWhvbGRlcixcclxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6Oi13ZWJraXQtaW5wdXQtcGxhY2Vob2xkZXIsXHJcbmRpdi5rdWthaS1tb2RhbCB0ZXh0YXJlYS50ZXh0Oi1tcy1pbnB1dC1wbGFjZWhvbGRlciB7XHJcbiAgY29sb3I6ICM4MDgwODA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6OnBsYWNlaG9sZGVyLFxyXG5kaXYua3VrYWktbW9kYWwgdGV4dGFyZWEudGV4dDo6LXdlYmtpdC1pbnB1dC1wbGFjZWhvbGRlcixcclxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6LW1zLWlucHV0LXBsYWNlaG9sZGVyIHtcclxuICBwYWRkaW5nLXRvcDogMC41cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxLjI1cmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYucm93LWdyb3VwIHtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgZGl2LnJvdy1ncm91cCA+IGRpdi5ncm91cDpmaXJzdC1jaGlsZCB7XHJcbiAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYuYWR2YW5jZWQge1xyXG4gIG1hcmdpbi10b3A6IDEuNXJlbTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uLmJsdWUge1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogYm9sZDtcclxuICBmb250LXNpemU6IDFyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICBjb2xvcjogd2hpdGU7XHJcbiAgYmFja2dyb3VuZDogIzU5NjNGRjtcclxuICBib3gtc2hhZG93OiAwcHggMHB4IDFweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjA0KSwgMHB4IDJweCA2cHggcmdiYSg4OSwgOTksIDI1NSwgMC4wNCksIDBweCAxNnB4IDI0cHggcmdiYSg4OSwgOTksIDI1NSwgMC4yNCk7XHJcbiAgd2lkdGg6IDEwMCU7XHJcbiAgaGVpZ2h0OiAzcmVtO1xyXG4gIGJvcmRlci1yYWRpdXM6IDAuNzVyZW07XHJcbiAgYm9yZGVyOiAwO1xyXG4gIG1hcmdpbi10b3A6IDIuNXJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAxLjVyZW07XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5ibHVlLmNvbmZpcm0sXHJcbmRpdi5rdWthaS1tb2RhbCBidXR0b24ucmV0cnkge1xyXG4gIGhlaWdodDogM3JlbTtcclxuICBtYXJnaW46IDA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5yZXRyeSB7XHJcbiAgd2lkdGg6IDEwMCU7XHJcbiAgZm9udC1zaXplOiAxcmVtO1xyXG4gIGJhY2tncm91bmQtY29sb3I6ICNkM2QzZDM7XHJcbiAgY29sb3I6IHJnYigzMywgMzcsIDQxKTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uOmZvY3VzIHtcclxuICBvdXRsaW5lOiBub25lO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYuc3dpdGNoLWNvbnRhaW5lciB7XHJcbiAgd2lkdGg6IGF1dG8gIWltcG9ydGFudDtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uLnNtYWxsIHtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IDUwMDtcclxuICBmb250LXNpemU6IDAuNzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICB3aWR0aDogYXV0bztcclxuICBoZWlnaHQ6IDEuNXJlbTtcclxuICBjb2xvcjogIzAwMDAwMDtcclxuICBvcGFjaXR5OiAwLjY7XHJcbiAgYmFja2dyb3VuZDogcmdiYSgyMTQsIDIxNCwgMjE0LCAwLjQpO1xyXG4gIGJvcmRlci1yYWRpdXM6IDAuMzEyNXJlbTtcclxuICBib3JkZXI6IDA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5zbWFsbC5tYXgge1xyXG4gIGJhY2tncm91bmQ6ICNkNWYyZGM7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5zbWFsbC5tdWx0aXBsZS1kZXN0aW5hdGlvbnMge1xyXG4gIGNvbG9yOiAjNTk2M0ZGO1xyXG4gIG9wYWNpdHk6IDE7XHJcbiAgbWFyZ2luOiAxcmVtIDEuNXJlbTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgZGl2LmFkdmFuY2VkID4gZGl2LnJvdy1ncm91cCB7XHJcbiAgaGVpZ2h0OiAxLjVyZW07XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGRpdi54IHtcclxuICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcbiAgdG9wOiAtMXJlbTtcclxuICByaWdodDogLTFyZW07XHJcbiAgd2lkdGg6IDJyZW07XHJcbiAgaGVpZ2h0OiAycmVtO1xyXG4gIHotaW5kZXg6IDEyMDtcclxuICBiYWNrZ3JvdW5kOiAjRkNGQ0ZDO1xyXG4gIGJvcmRlcjogMXB4IHNvbGlkICNGRkZGRkY7XHJcbiAgYm9yZGVyLXJhZGl1czogMXJlbTtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XHJcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XHJcbiAgY3Vyc29yOiBwb2ludGVyO1xyXG59XHJcbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDI3cmVtKSB7XHJcbiAgZGl2Lmt1a2FpLW1vZGFsIGRpdi54IHtcclxuICAgIHJpZ2h0OiAtMXB4O1xyXG4gICAgYm9yZGVyLWJvdHRvbS1yaWdodC1yYWRpdXM6IDA7XHJcbiAgfVxyXG4gIGRpdi5rdWthaS1tb2RhbCBidXR0b24uc21hbGwubXVsdGlwbGUtZGVzdGluYXRpb25zIHtcclxuICAgIG1hcmdpbi1yaWdodDogMi41cmVtO1xyXG4gIH1cclxufVxyXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAyNXJlbSkge1xyXG4gIGRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50IHtcclxuICAgIHdpZHRoOiAyM3JlbTtcclxuICB9XHJcbiAgZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQucGFzc3dvcmQge1xyXG4gICAgd2lkdGg6IDExcmVtO1xyXG4gIH1cclxufSIsIi8qIE1vZGFsICovXG5kaXYua3VrYWktbW9kYWwge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIHotaW5kZXg6IDEwMDtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwJTtcbiAgaGVpZ2h0OiAxMDAlO1xuICBvdmVyZmxvdzogYXV0bztcbiAgYmFja2dyb3VuZC1jb2xvcjogYmxhY2s7XG4gIGJhY2tncm91bmQtY29sb3I6IHJnYmEoMCwgMCwgMCwgMC40KTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsLnRvcCB7XG4gIHotaW5kZXg6IDEwMTtcbn1cblxuLyogTW9kYWwgQ29udGVudC9Cb3ggKi9cbmRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50IHtcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZmNmY2ZjO1xuICBtYXJnaW46IDVyZW0gYXV0bztcbiAgYm9yZGVyOiAxcHggc29saWQgI2ZmZmZmZjtcbiAgYm94LXNoYWRvdzogMHB4IDBweCAxcHggcmdiYSgwLCAwLCAwLCAwLjA0KSwgMHB4IDJweCA2cHggcmdiYSgwLCAwLCAwLCAwLjA0KSwgMHB4IDE2cHggMjRweCByZ2JhKDAsIDAsIDAsIDAuMDYpO1xuICBib3JkZXItcmFkaXVzOiAwLjc1cmVtO1xuICB3aWR0aDogMjVyZW07XG4gIC13ZWJraXQtYW5pbWF0aW9uLW5hbWU6IGFuaW1hdGV0b3A7XG4gIC13ZWJraXQtYW5pbWF0aW9uLWR1cmF0aW9uOiAwLjVzO1xuICBhbmltYXRpb24tbmFtZTogYW5pbWF0ZXRvcDtcbiAgYW5pbWF0aW9uLWR1cmF0aW9uOiAwLjVzO1xufVxuXG4vKiBBZGQgQW5pbWF0aW9uICovXG5ALXdlYmtpdC1rZXlmcmFtZXMgYW5pbWF0ZXRvcCB7XG4gIGZyb20ge1xuICAgIHRvcDogMjByZW07XG4gICAgb3BhY2l0eTogMDtcbiAgfVxuICB0byB7XG4gICAgdG9wOiAwO1xuICAgIG9wYWNpdHk6IDE7XG4gIH1cbn1cbkBrZXlmcmFtZXMgYW5pbWF0ZXRvcCB7XG4gIGZyb20ge1xuICAgIHRvcDogLTMwMHB4O1xuICAgIG9wYWNpdHk6IDA7XG4gIH1cbiAgdG8ge1xuICAgIHRvcDogMDtcbiAgICBvcGFjaXR5OiAxO1xuICB9XG59XG5kaXYua3VrYWktbW9kYWwgPiBkaXYua20tY29udGVudCA+IGRpdi5rbS1oZWFkZXIge1xuICBkaXNwbGF5OiBmbGV4O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XG4gIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCBibGFjaztcbiAgYm9yZGVyLWJvdHRvbTogMXB4IHNvbGlkIHJnYmEoMCwgMCwgMCwgMC4wNCk7XG59XG5cbmRpdi5rbS1oZWFkZXIgPiBIMSB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IGJvbGQ7XG4gIGZvbnQtc2l6ZTogMS4yNXJlbTtcbiAgbGluZS1oZWlnaHQ6IDEuNXJlbTtcbiAgZGlzcGxheTogZmxleDtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgY29sb3I6ICMyYzMyM2E7XG4gIG1hcmdpbjogMXJlbTtcbn1cblxuZGl2LmttLWhlYWRlciA+IHNwYW4uY2xvc2Uge1xuICBtYXJnaW46IDAuMjVyZW0gMC41cmVtO1xuICBjb2xvcjogI2FhYTtcbiAgZm9udC1zaXplOiAyOHB4O1xuICBmb250LXdlaWdodDogYm9sZDtcbn1cblxuZGl2LmttLWhlYWRlciA+IHNwYW4uY2xvc2U6aG92ZXIsXG5kaXYua20taGVhZGVyID4gc3Bhbi5jbG9zZTpmb2N1cyB7XG4gIGNvbG9yOiAjMmMzMjNhO1xuICB0ZXh0LWRlY29yYXRpb246IG5vbmU7XG4gIGN1cnNvcjogcG9pbnRlcjtcbn1cblxuZGl2LmttLWJvZHkge1xuICBtYXJnaW46IDFyZW07XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYuYW1vdW50IHtcbiAgZGlzcGxheTogZmxleDtcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XG4gIGhlaWdodDogNXJlbTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LmN1c3RvbS1sYXJnZSB7XG4gIHdpZHRoOiBhdXRvO1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG4gIGZvbnQtZmFtaWx5OiBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmO1xuICBmb250LXNpemU6IDVyZW07XG4gIGxpbmUtaGVpZ2h0OiA1cmVtO1xuICBjb2xvcjogIzJDMzIzQTtcbiAgYmFja2dyb3VuZDogI2ZjZmNmYztcbiAgb3BhY2l0eTogMC40O1xuICBwYWRkaW5nOiAwO1xuICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gIGJvcmRlcjogMDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LmN1c3RvbS1sYXJnZTpkaXNhYmxlZCB7XG4gIGJhY2tncm91bmQtY29sb3I6IHJnYmEoMCwgMCwgMCwgMCk7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBpbnB1dDpmb2N1cyxcbmRpdi5rdWthaS1tb2RhbCB0ZXh0YXJlYTpmb2N1cyB7XG4gIG91dGxpbmU6IG5vbmU7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBzcGFuLnRleiB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IDUwMDtcbiAgZm9udC1zaXplOiAxcmVtO1xuICBsaW5lLWhlaWdodDogMXJlbTtcbiAgY29sb3I6ICMyQzMyM0E7XG4gIG9wYWNpdHk6IDAuNDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIHAuZmVlIHtcbiAgbWFyZ2luLXRvcDogMC4zNzVyZW07XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IDUwMDtcbiAgZm9udC1zaXplOiAwLjc1cmVtO1xuICBsaW5lLWhlaWdodDogMXJlbTtcbiAgY29sb3I6ICMyQzMyM0E7XG4gIG9wYWNpdHk6IDAuNDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIHAucHJldmlldyB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcbiAgZm9udC1zaXplOiAwLjg3NXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBmbGV4LWVuZDtcbiAgY29sb3I6ICMwMDAwMDA7XG4gIG9wYWNpdHk6IDAuNjtcbiAgbWFyZ2luLWJvdHRvbTogMC41cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgdGQsXG5kaXYua3VrYWktbW9kYWwgdGgge1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG4gIGZvbnQtc2l6ZTogMC43NXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGNvbG9yOiAjMDAwMDAwO1xuICBvcGFjaXR5OiAwLjY7XG59XG5cbmRpdi5rdWthaS1tb2RhbCB0aCB7XG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xufVxuXG5kaXYua20tY29udGVudCBsYWJlbDpub3QoLnN3aXRjaCkge1xuICBtYXJnaW4tYm90dG9tOiAwLjVyZW07XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IDUwMDtcbiAgZm9udC1zaXplOiAxcmVtO1xuICBsaW5lLWhlaWdodDogMS4xMjVyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGNvbG9yOiAjMkMzMjNBO1xuICBvcGFjaXR5OiAwLjQ7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBwLCBzcGFuLmRhbmdlciB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcbiAgZm9udC1zaXplOiAwLjg3NXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBmbGV4LWVuZDtcbiAgY29sb3I6ICMwMDAwMDA7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBzcGFuLm5vLW1hcmdpbixcbmRpdi5rdWthaS1tb2RhbCBzcGFuLm1hcmdpbiB7XG4gIGNvbG9yOiAjRkYwMDAwO1xufVxuXG5kaXYua3VrYWktbW9kYWwgc3Bhbi5uby1tYXJnaW4ge1xuICBtYXJnaW4tdG9wOiAwLjc1cmVtO1xuICBtYXJnaW4tYm90dG9tOiAtMS43NXJlbTtcbiAgY29sb3I6ICNGRjAwMDA7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYuZ3JvdXAge1xuICBtYXJnaW4tdG9wOiAxLjVyZW07XG59XG5cbmRpdi5rdWthaS1tb2RhbCBpbnB1dC50ZXh0LFxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQge1xuICB3aWR0aDogMTAwJTtcbiAgYmFja2dyb3VuZDogI0UxRTFFMTtcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcbiAgaGVpZ2h0OiAzcmVtO1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG4gIGZvbnQtc2l6ZTogMXJlbTtcbiAgbGluZS1oZWlnaHQ6IDNyZW07XG4gIGxldHRlci1zcGFjaW5nOiAwLjE2cHg7XG4gIGNvbG9yOiAjMDAwMDAwO1xuICBwYWRkaW5nLWxlZnQ6IDFyZW07XG4gIHBhZGRpbmctcmlnaHQ6IDFyZW07XG4gIGJvcmRlcjogMDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQucGFzc3dvcmQge1xuICB3aWR0aDogMjAwJTtcbiAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgdGV4dGFyZWEudGV4dCB7XG4gIHBhZGRpbmctdG9wOiAwLjVyZW07XG4gIGhlaWdodDogN3JlbTtcbiAgbGluZS1oZWlnaHQ6IDEuMjVyZW07XG4gIHJlc2l6ZTogbm9uZTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQ6OnBsYWNlaG9sZGVyLFxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6OnBsYWNlaG9sZGVyIHtcbiAgY29sb3I6ICM4MDgwODA7XG4gIG9wYWNpdHk6IDE7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBpbnB1dC50ZXh0Ojotd2Via2l0LWlucHV0LXBsYWNlaG9sZGVyLFxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQ6LW1zLWlucHV0LXBsYWNlaG9sZGVyLFxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6Oi13ZWJraXQtaW5wdXQtcGxhY2Vob2xkZXIsXG5kaXYua3VrYWktbW9kYWwgdGV4dGFyZWEudGV4dDotbXMtaW5wdXQtcGxhY2Vob2xkZXIge1xuICBjb2xvcjogIzgwODA4MDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6OnBsYWNlaG9sZGVyLFxuZGl2Lmt1a2FpLW1vZGFsIHRleHRhcmVhLnRleHQ6Oi13ZWJraXQtaW5wdXQtcGxhY2Vob2xkZXIsXG5kaXYua3VrYWktbW9kYWwgdGV4dGFyZWEudGV4dDotbXMtaW5wdXQtcGxhY2Vob2xkZXIge1xuICBwYWRkaW5nLXRvcDogMC41cmVtO1xuICBsaW5lLWhlaWdodDogMS4yNXJlbTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5yb3ctZ3JvdXAge1xuICBkaXNwbGF5OiBmbGV4O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYucm93LWdyb3VwID4gZGl2Lmdyb3VwOmZpcnN0LWNoaWxkIHtcbiAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2LmFkdmFuY2VkIHtcbiAgbWFyZ2luLXRvcDogMS41cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uLmJsdWUge1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xuICBmb250LXNpemU6IDFyZW07XG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xuICBkaXNwbGF5OiBmbGV4O1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xuICBjb2xvcjogd2hpdGU7XG4gIGJhY2tncm91bmQ6ICM1OTYzRkY7XG4gIGJveC1zaGFkb3c6IDBweCAwcHggMXB4IHJnYmEoODksIDk5LCAyNTUsIDAuMDQpLCAwcHggMnB4IDZweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjA0KSwgMHB4IDE2cHggMjRweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjI0KTtcbiAgd2lkdGg6IDEwMCU7XG4gIGhlaWdodDogM3JlbTtcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcbiAgYm9yZGVyOiAwO1xuICBtYXJnaW4tdG9wOiAyLjVyZW07XG4gIG1hcmdpbi1ib3R0b206IDEuNXJlbTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5ibHVlLmNvbmZpcm0sXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uLnJldHJ5IHtcbiAgaGVpZ2h0OiAzcmVtO1xuICBtYXJnaW46IDA7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBidXR0b24ucmV0cnkge1xuICB3aWR0aDogMTAwJTtcbiAgZm9udC1zaXplOiAxcmVtO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZDNkM2QzO1xuICBjb2xvcjogIzIxMjUyOTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbjpmb2N1cyB7XG4gIG91dGxpbmU6IG5vbmU7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYuc3dpdGNoLWNvbnRhaW5lciB7XG4gIHdpZHRoOiBhdXRvICFpbXBvcnRhbnQ7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBidXR0b24uc21hbGwge1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiA1MDA7XG4gIGZvbnQtc2l6ZTogMC43NXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gIHdpZHRoOiBhdXRvO1xuICBoZWlnaHQ6IDEuNXJlbTtcbiAgY29sb3I6ICMwMDAwMDA7XG4gIG9wYWNpdHk6IDAuNjtcbiAgYmFja2dyb3VuZDogcmdiYSgyMTQsIDIxNCwgMjE0LCAwLjQpO1xuICBib3JkZXItcmFkaXVzOiAwLjMxMjVyZW07XG4gIGJvcmRlcjogMDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5zbWFsbC5tYXgge1xuICBiYWNrZ3JvdW5kOiAjZDVmMmRjO1xufVxuXG5kaXYua3VrYWktbW9kYWwgYnV0dG9uLnNtYWxsLm11bHRpcGxlLWRlc3RpbmF0aW9ucyB7XG4gIGNvbG9yOiAjNTk2M0ZGO1xuICBvcGFjaXR5OiAxO1xuICBtYXJnaW46IDFyZW0gMS41cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2LmFkdmFuY2VkID4gZGl2LnJvdy1ncm91cCB7XG4gIGhlaWdodDogMS41cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2Lngge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIHRvcDogLTFyZW07XG4gIHJpZ2h0OiAtMXJlbTtcbiAgd2lkdGg6IDJyZW07XG4gIGhlaWdodDogMnJlbTtcbiAgei1pbmRleDogMTIwO1xuICBiYWNrZ3JvdW5kOiAjRkNGQ0ZDO1xuICBib3JkZXI6IDFweCBzb2xpZCAjRkZGRkZGO1xuICBib3JkZXItcmFkaXVzOiAxcmVtO1xuICBkaXNwbGF5OiBmbGV4O1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgY3Vyc29yOiBwb2ludGVyO1xufVxuXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAyN3JlbSkge1xuICBkaXYua3VrYWktbW9kYWwgZGl2Lngge1xuICAgIHJpZ2h0OiAtMXB4O1xuICAgIGJvcmRlci1ib3R0b20tcmlnaHQtcmFkaXVzOiAwO1xuICB9XG5cbiAgZGl2Lmt1a2FpLW1vZGFsIGJ1dHRvbi5zbWFsbC5tdWx0aXBsZS1kZXN0aW5hdGlvbnMge1xuICAgIG1hcmdpbi1yaWdodDogMi41cmVtO1xuICB9XG59XG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAyNXJlbSkge1xuICBkaXYua3VrYWktbW9kYWwgPiBkaXYua20tY29udGVudCB7XG4gICAgd2lkdGg6IDIzcmVtO1xuICB9XG5cbiAgZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQucGFzc3dvcmQge1xuICAgIHdpZHRoOiAxMXJlbTtcbiAgfVxufVxuLnN3aXRjaCB7XG4gIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB3aWR0aDogM3JlbTtcbiAgaGVpZ2h0OiAxLjVyZW07XG4gIG1hcmdpbi1ib3R0b206IDA7XG59XG5cbi5zd2l0Y2ggaW5wdXQge1xuICBvcGFjaXR5OiAwO1xuICAtd2Via2l0LW9wYWNpdHk6IDA7XG4gIC1raHRtbC1vcGFjaXR5OiAwO1xuICB3aWR0aDogMDtcbiAgaGVpZ2h0OiAwO1xufVxuXG4uc2xpZGVyIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBjdXJzb3I6IHBvaW50ZXI7XG4gIHRvcDogMDtcbiAgbGVmdDogMDtcbiAgcmlnaHQ6IDA7XG4gIGJvdHRvbTogMDtcbiAgYmFja2dyb3VuZC1jb2xvcjogI2Q5ZDlkOTtcbiAgLXdlYmtpdC10cmFuc2l0aW9uOiAwLjRzO1xuICB0cmFuc2l0aW9uOiAwLjRzO1xufVxuXG4uc2xpZGVyOmJlZm9yZSB7XG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgY29udGVudDogXCJcIjtcbiAgaGVpZ2h0OiAxLjEyNXJlbTtcbiAgd2lkdGg6IDEuMTI1cmVtO1xuICBsZWZ0OiAwLjE4NzVyZW07XG4gIGJvdHRvbTogMC4xODc1cmVtO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjN0I3QjdCO1xuICAtd2Via2l0LXRyYW5zaXRpb246IDAuNHM7XG4gIHRyYW5zaXRpb246IDAuNHM7XG59XG5cbmlucHV0OmNoZWNrZWQgKyAuc2xpZGVyIHtcbiAgYm94LXNoYWRvdzogMHB4IDBweCAxcHggcmdiYSg4OSwgOTksIDI1NSwgMC4wNCksIDBweCAycHggNnB4IHJnYmEoODksIDk5LCAyNTUsIDAuMDQpLCAwcHggMTZweCAyNHB4IHJnYmEoODksIDk5LCAyNTUsIDAuMjQpO1xufVxuXG5pbnB1dDpjaGVja2VkICsgLnNsaWRlcjpiZWZvcmUge1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjNTk2M0ZGO1xuICAtd2Via2l0LXRyYW5zZm9ybTogdHJhbnNsYXRlWCgxLjVyZW0pO1xuICAtbXMtdHJhbnNmb3JtOiB0cmFuc2xhdGVYKDEuNXJlbSk7XG4gIHRyYW5zZm9ybTogdHJhbnNsYXRlWCgxLjVyZW0pO1xufVxuXG4uc2xpZGVyLnJvdW5kIHtcbiAgYm9yZGVyLXJhZGl1czogMi4xMjVyZW07XG59XG5cbi5zbGlkZXIucm91bmQ6YmVmb3JlIHtcbiAgYm9yZGVyLXJhZGl1czogNTAlO1xufVxuXG5pbnB1dDpjaGVja2VkICsgLnNsaWRlciB7XG4gIGJhY2tncm91bmQtY29sb3I6IHJnYmEoODksIDk5LCAyNTUsIDAuNCk7XG59XG5cbmRpdi5rdWthaS1jYXJkID4gZGl2LmdyZXktY2FyZCA+IGRpdi5zd2l0Y2gtY29udGFpbmVyID4gc3Bhbi5zd2l0Y2gtZGVzYyxcbnNwYW4uc3dpdGNoLWRlc2Mge1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG4gIGZvbnQtc2l6ZTogMTRweDtcbiAgbGluZS1oZWlnaHQ6IDE4cHg7XG4gIGxldHRlci1zcGFjaW5nOiAwLjE2cHg7XG4gIGNvbG9yOiAjMTYxNjE2O1xuICBtYXJnaW4tbGVmdDogMC41cmVtO1xufVxuXG5kaXYuc3dpdGNoLWNvbnRhaW5lciB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGp1c3RpZnktY29udGVudDogZmxleC1zdGFydDtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcbiAgd2lkdGg6IDI4cmVtO1xufVxuXG5zbWFsbCB7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcbiAgZm9udC1zaXplOiAwLjc1cmVtO1xuICBsaW5lLWhlaWdodDogMXJlbTtcbiAgbGV0dGVyLXNwYWNpbmc6IDAuMzJweDtcbiAgY29sb3I6ICMzOTM5Mzk7XG4gIG1hcmdpbi10b3A6IDIuNXJlbTtcbiAgbWFyZ2luLWJvdHRvbTogMC41cmVtO1xufVxuXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAyOXJlbSkge1xuICBkaXYuc3dpdGNoLWNvbnRhaW5lciB7XG4gICAgd2lkdGg6IDIwcmVtO1xuICB9XG59XG4vKiBkcm9wLWRvd24gKi9cbi8qIGNsYXNzIGFwcGxpZXMgdG8gc2VsZWN0IGVsZW1lbnQgaXRzZWxmLCBub3QgYSB3cmFwcGVyIGVsZW1lbnQgKi9cbi5zZWxlY3QtY3NzIHtcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xuICBmb250LXdlaWdodDogbm9ybWFsO1xuICBmb250LXNpemU6IDAuODc1cmVtO1xuICBsZXR0ZXItc3BhY2luZzogMC4xNnB4O1xuICBjb2xvcjogIzAwMDAwMDtcbiAgcGFkZGluZy1sZWZ0OiAxcmVtO1xuICBwYWRkaW5nLXJpZ2h0OiAxcmVtO1xuICBib3JkZXI6IDA7XG4gIHdpZHRoOiAxMDAlO1xuICBtYXgtd2lkdGg6IDEwMCU7XG4gIC8qIHVzZWZ1bCB3aGVuIHdpZHRoIGlzIHNldCB0byBhbnl0aGluZyBvdGhlciB0aGFuIDEwMCUgKi9cbiAgaGVpZ2h0OiAzcmVtO1xuICBsaW5lLWhlaWdodDogM3JlbTtcbiAgYm94LXNpemluZzogYm9yZGVyLWJveDtcbiAgbWFyZ2luOiAwO1xuICAtbW96LWFwcGVhcmFuY2U6IG5vbmU7XG4gIC13ZWJraXQtYXBwZWFyYW5jZTogbm9uZTtcbiAgYXBwZWFyYW5jZTogbm9uZTtcbiAgb3BhY2l0eTogMTtcbiAgYmFja2dyb3VuZC1jb2xvcjogI2UxZTFlMTtcbiAgLyogbm90ZTogYmcgaW1hZ2UgYmVsb3cgdXNlcyAyIHVybHMuIFRoZSBmaXJzdCBpcyBhbiBzdmcgZGF0YSB1cmkgZm9yIHRoZSBhcnJvdyBpY29uLCBhbmQgdGhlIHNlY29uZCBpcyB0aGUgZ3JhZGllbnQuIFxuICBcdGZvciB0aGUgaWNvbiwgaWYgeW91IHdhbnQgdG8gY2hhbmdlIHRoZSBjb2xvciwgYmUgc3VyZSB0byB1c2UgYCUyM2AgaW5zdGVhZCBvZiBgI2AsIHNpbmNlIGl0J3MgYSB1cmwuIFlvdSBjYW4gYWxzbyBzd2FwIGluIGEgZGlmZmVyZW50IHN2ZyBpY29uIG9yIGFuIGV4dGVybmFsIGltYWdlIHJlZmVyZW5jZVxuXG4gICovXG4gIGJhY2tncm91bmQtaW1hZ2U6IHVybChcImRhdGE6aW1hZ2Uvc3ZnK3htbDtjaGFyc2V0PVVTLUFTQ0lJLCUzQ3N2ZyUyMHhtbG5zJTNEJTIyaHR0cCUzQSUyRiUyRnd3dy53My5vcmclMkYyMDAwJTJGc3ZnJTIyJTIwd2lkdGglM0QlMjIyOTIuNCUyMiUyMGhlaWdodCUzRCUyMjI5Mi40JTIyJTNFJTNDcGF0aCUyMGZpbGwlM0QlMjIlMjMwMDdDQjIlMjIlMjBkJTNEJTIyTTI4NyUyMDY5LjRhMTcuNiUyMDE3LjYlMjAwJTIwMCUyMDAtMTMtNS40SDE4LjRjLTUlMjAwLTkuMyUyMDEuOC0xMi45JTIwNS40QTE3LjYlMjAxNy42JTIwMCUyMDAlMjAwJTIwMCUyMDgyLjJjMCUyMDUlMjAxLjglMjA5LjMlMjA1LjQlMjAxMi45bDEyOCUyMDEyNy45YzMuNiUyMDMuNiUyMDcuOCUyMDUuNCUyMDEyLjglMjA1LjRzOS4yLTEuOCUyMDEyLjgtNS40TDI4NyUyMDk1YzMuNS0zLjUlMjA1LjQtNy44JTIwNS40LTEyLjglMjAwLTUtMS45LTkuMi01LjUtMTIuOHolMjIlMkYlM0UlM0MlMkZzdmclM0VcIik7XG4gIGJhY2tncm91bmQtcmVwZWF0OiBuby1yZXBlYXQsIHJlcGVhdDtcbiAgLyogYXJyb3cgaWNvbiBwb3NpdGlvbiAoMWVtIGZyb20gdGhlIHJpZ2h0LCA1MCUgdmVydGljYWwpICwgdGhlbiBncmFkaWVudCBwb3NpdGlvbiovXG4gIGJhY2tncm91bmQtcG9zaXRpb246IHJpZ2h0IDAuN2VtIHRvcCA1MCUsIDAgMDtcbiAgLyogaWNvbiBzaXplLCB0aGVuIGdyYWRpZW50ICovXG4gIGJhY2tncm91bmQtc2l6ZTogMC42NWVtIGF1dG8sIDEwMCU7XG59XG5cbi8qIEhpZGUgYXJyb3cgaWNvbiBpbiBJRSBicm93c2VycyAqL1xuLnNlbGVjdC1jc3M6Oi1tcy1leHBhbmQge1xuICBkaXNwbGF5OiBub25lO1xufVxuXG4vKiBIb3ZlciBzdHlsZSAqL1xuLnNlbGVjdC1jc3M6aG92ZXIge1xuICBib3JkZXItY29sb3I6ICM4ODg7XG59XG5cbi8qIEZvY3VzIHN0eWxlICovXG4uc2VsZWN0LWNzczpmb2N1cyB7XG4gIG91dGxpbmU6IG5vbmU7XG59XG5cbi8qIFNldCBvcHRpb25zIHRvIG5vcm1hbCB3ZWlnaHQgKi9cbi5zZWxlY3QtY3NzIG9wdGlvbiB7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG59XG5cbi8qIFN1cHBvcnQgZm9yIHJ0bCB0ZXh0LCBleHBsaWNpdCBzdXBwb3J0IGZvciBBcmFiaWMgYW5kIEhlYnJldyAqL1xuKltkaXI9cnRsXSAuc2VsZWN0LWNzcywgOnJvb3Q6bGFuZyhhcikgLnNlbGVjdC1jc3MsIDpyb290OmxhbmcoaXcpIC5zZWxlY3QtY3NzIHtcbiAgYmFja2dyb3VuZC1wb3NpdGlvbjogbGVmdCAwLjdlbSB0b3AgNTAlLCAwIDA7XG4gIHBhZGRpbmc6IDAuNmVtIDAuOGVtIDAuNWVtIDEuNGVtO1xufVxuXG4vKiBEaXNhYmxlZCBzdHlsZXMgKi9cbi5zZWxlY3QtY3NzOmRpc2FibGVkLCAuc2VsZWN0LWNzc1thcmlhLWRpc2FibGVkPXRydWVdIHtcbiAgY29sb3I6IGdyYXl0ZXh0O1xuICBiYWNrZ3JvdW5kLWltYWdlOiB1cmwoXCJkYXRhOmltYWdlL3N2Zyt4bWw7Y2hhcnNldD1VUy1BU0NJSSwlM0NzdmclMjB4bWxucyUzRCUyMmh0dHAlM0ElMkYlMkZ3d3cudzMub3JnJTJGMjAwMCUyRnN2ZyUyMiUyMHdpZHRoJTNEJTIyMjkyLjQlMjIlMjBoZWlnaHQlM0QlMjIyOTIuNCUyMiUzRSUzQ3BhdGglMjBmaWxsJTNEJTIyZ3JheXRleHQlMjIlMjBkJTNEJTIyTTI4NyUyMDY5LjRhMTcuNiUyMDE3LjYlMjAwJTIwMCUyMDAtMTMtNS40SDE4LjRjLTUlMjAwLTkuMyUyMDEuOC0xMi45JTIwNS40QTE3LjYlMjAxNy42JTIwMCUyMDAlMjAwJTIwMCUyMDgyLjJjMCUyMDUlMjAxLjglMjA5LjMlMjA1LjQlMjAxMi45bDEyOCUyMDEyNy45YzMuNiUyMDMuNiUyMDcuOCUyMDUuNCUyMDEyLjglMjA1LjRzOS4yLTEuOCUyMDEyLjgtNS40TDI4NyUyMDk1YzMuNS0zLjUlMjA1LjQtNy44JTIwNS40LTEyLjglMjAwLTUtMS45LTkuMi01LjUtMTIuOHolMjIlMkYlM0UlM0MlMkZzdmclM0VcIik7XG59XG5cbi5zZWxlY3QtY3NzOmRpc2FibGVkOmhvdmVyLCAuc2VsZWN0LWNzc1thcmlhLWRpc2FibGVkPXRydWVdIHtcbiAgYm9yZGVyLWNvbG9yOiAjYWFhO1xufVxuXG5idXR0b24ucHVycGxlOmhvdmVyIHtcbiAgbWFyZ2luLXRvcDogLTAuMTI1cmVtO1xuICBtYXJnaW4tYm90dG9tOiAwLjEyNXJlbTtcbn1cblxuYnV0dG9uOmZvY3VzIHtcbiAgb3V0bGluZTogbm9uZTtcbn1cblxuYnV0dG9uLnB1cnBsZSB7XG4gIGJvcmRlci1yYWRpdXM6IDAuNzVyZW07XG4gIGhlaWdodDogM3JlbTtcbiAgd2lkdGg6IDEwMCU7XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IGJvbGQ7XG4gIGZvbnQtc2l6ZTogMXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICBjdXJzb3I6IHBvaW50ZXI7XG4gIC13ZWJraXQtYXBwZWFyYW5jZTogbm9uZSAhaW1wb3J0YW50O1xuICBib3JkZXItd2lkdGg6IDA7XG59XG5cbjpob3N0IGJ1dHRvbi5wdXJwbGU6aG92ZXIge1xuICBtYXJnaW4tdG9wOiAtMC4xMjVyZW07XG4gIG1hcmdpbi1ib3R0b206IDAuMTI1cmVtO1xufVxuXG46aG9zdCBidXR0b246Zm9jdXMge1xuICBvdXRsaW5lOiBub25lO1xufVxuXG46aG9zdCBwLnRvcnVzLWRldGFpbHMge1xuICBtYXJnaW4tdG9wOiAwLjVyZW07XG4gIG1hcmdpbi1ib3R0b206IDA7XG59XG5cbjpob3N0IGJ1dHRvbi5wdXJwbGUge1xuICBjb2xvcjogd2hpdGU7XG4gIGJhY2tncm91bmQ6ICM1OTYzRkY7XG4gIGJveC1zaGFkb3c6IDBweCAwcHggMXB4IHJnYmEoODksIDk5LCAyNTUsIDAuMDQpLCAwcHggMnB4IDZweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjA0KSwgMHB4IDE2cHggMjRweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjI0KTtcbiAgdHJhbnNpdGlvbjogbWFyZ2luLXRvcCAwLjFzIGVhc2UtaW4sIG1hcmdpbi1ib3R0b20gMC4xcyBlYXNlLWluO1xufVxuXG5kaXYua3VrYWktbW9kYWwgdGFibGUge1xuICBkaXNwbGF5OiBibG9jaztcbiAgbWFyZ2luLXRvcDogMXJlbTtcbiAgd2lkdGg6IDEwMCU7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYua20tYm9keSA+IGRpdi5ncm91cCBzZWxlY3Quc2VsZWN0LWNzcyB7XG4gIHdpZHRoOiA5LjVyZW07XG4gIGhlaWdodDogMnJlbTtcbiAgbGluZS1oZWlnaHQ6IDJyZW07XG4gIG9wYWNpdHk6IDAuNjtcbiAgYm9yZGVyLXJhZGl1czogMC41cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgdGFibGUgPiB0aGVhZCxcbmRpdi5rdWthaS1tb2RhbCB0YWJsZSA+IHRoZWFkIHtcbiAgd2lkdGg6IDEwMCU7XG59XG5cbmRpdi5rdWthaS1tb2RhbCB0YWJsZSA+IHRoZWFkID4gdHIgPiB0aCB7XG4gIHBhZGRpbmctYm90dG9tOiAwLjI1cmVtO1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiA1MDA7XG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xuICBjb2xvcjogI0E4QThBODtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIHRhYmxlID4gdGJvZHkgPiB0ciA+IHRkLnR4QW1vdW50LFxuZGl2Lmt1a2FpLW1vZGFsIHRhYmxlID4gdGhlYWQgPiB0ciA+IHRoOmxhc3QtY2hpbGQge1xuICB0ZXh0LWFsaWduOiByaWdodDtcbiAgd2lkdGg6IDEwMCU7XG59XG5cbnNtYWxsIHtcbiAgbWFyZ2luLWJvdHRvbTogMDtcbn1cblxuZGl2LnN3aXRjaC1jb250YWluZXIge1xuICBtYXJnaW4tdG9wOiAwLjVyZW07XG59XG5cbmRpdi5rdWthaS1tb2RhbCBpbnB1dC50ZXh0LnJlYWQtb25seSB7XG4gIGJhY2tncm91bmQ6ICNmMmYyZjI7XG59XG5cbmlucHV0LmN1c3RvbS10ZXh0Ym94IHtcbiAgcGFkZGluZy1sZWZ0OiAwLjc1cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2LmFkdmFuY2VkLWZvcm0gaW5wdXQudGV4dDo6cGxhY2Vob2xkZXIge1xuICBjb2xvcjogYmxhY2s7XG4gIG9wYWNpdHk6IDE7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYuYWR2YW5jZWQtZm9ybSBpbnB1dC50ZXh0Ojotd2Via2l0LWlucHV0LXBsYWNlaG9sZGVyLFxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5hZHZhbmNlZC1mb3JtIGlucHV0LnRleHQ6LW1zLWlucHV0LXBsYWNlaG9sZGVyIHtcbiAgY29sb3I6IGJsYWNrO1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2LmFkdmFuY2VkLWZvcm0gaW5wdXQudGV4dC5yZWFkLW9ubHkge1xuICBjb2xvcjogIzgwODA4MDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsID4gZGl2LmttLWNvbnRlbnQgPiBkaXYua20tYm9keSA+IGRpdi5ncm91cCA+IGlucHV0LnRleHQsXG5kaXYua3VrYWktbW9kYWwgPiBkaXYua20tY29udGVudCA+IGRpdi5rbS1ib2R5ID4gZGl2Lmdyb3VwID4gdGV4dGFyZWEge1xuICBmb250LXNpemU6IDAuODEyNXJlbTtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsID4gZGl2LmttLWNvbnRlbnQge1xuICB3aWR0aDogMzByZW07XG59XG5cbkBzdXBwb3J0cyAoLXdlYmtpdC10b3VjaC1jYWxsb3V0OiBub25lKSB7XG4gIGRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50ID4gZGl2LmttLWJvZHkgPiBkaXYuZ3JvdXAgPiBpbnB1dC50ZXh0LFxuZGl2Lmt1a2FpLW1vZGFsID4gZGl2LmttLWNvbnRlbnQgPiBkaXYua20tYm9keSA+IGRpdi5ncm91cCA+IHRleHRhcmVhIHtcbiAgICBmb250LXNpemU6IDFyZW07XG4gIH1cbn1cbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDMyLjI1cmVtKSB7XG4gIGRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50IHtcbiAgICB3aWR0aDogMjVyZW07XG4gIH1cbn1cbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDI1cmVtKSB7XG4gIGlucHV0I3RvQWRkcmVzcywgaW5wdXQuY3VzdG9tLXRleHRib3gge1xuICAgIGZvbnQtc2l6ZTogMC44MTI1cmVtO1xuICB9XG5cbiAgZGl2Lmt1a2FpLW1vZGFsID4gZGl2LmttLWNvbnRlbnQge1xuICAgIHdpZHRoOiAyMnJlbTtcbiAgfVxufVxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDogMjJyZW0pIHtcbiAgaW5wdXQjdG9BZGRyZXNzLCBpbnB1dC5jdXN0b20tdGV4dGJveCB7XG4gICAgZm9udC1zaXplOiAwLjc1cmVtO1xuICB9XG59XG5zcGFuLmJhdGNoSW5mbyB7XG4gIG1hcmdpbi1sZWZ0OiBhdXRvO1xuICBmb250LXNpemU6IDAuNzVyZW07XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYucHJldmlldy1hbW91bnQge1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xuICBtYXJnaW4tYm90dG9tOiAwLjVyZW07XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYucHJldmlldy10b3Age1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogcm93O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYucHJldmlldy1hbW91bnQgPiBzcGFuLmFtb3VudC10ZXoge1xuICBtYXJnaW46IDAuNXJlbSAwIDAuMjVyZW07XG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcbiAgZm9udC13ZWlnaHQ6IDUwMDtcbiAgZm9udC1zaXplOiAxLjVyZW07XG4gIGxpbmUtaGVpZ2h0OiAxLjVyZW07XG4gIGNvbG9yOiAjMTYxNjE2O1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2LnByZXZpZXctYW1vdW50ID4gc3Bhbi5hbW91bnQtdXNkIHtcbiAgbWFyZ2luLWJvdHRvbTogMC43NXJlbTtcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xuICBmb250LXdlaWdodDogbm9ybWFsO1xuICBmb250LXNpemU6IDAuODc1cmVtO1xuICBsaW5lLWhlaWdodDogMXJlbTtcbiAgY29sb3I6ICM1MjUyNTI7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYua20tYm9keSBzcGFuLnNpbmdsZS10byB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIG1hcmdpbjogMHJlbSAwIDAuNXJlbTtcbiAgd29yZC1icmVhazogYnJlYWstYWxsO1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG4gIGZvbnQtc2l6ZTogMXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGNvbG9yOiAjMTYxNjE2O1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2LmttLWJvZHkgc3Bhbi50b3J1cy10byB7XG4gIGRpc3BsYXk6IGJsb2NrO1xuICBtYXJnaW4tYm90dG9tOiAwLjI1cmVtO1xuICBmb250LXN0eWxlOiBub3JtYWw7XG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xuICBjb2xvcjogIzE2MTYxNjtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5zZXBlcmF0b3Ige1xuICBib3JkZXItYm90dG9tOiAxcHggc29saWQgcmdiYSgwLCAwLCAwLCAwLjA4KTtcbiAgbWFyZ2luOiAwLjVyZW0gMDtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5wcmV2aWV3LXJvdyB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2Vlbjtcbn1cblxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5wcmV2aWV3LXJvdyA+IHNwYW4ge1xuICBtYXJnaW46IDAuMjVyZW0gMDtcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcbiAgZm9udC1zaXplOiAwLjg3NXJlbTtcbiAgbGluZS1oZWlnaHQ6IDFyZW07XG4gIGNvbG9yOiAjNTI1MjUyO1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2LmttLWJvZHkgc3Bhbi5zZWN0aW9uLFxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5wcmV2aWV3LXJvdyA+IHNwYW46Zmlyc3QtY2hpbGQge1xuICBmb250LXdlaWdodDogNTAwO1xuICBmb250LXdlaWdodDogbm9ybWFsO1xuICBmb250LXNpemU6IDAuODc1cmVtO1xuICBsaW5lLWhlaWdodDogMXJlbTtcbiAgY29sb3I6ICNBOEE4QTg7XG59XG5cbmRpdi5rdWthaS1tb2RhbCBkaXYucHJldmlldy1yb3cgPiBzcGFuOmxhc3QtY2hpbGQge1xuICB3b3JkLWJyZWFrOiBicmVhay1hbGw7XG4gIHBhZGRpbmctbGVmdDogMC41cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgZGl2LnByZXZpZXctcm93IGltZyxcbmRpdi5rdWthaS1tb2RhbCBkaXYua20tYm9keSBzcGFuLnRvcnVzLXRvIGltZyB7XG4gIGhlaWdodDogMC43NXJlbTtcbiAgbWFyZ2luLWJvdHRvbTogMC4wNjI1cmVtO1xufVxuXG5kaXYua3VrYWktbW9kYWwgcCNwcmV2aWV3QXR0ZW50aW9uIHtcbiAgY29sb3I6ICNDRDAwMDA7XG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xufVxuXG5kaXYudGFicy1jb250YWluZXIgPiB1bC50YWJzIHtcbiAgZGlzcGxheTogZmxleDtcbiAgbGlzdC1zdHlsZS10eXBlOiBub25lO1xuICBtYXJnaW46IDA7XG4gIHBhZGRpbmc6IDA7XG59XG5cbmRpdi50YWJzLWNvbnRhaW5lciA+IHVsLnRhYnMgPiBsaS50YWIge1xuICB3aWR0aDogMTAwJTtcbiAgY29sb3I6ICM3ODc4Nzg7XG4gIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgY3Vyc29yOiBwb2ludGVyO1xuICBwYWRkaW5nOiAxcmVtIGF1dG87XG4gIGJhY2tncm91bmQtY29sb3I6ICNmNmY2ZjY7XG59XG5cbmRpdi50YWJzLWNvbnRhaW5lciA+IHVsLnRhYnMgPiBsaS50YWI6Zmlyc3QtY2hpbGQge1xuICBib3JkZXItdG9wLWxlZnQtcmFkaXVzOiAwLjc1cmVtO1xufVxuXG5kaXYudGFicy1jb250YWluZXIgPiB1bC50YWJzID4gbGkudGFiOmxhc3QtY2hpbGQge1xuICBib3JkZXItdG9wLXJpZ2h0LXJhZGl1czogMC43NXJlbTtcbn1cblxuZGl2LnRhYnMtY29udGFpbmVyID4gdWwudGFicyA+IGxpLnRhYi5hY3RpdmUge1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZDlkOWQ5O1xuICBjb2xvcjogIzQ4NDg0ODtcbn1cblxuZGl2LnRhYnMtY29udGFpbmVyID4gdWwudGFicyA+IGxpLnRhYjpob3ZlciB7XG4gIGJhY2tncm91bmQtY29sb3I6ICNDMEMwQzA7XG4gIGNvbG9yOiAjNDg0ODQ4O1xufSIsIi5zd2l0Y2gge1xyXG4gIHBvc2l0aW9uOiByZWxhdGl2ZTtcclxuICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XHJcbiAgd2lkdGg6IDNyZW07XHJcbiAgaGVpZ2h0OiAxLjVyZW07XHJcbiAgbWFyZ2luLWJvdHRvbTogMDtcclxufVxyXG5cclxuLnN3aXRjaCBpbnB1dCB7IFxyXG4gIG9wYWNpdHk6IDA7XHJcbiAgLXdlYmtpdC1vcGFjaXR5OiAwO1xyXG4gIC1raHRtbC1vcGFjaXR5OiAwO1xyXG4gIHdpZHRoOiAwO1xyXG4gIGhlaWdodDogMDtcclxufVxyXG5cclxuLnNsaWRlciB7XHJcbiAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gIGN1cnNvcjogcG9pbnRlcjtcclxuICB0b3A6IDA7XHJcbiAgbGVmdDogMDtcclxuICByaWdodDogMDtcclxuICBib3R0b206IDA7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogI2Q5ZDlkOTtcclxuICAtd2Via2l0LXRyYW5zaXRpb246IC40cztcclxuICB0cmFuc2l0aW9uOiAuNHM7XHJcbn1cclxuXHJcbi5zbGlkZXI6YmVmb3JlIHtcclxuICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcbiAgY29udGVudDogXCJcIjtcclxuICBoZWlnaHQ6IDEuMTI1cmVtO1xyXG4gIHdpZHRoOiAxLjEyNXJlbTtcclxuICBsZWZ0OiAwLjE4NzVyZW07XHJcbiAgYm90dG9tOiAwLjE4NzVyZW07XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogIzdCN0I3QjtcclxuICAtd2Via2l0LXRyYW5zaXRpb246IC40cztcclxuICB0cmFuc2l0aW9uOiAuNHM7XHJcbn1cclxuXHJcbmlucHV0OmNoZWNrZWQgKyAuc2xpZGVyIHtcclxuICBib3gtc2hhZG93OiAwcHggMHB4IDFweCByZ2JhKDg5LCA5OSwgMjU1LCAwLjA0KSwgMHB4IDJweCA2cHggcmdiYSg4OSwgOTksIDI1NSwgMC4wNCksIDBweCAxNnB4IDI0cHggcmdiYSg4OSwgOTksIDI1NSwgMC4yNCk7XHJcbn1cclxuXHJcbmlucHV0OmNoZWNrZWQgKyAuc2xpZGVyOmJlZm9yZSB7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogIzU5NjNGRjtcclxuICAtd2Via2l0LXRyYW5zZm9ybTogdHJhbnNsYXRlWCgxLjVyZW0pO1xyXG4gIC1tcy10cmFuc2Zvcm06IHRyYW5zbGF0ZVgoMS41cmVtKTtcclxuICB0cmFuc2Zvcm06IHRyYW5zbGF0ZVgoMS41cmVtKTtcclxufVxyXG5cclxuLnNsaWRlci5yb3VuZCB7XHJcbiAgYm9yZGVyLXJhZGl1czogMi4xMjVyZW07XHJcbn1cclxuLnNsaWRlci5yb3VuZDpiZWZvcmUge1xyXG4gIGJvcmRlci1yYWRpdXM6IDUwJTtcclxufVxyXG5pbnB1dDpjaGVja2VkICsgLnNsaWRlciB7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogcmdiYSg4OSwgOTksIDI1NSwgMC40KTs7XHJcbn1cclxuZGl2Lmt1a2FpLWNhcmQgPiBkaXYuZ3JleS1jYXJkID4gZGl2LnN3aXRjaC1jb250YWluZXIgPiBzcGFuLnN3aXRjaC1kZXNjLFxyXG5zcGFuLnN3aXRjaC1kZXNjIHtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcclxuICBmb250LXNpemU6IDE0cHg7XHJcbiAgbGluZS1oZWlnaHQ6IDE4cHg7XHJcbiAgbGV0dGVyLXNwYWNpbmc6IDAuMTZweDtcclxuICBjb2xvcjogIzE2MTYxNjtcclxuICBtYXJnaW4tbGVmdDogMC41cmVtO1xyXG59XHJcbmRpdi5zd2l0Y2gtY29udGFpbmVyIHtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGp1c3RpZnktY29udGVudDogZmxleC1zdGFydDtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XHJcbiAgd2lkdGg6IDI4cmVtO1xyXG59XHJcbnNtYWxsIHtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcclxuICBmb250LXNpemU6IDAuNzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgbGV0dGVyLXNwYWNpbmc6IDAuMzJweDtcclxuICBjb2xvcjogIzM5MzkzOTtcclxuICBtYXJnaW4tdG9wOiAyLjVyZW07XHJcbiAgbWFyZ2luLWJvdHRvbTogMC41cmVtO1xyXG59XHJcbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDI5cmVtKSB7XHJcbiAgZGl2LnN3aXRjaC1jb250YWluZXIge1xyXG4gICAgICB3aWR0aDogMjByZW07XHJcbiAgfVxyXG59IiwiLyogZHJvcC1kb3duICovXHJcblxyXG4vKiBjbGFzcyBhcHBsaWVzIHRvIHNlbGVjdCBlbGVtZW50IGl0c2VsZiwgbm90IGEgd3JhcHBlciBlbGVtZW50ICovXHJcbi5zZWxlY3QtY3NzIHtcclxuICBib3JkZXItcmFkaXVzOiAwLjc1cmVtO1xyXG4gIGZvbnQtc3R5bGU6IG5vcm1hbDtcclxuICBmb250LXdlaWdodDogbm9ybWFsO1xyXG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XHJcbiAgbGV0dGVyLXNwYWNpbmc6IDAuMTZweDtcclxuICBjb2xvcjogIzAwMDAwMDtcclxuICBwYWRkaW5nLWxlZnQ6IDFyZW07XHJcbiAgcGFkZGluZy1yaWdodDogMXJlbTtcclxuICBib3JkZXI6IDA7XHJcblx0d2lkdGg6IDEwMCU7XHJcbiAgbWF4LXdpZHRoOiAxMDAlOyAvKiB1c2VmdWwgd2hlbiB3aWR0aCBpcyBzZXQgdG8gYW55dGhpbmcgb3RoZXIgdGhhbiAxMDAlICovXHJcbiAgaGVpZ2h0OiAzcmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAzcmVtO1xyXG5cdGJveC1zaXppbmc6IGJvcmRlci1ib3g7XHJcblx0bWFyZ2luOiAwO1xyXG5cdC1tb3otYXBwZWFyYW5jZTogbm9uZTtcclxuXHQtd2Via2l0LWFwcGVhcmFuY2U6IG5vbmU7XHJcbiAgYXBwZWFyYW5jZTogbm9uZTtcclxuICBvcGFjaXR5OiAxO1xyXG5cdGJhY2tncm91bmQtY29sb3I6ICNlMWUxZTE7XHJcblx0Lyogbm90ZTogYmcgaW1hZ2UgYmVsb3cgdXNlcyAyIHVybHMuIFRoZSBmaXJzdCBpcyBhbiBzdmcgZGF0YSB1cmkgZm9yIHRoZSBhcnJvdyBpY29uLCBhbmQgdGhlIHNlY29uZCBpcyB0aGUgZ3JhZGllbnQuIFxyXG5cdFx0Zm9yIHRoZSBpY29uLCBpZiB5b3Ugd2FudCB0byBjaGFuZ2UgdGhlIGNvbG9yLCBiZSBzdXJlIHRvIHVzZSBgJTIzYCBpbnN0ZWFkIG9mIGAjYCwgc2luY2UgaXQncyBhIHVybC4gWW91IGNhbiBhbHNvIHN3YXAgaW4gYSBkaWZmZXJlbnQgc3ZnIGljb24gb3IgYW4gZXh0ZXJuYWwgaW1hZ2UgcmVmZXJlbmNlXHJcblx0XHRcclxuXHQqL1xyXG5cdGJhY2tncm91bmQtaW1hZ2U6IHVybCgnZGF0YTppbWFnZS9zdmcreG1sO2NoYXJzZXQ9VVMtQVNDSUksJTNDc3ZnJTIweG1sbnMlM0QlMjJodHRwJTNBJTJGJTJGd3d3LnczLm9yZyUyRjIwMDAlMkZzdmclMjIlMjB3aWR0aCUzRCUyMjI5Mi40JTIyJTIwaGVpZ2h0JTNEJTIyMjkyLjQlMjIlM0UlM0NwYXRoJTIwZmlsbCUzRCUyMiUyMzAwN0NCMiUyMiUyMGQlM0QlMjJNMjg3JTIwNjkuNGExNy42JTIwMTcuNiUyMDAlMjAwJTIwMC0xMy01LjRIMTguNGMtNSUyMDAtOS4zJTIwMS44LTEyLjklMjA1LjRBMTcuNiUyMDE3LjYlMjAwJTIwMCUyMDAlMjAwJTIwODIuMmMwJTIwNSUyMDEuOCUyMDkuMyUyMDUuNCUyMDEyLjlsMTI4JTIwMTI3LjljMy42JTIwMy42JTIwNy44JTIwNS40JTIwMTIuOCUyMDUuNHM5LjItMS44JTIwMTIuOC01LjRMMjg3JTIwOTVjMy41LTMuNSUyMDUuNC03LjglMjA1LjQtMTIuOCUyMDAtNS0xLjktOS4yLTUuNS0xMi44eiUyMiUyRiUzRSUzQyUyRnN2ZyUzRScpO1xyXG5cdGJhY2tncm91bmQtcmVwZWF0OiBuby1yZXBlYXQsIHJlcGVhdDtcclxuXHQvKiBhcnJvdyBpY29uIHBvc2l0aW9uICgxZW0gZnJvbSB0aGUgcmlnaHQsIDUwJSB2ZXJ0aWNhbCkgLCB0aGVuIGdyYWRpZW50IHBvc2l0aW9uKi9cclxuXHRiYWNrZ3JvdW5kLXBvc2l0aW9uOiByaWdodCAuN2VtIHRvcCA1MCUsIDAgMDtcclxuXHQvKiBpY29uIHNpemUsIHRoZW4gZ3JhZGllbnQgKi9cclxuXHRiYWNrZ3JvdW5kLXNpemU6IC42NWVtIGF1dG8sIDEwMCU7XHJcbn1cclxuLyogSGlkZSBhcnJvdyBpY29uIGluIElFIGJyb3dzZXJzICovXHJcbi5zZWxlY3QtY3NzOjotbXMtZXhwYW5kIHtcclxuXHRkaXNwbGF5OiBub25lO1xyXG59XHJcbi8qIEhvdmVyIHN0eWxlICovXHJcbi5zZWxlY3QtY3NzOmhvdmVyIHtcclxuXHRib3JkZXItY29sb3I6ICM4ODg7XHJcbn1cclxuLyogRm9jdXMgc3R5bGUgKi9cclxuLnNlbGVjdC1jc3M6Zm9jdXMge1xyXG5cdG91dGxpbmU6IG5vbmU7XHJcbn1cclxuXHJcbi8qIFNldCBvcHRpb25zIHRvIG5vcm1hbCB3ZWlnaHQgKi9cclxuLnNlbGVjdC1jc3Mgb3B0aW9uIHtcclxuXHRmb250LXdlaWdodDpub3JtYWw7XHJcbn1cclxuXHJcbi8qIFN1cHBvcnQgZm9yIHJ0bCB0ZXh0LCBleHBsaWNpdCBzdXBwb3J0IGZvciBBcmFiaWMgYW5kIEhlYnJldyAqL1xyXG4qW2Rpcj1cInJ0bFwiXSAuc2VsZWN0LWNzcywgOnJvb3Q6bGFuZyhhcikgLnNlbGVjdC1jc3MsIDpyb290OmxhbmcoaXcpIC5zZWxlY3QtY3NzIHtcclxuXHRiYWNrZ3JvdW5kLXBvc2l0aW9uOiBsZWZ0IC43ZW0gdG9wIDUwJSwgMCAwO1xyXG5cdHBhZGRpbmc6IC42ZW0gLjhlbSAuNWVtIDEuNGVtO1xyXG59XHJcblxyXG4vKiBEaXNhYmxlZCBzdHlsZXMgKi9cclxuLnNlbGVjdC1jc3M6ZGlzYWJsZWQsIC5zZWxlY3QtY3NzW2FyaWEtZGlzYWJsZWQ9dHJ1ZV0ge1xyXG5cdGNvbG9yOiBncmF5dGV4dDtcclxuXHRiYWNrZ3JvdW5kLWltYWdlOiB1cmwoJ2RhdGE6aW1hZ2Uvc3ZnK3htbDtjaGFyc2V0PVVTLUFTQ0lJLCUzQ3N2ZyUyMHhtbG5zJTNEJTIyaHR0cCUzQSUyRiUyRnd3dy53My5vcmclMkYyMDAwJTJGc3ZnJTIyJTIwd2lkdGglM0QlMjIyOTIuNCUyMiUyMGhlaWdodCUzRCUyMjI5Mi40JTIyJTNFJTNDcGF0aCUyMGZpbGwlM0QlMjJncmF5dGV4dCUyMiUyMGQlM0QlMjJNMjg3JTIwNjkuNGExNy42JTIwMTcuNiUyMDAlMjAwJTIwMC0xMy01LjRIMTguNGMtNSUyMDAtOS4zJTIwMS44LTEyLjklMjA1LjRBMTcuNiUyMDE3LjYlMjAwJTIwMCUyMDAlMjAwJTIwODIuMmMwJTIwNSUyMDEuOCUyMDkuMyUyMDUuNCUyMDEyLjlsMTI4JTIwMTI3LjljMy42JTIwMy42JTIwNy44JTIwNS40JTIwMTIuOCUyMDUuNHM5LjItMS44JTIwMTIuOC01LjRMMjg3JTIwOTVjMy41LTMuNSUyMDUuNC03LjglMjA1LjQtMTIuOCUyMDAtNS0xLjktOS4yLTUuNS0xMi44eiUyMiUyRiUzRSUzQyUyRnN2ZyUzRScpO1xyXG59XHJcblxyXG4uc2VsZWN0LWNzczpkaXNhYmxlZDpob3ZlciwgLnNlbGVjdC1jc3NbYXJpYS1kaXNhYmxlZD10cnVlXSB7XHJcblx0Ym9yZGVyLWNvbG9yOiAjYWFhO1xyXG59IiwiQGltcG9ydCAnLi4vLi4vLi4vc2Nzcy9tb2RhbC5zY3NzJztcclxuQGltcG9ydCAnLi4vLi4vLi4vc2Nzcy9zd2l0Y2guc2Nzcyc7XHJcbkBpbXBvcnQgJy4uLy4uLy4uL3Njc3MvZHJvcGRvd24uc2Nzcyc7XHJcbmJ1dHRvbi5wdXJwbGU6aG92ZXIge1xyXG4gIG1hcmdpbi10b3A6IC0wLjEyNXJlbTtcclxuICBtYXJnaW4tYm90dG9tOiAwLjEyNXJlbTtcclxufVxyXG5idXR0b246Zm9jdXMge1xyXG4gIG91dGxpbmU6IG5vbmU7XHJcbn1cclxuYnV0dG9uLnB1cnBsZSB7XHJcbiAgYm9yZGVyLXJhZGl1czogMC43NXJlbTtcclxuICBoZWlnaHQ6IDNyZW07XHJcbiAgd2lkdGg6IDEwMCU7XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG4gIGZvbnQtc2l6ZTogMXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGZsZXgtZGlyZWN0aW9uOmNvbHVtbjtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGp1c3RpZnktY29udGVudDpjZW50ZXI7XHJcbiAgY3Vyc29yOiBwb2ludGVyO1xyXG4gIC13ZWJraXQtYXBwZWFyYW5jZTogbm9uZSAhaW1wb3J0YW50O1xyXG4gIGJvcmRlci13aWR0aDogMDtcclxufVxyXG46aG9zdCBidXR0b24ucHVycGxlOmhvdmVyIHtcclxuICBtYXJnaW4tdG9wOiAtMC4xMjVyZW07XHJcbiAgbWFyZ2luLWJvdHRvbTogMC4xMjVyZW07XHJcbn1cclxuOmhvc3QgYnV0dG9uOmZvY3VzIHtcclxuICBvdXRsaW5lOiBub25lO1xyXG59XHJcbjpob3N0IHAudG9ydXMtZGV0YWlscyB7XHJcbiAgbWFyZ2luLXRvcDogMC41cmVtO1xyXG4gIG1hcmdpbi1ib3R0b206IDA7XHJcbn1cclxuOmhvc3QgYnV0dG9uLnB1cnBsZSB7XHJcbiAgY29sb3I6IHdoaXRlO1xyXG4gIGJhY2tncm91bmQ6ICM1OTYzRkY7XHJcbiAgYm94LXNoYWRvdzogMHB4IDBweCAxcHggcmdiYSg4OSwgOTksIDI1NSwgMC4wNCksIDBweCAycHggNnB4IHJnYmEoODksIDk5LCAyNTUsIDAuMDQpLCAwcHggMTZweCAyNHB4IHJnYmEoODksIDk5LCAyNTUsIDAuMjQpO1xyXG4gIHRyYW5zaXRpb246IG1hcmdpbi10b3AgMC4xcyBlYXNlLWluLCBtYXJnaW4tYm90dG9tIDAuMXMgZWFzZS1pbjtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgdGFibGUge1xyXG4gIGRpc3BsYXk6IGJsb2NrO1xyXG4gIG1hcmdpbi10b3A6IDFyZW07XHJcbiAgd2lkdGg6IDEwMCU7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5rbS1ib2R5ID4gZGl2Lmdyb3VwIHNlbGVjdC5zZWxlY3QtY3NzIHtcclxuICB3aWR0aDogOS41cmVtO1xyXG4gIGhlaWdodDogMnJlbTtcclxuICBsaW5lLWhlaWdodDogMnJlbTtcclxuICBvcGFjaXR5OiAwLjY7XHJcbiAgYm9yZGVyLXJhZGl1czogMC41cmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCB0YWJsZSA+IHRoZWFkLFxyXG5kaXYua3VrYWktbW9kYWwgdGFibGUgPiB0aGVhZCB7XHJcbiAgd2lkdGg6IDEwMCU7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIHRhYmxlID4gdGhlYWQgPiB0ciA+IHRoIHtcclxuICBwYWRkaW5nLWJvdHRvbTogMC4yNXJlbTtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IDUwMDtcclxuICBmb250LXNpemU6IDAuODc1cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xyXG4gIGNvbG9yOiAjQThBOEE4O1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCB0YWJsZSA+IHRib2R5ID4gdHIgPiB0ZC50eEFtb3VudCxcclxuZGl2Lmt1a2FpLW1vZGFsIHRhYmxlID4gdGhlYWQgPiB0ciA+IHRoOmxhc3QtY2hpbGQge1xyXG4gIHRleHQtYWxpZ246IHJpZ2h0O1xyXG4gIHdpZHRoOiAxMDAlO1xyXG59XHJcbnNtYWxsIHtcclxuICBtYXJnaW4tYm90dG9tOiAwO1xyXG59XHJcbmRpdi5zd2l0Y2gtY29udGFpbmVyIHtcclxuICBtYXJnaW4tdG9wOiAwLjVyZW07XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGlucHV0LnRleHQucmVhZC1vbmx5IHtcclxuICBiYWNrZ3JvdW5kOiAjZjJmMmYyO1xyXG59XHJcblxyXG5pbnB1dC5jdXN0b20tdGV4dGJveCB7XHJcbiAgcGFkZGluZy1sZWZ0OiAwLjc1cmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYuYWR2YW5jZWQtZm9ybSBpbnB1dC50ZXh0OjpwbGFjZWhvbGRlciB7XHJcbiAgY29sb3I6IGJsYWNrO1xyXG4gIG9wYWNpdHk6IDE7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5hZHZhbmNlZC1mb3JtIGlucHV0LnRleHQ6Oi13ZWJraXQtaW5wdXQtcGxhY2Vob2xkZXIsXHJcbmRpdi5rdWthaS1tb2RhbCBkaXYuYWR2YW5jZWQtZm9ybSBpbnB1dC50ZXh0Oi1tcy1pbnB1dC1wbGFjZWhvbGRlciB7XHJcbiAgY29sb3I6IGJsYWNrO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYuYWR2YW5jZWQtZm9ybSBpbnB1dC50ZXh0LnJlYWQtb25seSB7XHJcbiAgY29sb3I6ICM4MDgwODA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsID4gZGl2LmttLWNvbnRlbnQgPiBkaXYua20tYm9keSA+IGRpdi5ncm91cCA+IGlucHV0LnRleHQsXHJcbmRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50ID4gZGl2LmttLWJvZHkgPiBkaXYuZ3JvdXAgPiB0ZXh0YXJlYSB7XHJcbiAgZm9udC1zaXplOiAwLjgxMjVyZW07XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsID4gZGl2LmttLWNvbnRlbnQge1xyXG4gIHdpZHRoOiAzMHJlbTtcclxufVxyXG5Ac3VwcG9ydHMgKC13ZWJraXQtdG91Y2gtY2FsbG91dDogbm9uZSkge1xyXG4gIGRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50ID4gZGl2LmttLWJvZHkgPiBkaXYuZ3JvdXAgPiBpbnB1dC50ZXh0LFxyXG4gIGRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50ID4gZGl2LmttLWJvZHkgPiBkaXYuZ3JvdXAgPiB0ZXh0YXJlYSB7XHJcbiAgICBmb250LXNpemU6IDFyZW07XHJcbiAgfVxyXG59XHJcblxyXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAzMi4yNXJlbSkge1xyXG4gIGRpdi5rdWthaS1tb2RhbCA+IGRpdi5rbS1jb250ZW50IHtcclxuICAgIHdpZHRoOiAyNXJlbTtcclxuICB9XHJcbiAgXHJcbn1cclxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDogMjVyZW0pIHtcclxuICBpbnB1dCN0b0FkZHJlc3MsIGlucHV0LmN1c3RvbS10ZXh0Ym94IHtcclxuICAgIGZvbnQtc2l6ZTogMC44MTI1cmVtO1xyXG4gIH1cclxuICBkaXYua3VrYWktbW9kYWwgPiBkaXYua20tY29udGVudCB7XHJcbiAgICB3aWR0aDogMjJyZW07XHJcbiAgfVxyXG59XHJcbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDIycmVtKSB7XHJcbiAgaW5wdXQjdG9BZGRyZXNzLCBpbnB1dC5jdXN0b20tdGV4dGJveCB7XHJcbiAgICBmb250LXNpemU6IDAuNzVyZW07XHJcbiAgfVxyXG59XHJcbnNwYW4uYmF0Y2hJbmZvIHtcclxuICBtYXJnaW4tbGVmdDogYXV0bztcclxuICBmb250LXNpemU6IDAuNzVyZW07XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5wcmV2aWV3LWFtb3VudCB7XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xyXG4gIG1hcmdpbi1ib3R0b206IDAuNXJlbTtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgZGl2LnByZXZpZXctdG9wIHtcclxuICBkaXNwbGF5OiBmbGV4O1xyXG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XHJcbiAganVzdGlmeS1jb250ZW50OiBzcGFjZS1iZXR3ZWVuO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYucHJldmlldy1hbW91bnQgPiBzcGFuLmFtb3VudC10ZXoge1xyXG4gIG1hcmdpbjogMC41cmVtIDAgMC4yNXJlbTtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IDUwMDtcclxuICBmb250LXNpemU6IDEuNXJlbTtcclxuICBsaW5lLWhlaWdodDogMS41cmVtO1xyXG4gIGNvbG9yOiAjMTYxNjE2O1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYucHJldmlldy1hbW91bnQgPiBzcGFuLmFtb3VudC11c2Qge1xyXG4gIG1hcmdpbi1ib3R0b206IDAuNzVyZW07XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XHJcbiAgZm9udC1zaXplOiAwLjg3NXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBjb2xvcjogIzUyNTI1MjtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgZGl2LmttLWJvZHkgc3Bhbi5zaW5nbGUtdG8ge1xyXG4gIGRpc3BsYXk6IGZsZXg7XHJcbiAgbWFyZ2luOiAwcmVtIDAgMC41cmVtO1xyXG4gIHdvcmQtYnJlYWs6IGJyZWFrLWFsbDtcclxuICBmb250LXN0eWxlOiBub3JtYWw7XHJcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcclxuICBmb250LXNpemU6IDFyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbiAgY29sb3I6ICMxNjE2MTY7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5rbS1ib2R5IHNwYW4udG9ydXMtdG8ge1xyXG4gIGRpc3BsYXk6IGJsb2NrO1xyXG4gIG1hcmdpbi1ib3R0b206IDAuMjVyZW07XHJcbiAgZm9udC1zdHlsZTogbm9ybWFsO1xyXG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XHJcbiAgZm9udC1zaXplOiAwLjg3NXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBjb2xvcjogIzE2MTYxNjtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgZGl2LnNlcGVyYXRvciB7XHJcbiAgYm9yZGVyLWJvdHRvbTogMXB4IHNvbGlkIHJnYmEoJGNvbG9yOiAjMDAwMDAwLCAkYWxwaGE6IDAuMDgpO1xyXG4gIG1hcmdpbjogMC41cmVtIDA7XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5wcmV2aWV3LXJvdyB7XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBmbGV4LWRpcmVjdGlvbjogcm93O1xyXG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgZGl2LnByZXZpZXctcm93ID4gc3BhbiB7XHJcbiAgbWFyZ2luOiAwLjI1cmVtIDA7XHJcbiAgZm9udC13ZWlnaHQ6IG5vcm1hbDtcclxuICBmb250LXNpemU6IDAuODc1cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxcmVtO1xyXG4gIGNvbG9yOiAjNTI1MjUyO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBkaXYua20tYm9keSBzcGFuLnNlY3Rpb24sXHJcbmRpdi5rdWthaS1tb2RhbCBkaXYucHJldmlldy1yb3cgPiBzcGFuOmZpcnN0LWNoaWxkIHtcclxuICBmb250LXdlaWdodDogNTAwO1xyXG4gIGZvbnQtd2VpZ2h0OiBub3JtYWw7XHJcbiAgZm9udC1zaXplOiAwLjg3NXJlbTtcclxuICBsaW5lLWhlaWdodDogMXJlbTtcclxuICBjb2xvcjogI0E4QThBODtcclxufVxyXG5kaXYua3VrYWktbW9kYWwgZGl2LnByZXZpZXctcm93ID4gc3BhbjpsYXN0LWNoaWxkIHtcclxuICB3b3JkLWJyZWFrOiBicmVhay1hbGw7XHJcbiAgcGFkZGluZy1sZWZ0OiAwLjVyZW07XHJcbn1cclxuZGl2Lmt1a2FpLW1vZGFsIGRpdi5wcmV2aWV3LXJvdyBpbWcsXHJcbmRpdi5rdWthaS1tb2RhbCBkaXYua20tYm9keSBzcGFuLnRvcnVzLXRvIGltZ3tcclxuICBoZWlnaHQ6IDAuNzVyZW07XHJcbiAgbWFyZ2luLWJvdHRvbTogMC4wNjI1cmVtO1xyXG59XHJcbmRpdi5rdWthaS1tb2RhbCBwI3ByZXZpZXdBdHRlbnRpb24ge1xyXG4gIGNvbG9yOiAjQ0QwMDAwO1xyXG4gIGZvbnQtc2l6ZTogMC44NzVyZW07XHJcbiAgbGluZS1oZWlnaHQ6IDFyZW07XHJcbn1cclxuZGl2LnRhYnMtY29udGFpbmVyID4gdWwudGFicyB7XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBsaXN0LXN0eWxlLXR5cGU6IG5vbmU7XHJcbiAgbWFyZ2luOiAwO1xyXG4gIHBhZGRpbmc6IDA7XHJcbn1cclxuZGl2LnRhYnMtY29udGFpbmVyID4gdWwudGFicyA+IGxpLnRhYiB7XHJcbiAgd2lkdGg6IDEwMCU7XHJcbiAgY29sb3I6ICM3ODc4Nzg7XHJcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xyXG4gIGN1cnNvcjogcG9pbnRlcjtcclxuICBwYWRkaW5nOiAxcmVtIGF1dG87XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogcmdiKDI0NiwgMjQ2LCAyNDYpO1xyXG59XHJcbmRpdi50YWJzLWNvbnRhaW5lciA+IHVsLnRhYnMgPiBsaS50YWI6Zmlyc3QtY2hpbGQge1xyXG4gIGJvcmRlci10b3AtbGVmdC1yYWRpdXM6IDAuNzVyZW07XHJcbn1cclxuZGl2LnRhYnMtY29udGFpbmVyID4gdWwudGFicyA+IGxpLnRhYjpsYXN0LWNoaWxkIHtcclxuICBib3JkZXItdG9wLXJpZ2h0LXJhZGl1czogMC43NXJlbTtcclxufVxyXG5kaXYudGFicy1jb250YWluZXIgPiB1bC50YWJzID4gbGkudGFiLmFjdGl2ZSB7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogI2Q5ZDlkOTtcclxuICBjb2xvcjogIzQ4NDg0ODtcclxufVxyXG5kaXYudGFicy1jb250YWluZXIgPiB1bC50YWJzID4gbGkudGFiOmhvdmVyIHtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiAjQzBDMEMwO1xyXG4gIGNvbG9yOiAjNDg0ODQ4O1xyXG59Il19 */"] });
 /*@__PURE__*/ (function () { _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵsetClassMetadata"](SendComponent, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"],
         args: [{
@@ -13861,7 +6833,7 @@ SendComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComp
                 templateUrl: './send.component.html',
                 styleUrls: ['./send.component.scss']
             }]
-    }], function () { return [{ type: _ngx_translate_core__WEBPACK_IMPORTED_MODULE_2__["TranslateService"] }, { type: _services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_3__["WalletService"] }, { type: _services_operation_operation_service__WEBPACK_IMPORTED_MODULE_5__["OperationService"] }, { type: _services_coordinator_coordinator_service__WEBPACK_IMPORTED_MODULE_4__["CoordinatorService"] }, { type: _services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_6__["InputValidationService"] }, { type: _services_ledger_ledger_service__WEBPACK_IMPORTED_MODULE_7__["LedgerService"] }, { type: _services_estimate_estimate_service__WEBPACK_IMPORTED_MODULE_8__["EstimateService"] }, { type: _services_message_message_service__WEBPACK_IMPORTED_MODULE_12__["MessageService"] }, { type: _services_torus_torus_service__WEBPACK_IMPORTED_MODULE_13__["TorusService"] }, { type: _services_lookup_lookup_service__WEBPACK_IMPORTED_MODULE_14__["LookupService"] }]; }, { beaconMode: [{
+    }], function () { return [{ type: _ngx_translate_core__WEBPACK_IMPORTED_MODULE_2__["TranslateService"] }, { type: _services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_3__["WalletService"] }, { type: _services_operation_operation_service__WEBPACK_IMPORTED_MODULE_5__["OperationService"] }, { type: _services_coordinator_coordinator_service__WEBPACK_IMPORTED_MODULE_4__["CoordinatorService"] }, { type: _services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_6__["InputValidationService"] }, { type: _services_ledger_ledger_service__WEBPACK_IMPORTED_MODULE_7__["LedgerService"] }, { type: _services_estimate_estimate_service__WEBPACK_IMPORTED_MODULE_8__["EstimateService"] }, { type: _services_message_message_service__WEBPACK_IMPORTED_MODULE_11__["MessageService"] }, { type: _services_torus_torus_service__WEBPACK_IMPORTED_MODULE_12__["TorusService"] }, { type: _services_lookup_lookup_service__WEBPACK_IMPORTED_MODULE_13__["LookupService"] }]; }, { beaconMode: [{
             type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"]
         }], operationRequest: [{
             type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"]
@@ -14146,9 +7118,9 @@ function SpinnerComponent_div_0_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 } if (rf & 2) {
-    const ctx_r334 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+    const ctx_r335 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](13);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx_r334.messageService.spinnerText);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx_r335.messageService.spinnerText);
 } }
 class SpinnerComponent {
     constructor(messageService) {
@@ -14544,9 +7516,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/__ivy_ngcc__/fesm2015/router.js");
 /* harmony import */ var _services_message_message_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/message/message.service */ "./src/app/services/message/message.service.ts");
-/* harmony import */ var _airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @airgap/beacon-sdk */ "../beacon-sdk/dist/esm/index.js");
+/* harmony import */ var _airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @airgap/beacon-sdk */ "./node_modules/@airgap/beacon-sdk/dist/esm/index.js");
 /* harmony import */ var _services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../services/wallet/wallet.service */ "./src/app/services/wallet/wallet.service.ts");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../constants */ "./src/app/constants.ts");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../environments/environment */ "./src/environments/environment.ts");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
 /* harmony import */ var _services_beacon_beacon_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../services/beacon/beacon.service */ "./src/app/services/beacon/beacon.service.ts");
 /* harmony import */ var _services_deeplink_deeplink_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../services/deeplink/deeplink.service */ "./src/app/services/deeplink/deeplink.service.ts");
@@ -14583,7 +7555,6 @@ class UriHandlerComponent {
         this.location = location;
         this.beaconService = beaconService;
         this.deeplinkService = deeplinkService;
-        this.CONSTANTS = new _constants__WEBPACK_IMPORTED_MODULE_6__["Constants"]();
         this.permissionRequest = null;
         this.operationRequest = null;
         /* https://docs.walletbeacon.io/beacon/03.getting-started-wallet.html#setup */
@@ -14595,8 +7566,8 @@ class UriHandlerComponent {
             this.beaconService.client
                 .connect((message) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
                 console.log('### beacon message', message);
-                if (message.network.type !== this.CONSTANTS.NET.NETWORK) {
-                    console.warn(`Rejecting Beacon message because of network. Expected ${this.CONSTANTS.NET.NETWORK} instead of ${message.network.type}`);
+                if (message.network.type !== _environments_environment__WEBPACK_IMPORTED_MODULE_6__["CONSTANTS"].NETWORK) {
+                    console.warn(`Rejecting Beacon message because of network. Expected ${_environments_environment__WEBPACK_IMPORTED_MODULE_6__["CONSTANTS"].NETWORK} instead of ${message.network.type}`);
                     yield this.beaconService.rejectOnNetwork(message);
                 }
                 else if (!this.permissionRequest && !this.operationRequest) {
@@ -14767,58 +7738,6 @@ UriHandlerComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefi
                 styleUrls: ['./uri-handler.component.scss']
             }]
     }], function () { return [{ type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"] }, { type: _services_message_message_service__WEBPACK_IMPORTED_MODULE_3__["MessageService"] }, { type: _services_wallet_wallet_service__WEBPACK_IMPORTED_MODULE_5__["WalletService"] }, { type: _angular_common__WEBPACK_IMPORTED_MODULE_7__["Location"] }, { type: _services_beacon_beacon_service__WEBPACK_IMPORTED_MODULE_8__["BeaconService"] }, { type: _services_deeplink_deeplink_service__WEBPACK_IMPORTED_MODULE_9__["DeeplinkService"] }]; }, null); })();
-
-
-/***/ }),
-
-/***/ "./src/app/constants.ts":
-/*!******************************!*\
-  !*** ./src/app/constants.ts ***!
-  \******************************/
-/*! exports provided: Constants */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Constants", function() { return Constants; });
-class Constants {
-    constructor() {
-        // Select Testnet or Mainnet
-        this.NET = this.delphinet();
-    }
-    mainnet() {
-        return {
-            NAME: 'Mainnet',
-            NETWORK: 'mainnet',
-            CSI: {
-                url: 'https://conseil-prod.cryptonomic-infra.tech',
-                apiKey: 'klassare'
-            },
-            NODE_URL: 'https://mainnet-tezos.giganode.io',
-            BLOCK_EXPLORER_URL: 'https://tzkt.io'
-        };
-    }
-    carthagenet() {
-        return {
-            NAME: 'Testnet / Carthage',
-            NETWORK: 'carthagenet',
-            CSI: {
-                url: 'https://conseil-dev.cryptonomic-infra.tech',
-                apiKey: 'klassare'
-            },
-            NODE_URL: 'https://testnet-tezos.giganode.io',
-            BLOCK_EXPLORER_URL: 'https://carthage.tzkt.io'
-        };
-    }
-    delphinet() {
-        return {
-            NAME: 'Testnet / Delphi',
-            NETWORK: 'delphinet',
-            NODE_URL: 'https://delphinet-tezos.giganode.io/',
-            BLOCK_EXPLORER_URL: 'https://delphi.tzkt.io'
-        };
-    }
-}
 
 
 /***/ }),
@@ -16534,7 +9453,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var _services_message_message_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/message/message.service */ "./src/app/services/message/message.service.ts");
-/* harmony import */ var _airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @airgap/beacon-sdk */ "../beacon-sdk/dist/esm/index.js");
+/* harmony import */ var _airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @airgap/beacon-sdk */ "./node_modules/@airgap/beacon-sdk/dist/esm/index.js");
 
 
 
@@ -17309,6 +10228,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
 /* harmony import */ var big_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! big.js */ "./node_modules/big.js/big.js");
 /* harmony import */ var big_js__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(big_js__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../environments/environment */ "./src/environments/environment.ts");
+
 
 
 
@@ -17329,8 +10250,7 @@ class EstimateService {
         this.costPerByte = '250';
         this.revealGasLimit = 1000;
         this.queue = [];
-        this.CONSTANTS = this.operationService.CONSTANTS;
-        this.nodeURL = this.CONSTANTS.NET.NODE_URL;
+        this.nodeURL = _environments_environment__WEBPACK_IMPORTED_MODULE_7__["CONSTANTS"].NODE_URL;
     }
     init(hash, chainId, counter, manager, pk, pkh) {
         this.hash = hash;
@@ -17859,7 +10779,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ConseilService", function() { return ConseilService; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../constants */ "./src/app/constants.ts");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../environments/environment */ "./src/environments/environment.ts");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm2015/operators/index.js");
 /* harmony import */ var conseiljs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! conseiljs */ "./node_modules/conseiljs/dist/index-web.js");
@@ -17873,9 +10793,8 @@ __webpack_require__.r(__webpack_exports__);
 
 class ConseilService {
     constructor() {
-        this.CONSTANTS = new _constants__WEBPACK_IMPORTED_MODULE_2__["Constants"]();
-        this.conseilServer = this.CONSTANTS.NET.CSI;
-        this.network = this.CONSTANTS.NET.NETWORK;
+        this.conseilServer = _environments_environment__WEBPACK_IMPORTED_MODULE_2__["CONSTANTS"].CSI;
+        this.network = _environments_environment__WEBPACK_IMPORTED_MODULE_2__["CONSTANTS"].NETWORK;
         this.platform = 'tezos';
     }
     getContractAddresses(pkh, currentAddress = pkh) {
@@ -17994,7 +10913,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var _conseil_conseil_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./conseil/conseil.service */ "./src/app/services/indexer/conseil/conseil.service.ts");
 /* harmony import */ var _tzkt_tzkt_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./tzkt/tzkt.service */ "./src/app/services/indexer/tzkt/tzkt.service.ts");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../constants */ "./src/app/constants.ts");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../environments/environment */ "./src/environments/environment.ts");
 
 
 
@@ -18003,8 +10922,7 @@ __webpack_require__.r(__webpack_exports__);
 
 class IndexerService {
     constructor() {
-        const constants = new _constants__WEBPACK_IMPORTED_MODULE_4__["Constants"]();
-        this.selectedIndexerService = constants.NET.CSI ? new _conseil_conseil_service__WEBPACK_IMPORTED_MODULE_2__["ConseilService"] : new _tzkt_tzkt_service__WEBPACK_IMPORTED_MODULE_3__["TzktService"];
+        this.selectedIndexerService = _environments_environment__WEBPACK_IMPORTED_MODULE_4__["CONSTANTS"].CSI ? new _conseil_conseil_service__WEBPACK_IMPORTED_MODULE_2__["ConseilService"] : new _tzkt_tzkt_service__WEBPACK_IMPORTED_MODULE_3__["TzktService"];
     }
     getContractAddresses(address) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
@@ -18046,7 +10964,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TzktService", function() { return TzktService; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../constants */ "./src/app/constants.ts");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../environments/environment */ "./src/environments/environment.ts");
 
 
 
@@ -18054,8 +10972,7 @@ __webpack_require__.r(__webpack_exports__);
 class TzktService {
     constructor() {
         this.network = '';
-        this.CONSTANTS = new _constants__WEBPACK_IMPORTED_MODULE_2__["Constants"]();
-        this.network = this.CONSTANTS.NET.network !== 'mainnet' ? '.' + this.CONSTANTS.NET.NETWORK.slice(0, -3) : '';
+        this.network = !_environments_environment__WEBPACK_IMPORTED_MODULE_2__["CONSTANTS"].MAINNET ? '.' + _environments_environment__WEBPACK_IMPORTED_MODULE_2__["CONSTANTS"].NETWORK.slice(0, -3) : '';
     }
     getContractAddresses(pkh) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
@@ -18730,7 +11647,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var big_js__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(big_js__WEBPACK_IMPORTED_MODULE_9__);
 /* harmony import */ var _taquito_local_forging__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @taquito/local-forging */ "./node_modules/@taquito/local-forging/dist/taquito-local-forging.es5.js");
 /* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/__ivy_ngcc__/fesm2015/ngx-translate-core.js");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../constants */ "./src/app/constants.ts");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../../environments/environment */ "./src/environments/environment.ts");
 /* harmony import */ var _pipes_error_handling_pipe__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../pipes/error-handling.pipe */ "./src/app/pipes/error-handling.pipe.ts");
 /* harmony import */ var elliptic__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! elliptic */ "./node_modules/elliptic/lib/elliptic.js");
 /* harmony import */ var elliptic__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(elliptic__WEBPACK_IMPORTED_MODULE_14__);
@@ -18761,8 +11678,7 @@ class OperationService {
         this.http = http;
         this.translate = translate;
         this.errorHandlingPipe = errorHandlingPipe;
-        this.CONSTANTS = new _constants__WEBPACK_IMPORTED_MODULE_12__["Constants"]();
-        this.nodeURL = this.CONSTANTS.NET.NODE_URL;
+        this.nodeURL = _environments_environment__WEBPACK_IMPORTED_MODULE_12__["CONSTANTS"].NODE_URL;
         this.prefix = {
             tz1: new Uint8Array([6, 161, 159]),
             tz2: new Uint8Array([6, 161, 161]),
@@ -19137,7 +12053,7 @@ class OperationService {
                             pub_key_Y: pk.Y
                         }
                     };
-                    const url = this.CONSTANTS.NET.NETWORK === 'mainnet' ? 'https://torus-19.torusnode.com/jrpc' : 'https://teal-15-1.torusnode.com/jrpc';
+                    const url = _environments_environment__WEBPACK_IMPORTED_MODULE_12__["CONSTANTS"].NETWORK === 'mainnet' ? 'https://torus-19.torusnode.com/jrpc' : 'https://teal-15-1.torusnode.com/jrpc';
                     return this.http.post(url, JSON.stringify(torusReq), httpOptions)
                         .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])((ans) => {
                         try {
@@ -20087,7 +13003,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _toruslabs_torus_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_toruslabs_torus_js__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _services_operation_operation_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../services/operation/operation.service */ "./src/app/services/operation/operation.service.ts");
 /* harmony import */ var _services_input_validation_input_validation_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../services/input-validation/input-validation.service */ "./src/app/services/input-validation/input-validation.service.ts");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../constants */ "./src/app/constants.ts");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../environments/environment */ "./src/environments/environment.ts");
 
 
 
@@ -20107,7 +13023,6 @@ class TorusService {
     constructor(operationService, inputValidationService) {
         this.operationService = operationService;
         this.inputValidationService = inputValidationService;
-        this.CONSTANTS = new _constants__WEBPACK_IMPORTED_MODULE_7__["Constants"]();
         this.torus = null;
         this.nodeDetails = null;
         this.verifierMaps = {
@@ -20165,11 +13080,11 @@ class TorusService {
                 }
             };
         };
-        if (this.CONSTANTS.NET.NETWORK === 'mainnet') {
+        if (_environments_environment__WEBPACK_IMPORTED_MODULE_7__["CONSTANTS"].MAINNET) {
             this.verifierMap = this.verifierMaps.mainnet;
             this.proxy = { address: '0x638646503746d5456209e33a2ff5e3226d698bea', network: 'mainnet' };
         }
-        else if (this.CONSTANTS.NET.NETWORK) {
+        else {
             this.verifierMap = this.verifierMaps.testnet;
             this.proxy = { address: '0x4023d2a0D330bF11426B12C6144Cfb96B7fa6183', network: 'ropsten' };
         }
@@ -20304,7 +13219,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/http.js");
 /* harmony import */ var _wallet_wallet_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../wallet/wallet.service */ "./src/app/services/wallet/wallet.service.ts");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../constants */ "./src/app/constants.ts");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../environments/environment */ "./src/environments/environment.ts");
 
 
 
@@ -20317,10 +13232,9 @@ class TzrateService {
         this.http = http;
         this.walletService = walletService;
         this.apiUrl = 'https://api.coingecko.com/api/v3/simple/price?ids=tezos&vs_currencies=usd';
-        this.CONSTANTS = new _constants__WEBPACK_IMPORTED_MODULE_3__["Constants"]();
     }
     getTzrate() {
-        if (this.CONSTANTS.NET.NETWORK === 'mainnet') {
+        if (_environments_environment__WEBPACK_IMPORTED_MODULE_3__["CONSTANTS"].MAINNET) {
             this.http.get(this.apiUrl).subscribe((price) => {
                 this.walletService.wallet.XTZrate = price.tezos.usd;
                 this.updateFiatBalances();
@@ -21687,18 +14601,22 @@ const BAKERSLIST = [
 /*!*****************************************!*\
   !*** ./src/environments/environment.ts ***!
   \*****************************************/
-/*! exports provided: environment */
+/*! exports provided: environment, CONSTANTS */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "environment", function() { return environment; });
-// The file contents for the current environment will overwrite these during build.
-// The build system defaults to the dev environment which uses `environment.ts`, but if you do
-// `ng build --env=prod` then `environment.prod.ts` will be used instead.
-// The list of which env maps to which file can be found in `.angular-cli.json`.
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CONSTANTS", function() { return CONSTANTS; });
 const environment = {
     production: false
+};
+const CONSTANTS = {
+    NAME: 'Testnet / Delphi',
+    NETWORK: 'delphinet',
+    MAINNET: false,
+    NODE_URL: 'https://delphinet-tezos.giganode.io/',
+    BLOCK_EXPLORER_URL: 'https://delphi.tzkt.io'
 };
 
 
