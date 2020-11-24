@@ -6093,9 +6093,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerStart"](0);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](1, "TESTNET VERSION");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](1);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerEnd"]();
+      }
+
+      if (rf & 2) {
+        var ctx_r315 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"]("", ctx_r315.CONSTANTS.NETWORK.toUpperCase(), " VERSION");
       }
     }
 
@@ -6241,7 +6249,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](16, "div", 13);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](17, HeaderComponent_ng_container_17_Template, 2, 0, "ng-container", 5);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](17, HeaderComponent_ng_container_17_Template, 2, 1, "ng-container", 5);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
@@ -26415,11 +26423,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       production: false
     };
     var CONSTANTS = {
-      NAME: 'Testnet / Delphi',
-      NETWORK: 'delphinet',
+      NAME: 'Testnet / Carthage',
+      NETWORK: 'carthagenet',
       MAINNET: false,
-      NODE_URL: 'https://delphinet-tezos.giganode.io/',
-      BLOCK_EXPLORER_URL: 'https://delphi.tzkt.io'
+      NODE_URL: 'https://testnet-tezos.giganode.io',
+      BLOCK_EXPLORER_URL: 'https://carthagenet.tzkt.io'
     };
     /***/
   },
