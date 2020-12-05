@@ -22153,13 +22153,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "removeBeaconMsg",
         value: function removeBeaconMsg() {
           for (var i = 0; i < this.messages.length; i++) {
-            if (this.messages[i].loader || this.messages[i].msg === this.pairingCompleteMsg) {
+            if (this.messages[i].loader) {
               this.messages.splice(i, 1);
-              i--;
+              this.addSuccess(this.pairingCompleteMsg, 10);
+              break;
+            } else if (this.messages[i].msg === this.pairingCompleteMsg) {
+              this.messages.splice(i, 1);
+              break;
             }
           }
-
-          this.addSuccess(this.pairingCompleteMsg, 10);
         }
       }, {
         key: "clear",
