@@ -4914,7 +4914,7 @@ class PermissionRequestComponent {
             const scrollBarWidth = window.innerWidth - document.body.offsetWidth;
             document.body.style.marginRight = scrollBarWidth.toString();
             document.body.style.overflow = 'hidden';
-            this.messageService.removeBeaconMsg();
+            this.messageService.removeBeaconMsg(true);
         }
     }
     rejectPermissions() {
@@ -11626,18 +11626,22 @@ class MessageService {
             loader: true
         });
     }
-    removeBeaconMsg() {
-        for (let i = 0; i < this.messages.length; i++) {
-            if (this.messages[i].loader) {
-                this.messages.splice(i, 1);
-                this.addSuccess(this.pairingCompleteMsg, 10);
-                break;
-            }
-            else if (this.messages[i].msg === this.pairingCompleteMsg) {
-                this.messages.splice(i, 1);
-                break;
-            }
-        }
+    removeBeaconMsg(delay = false) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+            setTimeout(() => {
+                for (let i = 0; i < this.messages.length; i++) {
+                    if (this.messages[i].loader) {
+                        this.messages.splice(i, 1);
+                        this.addSuccess(this.pairingCompleteMsg, 10);
+                        break;
+                    }
+                    else if (this.messages[i].msg === this.pairingCompleteMsg) {
+                        this.messages.splice(i, 1);
+                        break;
+                    }
+                }
+            }, delay ? 500 : 0);
+        });
     }
     clear() {
         this.messages = [];

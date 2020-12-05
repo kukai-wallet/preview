@@ -9786,7 +9786,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             var scrollBarWidth = window.innerWidth - document.body.offsetWidth;
             document.body.style.marginRight = scrollBarWidth.toString();
             document.body.style.overflow = 'hidden';
-            this.messageService.removeBeaconMsg();
+            this.messageService.removeBeaconMsg(true);
           }
         }
       }, {
@@ -22152,16 +22152,37 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "removeBeaconMsg",
         value: function removeBeaconMsg() {
-          for (var i = 0; i < this.messages.length; i++) {
-            if (this.messages[i].loader) {
-              this.messages.splice(i, 1);
-              this.addSuccess(this.pairingCompleteMsg, 10);
-              break;
-            } else if (this.messages[i].msg === this.pairingCompleteMsg) {
-              this.messages.splice(i, 1);
-              break;
-            }
-          }
+          var delay = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee93() {
+            var _this47 = this;
+
+            return regeneratorRuntime.wrap(function _callee93$(_context94) {
+              while (1) {
+                switch (_context94.prev = _context94.next) {
+                  case 0:
+                    setTimeout(function () {
+                      for (var i = 0; i < _this47.messages.length; i++) {
+                        if (_this47.messages[i].loader) {
+                          _this47.messages.splice(i, 1);
+
+                          _this47.addSuccess(_this47.pairingCompleteMsg, 10);
+
+                          break;
+                        } else if (_this47.messages[i].msg === _this47.pairingCompleteMsg) {
+                          _this47.messages.splice(i, 1);
+
+                          break;
+                        }
+                      }
+                    }, delay ? 500 : 0);
+
+                  case 1:
+                  case "end":
+                    return _context94.stop();
+                }
+              }
+            }, _callee93);
+          }));
         }
       }, {
         key: "clear",
@@ -22172,32 +22193,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "startSpinner",
         value: function startSpinner() {
           var text = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee93() {
-            return regeneratorRuntime.wrap(function _callee93$(_context94) {
-              while (1) {
-                switch (_context94.prev = _context94.next) {
-                  case 0:
-                    this.spinnerText = text;
-                    this.spinnerOn = true;
-
-                  case 2:
-                  case "end":
-                    return _context94.stop();
-                }
-              }
-            }, _callee93, this);
-          }));
-        }
-      }, {
-        key: "stopSpinner",
-        value: function stopSpinner() {
           return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee94() {
             return regeneratorRuntime.wrap(function _callee94$(_context95) {
               while (1) {
                 switch (_context95.prev = _context95.next) {
                   case 0:
-                    this.spinnerText = '';
-                    this.spinnerOn = false;
+                    this.spinnerText = text;
+                    this.spinnerOn = true;
 
                   case 2:
                   case "end":
@@ -22205,6 +22207,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 }
               }
             }, _callee94, this);
+          }));
+        }
+      }, {
+        key: "stopSpinner",
+        value: function stopSpinner() {
+          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee95() {
+            return regeneratorRuntime.wrap(function _callee95$(_context96) {
+              while (1) {
+                switch (_context96.prev = _context96.next) {
+                  case 0:
+                    this.spinnerText = '';
+                    this.spinnerOn = false;
+
+                  case 2:
+                  case "end":
+                    return _context96.stop();
+                }
+              }
+            }, _callee95, this);
           }));
         }
       }]);
@@ -22412,7 +22433,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       _createClass(OperationService, [{
         key: "activate",
         value: function activate(pkh, secret) {
-          var _this47 = this;
+          var _this48 = this;
 
           return this.getHeader().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (header) {
             var fop = {
@@ -22423,19 +22444,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 secret: secret
               }]
             };
-            return _this47.http.post(_this47.nodeURL + '/chains/main/blocks/head/helpers/forge/operations', fop).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (opbytes) {
+            return _this48.http.post(_this48.nodeURL + '/chains/main/blocks/head/helpers/forge/operations', fop).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (opbytes) {
               var sopbytes = opbytes + Array(129).join('0');
               fop.protocol = header.protocol;
               fop.signature = 'edsigtXomBKi5CTRf5cjATJWSyaRvhfYNHqSUGrn4SdbYRcGwQrUGjzEfQDTuqHhuA8b2d8NarZjz8TRf65WkpQmo423BtomS8Q';
-              return _this47.http.post(_this47.nodeURL + '/chains/main/blocks/head/helpers/preapply/operations', [fop]).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (preApplyResult) {
+              return _this48.http.post(_this48.nodeURL + '/chains/main/blocks/head/helpers/preapply/operations', [fop]).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (preApplyResult) {
                 console.log(JSON.stringify(preApplyResult));
-                return _this47.http.post(_this47.nodeURL + '/injection/operation', JSON.stringify(sopbytes), httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (_final) {
-                  return _this47.opCheck(_final);
+                return _this48.http.post(_this48.nodeURL + '/injection/operation', JSON.stringify(sopbytes), httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (_final) {
+                  return _this48.opCheck(_final);
                 }));
               }));
             }));
           })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(function (err) {
-            return _this47.errHandler(err);
+            return _this48.errHandler(err);
           }));
         }
       }, {
@@ -22468,31 +22489,31 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "originate",
         value: function originate(pkh, amount) {
-          var _this48 = this;
+          var _this49 = this;
 
           var fee = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
           var keys = arguments.length > 3 ? arguments[3] : undefined;
           return this.getHeader().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (header) {
-            return _this48.http.get(_this48.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/counter', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (actions) {
-              return _this48.http.get(_this48.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/manager_key', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (manager) {
-                if (fee >= _this48.feeHardCap) {
+            return _this49.http.get(_this49.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/counter', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (actions) {
+              return _this49.http.get(_this49.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/manager_key', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (manager) {
+                if (fee >= _this49.feeHardCap) {
                   throw new Error('TooHighFee');
                 }
 
                 var counter = Number(actions);
 
-                var script = _this48.getManagerScript(keys.pkh);
+                var script = _this49.getManagerScript(keys.pkh);
 
                 var fop = {
                   branch: header.hash,
                   contents: [{
                     kind: 'origination',
                     source: keys.pkh,
-                    fee: _this48.microTez.times(fee).toString(),
+                    fee: _this49.microTez.times(fee).toString(),
                     counter: (++counter).toString(),
                     gas_limit: '15678',
                     storage_limit: '509',
-                    balance: _this48.microTez.times(amount).toString(),
+                    balance: _this49.microTez.times(amount).toString(),
                     script: script
                   }]
                 };
@@ -22511,11 +22532,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                   fop.contents[1].counter = (Number(fop.contents[1].counter) + 1).toString();
                 }
 
-                return _this48.operation(fop, header, keys, true);
+                return _this49.operation(fop, header, keys, true);
               }));
             }));
           })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(function (err) {
-            return _this48.errHandler(err);
+            return _this49.errHandler(err);
           }));
         }
         /*
@@ -22525,24 +22546,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "transfer",
         value: function transfer(from, transactions, fee, keys) {
-          var _this49 = this;
+          var _this50 = this;
 
           return this.getHeader().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (header) {
-            return _this49.http.get(_this49.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/counter', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (actions) {
-              return _this49.http.get(_this49.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/manager_key', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (manager) {
-                if (fee >= _this49.feeHardCap) {
+            return _this50.http.get(_this50.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/counter', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (actions) {
+              return _this50.http.get(_this50.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/manager_key', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (manager) {
+                if (fee >= _this50.feeHardCap) {
                   throw new Error('TooHighFee');
                 }
 
                 var counter = Number(actions);
 
-                var fop = _this49.createTransactionObject(header.hash, counter, manager, transactions, keys.pkh, keys.pk, from, fee);
+                var fop = _this50.createTransactionObject(header.hash, counter, manager, transactions, keys.pkh, keys.pk, from, fee);
 
-                return _this49.operation(fop, header, keys);
+                return _this50.operation(fop, header, keys);
               }));
             }));
           })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(function (err) {
-            return _this49.errHandler(err);
+            return _this50.errHandler(err);
           }));
         }
       }, {
@@ -22629,14 +22650,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "delegate",
         value: function delegate(from, to) {
-          var _this50 = this;
+          var _this51 = this;
 
           var fee = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
           var keys = arguments.length > 3 ? arguments[3] : undefined;
           return this.getHeader().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (header) {
-            return _this50.http.get(_this50.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/counter', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (actions) {
-              return _this50.http.get(_this50.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/manager_key', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (manager) {
-                if (fee >= _this50.feeHardCap) {
+            return _this51.http.get(_this51.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/counter', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (actions) {
+              return _this51.http.get(_this51.nodeURL + '/chains/main/blocks/head/context/contracts/' + keys.pkh + '/manager_key', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (manager) {
+                if (fee >= _this51.feeHardCap) {
                   throw new Error('TooHighFee');
                 }
 
@@ -22647,7 +22668,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                   delegationOp = {
                     kind: 'delegation',
                     source: from,
-                    fee: _this50.microTez.times(fee).toString(),
+                    fee: _this51.microTez.times(fee).toString(),
                     counter: (++counter).toString(),
                     gas_limit: '1000',
                     storage_limit: '0'
@@ -22660,13 +22681,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                   delegationOp = {
                     kind: 'transaction',
                     source: keys.pkh,
-                    fee: _this50.microTez.times(fee).toString(),
+                    fee: _this51.microTez.times(fee).toString(),
                     counter: (++counter).toString(),
                     gas_limit: '4380',
                     storage_limit: '0',
                     amount: '0',
                     destination: from,
-                    parameters: to !== '' ? _this50.getContractDelegation(to) : _this50.getContractUnDelegation()
+                    parameters: to !== '' ? _this51.getContractDelegation(to) : _this51.getContractUnDelegation()
                   };
                 }
 
@@ -22689,11 +22710,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                   fop.contents[1].counter = (Number(fop.contents[1].counter) + 1).toString();
                 }
 
-                return _this50.operation(fop, header, keys);
+                return _this51.operation(fop, header, keys);
               }));
             }));
           })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(function (err) {
-            return _this50.errHandler(err);
+            return _this51.errHandler(err);
           }));
         }
         /*
@@ -22703,25 +22724,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "operation",
         value: function operation(fop, header, keys) {
-          var _this51 = this;
+          var _this52 = this;
 
           var origination = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
           console.log('fop to send: ' + JSON.stringify(fop));
           return this.http.post(this.nodeURL + '/chains/main/blocks/head/helpers/forge/operations', fop).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (opbytes) {
-            return _this51.localForge(fop).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (localOpbytes) {
+            return _this52.localForge(fop).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (localOpbytes) {
               if (opbytes !== localOpbytes) {
                 throw new Error('ValidationError');
               }
 
               if (!keys.sk) {
                 fop.signature = 'edsigtXomBKi5CTRf5cjATJWSyaRvhfYNHqSUGrn4SdbYRcGwQrUGjzEfQDTuqHhuA8b2d8NarZjz8TRf65WkpQmo423BtomS8Q';
-                return _this51.http.post(_this51.nodeURL + '/chains/main/blocks/head/helpers/scripts/run_operation', {
+                return _this52.http.post(_this52.nodeURL + '/chains/main/blocks/head/helpers/scripts/run_operation', {
                   operation: fop,
                   chain_id: header.chain_id
                 }).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (applied) {
                   console.log('applied: ' + JSON.stringify(applied));
 
-                  _this51.checkApplied([applied]);
+                  _this52.checkApplied([applied]);
 
                   return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])({
                     success: true,
@@ -22733,24 +22754,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               } else {
                 fop.protocol = header.protocol;
 
-                var signed = _this51.sign(opbytes, keys.sk);
+                var signed = _this52.sign(opbytes, keys.sk);
 
                 var sopbytes = signed.sbytes;
                 fop.signature = signed.edsig;
-                return _this51.http.post(_this51.nodeURL + '/chains/main/blocks/head/helpers/preapply/operations', [fop]).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (applied) {
+                return _this52.http.post(_this52.nodeURL + '/chains/main/blocks/head/helpers/preapply/operations', [fop]).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (applied) {
                   console.log('applied: ' + JSON.stringify(applied));
 
-                  _this51.checkApplied(applied);
+                  _this52.checkApplied(applied);
 
                   console.log('sop: ' + sopbytes);
-                  return _this51.http.post(_this51.nodeURL + '/injection/operation', JSON.stringify(sopbytes), httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (_final3) {
+                  return _this52.http.post(_this52.nodeURL + '/injection/operation', JSON.stringify(sopbytes), httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (_final3) {
                     var newPkh = null;
 
                     if (origination) {
                       newPkh = applied[0].contents[fop.contents.length - 1].metadata.operation_result.originated_contracts[0];
                     }
 
-                    return _this51.opCheck(_final3, newPkh);
+                    return _this52.opCheck(_final3, newPkh);
                   }));
                 }));
               }
@@ -22764,7 +22785,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "broadcast",
         value: function broadcast(sopbytes) {
-          var _this52 = this;
+          var _this53 = this;
 
           var fop;
 
@@ -22779,7 +22800,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
           return this.getHeader().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (header) {
             fop.protocol = header.protocol;
-            return _this52.http.post(_this52.nodeURL + '/chains/main/blocks/head/helpers/preapply/operations', [fop]).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (parsed) {
+            return _this53.http.post(_this53.nodeURL + '/chains/main/blocks/head/helpers/preapply/operations', [fop]).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (parsed) {
               var newPkh = null;
 
               for (var i = 0; i < parsed[0].contents.length; i++) {
@@ -22788,18 +22809,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 }
               }
 
-              return _this52.http.post(_this52.nodeURL + '/injection/operation', JSON.stringify(sopbytes), httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (_final4) {
-                return _this52.opCheck(_final4, newPkh);
+              return _this53.http.post(_this53.nodeURL + '/injection/operation', JSON.stringify(sopbytes), httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (_final4) {
+                return _this53.opCheck(_final4, newPkh);
               }));
             }));
           })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(function (err) {
-            return _this52.errHandler(err);
+            return _this53.errHandler(err);
           }));
         }
       }, {
         key: "torusKeyLookup",
         value: function torusKeyLookup(tz2address) {
-          var _this53 = this;
+          var _this54 = this;
 
           // Make it into Promise
           // Zero padding
@@ -22813,7 +22834,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 noReveal: true
               });
             } else {
-              return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["from"])(_this53.decompress(manager)).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (pk) {
+              return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["from"])(_this54.decompress(manager)).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (pk) {
                 var torusReq = {
                   jsonrpc: '2.0',
                   method: 'KeyLookupRequest',
@@ -22824,7 +22845,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                   }
                 };
                 var url = _environments_environment__WEBPACK_IMPORTED_MODULE_12__["CONSTANTS"].NETWORK === 'mainnet' ? 'https://torus-19.torusnode.com/jrpc' : 'https://teal-15-1.torusnode.com/jrpc';
-                return _this53.http.post(url, JSON.stringify(torusReq), httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (ans) {
+                return _this54.http.post(url, JSON.stringify(torusReq), httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (ans) {
                   try {
                     if (ans.result.PublicKey.X === pk.X && ans.result.PublicKey.Y === pk.Y) {
                       return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])(ans);
@@ -22907,7 +22928,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "getBalance",
         value: function getBalance(pkh) {
-          var _this54 = this;
+          var _this55 = this;
 
           return this.http.get(this.nodeURL + '/chains/main/blocks/head/context/contracts/' + pkh + '/balance').pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (balance) {
             return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])({
@@ -22917,13 +22938,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               }
             });
           })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(function (err) {
-            return _this54.errHandler(err);
+            return _this55.errHandler(err);
           }));
         }
       }, {
         key: "getDelegate",
         value: function getDelegate(pkh) {
-          var _this55 = this;
+          var _this56 = this;
 
           return this.http.get(this.nodeURL + '/chains/main/blocks/head/context/contracts/' + pkh).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (contract) {
             var delegate = '';
@@ -22939,13 +22960,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               }
             });
           })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(function (err) {
-            return _this55.errHandler(err);
+            return _this56.errHandler(err);
           }));
         }
       }, {
         key: "getVotingRights",
         value: function getVotingRights() {
-          var _this56 = this;
+          var _this57 = this;
 
           return this.http.get(this.nodeURL + '/chains/main/blocks/head/votes/listings').pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (listings) {
             return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])({
@@ -22953,7 +22974,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               payload: listings
             });
           })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(function (err) {
-            return _this56.errHandler(err);
+            return _this57.errHandler(err);
           }));
         }
       }, {
@@ -22972,7 +22993,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "getAccount",
         value: function getAccount(pkh) {
-          var _this57 = this;
+          var _this58 = this;
 
           return this.http.get(this.nodeURL + '/chains/main/blocks/head/context/contracts/' + pkh).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (contract) {
             var delegate = '';
@@ -22991,19 +23012,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               }
             });
           })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(function (err) {
-            return _this57.errHandler(err);
+            return _this58.errHandler(err);
           }));
         }
       }, {
         key: "getVerifiedOpBytes",
         value: function getVerifiedOpBytes(operationLevel, operationHash, pkh, pk) {
-          var _this58 = this;
+          var _this59 = this;
 
           return this.http.get(this.nodeURL + '/chains/main/blocks/' + operationLevel + '/operation_hashes', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (opHashes) {
             var opIndex = opHashes[3].findIndex(function (a) {
               return a === operationHash;
             });
-            return _this58.http.get(_this58.nodeURL + '/chains/main/blocks/' + operationLevel + '/operations', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (op) {
+            return _this59.http.get(_this59.nodeURL + '/chains/main/blocks/' + operationLevel + '/operations', {}).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (op) {
               var ans = '';
               op = op[3][opIndex];
               var sig = op.signature;
@@ -23022,10 +23043,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 }
               }
 
-              return _this58.http.post(_this58.nodeURL + '/chains/main/blocks/head/helpers/forge/operations', op).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (opBytes) {
-                if (_this58.pk2pkh(pk) === pkh) {
-                  if (_this58.verify(opBytes, sig, pk)) {
-                    ans = opBytes + _this58.buf2hex(_this58.b58cdecode(sig, _this58.prefix.sig));
+              return _this59.http.post(_this59.nodeURL + '/chains/main/blocks/head/helpers/forge/operations', op).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["flatMap"])(function (opBytes) {
+                if (_this59.pk2pkh(pk) === pkh) {
+                  if (_this59.verify(opBytes, sig, pk)) {
+                    ans = opBytes + _this59.buf2hex(_this59.b58cdecode(sig, _this59.prefix.sig));
                   } else {
                     throw new Error('InvalidSignature');
                   }
@@ -23160,33 +23181,33 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "decompress",
         value: function decompress(pk) {
-          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee95() {
+          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee96() {
             var decodedPk, hexPk, secp256k1, compressed, uncompressed, xy;
-            return regeneratorRuntime.wrap(function _callee95$(_context96) {
+            return regeneratorRuntime.wrap(function _callee96$(_context97) {
               while (1) {
-                switch (_context96.prev = _context96.next) {
+                switch (_context97.prev = _context97.next) {
                   case 0:
                     decodedPk = this.b58cdecode(pk, this.prefix.sppk);
                     hexPk = this.buf2hex(decodedPk);
-                    _context96.next = 4;
+                    _context97.next = 4;
                     return Object(_bitauth_libauth__WEBPACK_IMPORTED_MODULE_15__["instantiateSecp256k1"])();
 
                   case 4:
-                    secp256k1 = _context96.sent;
+                    secp256k1 = _context97.sent;
                     compressed = Object(_bitauth_libauth__WEBPACK_IMPORTED_MODULE_15__["hexToBin"])(hexPk);
                     uncompressed = secp256k1.uncompressPublicKey(compressed);
                     xy = Object(_bitauth_libauth__WEBPACK_IMPORTED_MODULE_15__["binToHex"])(uncompressed).slice(2);
-                    return _context96.abrupt("return", {
+                    return _context97.abrupt("return", {
                       X: xy.slice(0, 64),
                       Y: xy.slice(64, 128)
                     });
 
                   case 9:
                   case "end":
-                    return _context96.stop();
+                    return _context97.stop();
                 }
               }
-            }, _callee95, this);
+            }, _callee96, this);
           }));
         }
       }, {
@@ -24097,56 +24118,56 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       _createClass(TorusService, [{
         key: "initTorus",
         value: function initTorus() {
-          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee96() {
+          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee97() {
             var torusdirectsdk;
-            return regeneratorRuntime.wrap(function _callee96$(_context97) {
+            return regeneratorRuntime.wrap(function _callee97$(_context98) {
               while (1) {
-                switch (_context97.prev = _context97.next) {
+                switch (_context98.prev = _context98.next) {
                   case 0:
                     if (this.torus) {
-                      _context97.next = 11;
+                      _context98.next = 11;
                       break;
                     }
 
-                    _context97.prev = 1;
+                    _context98.prev = 1;
                     torusdirectsdk = new _toruslabs_torus_direct_web_sdk__WEBPACK_IMPORTED_MODULE_2___default.a({
                       baseUrl: "".concat(location.origin, "/serviceworker"),
                       enableLogging: !(this.proxy.network === 'mainnet'),
                       proxyContractAddress: this.proxy.address,
                       network: this.proxy.network === 'mainnet' ? this.proxy.network : 'testnet'
                     });
-                    _context97.next = 5;
+                    _context98.next = 5;
                     return torusdirectsdk.init({
                       skipSw: false
                     });
 
                   case 5:
                     this.torus = torusdirectsdk;
-                    _context97.next = 11;
+                    _context98.next = 11;
                     break;
 
                   case 8:
-                    _context97.prev = 8;
-                    _context97.t0 = _context97["catch"](1);
-                    console.error(_context97.t0, 'oninit caught');
+                    _context98.prev = 8;
+                    _context98.t0 = _context98["catch"](1);
+                    console.error(_context98.t0, 'oninit caught');
 
                   case 11:
                   case "end":
-                    return _context97.stop();
+                    return _context98.stop();
                 }
               }
-            }, _callee96, this, [[1, 8]]);
+            }, _callee97, this, [[1, 8]]);
           }));
         }
       }, {
         key: "lookupPkh",
         value: function lookupPkh(selectedVerifier, verifierId) {
-          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee97() {
+          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee98() {
             var fetchNodeDetails, torus, verifier, _yield$fetchNodeDetai, torusNodeEndpoints, torusNodePub, torusIndexes, sanitizedVerifierId, twitterId, username, _yield$this$twitterLo, id, pk, pkh;
 
-            return regeneratorRuntime.wrap(function _callee97$(_context98) {
+            return regeneratorRuntime.wrap(function _callee98$(_context99) {
               while (1) {
-                switch (_context98.prev = _context98.next) {
+                switch (_context99.prev = _context99.next) {
                   case 0:
                     fetchNodeDetails = new _toruslabs_fetch_node_details__WEBPACK_IMPORTED_MODULE_3___default.a({
                       network: this.proxy.network,
@@ -24156,15 +24177,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     verifier = this.verifierMap[selectedVerifier].verifier;
 
                     if (this.nodeDetails) {
-                      _context98.next = 11;
+                      _context99.next = 11;
                       break;
                     }
 
-                    _context98.next = 6;
+                    _context99.next = 6;
                     return fetchNodeDetails.getNodeDetails();
 
                   case 6:
-                    _yield$fetchNodeDetai = _context98.sent;
+                    _yield$fetchNodeDetai = _context99.sent;
                     torusNodeEndpoints = _yield$fetchNodeDetai.torusNodeEndpoints;
                     torusNodePub = _yield$fetchNodeDetai.torusNodePub;
                     torusIndexes = _yield$fetchNodeDetai.torusIndexes;
@@ -24183,67 +24204,67 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     twitterId = '';
 
                     if (!(selectedVerifier === 'twitter')) {
-                      _context98.next = 26;
+                      _context99.next = 26;
                       break;
                     }
 
                     username = sanitizedVerifierId.replace('@', '');
-                    _context98.next = 18;
+                    _context99.next = 18;
                     return this.twitterLookup(username);
 
                   case 18:
-                    _yield$this$twitterLo = _context98.sent;
+                    _yield$this$twitterLo = _context99.sent;
                     id = _yield$this$twitterLo.id;
 
                     if (!this.inputValidationService.twitterId(id)) {
-                      _context98.next = 25;
+                      _context99.next = 25;
                       break;
                     }
 
                     sanitizedVerifierId = "twitter|".concat(id);
                     twitterId = id;
-                    _context98.next = 26;
+                    _context99.next = 26;
                     break;
 
                   case 25:
                     throw new Error('Twitter handle not found');
 
                   case 26:
-                    _context98.next = 28;
+                    _context99.next = 28;
                     return torus.getPublicAddress(this.nodeDetails.torusNodeEndpoints, this.nodeDetails.torusNodePub, {
                       verifier: verifier,
                       verifierId: sanitizedVerifierId
                     }, true);
 
                   case 28:
-                    pk = _context98.sent;
+                    pk = _context99.sent;
                     pkh = this.operationService.spPointsToPkh(pk.X, pk.Y);
-                    return _context98.abrupt("return", {
+                    return _context99.abrupt("return", {
                       pkh: pkh,
                       twitterId: twitterId
                     });
 
                   case 31:
                   case "end":
-                    return _context98.stop();
+                    return _context99.stop();
                 }
               }
-            }, _callee97, this);
+            }, _callee98, this);
           }));
         }
       }, {
         key: "twitterLookup",
         value: function twitterLookup(username, id) {
-          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee98() {
+          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee99() {
             var req;
-            return regeneratorRuntime.wrap(function _callee98$(_context99) {
+            return regeneratorRuntime.wrap(function _callee99$(_context100) {
               while (1) {
-                switch (_context99.prev = _context99.next) {
+                switch (_context100.prev = _context100.next) {
                   case 0:
                     req = {};
 
                     if (!(id && username || !id && !username)) {
-                      _context99.next = 6;
+                      _context100.next = 6;
                       break;
                     }
 
@@ -24265,7 +24286,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     }
 
                   case 7:
-                    _context99.next = 9;
+                    _context100.next = 9;
                     return fetch("https://api.tezos.help/twitter-lookup/", {
                       method: 'POST',
                       headers: {
@@ -24278,28 +24299,28 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     });
 
                   case 9:
-                    return _context99.abrupt("return", _context99.sent);
+                    return _context100.abrupt("return", _context100.sent);
 
                   case 10:
                   case "end":
-                    return _context99.stop();
+                    return _context100.stop();
                 }
               }
-            }, _callee98);
+            }, _callee99);
           }));
         }
       }, {
         key: "loginTorus",
         value: function loginTorus(selectedVerifier) {
           var verifierId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee99() {
+          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee100() {
             var jwtParams, _this$verifierMap$sel, typeOfLogin, clientId, verifier, loginDetails, keyPair;
 
-            return regeneratorRuntime.wrap(function _callee99$(_context100) {
+            return regeneratorRuntime.wrap(function _callee100$(_context101) {
               while (1) {
-                switch (_context100.prev = _context100.next) {
+                switch (_context101.prev = _context101.next) {
                   case 0:
-                    _context100.prev = 0;
+                    _context101.prev = 0;
                     jwtParams = this._loginToConnectionMap()[selectedVerifier] || {};
 
                     if (verifierId && selectedVerifier === GOOGLE) {
@@ -24308,7 +24329,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     }
 
                     _this$verifierMap$sel = this.verifierMap[selectedVerifier], typeOfLogin = _this$verifierMap$sel.typeOfLogin, clientId = _this$verifierMap$sel.clientId, verifier = _this$verifierMap$sel.verifier;
-                    _context100.next = 6;
+                    _context101.next = 6;
                     return this.torus.triggerLogin({
                       verifier: verifier,
                       typeOfLogin: typeOfLogin,
@@ -24317,55 +24338,55 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     });
 
                   case 6:
-                    loginDetails = _context100.sent;
+                    loginDetails = _context101.sent;
                     keyPair = this.operationService.spPrivKeyToKeyPair(loginDetails.privateKey);
                     console.log('DirectAuth KeyPair', keyPair);
-                    return _context100.abrupt("return", {
+                    return _context101.abrupt("return", {
                       keyPair: keyPair,
                       userInfo: loginDetails.userInfo
                     });
 
                   case 12:
-                    _context100.prev = 12;
-                    _context100.t0 = _context100["catch"](0);
-                    console.error(_context100.t0, 'login caught');
-                    return _context100.abrupt("return", {
+                    _context101.prev = 12;
+                    _context101.t0 = _context101["catch"](0);
+                    console.error(_context101.t0, 'login caught');
+                    return _context101.abrupt("return", {
                       keyPair: null,
                       userInfo: null
                     });
 
                   case 16:
                   case "end":
-                    return _context100.stop();
+                    return _context101.stop();
                 }
               }
-            }, _callee99, this, [[0, 12]]);
+            }, _callee100, this, [[0, 12]]);
           }));
         }
       }, {
         key: "getTorusKeyPair",
         value: function getTorusKeyPair(selectedVerifier, verifierId) {
-          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee100() {
+          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee101() {
             var _yield$this$loginToru, keyPair;
 
-            return regeneratorRuntime.wrap(function _callee100$(_context101) {
+            return regeneratorRuntime.wrap(function _callee101$(_context102) {
               while (1) {
-                switch (_context101.prev = _context101.next) {
+                switch (_context102.prev = _context102.next) {
                   case 0:
-                    _context101.next = 2;
+                    _context102.next = 2;
                     return this.loginTorus(selectedVerifier, verifierId);
 
                   case 2:
-                    _yield$this$loginToru = _context101.sent;
+                    _yield$this$loginToru = _context102.sent;
                     keyPair = _yield$this$loginToru.keyPair;
-                    return _context101.abrupt("return", keyPair);
+                    return _context102.abrupt("return", keyPair);
 
                   case 5:
                   case "end":
-                    return _context101.stop();
+                    return _context102.stop();
                 }
               }
-            }, _callee100, this);
+            }, _callee101, this);
           }));
         }
       }]);
@@ -24458,13 +24479,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       _createClass(TzrateService, [{
         key: "getTzrate",
         value: function getTzrate() {
-          var _this59 = this;
+          var _this60 = this;
 
           if (_environments_environment__WEBPACK_IMPORTED_MODULE_3__["CONSTANTS"].MAINNET) {
             this.http.get(this.apiUrl).subscribe(function (price) {
-              _this59.walletService.wallet.XTZrate = price.tezos.usd;
+              _this60.walletService.wallet.XTZrate = price.tezos.usd;
 
-              _this59.updateFiatBalances();
+              _this60.updateFiatBalances();
             }, function (err) {
               return console.log('Failed to get xtz price: ' + JSON.stringify(err));
             });
@@ -24633,11 +24654,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           value: function createEncryptedWallet(mnemonic, password) {
             var passphrase = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
             var hdSeed = arguments.length > 3 ? arguments[3] : undefined;
-            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee101() {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee102() {
               var seed, entropy, keyPair, encrypted, encryptedSeed, iv, iv2, encryptedEntropy;
-              return regeneratorRuntime.wrap(function _callee101$(_context102) {
+              return regeneratorRuntime.wrap(function _callee102$(_context103) {
                 while (1) {
-                  switch (_context102.prev = _context102.next) {
+                  switch (_context103.prev = _context103.next) {
                     case 0:
                       seed = _tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_7__["utils"].mnemonicToSeed(mnemonic, passphrase, hdSeed);
                       entropy = Buffer.from(_tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_7__["utils"].mnemonicToEntropy(mnemonic));
@@ -24648,20 +24669,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         keyPair = _tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_7__["hd"].keyPairFromAccountIndex(seed, 0);
                       }
 
-                      _context102.next = 5;
+                      _context103.next = 5;
                       return this.encryptionService.encrypt(seed, password, 3);
 
                     case 5:
-                      encrypted = _context102.sent;
+                      encrypted = _context103.sent;
                       encryptedSeed = encrypted.chiphertext;
                       iv = encrypted.iv;
                       iv2 = this.encryptionService.bumpIV(iv, 1);
-                      _context102.next = 11;
+                      _context103.next = 11;
                       return this.encryptionService.encrypt(entropy, password, 3, iv2);
 
                     case 11:
-                      encryptedEntropy = _context102.sent.chiphertext;
-                      return _context102.abrupt("return", {
+                      encryptedEntropy = _context103.sent.chiphertext;
+                      return _context103.abrupt("return", {
                         data: this.exportKeyStoreInit(hdSeed ? _interfaces__WEBPACK_IMPORTED_MODULE_2__["WalletType"].HdWallet : _interfaces__WEBPACK_IMPORTED_MODULE_2__["WalletType"].FullWallet, encryptedSeed, encryptedEntropy, iv),
                         pkh: keyPair.pkh,
                         pk: keyPair.pk,
@@ -24670,68 +24691,68 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                     case 13:
                     case "end":
-                      return _context102.stop();
+                      return _context103.stop();
                   }
                 }
-              }, _callee101, this);
+              }, _callee102, this);
             }));
           }
         }, {
           key: "getKeys",
           value: function getKeys(pwd, pkh) {
-            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee102() {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee103() {
               var seed, keyPair, _keyPair, account, _keyPair2;
 
-              return regeneratorRuntime.wrap(function _callee102$(_context103) {
+              return regeneratorRuntime.wrap(function _callee103$(_context104) {
                 while (1) {
-                  switch (_context103.prev = _context103.next) {
+                  switch (_context104.prev = _context104.next) {
                     case 0:
                       if (!(this.wallet instanceof _wallet__WEBPACK_IMPORTED_MODULE_3__["LegacyWalletV1"])) {
-                        _context103.next = 8;
+                        _context104.next = 8;
                         break;
                       }
 
                       console.log('v1');
-                      _context103.next = 4;
+                      _context104.next = 4;
                       return this.encryptionService.decrypt(this.wallet.encryptedSeed, pwd, this.wallet.salt, 1);
 
                     case 4:
-                      seed = _context103.sent;
+                      seed = _context104.sent;
                       console.log('done');
-                      _context103.next = 41;
+                      _context104.next = 41;
                       break;
 
                     case 8:
                       if (!(this.wallet instanceof _wallet__WEBPACK_IMPORTED_MODULE_3__["LegacyWalletV2"])) {
-                        _context103.next = 14;
+                        _context104.next = 14;
                         break;
                       }
 
-                      _context103.next = 11;
+                      _context104.next = 11;
                       return this.encryptionService.decrypt(this.wallet.encryptedSeed, pwd, this.wallet.IV, 2);
 
                     case 11:
-                      seed = _context103.sent;
-                      _context103.next = 41;
+                      seed = _context104.sent;
+                      _context104.next = 41;
                       break;
 
                     case 14:
                       if (!(this.wallet instanceof _wallet__WEBPACK_IMPORTED_MODULE_3__["LegacyWalletV3"] || this.wallet instanceof _wallet__WEBPACK_IMPORTED_MODULE_3__["HdWallet"])) {
-                        _context103.next = 20;
+                        _context104.next = 20;
                         break;
                       }
 
-                      _context103.next = 17;
+                      _context104.next = 17;
                       return this.encryptionService.decrypt(this.wallet.encryptedSeed, pwd, this.wallet.IV, 3);
 
                     case 17:
-                      seed = _context103.sent;
-                      _context103.next = 41;
+                      seed = _context104.sent;
+                      _context104.next = 41;
                       break;
 
                     case 20:
                       if (!(this.wallet instanceof _wallet__WEBPACK_IMPORTED_MODULE_3__["LedgerWallet"])) {
-                        _context103.next = 26;
+                        _context104.next = 26;
                         break;
                       }
 
@@ -24741,54 +24762,54 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         pk: this.wallet.implicitAccounts[0].pk,
                         pkh: this.wallet.implicitAccounts[0].pkh
                       };
-                      return _context103.abrupt("return", keyPair);
+                      return _context104.abrupt("return", keyPair);
 
                     case 26:
                       if (!(this.wallet instanceof _wallet__WEBPACK_IMPORTED_MODULE_3__["TorusWallet"])) {
-                        _context103.next = 40;
+                        _context104.next = 40;
                         break;
                       }
 
                       console.log('torus id ' + this.wallet.id);
-                      _context103.next = 30;
+                      _context104.next = 30;
                       return this.torusService.getTorusKeyPair(this.wallet.verifier, this.wallet.id);
 
                     case 30:
-                      _keyPair = _context103.sent;
+                      _keyPair = _context104.sent;
                       console.log(_keyPair);
 
                       if (!this.wallet.getImplicitAccount(_keyPair.pkh)) {
-                        _context103.next = 36;
+                        _context104.next = 36;
                         break;
                       }
 
-                      return _context103.abrupt("return", _keyPair);
+                      return _context104.abrupt("return", _keyPair);
 
                     case 36:
                       throw new Error('Signed with wrong account');
 
                     case 37:
-                      return _context103.abrupt("return", null);
+                      return _context104.abrupt("return", null);
 
                     case 40:
-                      return _context103.abrupt("return", null);
+                      return _context104.abrupt("return", null);
 
                     case 41:
                       if (seed) {
-                        _context103.next = 43;
+                        _context104.next = 43;
                         break;
                       }
 
-                      return _context103.abrupt("return", null);
+                      return _context104.abrupt("return", null);
 
                     case 43:
                       if (!(this.wallet instanceof _wallet__WEBPACK_IMPORTED_MODULE_3__["HdWallet"])) {
-                        _context103.next = 52;
+                        _context104.next = 52;
                         break;
                       }
 
                       if (pkh) {
-                        _context103.next = 46;
+                        _context104.next = 46;
                         break;
                       }
 
@@ -24798,88 +24819,88 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                       account = this.wallet.getImplicitAccount(pkh);
 
                       if (account.derivationPath) {
-                        _context103.next = 49;
+                        _context104.next = 49;
                         break;
                       }
 
                       throw new Error('No derivationPath found');
 
                     case 49:
-                      return _context103.abrupt("return", _tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_7__["hd"].seedToKeyPair(seed, account.derivationPath));
+                      return _context104.abrupt("return", _tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_7__["hd"].seedToKeyPair(seed, account.derivationPath));
 
                     case 52:
                       if (!(this.wallet instanceof _wallet__WEBPACK_IMPORTED_MODULE_3__["LegacyWalletV1"])) {
-                        _context103.next = 61;
+                        _context104.next = 61;
                         break;
                       }
 
                       _keyPair2 = this.operationService.seed2keyPair(seed);
 
                       if (!(!_keyPair2.pkh || !pkh || _keyPair2.pkh !== pkh)) {
-                        _context103.next = 58;
+                        _context104.next = 58;
                         break;
                       }
 
-                      return _context103.abrupt("return", null);
+                      return _context104.abrupt("return", null);
 
                     case 58:
-                      return _context103.abrupt("return", _keyPair2);
+                      return _context104.abrupt("return", _keyPair2);
 
                     case 59:
-                      _context103.next = 62;
+                      _context104.next = 62;
                       break;
 
                     case 61:
-                      return _context103.abrupt("return", this.operationService.seed2keyPair(seed));
+                      return _context104.abrupt("return", this.operationService.seed2keyPair(seed));
 
                     case 62:
-                    case "end":
-                      return _context103.stop();
-                  }
-                }
-              }, _callee102, this);
-            }));
-          }
-        }, {
-          key: "revealMnemonicPhrase",
-          value: function revealMnemonicPhrase(pwd) {
-            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee103() {
-              var iv, entropy;
-              return regeneratorRuntime.wrap(function _callee103$(_context104) {
-                while (1) {
-                  switch (_context104.prev = _context104.next) {
-                    case 0:
-                      if (!(this.wallet && (this.wallet instanceof _wallet__WEBPACK_IMPORTED_MODULE_3__["HdWallet"] || this.wallet instanceof _wallet__WEBPACK_IMPORTED_MODULE_3__["LegacyWalletV3"]))) {
-                        _context104.next = 10;
-                        break;
-                      }
-
-                      iv = this.encryptionService.bumpIV(this.wallet.IV, 1);
-                      _context104.next = 4;
-                      return this.encryptionService.decrypt(this.wallet.encryptedEntropy, pwd, iv, 3);
-
-                    case 4:
-                      entropy = _context104.sent;
-
-                      if (!entropy) {
-                        _context104.next = 9;
-                        break;
-                      }
-
-                      return _context104.abrupt("return", _tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_7__["utils"].entropyToMnemonic(entropy));
-
-                    case 9:
-                      console.log('Invalid password');
-
-                    case 10:
-                      return _context104.abrupt("return", '');
-
-                    case 11:
                     case "end":
                       return _context104.stop();
                   }
                 }
               }, _callee103, this);
+            }));
+          }
+        }, {
+          key: "revealMnemonicPhrase",
+          value: function revealMnemonicPhrase(pwd) {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee104() {
+              var iv, entropy;
+              return regeneratorRuntime.wrap(function _callee104$(_context105) {
+                while (1) {
+                  switch (_context105.prev = _context105.next) {
+                    case 0:
+                      if (!(this.wallet && (this.wallet instanceof _wallet__WEBPACK_IMPORTED_MODULE_3__["HdWallet"] || this.wallet instanceof _wallet__WEBPACK_IMPORTED_MODULE_3__["LegacyWalletV3"]))) {
+                        _context105.next = 10;
+                        break;
+                      }
+
+                      iv = this.encryptionService.bumpIV(this.wallet.IV, 1);
+                      _context105.next = 4;
+                      return this.encryptionService.decrypt(this.wallet.encryptedEntropy, pwd, iv, 3);
+
+                    case 4:
+                      entropy = _context105.sent;
+
+                      if (!entropy) {
+                        _context105.next = 9;
+                        break;
+                      }
+
+                      return _context105.abrupt("return", _tezos_core_tools_crypto_utils__WEBPACK_IMPORTED_MODULE_7__["utils"].entropyToMnemonic(entropy));
+
+                    case 9:
+                      console.log('Invalid password');
+
+                    case 10:
+                      return _context105.abrupt("return", '');
+
+                    case 11:
+                    case "end":
+                      return _context105.stop();
+                  }
+                }
+              }, _callee104, this);
             }));
           }
         }, {
@@ -24930,25 +24951,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
           key: "incrementAccountIndex",
           value: function incrementAccountIndex(password) {
-            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee104() {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee105() {
               var seed, keyPair;
-              return regeneratorRuntime.wrap(function _callee104$(_context105) {
+              return regeneratorRuntime.wrap(function _callee105$(_context106) {
                 while (1) {
-                  switch (_context105.prev = _context105.next) {
+                  switch (_context106.prev = _context106.next) {
                     case 0:
                       if (!(this.wallet instanceof _wallet__WEBPACK_IMPORTED_MODULE_3__["HdWallet"])) {
-                        _context105.next = 13;
+                        _context106.next = 13;
                         break;
                       }
 
-                      _context105.next = 3;
+                      _context106.next = 3;
                       return this.encryptionService.decrypt(this.wallet.encryptedSeed, password, this.wallet.IV, 3);
 
                     case 3:
-                      seed = _context105.sent;
+                      seed = _context106.sent;
 
                       if (!seed) {
-                        _context105.next = 12;
+                        _context106.next = 12;
                         break;
                       }
 
@@ -24956,17 +24977,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                       this.addImplicitAccount(keyPair.pk, this.wallet.index);
                       this.wallet.index++;
                       this.storeWallet();
-                      return _context105.abrupt("return", keyPair.pkh);
+                      return _context106.abrupt("return", keyPair.pkh);
 
                     case 12:
-                      return _context105.abrupt("return", '');
+                      return _context106.abrupt("return", '');
 
                     case 13:
                     case "end":
-                      return _context105.stop();
+                      return _context106.stop();
                   }
                 }
-              }, _callee104, this);
+              }, _callee105, this);
             }));
           }
           /*
@@ -25451,13 +25472,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       var _super = _createSuper(FullWallet);
 
       function FullWallet(encryptedSeed) {
-        var _this60;
+        var _this61;
 
         _classCallCheck(this, FullWallet);
 
-        _this60 = _super.call(this);
-        _this60.encryptedSeed = encryptedSeed;
-        return _this60;
+        _this61 = _super.call(this);
+        _this61.encryptedSeed = encryptedSeed;
+        return _this61;
       }
 
       return FullWallet;
@@ -25469,13 +25490,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       var _super2 = _createSuper(LegacyWalletV1);
 
       function LegacyWalletV1(salt, encrypedSeed) {
-        var _this61;
+        var _this62;
 
         _classCallCheck(this, LegacyWalletV1);
 
-        _this61 = _super2.call(this, encrypedSeed);
-        _this61.salt = salt;
-        return _this61;
+        _this62 = _super2.call(this, encrypedSeed);
+        _this62.salt = salt;
+        return _this62;
       }
 
       return LegacyWalletV1;
@@ -25487,13 +25508,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       var _super3 = _createSuper(LegacyWalletV2);
 
       function LegacyWalletV2(IV, encryptedSeed) {
-        var _this62;
+        var _this63;
 
         _classCallCheck(this, LegacyWalletV2);
 
-        _this62 = _super3.call(this, encryptedSeed);
-        _this62.IV = IV;
-        return _this62;
+        _this63 = _super3.call(this, encryptedSeed);
+        _this63.IV = IV;
+        return _this63;
       }
 
       return LegacyWalletV2;
@@ -25505,14 +25526,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       var _super4 = _createSuper(LegacyWalletV3);
 
       function LegacyWalletV3(IV, encryptedSeed, encryptedEntropy) {
-        var _this63;
+        var _this64;
 
         _classCallCheck(this, LegacyWalletV3);
 
-        _this63 = _super4.call(this, encryptedSeed);
-        _this63.IV = IV;
-        _this63.encryptedEntropy = encryptedEntropy;
-        return _this63;
+        _this64 = _super4.call(this, encryptedSeed);
+        _this64.IV = IV;
+        _this64.encryptedEntropy = encryptedEntropy;
+        return _this64;
       }
 
       return LegacyWalletV3;
@@ -25524,15 +25545,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       var _super5 = _createSuper(HdWallet);
 
       function HdWallet(IV, encryptedSeed, encryptedEntropy) {
-        var _this64;
+        var _this65;
 
         _classCallCheck(this, HdWallet);
 
-        _this64 = _super5.call(this, encryptedSeed);
-        _this64.encryptedEntropy = encryptedEntropy;
-        _this64.IV = IV;
-        _this64.index = 0;
-        return _this64;
+        _this65 = _super5.call(this, encryptedSeed);
+        _this65.encryptedEntropy = encryptedEntropy;
+        _this65.IV = IV;
+        _this65.index = 0;
+        return _this65;
       }
 
       return HdWallet;
@@ -25544,15 +25565,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       var _super6 = _createSuper(TorusWallet);
 
       function TorusWallet(verifier, id, name) {
-        var _this65;
+        var _this66;
 
         _classCallCheck(this, TorusWallet);
 
-        _this65 = _super6.call(this);
-        _this65.verifier = verifier;
-        _this65.id = id;
-        _this65.name = name;
-        return _this65;
+        _this66 = _super6.call(this);
+        _this66.verifier = verifier;
+        _this66.id = id;
+        _this66.name = name;
+        return _this66;
       }
 
       _createClass(TorusWallet, [{
@@ -25614,18 +25635,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       var _super8 = _createSuper(ImplicitAccount);
 
       function ImplicitAccount(pkh, pk, derivationPath) {
-        var _this66;
+        var _this67;
 
         _classCallCheck(this, ImplicitAccount);
 
-        _this66 = _super8.call(this, pkh, pk, pkh);
-        _this66.originatedAccounts = [];
+        _this67 = _super8.call(this, pkh, pk, pkh);
+        _this67.originatedAccounts = [];
 
         if (derivationPath) {
-          _this66.derivationPath = derivationPath;
+          _this67.derivationPath = derivationPath;
         }
 
-        return _this66;
+        return _this67;
       }
 
       _createClass(ImplicitAccount, [{
