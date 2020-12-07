@@ -14830,7 +14830,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       _createClass(TorusComponent, [{
         key: "ngOnInit",
         value: function ngOnInit() {
-          this.torusService.initTorus();
+          if (this.walletService.wallet) {
+            this.router.navigate(['/accounts']);
+          } else {
+            this.torusService.initTorus();
+          }
         }
       }, {
         key: "torusLogin",
@@ -17581,15 +17585,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               while (1) {
                 switch (_context42.prev = _context42.next) {
                   case 0:
-                    _context42.next = 2;
-                    return this.client.removeAllPeers();
+                    if (!(this.peers.length > 0)) {
+                      _context42.next = 5;
+                      break;
+                    }
 
-                  case 2:
-                    _context42.next = 4;
-                    return this.client.removeAllAppMetadata();
+                    _context42.next = 3;
+                    return this.removePeer(0);
 
-                  case 4:
-                    this.syncBeaconState();
+                  case 3:
+                    _context42.next = 0;
+                    break;
 
                   case 5:
                   case "end":
@@ -26527,11 +26533,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       production: false
     };
     var CONSTANTS = {
-      NAME: 'Testnet / Carthage',
-      NETWORK: 'carthagenet',
+      NAME: 'Testnet / Delphinet',
+      NETWORK: 'delphinet',
       MAINNET: false,
-      NODE_URL: 'https://testnet-tezos.giganode.io',
-      BLOCK_EXPLORER_URL: 'https://carthagenet.tzkt.io'
+      NODE_URL: 'https://delphinet-tezos.giganode.io',
+      BLOCK_EXPLORER_URL: 'https://delphinet.tzkt.io'
     };
     /***/
   },

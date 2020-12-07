@@ -7435,7 +7435,12 @@ class TorusComponent {
         this.activeLogin = 'google';
     }
     ngOnInit() {
-        this.torusService.initTorus();
+        if (this.walletService.wallet) {
+            this.router.navigate(['/accounts']);
+        }
+        else {
+            this.torusService.initTorus();
+        }
     }
     torusLogin(verifier) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
@@ -9529,9 +9534,9 @@ class BeaconService {
     }
     removePeers() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            yield this.client.removeAllPeers();
-            yield this.client.removeAllAppMetadata();
-            this.syncBeaconState();
+            while (this.peers.length > 0) {
+                yield this.removePeer(0);
+            }
         });
     }
     removePeer(index) {
@@ -14670,11 +14675,11 @@ const environment = {
     production: false
 };
 const CONSTANTS = {
-    NAME: 'Testnet / Carthage',
-    NETWORK: 'carthagenet',
+    NAME: 'Testnet / Delphinet',
+    NETWORK: 'delphinet',
     MAINNET: false,
-    NODE_URL: 'https://testnet-tezos.giganode.io',
-    BLOCK_EXPLORER_URL: 'https://carthagenet.tzkt.io'
+    NODE_URL: 'https://delphinet-tezos.giganode.io',
+    BLOCK_EXPLORER_URL: 'https://delphinet.tzkt.io'
 };
 
 
