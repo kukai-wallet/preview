@@ -11162,7 +11162,7 @@ class TzktService {
                         (tokens ? JSON.stringify(tokens) : '');
                     const input = Buffer.from(payload);
                     const hash = crypto_browserify__WEBPACK_IMPORTED_MODULE_3__["createHash"]('md5').update(input, 'base64').digest('hex');
-                    if (payload && payload !== '0001-01-01T00:00:00Z[]') {
+                    if (payload && (payload !== '0001-01-01T00:00:00Z[]') && payload !== '[]') {
                         return { counter: hash, unknownTokenIds, tokens };
                     }
                 }
