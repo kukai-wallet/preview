@@ -6167,9 +6167,8 @@
             try {
               Object(_taquito_michel_codec__WEBPACK_IMPORTED_MODULE_10__["assertMichelsonContract"])(origination.script.code);
               Object(_taquito_michel_codec__WEBPACK_IMPORTED_MODULE_10__["assertMichelsonData"])(origination.script.storage);
-              console.log('contracts ok');
             } catch (e) {
-              console.warn(e);
+              console.warn('Invalid script');
               return false;
             }
 
@@ -6572,10 +6571,10 @@
         }, {
           key: "clearForm",
           value: function clearForm() {
+            this.defaultTransactionParams = zeroTxParams;
             this.customFee = '';
             this.customGas = '';
             this.customStorage = '';
-            this.defaultTransactionParams = zeroTxParams;
             this.balance = '';
             this.script = null;
             this.advancedForm = false;
@@ -8614,7 +8613,7 @@
                 description: 'USDtz is a Tezos on-chain stablecoin pegged to the value of the United States Dollar.',
                 displayUrl: '../../../assets/img/tokens/usdtz.png',
                 thumbnailUrl: '../../../assets/img/tokens/usdtz.png',
-                symbolPreference: true
+                shouldPreferSymbol: true
               }
             }
           },
@@ -8629,8 +8628,8 @@
                 description: 'This certificate verifies that the holder of its private key attended, contributed and completed the Tezos Israel and Madfish Solution Workshop on December 7th to the 9th, 2020. The certificate holder utilized skills in smart contract development and tokenization to build, test and deploy a token on the Tezos blockchain.',
                 displayUrl: '../../../assets/img/tokens/mfil.jfif',
                 thumbnailUrl: '../../../assets/img/tokens/mfil.jfif',
-                nonTransferable: true,
-                booleanAmount: true
+                isTransferable: false,
+                isBooleanAmount: true
               }
             }
           },
@@ -8645,13 +8644,13 @@
                 description: 'Kolibri is a Tezos based stablecoin built on Collateralized Debt Positions (CDPs) known as Ovens.',
                 displayUrl: '../../../assets/img/tokens/kusd.png',
                 thumbnailUrl: '../../../assets/img/tokens/kusd.png',
-                symbolPreference: true
+                shouldPreferSymbol: true
               }
             }
           }
         }
       };
-      var TRUSTED_TOKEN_CONTRACTS = ['KT1LyJV9JdcDCp5zDfw6MxpoShXYrBMG3dfK', 'KT1RfMoskMhR1hDFJTVN6gGMwQLDSTmLeDsc', 'KT1Szwqme712TkQ7LdP1hBqKjdUUBjxoB8bR', 'KT1PS2jZVzNMW54UsnqBqwwkArXnAZ29jiTF'];
+      var TRUSTED_TOKEN_CONTRACTS = ['KT1LyJV9JdcDCp5zDfw6MxpoShXYrBMG3dfK', 'KT1RfMoskMhR1hDFJTVN6gGMwQLDSTmLeDsc', 'KT1Szwqme712TkQ7LdP1hBqKjdUUBjxoB8bR', 'KT1PS2jZVzNMW54UsnqBqwwkArXnAZ29jiTF', 'KT1Jscaxi6J9sKUzX37wFfRRdZPdNfMDy85R', 'KT1NaoA6pjAMCpnQAmUoQTxMCuEjJ2kodyrj', 'KT1RMqNMuXm2EU99E75cHk53iN75y9kmCG1X'];
       /***/
     },
 
@@ -8775,7 +8774,7 @@
 
           this.indexerService = indexerService;
           this.AUTO_DISCOVER = true;
-          this.version = '1.0.1';
+          this.version = '1.0.2';
           this.contracts = {};
           this.exploredIds = {};
           this.storeKey = 'tokenMetadata';
@@ -8929,8 +8928,8 @@
                           description: metadata.description ? metadata.description : '',
                           displayUrl: displayUrl,
                           thumbnailUrl: thumbnailUrl,
-                          nonTransferable: (metadata === null || metadata === void 0 ? void 0 : metadata.nonTransferable) ? metadata.nonTransferable : false,
-                          booleanAmount: (metadata === null || metadata === void 0 ? void 0 : metadata.booleanAmount) ? metadata.booleanAmount : false
+                          isTransferable: (metadata === null || metadata === void 0 ? void 0 : metadata.isTransferable) ? metadata.isTransferable : true,
+                          isBooleanAmount: (metadata === null || metadata === void 0 ? void 0 : metadata.isBooleanAmount) ? metadata.isBooleanAmount : false
                         };
                         contract.tokens[id] = token;
                         this.addAsset(contractAddress, contract);
@@ -9044,8 +9043,8 @@
               var token = this.getAsset(tokenKey);
 
               if (token) {
-                if (!token.symbolPreference && token.name || !token.symbol) {
-                  if (token.booleanAmount) {
+                if (!token.shouldPreferSymbol && token.name || !token.symbol) {
+                  if (token.isBooleanAmount) {
                     return "".concat(token.name);
                   } else {
                     return "".concat(big_js__WEBPACK_IMPORTED_MODULE_4___default()(amount).div(Math.pow(10, baseUnit ? token.decimals : 0)).toFixed(), " ").concat(token.name);
@@ -9943,7 +9942,7 @@
 
           _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r0.tokenTransfer && !ctx_r0.tokenService.getAsset(ctx_r0.tokenTransfer).nonTransferable);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r0.tokenTransfer && ctx_r0.tokenService.getAsset(ctx_r0.tokenTransfer).isTransferable !== false);
         }
       }
 
@@ -12047,7 +12046,7 @@
                           this.toPkh = tokenTransfer.to;
                           this.tokenTransfer = tokenTransfer.tokenId;
 
-                          if (asset.booleanAmount) {
+                          if (asset.isBooleanAmount) {
                             this.hideAmount = true;
                           }
                         } else {
@@ -12137,7 +12136,7 @@
                       if (this.tokenTransfer) {
                         asset = this.tokenService.getAsset(this.tokenTransfer);
 
-                        if (asset.booleanAmount) {
+                        if (asset.isBooleanAmount) {
                           this.hideAmount = true;
                           this.amount = '1';
                           this.amountChange();
@@ -18285,7 +18284,7 @@
           function TzktService() {
             _classCallCheck(this, TzktService);
 
-            this.bcd = 'https://test.better-call.dev/v1';
+            this.bcd = 'https://api.better-call.dev/v1';
           }
 
           _createClass(TzktService, [{
@@ -18635,13 +18634,13 @@
                             key: 'thumbnailUri',
                             type: 'string'
                           }, {
-                            key: 'nonTransferable',
+                            key: 'isTransferable',
                             type: 'boolean'
                           }, {
-                            key: 'symbolPreference',
+                            key: 'shouldPreferSymbol',
                             type: 'boolean'
                           }, {
-                            key: 'booleanAmount',
+                            key: 'isBooleanAmount',
                             type: 'boolean'
                           }];
 
@@ -18808,7 +18807,7 @@
                         lookFor = {
                           strings: ['name', 'symbol', 'description', 'displayUri', 'displayURI'],
                           numbers: ['decimals'],
-                          booleans: ['nonTransferable', 'booleanAmount', 'symbolPreference']
+                          booleans: ['isTransferable', 'isBooleanAmount', 'shouldPreferSymbol']
                         };
                         _context64.prev = 7;
                         _iterator17 = _createForOfIteratorHelper(tokenBigMap);
