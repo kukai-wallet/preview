@@ -5755,20 +5755,16 @@ class SendComponent {
     }
     ngOnChanges(changes) {
         var _a;
-        console.log('headless', this.headless);
-        console.log(changes);
         if (this.headless && ((_a = changes === null || changes === void 0 ? void 0 : changes.operationRequest) === null || _a === void 0 ? void 0 : _a.currentValue)) {
             this.checkOpReq(changes.operationRequest.currentValue);
         }
     }
     checkOpReq(opReq) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            console.log(opReq);
             if (opReq.operationDetails) {
                 opReq = opReq.operationDetails;
             }
             if (opReq[0].kind === 'transaction') {
-                console.log('opReq', opReq);
                 const txs = opReq.map(tx => {
                     if (tx.kind !== 'transaction') {
                         throw new Error('Invalid op kind');
@@ -5791,7 +5787,7 @@ class SendComponent {
                             this.tokenTransfer = tokenTransferObj.tokenId;
                             delete txs[0].parameters;
                         }
-                        this.simulateRequest(txs, tokenTransferObj.tokenId);
+                        this.simulateRequest(txs, tokenTransferObj === null || tokenTransferObj === void 0 ? void 0 : tokenTransferObj.tokenId);
                     }
                 }
                 else {
@@ -5815,7 +5811,6 @@ class SendComponent {
                         throw new Error('entrypoint and value expected');
                     }
                     Object(_taquito_michel_codec__WEBPACK_IMPORTED_MODULE_6__["assertMichelsonData"])(tx.parameters.value);
-                    console.log('Sim ok');
                 }
                 catch (e) {
                     this.messageService.addError(`Invalid parameters: ${e.message}`);
@@ -5854,14 +5849,12 @@ class SendComponent {
         });
     }
     prepareTransaction() {
-        console.log('prep');
         this.prepareRequest = { account: this.activeAccount, tokenTransfer: this.tokenTransfer };
     }
     confirmTransactions(transactions) {
         this.confirmRequest = { account: this.activeAccount, tokenTransfer: this.tokenTransfer, transactions };
     }
     handlePrepareResponse(preparedTransactions) {
-        console.log('handle prep');
         this.prepareRequest = null;
         if (!preparedTransactions) {
             //modalOpen
@@ -5872,7 +5865,6 @@ class SendComponent {
         }
     }
     handleConfirmResponse(opHash) {
-        console.log('handle', opHash);
         this.confirmRequest = null;
         this.operationResponse.emit(opHash);
     }
@@ -11599,7 +11591,6 @@ class PrepareSendComponent {
     ngOnChanges(changes) {
         var _a;
         if (((_a = changes === null || changes === void 0 ? void 0 : changes.prepareRequest) === null || _a === void 0 ? void 0 : _a.currentValue) && !changes.prepareRequest.previousValue) {
-            console.log(changes);
             this.tokenTransfer = changes.prepareRequest.currentValue.tokenTransfer;
             this.activeAccount = changes.prepareRequest.currentValue.account;
             this.openModal();
@@ -11715,7 +11706,6 @@ class PrepareSendComponent {
                     this.simSemaphore++; // Put lock on 'Preview and 'Send max'
                     const callback = (res) => {
                         if (res) {
-                            console.log('got res', res);
                             if (res.error) {
                                 this.formInvalid = res.error;
                                 this.latestSimError = res.error;
@@ -11732,7 +11722,6 @@ class PrepareSendComponent {
                         }
                         this.simSemaphore--;
                     };
-                    console.log('simulate...');
                     this.estimateService.estimate(JSON.parse(JSON.stringify(txs)), this.activeAccount.address, this.tokenTransfer, callback);
                 }
                 else {
@@ -11817,7 +11806,6 @@ class PrepareSendComponent {
                 assert__WEBPACK_IMPORTED_MODULE_10___default()(this.inputValidationService.address(cols[0]), `Transaction ${i + 1} contains an invalid destination.`);
                 assert__WEBPACK_IMPORTED_MODULE_10___default()(this.inputValidationService.amount(cols[1]), `Transaction ${i + 1} contains an invalid amount.`);
                 this.checkTx(cols[0], cols[1], finalCheck);
-                console.log('cols: ' + cols.length);
                 const tx = {
                     kind: 'transaction',
                     destination: cols[0],
@@ -11837,17 +11825,12 @@ class PrepareSendComponent {
         assert__WEBPACK_IMPORTED_MODULE_10___default()(this.inputValidationService.gas(this.customGasLimit), 'Invalid gas limit');
         assert__WEBPACK_IMPORTED_MODULE_10___default()(this.inputValidationService.gas(this.customStorageLimit), 'Invalid storage limit');
         assert__WEBPACK_IMPORTED_MODULE_10___default()(!this.checkBalance(), this.checkBalance());
-        console.log(minimalTxs);
         const fullyTxs = [];
         assert__WEBPACK_IMPORTED_MODULE_10___default()(minimalTxs.length === ((_a = this.defaultTransactionParams.customLimits) === null || _a === void 0 ? void 0 : _a.length), 'Simulation error');
         for (let i = 0; i < minimalTxs.length; i++) {
-            console.log(this.customGasLimit);
-            console.log(this.defaultTransactionParams.customLimits[i].gasLimit.toString());
             const fullyTx = Object.assign(Object.assign({}, minimalTxs[i]), { fee: (i === minimalTxs.length - 1) ? this.getTotalFee().toString() : '0', gasLimit: this.customGasLimit ? this.customGasLimit : this.defaultTransactionParams.customLimits[i].gasLimit.toString(), storageLimit: this.customStorageLimit ? this.customStorageLimit : this.defaultTransactionParams.customLimits[i].storageLimit.toString() });
-            console.log('push', fullyTx);
             fullyTxs.push(fullyTx);
         }
-        console.log(this.defaultTransactionParams);
         return fullyTxs;
     }
     invalidTorusAccount() {
@@ -11904,7 +11887,6 @@ class PrepareSendComponent {
                 for (const tx of this.transactions) {
                     amount = amount.plus(big_js__WEBPACK_IMPORTED_MODULE_6___default()(tx.amount));
                 }
-                console.log(amount.toFixed() + ' vs ' + max.toFixed());
                 if (amount.gt(max)) {
                     return this.translate.instant('SENDCOMPONENT.TOOHIGHFEEORAMOUNT');
                 }
@@ -11965,7 +11947,6 @@ class PrepareSendComponent {
     verifierChange() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             this.torusLookupAddress = '';
-            console.log('Verifier: ' + this.torusVerifier);
             if (this.torusVerifier) {
                 this.torusLookup();
             }
@@ -11978,7 +11959,6 @@ class PrepareSendComponent {
     }
     torusLookup() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            console.log('lookup torus');
             if (!this.torusService.verifierMapKeys.includes(this.torusVerifier)) {
                 this.formInvalid = 'Invalid verifier';
             }
@@ -11998,7 +11978,6 @@ class PrepareSendComponent {
                     this.torusLookupAddress = pkh;
                     this.torusTwitterId = twitterId ? twitterId : '';
                     this.estimateFees();
-                    console.log('Torus address', pkh);
                 }
                 else {
                     this.torusLookupAddress = '';
@@ -14542,9 +14521,9 @@ function ConfirmSendComponent_div_0_ng_container_20_span_1_Template(rf, ctx) { i
 } if (rf & 2) {
     const ctx_r19 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](3);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpropertyInterpolate1"]("src", "../../../assets/img/", ctx_r19.torusVerifier, "-logo.svg", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵsanitizeUrl"]);
+    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpropertyInterpolate1"]("src", "../../../assets/img/", ctx_r19.transactions[0].meta.verifier, "-logo.svg", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵsanitizeUrl"]);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" ", ctx_r19.torusLookupId, "");
+    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" ", ctx_r19.transactions[0].meta.alias, "");
 } }
 function ConfirmSendComponent_div_0_ng_container_20_p_4_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "p", 34);
@@ -14573,11 +14552,11 @@ function ConfirmSendComponent_div_0_ng_container_20_Template(rf, ctx) { if (rf &
 } if (rf & 2) {
     const ctx_r6 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"](2);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r6.torusLookupId);
+    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r6.transactions[0].meta && ctx_r6.transactions[0].meta.verifier);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate"](ctx_r6.transactions[0].destination);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r6.torusLookupId);
+    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r6.transactions[0].meta && ctx_r6.transactions[0].meta.verifier);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r6.tokenTransfer && ctx_r6.transactions[0].destination.slice(0, 3) === "KT1");
 } }
@@ -15116,9 +15095,7 @@ class ConfirmSendComponent {
         this.pwdInvalid = '';
         this.advancedForm = false;
     }
-    ngOnInit() {
-        console.log('headless', this.headlessMode);
-    }
+    ngOnInit() { }
     ngOnChanges(changes) {
         var _a;
         if (((_a = changes === null || changes === void 0 ? void 0 : changes.confirmRequest) === null || _a === void 0 ? void 0 : _a.currentValue) && !changes.confirmRequest.previousValue) {
@@ -15126,9 +15103,17 @@ class ConfirmSendComponent {
             this.activeAccount = changes.confirmRequest.currentValue.account;
             this.transactions = changes.confirmRequest.currentValue.transactions;
             console.log('transactions', this.transactions);
-            this.openModal();
-            this.loadParameters();
+            this.init();
         }
+    }
+    init() {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+            yield this.openModal();
+            yield this.loadParameters();
+            if (this.walletService.wallet instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_13__["LedgerWallet"]) {
+                this.ledgerError = '?';
+            }
+        });
     }
     loadParameters() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
@@ -15143,7 +15128,6 @@ class ConfirmSendComponent {
                 }
             }
             else if (this.transactions[0].parameters) {
-                const tokenTransfer = this.beaconTokenTransfer(this.transactions[0]);
                 this.updateParameters(0, this.transactions[0].parameters);
             }
         });
@@ -15180,9 +15164,6 @@ class ConfirmSendComponent {
             }
             catch (e) {
                 console.warn(e);
-                /*if (this.headlessMode) {
-                  this.formInvalid = e;
-                }*/
                 this.micheline = null;
             }
         }
@@ -15220,13 +15201,24 @@ class ConfirmSendComponent {
         totalBurn = totalBurn.mul(this.transactions.length).times(this.costPerByte).div(1000000).toFixed();
         return totalBurn;
     }
+    ledgerRetry() {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+            this.messageService.startSpinner('Preparing transaction...');
+            const keys = yield this.walletService.getKeys('');
+            if (keys) {
+                yield this.sendTransaction(keys);
+            }
+            else {
+                this.messageService.stopSpinner();
+            }
+        });
+    }
     inject() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             if (this.walletService.isLedgerWallet()) {
                 this.broadCastLedgerTransaction();
                 this.sendResponse = null;
                 this.closeModal();
-                this.reset();
             }
             else {
                 const pwd = this.password;
@@ -15267,7 +15259,6 @@ class ConfirmSendComponent {
                         this.operationResponse.emit(ans.payload.opHash);
                         this.messageService.stopSpinner();
                         const metadata = { transactions: this.transactions, opHash: ans.payload.opHash, tokenTransfer: this.tokenTransfer };
-                        console.log('Metadata', metadata);
                         yield this.coordinatorService.boost(this.activeAccount.address, metadata);
                         if (this.transactions[0].meta) {
                             this.torusNotification(this.transactions[0]);
@@ -15280,6 +15271,7 @@ class ConfirmSendComponent {
                     }
                     else if (this.walletService.wallet instanceof _services_wallet_wallet__WEBPACK_IMPORTED_MODULE_13__["LedgerWallet"]) {
                         yield this.requestLedgerSignature();
+                        return;
                     }
                 }
                 else {
@@ -15343,10 +15335,11 @@ class ConfirmSendComponent {
                     }
                 }
                 else {
-                    this.messageService.addError(this.sendResponse.payload.msg, 0);
+                    console.log('sendResponse', JSON.stringify(this.sendResponse));
                     this.operationResponse.emit('broadcast_error');
                 }
                 console.log('ans: ' + JSON.stringify(ans));
+                this.reset();
             })));
         });
     }
@@ -15370,7 +15363,8 @@ class ConfirmSendComponent {
         });
     }
     previewAttention() {
-        if (this.transactions[0].meta.verifier) {
+        var _a, _b;
+        if ((_b = (_a = this.transactions[0]) === null || _a === void 0 ? void 0 : _a.meta) === null || _b === void 0 ? void 0 : _b.verifier) {
             if (!this.tokenTransfer && new big_js__WEBPACK_IMPORTED_MODULE_12___default.a(this.totalAmount()).gt('50')) {
                 let recipientKind = '';
                 switch (this.transactions[0].meta.verifier) {
