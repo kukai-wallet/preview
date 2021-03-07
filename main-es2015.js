@@ -14891,7 +14891,7 @@ function ConfirmSendComponent_div_0_div_34_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r12.parameters);
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r12.headlessMode);
+    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r12.headlessMode && !ctx_r12.walletService.isLedgerWallet() || ctx_r12.ledgerError);
 } }
 function ConfirmSendComponent_div_0_div_35_ng_container_8_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementContainerStart"](0);
@@ -15333,6 +15333,7 @@ class ConfirmSendComponent {
                     if (this.walletService.addressExists(this.transactions[0].destination)) {
                         yield this.coordinatorService.boost(this.transactions[0].destination);
                     }
+                    this.operationResponse.emit(ans.payload.opHash);
                 }
                 else {
                     console.log('sendResponse', JSON.stringify(this.sendResponse));
@@ -16271,7 +16272,6 @@ class UriHandlerComponent {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             if (!opHash) {
                 yield this.beaconService.rejectOnUserAbort(this.operationRequest);
-                console.log('aborted');
             }
             else if (opHash === 'broadcast_error') {
                 yield this.beaconService.rejectOnBroadcastError(this.signRequest);
@@ -16283,7 +16283,6 @@ class UriHandlerComponent {
                     id: this.operationRequest.id
                 };
                 yield this.beaconService.client.respond(response);
-                console.log(response);
             }
             this.operationRequest = null;
         });

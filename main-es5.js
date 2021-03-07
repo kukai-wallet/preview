@@ -26556,7 +26556,7 @@
 
           _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r12.headlessMode);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx_r12.headlessMode && !ctx_r12.walletService.isLedgerWallet() || ctx_r12.ledgerError);
         }
       }
 
@@ -27545,7 +27545,7 @@
                                   this.sendResponse = ans;
 
                                   if (!(ans.success && this.activeAccount)) {
-                                    _context107.next = 11;
+                                    _context107.next = 12;
                                     break;
                                   }
 
@@ -27572,18 +27572,19 @@
                                   return this.coordinatorService.boost(this.transactions[0].destination);
 
                                 case 9:
-                                  _context107.next = 13;
+                                  this.operationResponse.emit(ans.payload.opHash);
+                                  _context107.next = 14;
                                   break;
 
-                                case 11:
+                                case 12:
                                   console.log('sendResponse', JSON.stringify(this.sendResponse));
                                   this.operationResponse.emit('broadcast_error');
 
-                                case 13:
+                                case 14:
                                   console.log('ans: ' + JSON.stringify(ans));
                                   this.reset();
 
-                                case 15:
+                                case 16:
                                 case "end":
                                   return _context107.stop();
                               }
@@ -29628,7 +29629,7 @@
                   switch (_context124.prev = _context124.next) {
                     case 0:
                       if (opHash) {
-                        _context124.next = 6;
+                        _context124.next = 5;
                         break;
                       }
 
@@ -29636,39 +29637,35 @@
                       return this.beaconService.rejectOnUserAbort(this.operationRequest);
 
                     case 3:
-                      console.log('aborted');
-                      _context124.next = 15;
+                      _context124.next = 13;
                       break;
 
-                    case 6:
+                    case 5:
                       if (!(opHash === 'broadcast_error')) {
-                        _context124.next = 11;
+                        _context124.next = 10;
                         break;
                       }
 
-                      _context124.next = 9;
+                      _context124.next = 8;
                       return this.beaconService.rejectOnBroadcastError(this.signRequest);
 
-                    case 9:
-                      _context124.next = 15;
+                    case 8:
+                      _context124.next = 13;
                       break;
 
-                    case 11:
+                    case 10:
                       response = {
                         type: _airgap_beacon_sdk__WEBPACK_IMPORTED_MODULE_4__["BeaconMessageType"].OperationResponse,
                         transactionHash: opHash,
                         id: this.operationRequest.id
                       };
-                      _context124.next = 14;
+                      _context124.next = 13;
                       return this.beaconService.client.respond(response);
 
-                    case 14:
-                      console.log(response);
-
-                    case 15:
+                    case 13:
                       this.operationRequest = null;
 
-                    case 16:
+                    case 14:
                     case "end":
                       return _context124.stop();
                   }
