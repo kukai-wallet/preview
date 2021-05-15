@@ -3381,10 +3381,15 @@ label,
 input,
 textarea {
   font-family: "Helvetica Now Text";
+  margin: 0;
 }
 
 th {
   text-align: inherit;
+}
+
+table {
+  border-collapse: collapse;
 }
 
 .root {
@@ -3431,7 +3436,7 @@ th {
 .kukai-card div.whitebox {
   font-size: 1rem;
   line-height: 1.5rem;
-  width: 100%;
+  width: calc(100% - 2.5rem);
   height: 8.5rem;
   z-index: 1;
   color: black;
@@ -3710,7 +3715,7 @@ th {
   -webkit-margin-after: 0;
           margin-block-end: 0;
   font-weight: 500;
-  font-size: 2.25rem;
+  font-size: 2rem;
   line-height: 2.5rem;
 }
 
