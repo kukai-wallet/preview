@@ -12697,7 +12697,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var babel_polyfill__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! babel-polyfill */ "201c");
 /* harmony import */ var babel_polyfill__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(babel_polyfill__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _ledgerhq_hw_transport_u2f__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ledgerhq/hw-transport-u2f */ "1BiQ");
-/* harmony import */ var _ledgerhq_hw_transport_webusb__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ledgerhq/hw-transport-webusb */ "r+TU");
+/* harmony import */ var _ledgerhq_hw_transport_webhid__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ledgerhq/hw-transport-webhid */ "g3jJ");
 /* harmony import */ var _obsidiansystems_hw_app_xtz__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @obsidiansystems/hw-app-xtz */ "Vi/m");
 /* harmony import */ var _obsidiansystems_hw_app_xtz__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_obsidiansystems_hw_app_xtz__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _operation_operation_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../operation/operation.service */ "2imr");
@@ -12717,30 +12717,46 @@ class LedgerService {
     constructor(operationService, messageService) {
         this.operationService = operationService;
         this.messageService = messageService;
-        this.errorMessage = 'U2F browser support is needed for Ledger. Please use Chrome, Opera ' +
-            'or Firefox with a U2F extension. Also make sure you\'re on an HTTPS connection';
+        this.errorMessage = 'U2F or WebHID browser support is needed for Ledger. Please use Chrome, Opera or Firefox.';
     }
     setTransport() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             if (!this.transport) {
-                console.log('Trying to use WebUSB for transport...');
-                try {
-                    this.transport = yield _ledgerhq_hw_transport_webusb__WEBPACK_IMPORTED_MODULE_4__["default"].create();
-                    console.log('supported?', this.transport.isSupported());
-                    console.log('Transport is now set to use WebUSB!');
+                if (this.useWebHID()) {
+                    console.log('Trying to use WebUSB for transport...');
+                    try {
+                        this.transport = yield _ledgerhq_hw_transport_webhid__WEBPACK_IMPORTED_MODULE_4__["default"].create();
+                        console.log('Transport is now set to use WebUSB!');
+                    }
+                    catch (e) {
+                        console.error(e);
+                        console.warn('Couldn\'t use WebUSB for transport!');
+                    }
                 }
-                catch (e) {
-                    console.warn('Couldn\'t use WebUSB for transport!');
+                else {
                     try {
                         this.transport = yield _ledgerhq_hw_transport_u2f__WEBPACK_IMPORTED_MODULE_3__["default"].create();
                         console.log('Transport is now set to use U2F!');
                     }
                     catch (e) {
+                        console.error(e);
                         console.log('Couldn\'t use U2F for transport!');
                     }
                 }
             }
         });
+    }
+    useWebHID() {
+        var _a, _b;
+        try {
+            const isMac = navigator.platform.indexOf('Mac') > -1;
+            const isChrome = (_b = (_a = navigator.userAgentData) === null || _a === void 0 ? void 0 : _a.brands) === null || _b === void 0 ? void 0 : _b.some(b => b.brand === 'Google Chrome');
+            console.log(isMac, isChrome);
+            return (isMac && isChrome);
+        }
+        catch (e) {
+            return false;
+        }
     }
     transportCheck() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {

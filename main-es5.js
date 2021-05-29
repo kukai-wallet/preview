@@ -21795,9 +21795,9 @@
       /* harmony import */
 
 
-      var _ledgerhq_hw_transport_webusb__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
-      /*! @ledgerhq/hw-transport-webusb */
-      "r+TU");
+      var _ledgerhq_hw_transport_webhid__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+      /*! @ledgerhq/hw-transport-webhid */
+      "g3jJ");
       /* harmony import */
 
 
@@ -21827,7 +21827,7 @@
 
           this.operationService = operationService;
           this.messageService = messageService;
-          this.errorMessage = 'U2F browser support is needed for Ledger. Please use Chrome, Opera ' + 'or Firefox with a U2F extension. Also make sure you\'re on an HTTPS connection';
+          this.errorMessage = 'U2F or WebHID browser support is needed for Ledger. Please use Chrome, Opera or Firefox.';
         }
 
         _createClass(LedgerService, [{
@@ -21839,48 +21839,76 @@
                   switch (_context83.prev = _context83.next) {
                     case 0:
                       if (this.transport) {
-                        _context83.next = 23;
+                        _context83.next = 27;
+                        break;
+                      }
+
+                      if (!this.useWebHID()) {
+                        _context83.next = 16;
                         break;
                       }
 
                       console.log('Trying to use WebUSB for transport...');
-                      _context83.prev = 2;
-                      _context83.next = 5;
-                      return _ledgerhq_hw_transport_webusb__WEBPACK_IMPORTED_MODULE_4__["default"].create();
+                      _context83.prev = 3;
+                      _context83.next = 6;
+                      return _ledgerhq_hw_transport_webhid__WEBPACK_IMPORTED_MODULE_4__["default"].create();
 
-                    case 5:
+                    case 6:
                       this.transport = _context83.sent;
-                      console.log('supported?', this.transport.isSupported());
                       console.log('Transport is now set to use WebUSB!');
-                      _context83.next = 23;
+                      _context83.next = 14;
                       break;
 
                     case 10:
                       _context83.prev = 10;
-                      _context83.t0 = _context83["catch"](2);
+                      _context83.t0 = _context83["catch"](3);
+                      console.error(_context83.t0);
                       console.warn('Couldn\'t use WebUSB for transport!');
-                      _context83.prev = 13;
-                      _context83.next = 16;
-                      return _ledgerhq_hw_transport_u2f__WEBPACK_IMPORTED_MODULE_3__["default"].create();
 
-                    case 16:
-                      this.transport = _context83.sent;
-                      console.log('Transport is now set to use U2F!');
-                      _context83.next = 23;
+                    case 14:
+                      _context83.next = 27;
                       break;
 
-                    case 20:
-                      _context83.prev = 20;
-                      _context83.t1 = _context83["catch"](13);
-                      console.log('Couldn\'t use U2F for transport!');
+                    case 16:
+                      _context83.prev = 16;
+                      _context83.next = 19;
+                      return _ledgerhq_hw_transport_u2f__WEBPACK_IMPORTED_MODULE_3__["default"].create();
+
+                    case 19:
+                      this.transport = _context83.sent;
+                      console.log('Transport is now set to use U2F!');
+                      _context83.next = 27;
+                      break;
 
                     case 23:
+                      _context83.prev = 23;
+                      _context83.t1 = _context83["catch"](16);
+                      console.error(_context83.t1);
+                      console.log('Couldn\'t use U2F for transport!');
+
+                    case 27:
                     case "end":
                       return _context83.stop();
                   }
                 }
-              }, _callee82, this, [[2, 10], [13, 20]]);
+              }, _callee82, this, [[3, 10], [16, 23]]);
             }));
+          }
+        }, {
+          key: "useWebHID",
+          value: function useWebHID() {
+            var _a, _b;
+
+            try {
+              var isMac = navigator.platform.indexOf('Mac') > -1;
+              var isChrome = (_b = (_a = navigator.userAgentData) === null || _a === void 0 ? void 0 : _a.brands) === null || _b === void 0 ? void 0 : _b.some(function (b) {
+                return b.brand === 'Google Chrome';
+              });
+              console.log(isMac, isChrome);
+              return isMac && isChrome;
+            } catch (e) {
+              return false;
+            }
           }
         }, {
           key: "transportCheck",
