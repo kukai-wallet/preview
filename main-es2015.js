@@ -12723,9 +12723,10 @@ class LedgerService {
     setTransport() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             if (!this.transport) {
-                console.log('Trying to use U2F for transport...');
+                console.log('Trying to use WebUSB for transport...');
                 try {
                     this.transport = yield _ledgerhq_hw_transport_webusb__WEBPACK_IMPORTED_MODULE_4__["default"].create();
+                    console.log('supported?', this.transport.isSupported());
                     console.log('Transport is now set to use WebUSB!');
                 }
                 catch (e) {

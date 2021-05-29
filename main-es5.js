@@ -21839,46 +21839,47 @@
                   switch (_context83.prev = _context83.next) {
                     case 0:
                       if (this.transport) {
-                        _context83.next = 22;
+                        _context83.next = 23;
                         break;
                       }
 
-                      console.log('Trying to use U2F for transport...');
+                      console.log('Trying to use WebUSB for transport...');
                       _context83.prev = 2;
                       _context83.next = 5;
                       return _ledgerhq_hw_transport_webusb__WEBPACK_IMPORTED_MODULE_4__["default"].create();
 
                     case 5:
                       this.transport = _context83.sent;
+                      console.log('supported?', this.transport.isSupported());
                       console.log('Transport is now set to use WebUSB!');
-                      _context83.next = 22;
+                      _context83.next = 23;
                       break;
 
-                    case 9:
-                      _context83.prev = 9;
+                    case 10:
+                      _context83.prev = 10;
                       _context83.t0 = _context83["catch"](2);
                       console.warn('Couldn\'t use WebUSB for transport!');
-                      _context83.prev = 12;
-                      _context83.next = 15;
+                      _context83.prev = 13;
+                      _context83.next = 16;
                       return _ledgerhq_hw_transport_u2f__WEBPACK_IMPORTED_MODULE_3__["default"].create();
 
-                    case 15:
+                    case 16:
                       this.transport = _context83.sent;
                       console.log('Transport is now set to use U2F!');
-                      _context83.next = 22;
+                      _context83.next = 23;
                       break;
 
-                    case 19:
-                      _context83.prev = 19;
-                      _context83.t1 = _context83["catch"](12);
+                    case 20:
+                      _context83.prev = 20;
+                      _context83.t1 = _context83["catch"](13);
                       console.log('Couldn\'t use U2F for transport!');
 
-                    case 22:
+                    case 23:
                     case "end":
                       return _context83.stop();
                   }
                 }
-              }, _callee82, this, [[2, 9], [12, 19]]);
+              }, _callee82, this, [[2, 10], [13, 20]]);
             }));
           }
         }, {
