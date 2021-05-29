@@ -791,9 +791,9 @@ MessageService.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineIn
 /***/ }),
 
 /***/ 11:
-/*!************************!*\
-  !*** buffer (ignored) ***!
-  \************************/
+/*!**********************!*\
+  !*** util (ignored) ***!
+  \**********************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -813,9 +813,9 @@ MessageService.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineIn
 /***/ }),
 
 /***/ 13:
-/*!**********************!*\
-  !*** util (ignored) ***!
-  \**********************/
+/*!************************!*\
+  !*** buffer (ignored) ***!
+  \************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -12717,7 +12717,7 @@ class LedgerService {
     constructor(operationService, messageService) {
         this.operationService = operationService;
         this.messageService = messageService;
-        this.errorMessage = 'U2F or WebHID browser support is needed for Ledger. Please use Chrome, Opera or Firefox.';
+        this.errorMessage = 'U2F or WebHID browser support is needed for Ledger';
     }
     setTransport() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
@@ -12751,7 +12751,6 @@ class LedgerService {
         try {
             const isMac = navigator.platform.indexOf('Mac') > -1;
             const isChrome = (_b = (_a = navigator.userAgentData) === null || _a === void 0 ? void 0 : _a.brands) === null || _b === void 0 ? void 0 : _b.some(b => b.brand === 'Google Chrome');
-            console.log(isMac, isChrome);
             return (isMac && isChrome);
         }
         catch (e) {
