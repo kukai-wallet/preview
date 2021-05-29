@@ -21848,14 +21848,14 @@
                         break;
                       }
 
-                      console.log('Trying to use WebUSB for transport...');
+                      console.log('Trying to use WebHID for transport...');
                       _context83.prev = 3;
                       _context83.next = 6;
                       return _ledgerhq_hw_transport_webhid__WEBPACK_IMPORTED_MODULE_4__["default"].create();
 
                     case 6:
                       this.transport = _context83.sent;
-                      console.log('Transport is now set to use WebUSB!');
+                      console.log('Transport is now set to use WebHID!');
                       _context83.next = 14;
                       break;
 
@@ -21863,7 +21863,7 @@
                       _context83.prev = 10;
                       _context83.t0 = _context83["catch"](3);
                       console.error(_context83.t0);
-                      console.warn('Couldn\'t use WebUSB for transport!');
+                      console.warn('Couldn\'t use WebHID for transport!');
 
                     case 14:
                       _context83.next = 27;

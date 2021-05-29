@@ -12723,14 +12723,14 @@ class LedgerService {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             if (!this.transport) {
                 if (this.useWebHID()) {
-                    console.log('Trying to use WebUSB for transport...');
+                    console.log('Trying to use WebHID for transport...');
                     try {
                         this.transport = yield _ledgerhq_hw_transport_webhid__WEBPACK_IMPORTED_MODULE_4__["default"].create();
-                        console.log('Transport is now set to use WebUSB!');
+                        console.log('Transport is now set to use WebHID!');
                     }
                     catch (e) {
                         console.error(e);
-                        console.warn('Couldn\'t use WebUSB for transport!');
+                        console.warn('Couldn\'t use WebHID for transport!');
                     }
                 }
                 else {
